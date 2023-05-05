@@ -1,0 +1,158 @@
+<div class="page" style="width: 100%;">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Manage Vendor Lease Request</span>
+          <ul class="breadcrumb"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded">
+            <div class="col-md-12 bg-light py-3">
+              <div class="row">
+                <div class="col-md-12 col-lg-12 col-xl-12">
+
+                  <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12 col-xl-4">
+                      <div class="form-group mb-xl-0">
+                        <input class="form-control" type="text" [(ngModel)]='searhName' placeholder="Search By Lease#/Busines Name/Contact Name" (keyup)='updateFilter($event)'>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <input type="button" class="btn btn-primary src-icon" (click)="SearchVendorLeaseRequestLease()" value="Search">
+                        <input type="button" class="btn btn-danger reset-icon" value="Reset" (click)="ResetSearch()" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-12 col-xl-12 text-xl-right"></div>
+              </div>
+            </div>
+
+            <div class="col-md-12 mt-4">
+              <div class="table-responsive">
+                <div class="table table-striped">
+                  <ngx-datatable  #table class="bootstrap table table-hover table-dynamic"
+                                 [rows]="pagedData.data"
+                                 [columnMode]="'force'"
+                                 [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="40"
+                                 
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="pagedData.pager.totalItems"
+                                 [offset]="pagedData.pager.currentPage"
+                                 [limit]="pagedData.pager.pageSize"
+                                 (page)='setPage($event)'
+                                 (sort)="onSort($event)">
+
+                    <ngx-datatable-column name="Lease#" prop="LeaseNumber" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div *ngIf="row.DocumentFileName!='javascript:void(0);'">
+                          <a href="javascript:void(0);" (click)="createTitleWorkRequest(row.LeaseId)" >{{row.LeaseNumber}}</a>
+                        </div>
+                        <div *ngIf="row.DocumentFileName=='javascript:void(0);'">
+                          <a href="javascript:void(0);" (click)="createTitleWorkRequest(row.LeaseId)"  class="font-weight-bold">{{row.LeaseNumber}}</a>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Business Name" prop="ContactBussinessName" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.DocumentFileName!='javascript:void(0);'">{{row.ContactBussinessName}}</span>
+                        <span *ngIf="row.DocumentFileName=='javascript:void(0);'" class="font-weight-bold">{{row.ContactBussinessName}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Contact Name" prop="ContactName" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.DocumentFileName!='javascript:void(0);'">{{row.ContactName}}</span>
+                        <span *ngIf="row.DocumentFileName=='javascript:void(0);'" class="font-weight-bold">{{row.ContactName}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="80" name="Vendor Name" prop="VendorName" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.DocumentFileName!='javascript:void(0);'">{{row.VendorName}}</span>
+                        <span *ngIf="row.DocumentFileName=='javascript:void(0);'" class="font-weight-bold">{{row.VendorName}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Date" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.DocumentFileName!='javascript:void(0);'"> {{row.CreateTitleWorkRequestDate | date: 'MM-dd-yyyy'}}</span>
+                        <span *ngIf="row.DocumentFileName=='javascript:void(0);'" class="font-weight-bold"> {{row.CreateTitleWorkRequestDate | date: 'MM-dd-yyyy'}}</span>
+
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="80" name="Action" [sortable]="false" headerClass="text-center">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center">
+                          <a href="javascript:void(0);" (click)="UploadDocumentforVender(row)"><i class="fas fa-upload" title="Upload Document"></i></a>
+                        </div>
+
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Download" [sortable]="false" headerClass="text-center">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center" *ngIf="row.DocumentFileName != 'javascript:void(0);'">
+                          <a href="{{row.DocumentFileName}}" download class="text-success mx-1">
+                            <i class="fa fa-download" title="download"></i>
+                          </a>
+                        </div>
+                        <div class="icon-text-center" *ngIf="row.DocumentFileName == 'javascript:void(0);'">-</div>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="currentPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count" style="max-width:170px;">
+                          {{rowCount}} total
+                        </div>
+                        <div>
+                          <div style="color:black; margin-right:10px;" class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                         [pagerPreviousIcon]="'fa fa-angle-left'"
+                                         [pagerNextIcon]="'fa feather-chevron-left'"
+                                         [page]="pagedData.pager.currentPage+1"
+                                         [size]="pageSizeValue"
+                                         [count]="pagedData.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPage($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<app-uploaddovendordocument #vendordocumentUploadModal (refresh)="SearchVendorLeaseRequestLease()"></app-uploaddovendordocument>
+<app-vendorrequestdetail #vendorTitleWorkRequestModal></app-vendorrequestdetail>

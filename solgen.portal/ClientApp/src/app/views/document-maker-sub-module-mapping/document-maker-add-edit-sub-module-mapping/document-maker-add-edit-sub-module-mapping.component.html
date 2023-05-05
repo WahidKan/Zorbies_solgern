@@ -1,0 +1,473 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+
+
+
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li><a routerLink="/document-maker-submodule-mapping">Document Mapping</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="panel ">
+    <div class="panel-content clearfix mb-4 p-4"> 
+      <!-- *ngIf="id != null && id > 0" -->
+      <ul class="nav nav-tabs nav-cust" id="myTab"  role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active show" id="lead-tab"
+              data-toggle="tab" href="#RouteRule" role="tab" aria-selected="true">Document Mapping</a>
+        </li>
+        <li class="nav-item" *ngIf="id>0">
+          <a class="nav-link" id="delivery-options"
+              data-toggle="tab" href="#DeliveryOptions" (click)="onLoadDeliveryOption()" role="tab" aria-selected="true">Delivery Options</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade active show" id="RouteRule" role="tabpanel">
+          <div class="row">
+            <div class="col-lg-12 portlets">
+              <form autocomplete="off" #documentMappingForm="ngForm" ngNativeValidate (ngSubmit)="submit()">
+               <div class="row">
+                  <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-sm-4 col-md-4">
+                          <label>Name:<span class="text-danger">*</span></label>
+                          <div class="form-group">
+                            <input type="text" class="form-control" [(ngModel)]="mapping.name" name="mapping.name" #name ="ngModel" required="required"
+                            [ngClass]="{'is-invalid': (name.invalid && (name.dirty || name.touched) && (name.errors?.required || name?.errors?.maxlength)) }">
+                            <small *ngIf="name.invalid && (name.dirty || name.touched) && (name.errors?.required || name?.errors?.maxlength)"
+                              class="text-danger">Name is required.</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+                          <label>Select Module Object:<span class="text-danger">*</span></label>
+                          <div class="form-group" [ngStyle]="action == 'Update' ? {'pointer-events': 'none'} : {}">
+                              <ng-select [items]="subModulesList" [(ngModel)]="mapping.subModuleId" name="mapping.subModuleId" bindLabel="sub_module_name"
+                              placeholder="Select..." [closeOnSelect]="true" (change)="onSubModuleChange($event)"
+                              #subModuleId ="ngModel" required="required"
+                              [ngClass]="{'is-invalid': (subModuleId.invalid && (subModuleId.dirty || subModuleId.touched) && (subModuleId.errors?.required || subModuleId?.errors?.maxlength)) }">
+                              </ng-select>
+                              <small *ngIf="subModuleId.invalid && (subModuleId.dirty || subModuleId.touched) && (subModuleId.errors?.required || subModuleId?.errors?.maxlength)"
+                              class="text-danger">Module Object is required.</small>
+                          </div>
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+                          <label>Status:<span class="text-danger">*</span></label>
+                          <!-- <label>Status:</label> -->
+                          <div class="form-group">
+                              <ng-select [items]="statusList" [(ngModel)]="mapping.statusId" name="mapping.statusId" bindLabel="text" #statusId ="ngModel"
+                              placeholder="Select..." required="required" [closeOnSelect]="true" (change)="onStatusChange($event)"
+                              [ngClass]="{'is-invalid': (statusId.invalid && (statusId.dirty || statusId.touched) && (statusId.errors?.required || statusId?.errors?.maxlength)) }">
+                              </ng-select>
+                              <small *ngIf="statusId.invalid && (statusId.dirty || statusId.touched) && (statusId.errors?.required || statusId?.errors?.maxlength)"
+                              class="text-danger">Status is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                        <div class="row">
+                          <div class="col-sm-4 col-md-4">
+                              <label>Type:<span class="text-danger">*</span></label>
+                              <div class="form-group" [ngStyle]="action == 'Update' ? {'pointer-events': 'none'} : {}">
+                                <div class="radio d-inline-block">
+                                  <input id="radio-1" name="type" type="radio" value="Document" [(ngModel)]="mapping.type" name="mapping.type" #typeDocument="ngModel" (click)="onTypeSelection($event)"
+                                  [ngClass]="{'is-invalid': (typeDocument.invalid && (typeDocument.dirty || typeDocument.touched) && (typeDocument.errors?.required || typeDocument?.errors?.maxlength)) }">
+                                  <label for="radio-1" class="radio-label">Document</label>
+                                </div>
+                                <div class="radio d-inline-block ml-5">
+                                  <input id="radio-2" name="type" type="radio" value="Route" [(ngModel)]="mapping.type" #typeRoute="ngModel" name="mapping.type" (click)="onTypeSelection($event)"
+                                  [ngClass]="{'is-invalid': (typeRoute.invalid && (typeRoute.dirty || typeRoute.touched) && (typeRoute.errors?.required || typeRoute?.errors?.maxlength)) }">
+                                  <label for="radio-2" class="radio-label">Route/Rule</label>
+                                </div>
+                                <small *ngIf="typeDocument.invalid && (typeDocument.dirty || typeDocument.touched) && (typeDocument.errors?.required || typeDocument?.errors?.maxlength)"
+                                class="text-danger">Type is required.</small>
+                                <small *ngIf="typeRoute.invalid && (typeRoute.dirty || typeRoute.touched) && (typeRoute.errors?.required || typeRoute?.errors?.maxlength)"
+                                    class="text-danger">Type is required.</small>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-4" >
+                              <div *ngIf="mapping.type == 'Document'">
+                              <label>Document Type:<span class="text-danger">*</span></label>
+                              <div class="form-group" [ngStyle]="action == 'Update' ? {'pointer-events': 'none'} : {}">
+                                <div class="radio d-inline-block">
+                                  <input id="radio-12" name="typeHtml" type="radio" value="pdf" [(ngModel)]="mapping.Doctype" name="mapping.Doctype" #typeDocument1="ngModel"  (click)="onTypeSelectionDoc($event)"
+                                  [ngClass]="{'is-invalid': (typeDocument1.invalid && (typeDocument1.dirty || typeDocument1.touched) && (typeDocument1.errors?.required || typeDocument1?.errors?.maxlength)) }">
+                                  <label for="radio-12" class="radio-label">Pdf</label>
+                                </div>
+                                <div class="radio d-inline-block ml-5">
+                                  <input id="radio-21" name="typeHtml" type="radio" value="html" [(ngModel)]="mapping.Doctype" #typeDocument2="ngModel" name="mapping.Doctype"  (click)="onTypeSelectionDoc($event)"
+                                  [ngClass]="{'is-invalid': (typeDocument2.invalid && (typeDocument2.dirty || typeDocument2.touched) && (typeDocument2.errors?.required || typeDocument2?.errors?.maxlength)) }">
+                                  <label for="radio-21" class="radio-label">Html</label>
+                                </div>
+                                <small *ngIf="typeDocument1.invalid && (typeDocument1.dirty || typeDocument1.touched) && (typeDocument1.errors?.required || typeDocument1?.errors?.maxlength)"
+                                class="text-danger">Type is required.</small>
+                                <small *ngIf="typeDocument2.invalid && (typeDocument2.dirty || typeDocument2.touched) && (typeDocument2.errors?.required || typeDocument2?.errors?.maxlength)"
+                                    class="text-danger">Type is required.</small>
+                              </div>
+                            </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4">
+                              <label *ngIf="mapping.type == 'Document' &&  mapping.Doctype == 'pdf'">Document<span class="text-danger">*</span></label>
+                              <label *ngIf="mapping.type == 'Route'">Route/Rule<span class="text-danger">*</span></label>
+                              <label *ngIf="mapping.type == 'Document' &&  mapping.Doctype == 'html'">HTML Documents<span class="text-danger">*</span></label>
+                              <div [ngStyle]="action == 'Update' ? {'pointer-events': 'none'} : {}" class="form-group">
+                                <ng-select [items]="documents" [(ngModel)]="selectedObjectId" name="selectedObjectId" #document="ngModel" bindLabel="text"  required="required"
+                                *ngIf="mapping.type == 'Document' && mapping.Doctype == 'pdf'" placeholder="Select Document" [closeOnSelect]="true" (change)="onDocumentChange($event)"
+                                [ngClass]="{'is-invalid': (document.invalid && (document.dirty || document.touched) && (document.errors?.required || document?.errors?.maxlength)) }">
+                                </ng-select>
+                                <ng-select [items]="dataRoutes" [(ngModel)]="selectedObjectId" name="selectedObjectId" #route="ngModel" bindLabel="text"  required="required"
+                                *ngIf="mapping.type == 'Route'" placeholder="Select Route/Rule" [closeOnSelect]="true" (change)="onRouteChange($event)"
+                                [ngClass]="{'is-invalid': (route.invalid && (route.dirty || route.touched) && (route.errors?.required || route?.errors?.maxlength)) }">
+                                </ng-select>
+                                <ng-select [items]="HtmlTemplist" [(ngModel)]="selectedObjectId" name="selectedObjectId" #Html="ngModel" bindLabel="text"  required="required"
+                                *ngIf="mapping.type == 'Document' && mapping.Doctype == 'html'" placeholder="Select HTML Document" [closeOnSelect]="true" (change)="onHtmlDocumentChange($event)"
+                                [ngClass]="{'is-invalid': (Html.invalid && (route.dirty || Html.touched) && (Html.errors?.required || Html?.errors?.maxlength)) }">
+                                </ng-select>
+                                <small *ngIf="mapping.type == 'Document' &&  mapping.Doctype == 'pdf' && document && document.invalid && (document.dirty || document.touched) && (document.errors?.required || document?.errors?.maxlength)"
+                                class="text-danger">Document is required.</small>
+                                <small *ngIf="mapping.type == 'Route' && route && route.invalid && (route.dirty || route.touched) && (route.errors?.required || route?.errors?.maxlength)"
+                                class="text-danger">Route/Rule is required.</small>
+                                <small *ngIf="mapping.type == 'Document' &&  mapping.Doctype == 'html' && Html && Html.invalid && (Html.dirty || Html.touched) && (Html.errors?.required || Html?.errors?.maxlength)"
+                                class="text-danger">HTML Document is required.</small>
+                              </div>
+                            </div>
+                        </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-12 ">
+                        <h3 class="form-heading"><span>Document List</span></h3>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 py-1">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Document Name</th>
+                            <th scope="col">Document Id</th>
+                            <th scope="col">Path</th>
+                            <th scope="col">Document type</th>
+                            <th scope="col">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let doc of documentList; index as i;">
+                            <th>{{doc.name}}</th>
+                            <td>{{doc.id}}</td>
+                            <td>{{doc.path}}</td>
+                            <td>{{doc.type}}</td>
+                            <td>
+                              <a class="actions-onclick view-list" class="btn-edit" title="View Document" href="javascript:void(0);" (click)="downloadFile(doc)"><i class="feather-eye pr-2 "></i></a>
+                              <!-- <a *ngIf="mapping.type == 'Document'" class="actions-onclick view-list" class="btn-edit" title="Remove Document" href="javascript:void(0);" (click)="deleteDocument(doc.id)"><i class="feather-trash-2 pr-2 "></i></a> -->
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-12 ">
+                        <h3 class="form-heading"><span>Choose Mapping Fields</span></h3>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div *ngIf="mapping.type == 'Document'" id="accordion">
+                      <div class="panel active" *ngFor="let d of documentList; index as ii;">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a href="#{{ii}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                              <span>Document name :<strong>{{ d.name}}</strong>
+                                <div>
+                                  <div class="form-group" *ngIf="mapping.Doctype != 'html'" >
+                                      <button type="button"  class="btn btn-success mr-2" (click)="AddNewFieldpopup(d.id, $event)"><i class="feather-plus"></i> Add New Field </button>
+                                  </div>
+                                </div>
+
+                              </span>
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="{{ii}}" class="panel-collapse collapse active show">
+                          <div class="panel-body row px-3">
+                            <div class="col-md-12 py-1" *ngFor="let field of getDocumentFieldsFilter(d.id); index as docindex;">
+                              <div *ngIf="field.documentId == d.id">
+                                <label class="ng-star-inserted">
+                                  <!-- {{field.formFieldName}} - (Document Name : <strong>{{field.documentName}}</strong>) -->
+                                    {{field.formFieldName}} 
+                                </label>
+                                <ng-select id="{{field.fieldName}}" [items]="formFields" [(ngModel)]="field.mappings" #mappings="ngModel"
+                                            placeholder="Select Form Fields" bindLabel="formFieldName" name="field.mappings_{{docindex}}"
+                                            [multiple]="true" [searchable]="true" (change)="onChange($event, field)"
+                                            [closeOnSelect]="true" (remove)="OnRemove($event)">
+                                </ng-select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="mapping.type == 'Route' && selectedObjectId" id="accordion">
+                      <div class="panel active">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a href="#route" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                              <span>Route name :<strong>{{ selectedObjectId.text}}</strong>
+                              </span>
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="route" class="panel-collapse collapse active show">
+                          <div class="panel-body row px-3">
+                            <div class="col-md-12 py-1" *ngFor="let field of routeFormFields; index as routeIndex;">
+                                <label class="ng-star-inserted">
+                                  {{field.formFieldName}}
+                                </label>
+                                <ng-select id="{{field.fieldName}}" [items]="formFields" [(ngModel)]="field.mappings" #mappings="ngModel"
+                                            placeholder="Select Form Fields" bindLabel="formFieldName" name="field.mappings_{{routeIndex}}"
+                                            [multiple]="true" [searchable]="true" (change)="onChange($event, field)"
+                                            [closeOnSelect]="true" (remove)="OnRemove($event)">
+                                </ng-select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="row mt-3" >
+                      <div class="col-sm-12 col-md-12">
+                          <button class="btn btn-success mr-2" href="javascript:void(0);" [disabled]="!documentMappingForm.form.valid"><span><i class="feather-save"></i> Submit</span></button>
+                          <a routerLink="/document-maker-submodule-mapping" class="btn btn-danger" href="javascript:void(0);"><span><i class="feather-x"></i> Cancel</span></a>
+                      </div>
+                  </div>
+                  </div>
+                  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" *ngIf="id>0" id="DeliveryOptions" role="tabpanel">
+          <div class="row">
+            <div class="col-lg-8 portlets">
+              <div class="row">
+                 <div class="col-md-12">
+                   <div class="row">
+                     <div class="col-md-12 ">
+                       <h3 class="form-heading"><span>Delivery options</span></h3>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="col-md-12 py-1">
+                   <label>Delivery option:</label>
+                     <div class="form-group disabled-pointer-event" >
+                       <div class="float-left">
+                        <div class="custom-control d-inline-block custom-checkbox pl-0">
+                          <label class="switch">
+                            <input type="checkbox"
+                                   id="radio-Email" name="sendingType"   [(ngModel)]="DeliveryOptions.sendingType">
+                            <span class="slider round" id="radio-Email"><span>Yes</span></span>
+                          </label>
+                         
+                        </div>
+                       </div>
+                       <div class="float-left">
+                        <label  >Email</label>
+                      </div>
+                      
+                      <div class="float-left ml-3">
+                      <div class="custom-control d-inline-block custom-checkbox pl-0">
+                        <label class="switch">
+                          <input type="checkbox"
+                                 id="radio-SignNow"  name="sendingTypeSignNow" [(ngModel)]="DeliveryOptions.sendingTypeSignNow">
+                          <span class="slider round" id="radio-SignNow"><span>Yes</span></span>
+                        </label>
+                        <!-- <label class="switch" for="radio-SignNow" >Sign Now</label> -->
+                      </div>
+                    </div>
+                    <div class="float-left">
+                      <label  >Sign Now</label>
+                    </div>
+                     </div>
+                 </div>
+                 <div class="row">
+                 <div  class="col-md-12" >
+                 <div class="col-md-12">
+                   <div class="row">
+                     <div class="col-md-12 ">
+                       <h3 class="form-heading"><span>Email</span></h3>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="col-md-12">
+                  <div class="row">
+                  <div *ngIf="togglEmail" class="col-sm-12 col-md-12 v">
+                    <label>Send Email To:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" (change)="onChangesendToEmail($event)" readonly (click)="sendToEmailChange($event)"    (paste)="onPaste($event)"
+                       [(ngModel)]="DeliveryOptions.sendToEmail" #name ="ngModel" >
+
+                      </div>
+                  </div>
+                  <div *ngIf="togglEmail" class="col-sm-12 col-md-12 py-1">
+                    <label>Send Email From:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" (change)="onChangesendFromEmail($event)" readonly (click)="sendFromEmailChange($event)" (paste)="onPaste($event)"
+                       [(ngModel)]="DeliveryOptions.fromToEmail" #name ="ngModel" >
+
+                      </div>
+                  </div>
+                  <div *ngIf="togglEmail" class="col-sm-12 col-md-12 py-1">
+                    <label>CC Email:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" (change)="onChangeCCEmail($event)" (click)="sendCCEmailChange($event)" (paste)="onPaste($event)"
+                       [(ngModel)]="DeliveryOptions.ccEmail" #name ="ngModel" >
+
+                      </div>
+                  </div>
+                  <div class="col-sm-12 col-md-12 v" *ngIf="signer1">
+                    <label>Signer 1:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control"
+                       [(ngModel)]="DeliveryOptions.signer1Email" readonly #name ="ngModel" >
+                      </div>
+                  </div>
+                  <div class="col-sm-12 col-md-12 v" *ngIf="signer2">
+                    <label>Signer 2:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control"
+                       [(ngModel)]="DeliveryOptions.signer2Email" readonly #name ="ngModel" >
+
+                      </div>
+                  </div>
+                  <div class="col-sm-12 col-md-12 py-1">
+                    <label>Subject:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" [(ngModel)]="DeliveryOptions.subject" #name ="ngModel" >
+
+                      </div>
+                  </div>
+
+
+                  <div class="col-12 col-md-12 col-lg-12">
+                    <label>Template:<span style="color:red">*</span></label>
+                    <div class="form-group">
+                        <ckeditor #myckeditor name="myckeditor"
+                        [(ngModel)]="DeliveryOptions.body"
+                        required
+                        [config]="ckeConfig"
+                        debounce="500"
+                        (paste)="onPaste($event)"
+                        (change)="onChangeCust($event)"
+                        (focus)="focusOutFunction($event)"
+                        >
+                          </ckeditor>
+
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="col-sm-12 col-md-12">
+                      <button class="btn btn-success mr-2" href="javascript:void(0);" (click)="submit()"><span><i class="feather-save"></i> Submit</span></button>
+                      <a routerLink="/document-maker-submodule-mapping" class="btn btn-danger" href="javascript:void(0);"><span><i class="feather-x"></i> Cancel</span></a>
+                  </div>
+                </div>
+                 <!-- <div   *ngIf="mapping.sendingType == 'SignNow'">
+                 <div class="col-md-12">
+                   <div class="row">
+                     <div class="col-md-12 ">
+                       <h3 class="form-heading"><span>Sign Now</span></h3>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="col-md-12">
+                   sign now options here
+                 </div>
+                 <div class="col-md-12">
+
+                 </div>
+
+                </div> -->
+
+
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 portlets">
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                  <div class="card">
+                    <div class="card-header datafield-header">
+                      <p>The following fields can be included in your auto responder. They will be replaced with the data entered by the user in each of them.</p>
+                      <p>Click in the field then click on mapped fields from this panel to automatically paste them into the selected field.</p>
+                    </div>
+                    <div class="card-body datafields">
+                      <div class="row p-1 m-0 datafield-db" *ngFor="let option of customCompnentValues;" (click)="FillEditorData(option.formFieldName,option.formFieldName,option.formFieldId)">
+                        <div class="col-10 col-sm-10 col-md- 10 col-lg-10 col-xl-10 pl-0 float-left">
+                          <label class="m-0" style="cursor: pointer;width: 110px;">Document Field:</label>
+                          <label class="m-0" style="cursor: pointer;">{{option.FieldKey}}</label>
+                        </div>
+                        <div class="col-10 col-sm-10 col-md- 10 col-lg-10 col-xl-10 pl-0 float-left">
+                          <label class="m-0" style="cursor: pointer;width: 110px;">Mapped Field    :</label>
+                          <label class="m-0" style="cursor: pointer;">{{option.formFieldName}}</label>
+                        </div>
+                        <div class="col-2 col-sm-2 col-md- 2 col-lg-2 col-xl-2 float-left text-right m-0 pr-0">
+                          <a href="javascript:void(0);"><i class="feather-corner-up-left text-primary"></i></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!--====================================================================aDD FIELD POPUP sTART=========================================================-->
+<div class="modal fade" tabindex="-1" bsModal #AddnewFieldModalMapping="bs-modal" [config]="{ backdrop: 'static' }" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-xl modal-info">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add New Field</h4>
+        <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom: 10px; height: auto; overflow: inherit">
+        <div class="row" style="width: 100%;margin-left: 0%;">
+         <label>Field Name</label>
+
+         <!-- {{AddNewFielddataRouteModel}} -->
+          <input *ngIf="AddNewFielddataRouteModel" class="form-control" [(ngModel)]="AddNewFielddataRouteModel.name" type="text"  placeholder="Enter New Field " />
+        </div>
+      </div>
+      <div class="modal-footer">
+
+        <button class="btn btn-success form-btns" (click)="saveNewField()"><i
+            class="feather-save text-white pr-2"></i>Add</button>
+        <button class="btn btn-danger form-btns" (click)="close()">
+          <i class="feather-x text-white"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+
+

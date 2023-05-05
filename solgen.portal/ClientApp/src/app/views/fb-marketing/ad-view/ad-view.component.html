@@ -1,0 +1,457 @@
+<style>
+    .hide {
+      display: none !important;
+    }
+  </style>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  <app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+ 
+  <!-- <div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+      <h2 class="float-left pr-2 w-100"><strong>Ad Details</strong></h2>
+      <div class="breadcrumb-wrapper w-100">
+        <ol class="breadcrumb">
+          <li><a routerLink="/dashboard">Dashboard</a></li>
+          <li><a routerLink="/marketing/ads-list">Manage Ads</a></li>
+          <li class="active">Ad Details</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+      <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+    </div>
+  </div> -->
+
+  <div class="clearfix"></div> 
+  <div class="panel   clearfix">
+    <div class="panel-content clearfix mb-4 p-0">
+      <!-- <div class="float-left p-3"> 
+        <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#Details" role="tab"
+              aria-selected="true">Details</a>
+          </li>         
+        </ul>       
+      </div>
+      <div class="float-right p-3"> 
+        <ul class="nav nav-tabs   " id="myTab" role="tablist">
+          <li class="nav-item">
+            <a *ngIf="isUpdate" href="javascript:void(0);" [routerLink]="['/marketing/editAd', id]"
+            class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+          <a href="javascript:void(0);" class="btn btn-dark text-white smview" routerLink="/marketing/ads-list"><i
+              class="feather-arrow-left mr-1"></i> Back</a>
+          </li>          
+        </ul>
+      </div> -->
+
+      <app-view-filter-bar-manager [adViewStatus]="isUpdate"  [submoduleName]="'facebookAdSet'" [titleName]="''"  
+      [customCompnentValuesTop]="''" [logoClass]="''" 
+      [pageLink]="'/marketing/editAd'"  ></app-view-filter-bar-manager>
+
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade active show" id="Details" role="tabpanel">
+          <div class="row">
+            <div class="col-sm-12 col-lg-12">
+              <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                <div class="panel active" *ngIf="viewData">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#facebookcampaign" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+                        aria-expanded="true">
+                        <span>Ad Information</span>
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="facebookcampaign" class="panel-collapse collapse active show">
+                    <div class="panel-body row px-3">
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Ad Name:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.name}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Ad Id:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.id}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Campaign:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">
+                              <a title="View Campaign" [routerLink]="['/marketing/campaign-view/', viewData.campaignId]" >{{viewData.campaign}}</a></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Ad set:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">
+                              <a title="View Adset" [routerLink]="['/marketing/adSet-view/', viewData.adSetId]" >{{viewData.adsetname}}</a></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Delivery:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.delivery}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Amount Spent:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;"><span>$</span>{{ viewData.amount_spent}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Bid Strategy:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{
+                              viewData.bid_strategy}}</span>
+                          </div>
+                        </div>
+                      </div>
+  
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Budget:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;"><span>$</span>{{
+                              viewData.bid_amount}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Conversion Rate Ranking:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">
+                              {{viewData.conversion_rate_rancking}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Cost per Result:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;"><span>$</span>{{ viewData.cost_per_result}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      
+  
+                     
+                      <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Cost per Result:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;"><span *ngIf="viewData.cost_per_result">$</span>{{ viewData.cost_per_result}}</span>
+                          </div>
+                        </div>
+                      </div> -->
+
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Ends:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.ends}}</span>
+                          </div>
+                        </div>
+                      </div>
+  
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Frequency:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.frequency}}</span>
+                          </div>
+                        </div>
+                      </div>
+  
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Impressions:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{
+                              viewData.impressions}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Last Significant Edit:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">
+                              {{viewData.last_significant_edit || DateTimeToLocal | date:'MM/dd/yyyy'}} {{' '}}  {{(viewData.last_significant_edit_time !== null) ? commonService.getUserUTCToSelectedZoneTime(viewData.last_significant_edit_time) : ""}} 
+                            
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Last Significant Edit Date Time:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">
+                                
+                                 {{viewData.last_significant_edit || DateTimeToLocal | date:'dd/MM/yyyy'}}     -->
+                                              
+                                <!-- {{ viewData.last_significant_edit | date:'dd-MMM-yyyy'}} -->
+                            
+                            <!-- </span>
+                          </div>
+                        </div> -->
+                      <!-- </div> -->
+                      <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                      </div> -->
+                      <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Last Significant Edit Time:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;"> {{viewData.last_significant_edit_time | DateTimeToLocal}}</span>
+                          </div>
+                        </div>
+                      </div>  -->
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Reach:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.reach}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Result:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.result}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Source:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.source}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+
+  
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Unique Link Clicks:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.unique_links_clicks}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>External Id:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.external_id}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Last Edit Date Time:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">
+                                
+                                <!-- {{viewData.last_edit || DateTimeToLocal | date:'dd/MM/yyyy'}}     -->
+                                {{viewData.last_edit || DateTimeToLocal | date:'MM/dd/yyyy'}} {{' '}}  {{(viewData.last_edit_time !== null) ? commonService.getUserUTCToSelectedZoneTime(viewData.last_edit_time) : ""}}               
+                            
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Last Edit Time:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{commonService.getUserUTCToSelectedZoneTime(viewData.last_edit_time)}}</span>
+                          </div>
+                        </div>
+                      </div> -->
+
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Ad Status:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.status}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Ad Start Date:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;"> {{ viewData.add_start_date | date:'MM/dd/yyyy'}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Daily Budget:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;"><span>$</span>{{ viewData.daily_budget}}</span>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Ad Objective:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.add_objective}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Link To Data:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.link_url}}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Created By:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">
+                              {{ viewData.createdBy}} &nbsp;
+                              {{ (viewData.created_at !== null) ?
+                                (viewData.created_at | date:'MM/dd/yyyy') : "" }}
+                                &nbsp;
+                                {{ (viewData.created_at !== null) ?
+                                (viewData.created_at || DateTimeToLocal | date :'hh:mm a') : "-" }}
+                              
+                              <!-- {{ viewData.createdBy}} &nbsp;  {{ (viewData.created_at !== null) ? (viewData.created_at | DateTimeToLocal) : "-" }}  -->
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div  class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="input-group border-bottom h-100">
+                          <div class="col-sm-12 col-md-6 px-0">
+                            <span class="py-2 d-block"><strong>Last Modified By:</strong></span>
+                          </div>
+                          <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                            <span class="py-2 d-block" style="word-break:break-all;">
+                              {{ viewData.modifiedBy}} &nbsp;
+                              {{ (viewData.modified_at !== null) ?
+                                (viewData.modified_at | date:'MM/dd/yyyy') : "" }}
+                                &nbsp;
+                                {{ (viewData.modified_at !== null) ?
+                                (viewData.modified_at || DateTimeToLocal | date :'hh:mm a') : "-" }}
+
+                               <!-- {{ viewData.modifiedBy}} &nbsp; {{ (viewData.modified_at !== null) ? (viewData.modified_at | DateTimeToLocal) : "-" }} -->
+                              <!-- {{ (viewData.modifiedBy !== null) ? (viewData.modifiedBy) : "-" }}  -->
+                              <!-- ,{{ (viewData.modified_at !== null) ? (viewData.modified_at | DateTimeToLocal) : "" }} -->
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- *ngFor="let item of formControlList" -->
+               
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  
+    <div class="clearfix"></div>

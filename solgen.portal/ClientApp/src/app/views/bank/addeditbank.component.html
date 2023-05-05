@@ -1,0 +1,187 @@
+<div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Add Lender</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li><a routerLink="/dashboard">Dashboard</a></li>
+      <li><a routerLink="/bank">Manage Lender</a></li>
+      <li class="active">{{pageTitle}}</li>
+    </ol>
+  </div>
+
+</div>
+<div class="clearfix"></div>
+
+<div class="panel">
+  <div class="panel-content ">
+    <form [formGroup]="addForm" autocomplete="off">
+      <div class="row mx-auto mb-2">
+        <div class="col-12 col-md-6 col-lg-4">
+          <label>Bank Name:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="bankName" maxlength="50" placeholder="Enter Bank Name"
+                   [ngClass]="{'is-invalid': (bankName.invalid && (bankName.dirty || bankName.touched) && (bankName.errors?.required || bankName.errors?.maxlength)) }">
+            <small *ngIf="bankName.invalid && (bankName.dirty || bankName.touched) && bankName.errors?.required"
+                   class="text-danger">Bank Name is required</small>
+            <input type="hidden" formControlName="id" />
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <label>Status:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <ng-select [items]="lstStatus"
+                       placeholder="Select Status" bindValue="value" bindLabel="text" formControlName="statusId"
+                       [ngClass]="{'is-invalid': (statusId.invalid && (statusId.dirty || statusId.touched) && statusId.errors?.required) }">
+            </ng-select>
+            <small *ngIf="statusId.touched && statusId.errors?.required" style="color:red;">Please select Status</small>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <label>Phone:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="phone" placeholder="(___) ___-____" [ngClass]="{'is-invalid': (phone.invalid && (phone.dirty || phone.touched) && (phone.errors?.required || phone.errors?.pattern)) }">
+            </p-inputMask>
+            <small *ngIf="phone.invalid && (phone.dirty || phone.touched) && phone.errors?.required"
+                   class="text-danger">Phone is required</small>
+          </div>
+        </div>
+
+
+        <div class="col-12 col-md-12 col-lg-12">
+          <label class="m-label-s">Bank Address:</label>
+          <hr size="4" class="mt-0 border-secondary">
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <label>City:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Enter City" formControlName="city"
+                   [ngClass]="{'is-invalid': (city.invalid && (city.dirty || city.touched) && (city.errors?.required || city.errors?.maxlength)) }">
+            <small *ngIf="city.invalid && (city.dirty || city.touched) && city.errors?.required"
+                   class="text-danger">City is required</small>
+            <small *ngIf="city.invalid && (city.dirty || city.touched) && city.errors?.maxlength"
+                   class="text-danger">City name must be less than 100 characters.</small>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+          <label>County:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Enter County"
+                   formControlName="county"
+                   [ngClass]="{'is-invalid': (county.invalid && (county.dirty || county.touched) && (county.errors?.required || county.errors?.maxlength)) }">
+            <small *ngIf="county.invalid && (county.dirty || county.touched) && county.errors?.required"
+                   class="text-danger">County is required</small>
+            <small *ngIf="county.invalid && (county.dirty || county.touched) && county.errors?.maxlength"
+                   class="text-danger">County must be less than 100 characters.</small>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+          <label>State:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <ng-select [items]="lstStates" [loading]="loadSave" placeholder="Select State" formControlName="stateId"
+                       bindValue="value" bindLabel="text"
+                       [ngClass]="{'is-invalid': (stateId.invalid && (stateId.dirty || stateId.touched) && stateId.errors?.required) }"></ng-select>
+            <small *ngIf="stateId.invalid && (stateId.dirty || stateId.touched) && stateId.errors?.required" class="text-danger">Please select State</small>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <label>Zip Code:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Enter Zip Code" formControlName="zipCode"
+                   [ngClass]="{'is-invalid': (zipCode.invalid && (zipCode.dirty || zipCode.touched) && (zipCode.errors?.required || zipCode.errors?.maxlength)) }">
+            <small *ngIf="zipCode.invalid && (zipCode.dirty || zipCode.touched) && zipCode.errors?.required"
+                   class="text-danger">Zip Code is required</small>
+            <small *ngIf="zipCode.invalid && (zipCode.dirty || zipCode.touched) && zipCode.errors?.maxlength"
+                   class="text-danger">Zip Code can not be greater than 5 characters.</small>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+          <label>Address:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <textarea type="text" class="form-control" formControlName="address" placeholder="Enter address"
+                      [ngClass]="{'is-invalid': (address.invalid && (address.dirty || address.touched) && (address.errors?.required || address.errors?.maxlength)) }"></textarea>
+            <small *ngIf="address.invalid && (address.dirty || address.touched) && address.errors?.required"
+                   class="text-danger">Address is required</small>
+            <small *ngIf="address.invalid && (address.dirty || address.touched) && address.errors?.maxlength"
+                   class="text-danger">Address must be less than 500 characters.</small>
+          </div>
+        </div>
+
+
+        <div class="col-12 col-md-12 col-lg-12" *ngIf="showList && (isSuperAdminUser || isOrperationUser)">
+          <label class="m-label-s">User Information:</label>
+          <hr size="4" class="mt-0 border-secondary">
+
+          <div class="col-md-12 mt-4">
+            <div class="table-responsive">
+              <div class="table table-striped">
+                <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                               [rows]="pagedData.data"
+                                  [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                               [columnMode]="'force'"
+                               [headerHeight]="40"
+                               [footerHeight]="40"
+                             
+                               
+                               [externalPaging]="true"
+                               [externalSorting]="true"
+                               [loadingIndicator]="loadSave"
+                               [count]="pagedData.pager.totalItems"
+                               [offset]="pagedData.pager.currentPage"
+                               [limit]="pagedData.pager.pageSize">
+                  <ngx-datatable-column name="Name" prop="BankUserName" [sortable]="false"></ngx-datatable-column>
+                  <ngx-datatable-column name="Email" prop="email" [sortable]="false"></ngx-datatable-column>
+                  <ngx-datatable-column name="Role" prop="RoleName" [sortable]="false"></ngx-datatable-column>
+                  <ngx-datatable-column name="IsActive" prop="IsActive" [sortable]="false" headerClass="text-center">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <div class="icon-text-center" *ngIf="row.IsActive == 0">
+                        <span><i class="fa fa-times text-danger icon_tick"></i></span>
+                      </div>
+                      <div class="icon-text-center" *ngIf="row.IsActive == 1">
+                        <span><i class="fas fa-check text-success icon_tick"></i></span>
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+
+                  <ngx-datatable-footer>
+                    <ng-template ngx-datatable-footer-template
+                                 let-rowCount="rowCount"
+                                 let-pageSize="pageSize"
+                                 let-selectedCount="selectedCount"
+                                 let-currentPage="currentPage"
+                                 let-offset="offset"
+                                 let-isVisible="isVisible">
+                      <div class="page-count" style="max-width:170px;">
+                        {{rowCount}} total
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-footer>
+                </ngx-datatable>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+
+      <div class="row mx-auto mb-3">
+        <div class="col-sm-12 col-md-12">
+          <a href="javascript:void(0);" *ngIf="addOrUpdatePermission" class="btn btn-success mr-1" (click)="addEditBank()"><i class="feather-save"></i> Submit</a>
+          <a href="javascript:void(0);" class="btn btn-danger" (click)="Cancel()"><i class="fa fa-times"></i> Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>
+
+
+
+

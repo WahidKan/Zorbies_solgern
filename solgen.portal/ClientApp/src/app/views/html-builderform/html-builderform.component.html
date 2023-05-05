@@ -1,0 +1,99 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+        <li><a class="smview" routerLink="/HtmlTemplate">HTML Templates</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <a href="javascript:void(0);" class="savegraps" (click)="showAddEditPopup()"><i class="feather-save"></i></a>
+      <div id="gjs">
+
+      </div>
+      <div id="blocks"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade in show" bsModal #addEditHtmlContentPopUp="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="Closemodel()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height:100%;">
+
+        <div class="login-container">
+          <div class="login-main">
+            <div class="login-box">
+
+              <form [formGroup]="addEditHtmlContentForm" autocomplete="off">
+                <div class="row">
+                  <div class="col-md-12">
+                    <label>Template Name:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" [readOnly]="usedinDocument == 'TemAvailable'"  formControlName="name" maxlength="50" placeholder="Enter Template Name"
+                             [ngClass]="{'is-invalid': (name.invalid && (name.dirty || name.touched) && (name.errors?.required || name.errors?.maxlength)) }">
+                      <small *ngIf="name.invalid && (name.dirty || name.touched) && name.errors?.required"
+                             class="text-danger">Template Name is required.</small>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <label>Description:</label>
+                    <div class="form-group">
+                      <textarea type="text" class="form-control" formControlName="description" maxlength="250" placeholder="Enter Description"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <label>Status:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <ng-select [items]="statusList" formControlName="statusId" bindLabel="text" bindValue="value"
+                      placeholder="Select..." required="required" [closeOnSelect]="true" [ngClass]="{'disabledddl':isStatusDisable}"
+                      [ngClass]="{'is-invalid': (statusId.invalid && (statusId.dirty || statusId.touched) && (statusId.errors?.required || statusId?.errors?.maxlength)) }">
+                      </ng-select>
+                      <small *ngIf="statusId.invalid && (statusId.dirty || statusId.touched) && (statusId.errors?.required || statusId?.errors?.maxlength)"
+                      class="text-danger">Status is required.</small>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-4 dispaly-none">
+                    <label>Link with Customer portal:</label>
+                    <div class="form-group">
+                      <label class="switch">
+                        <input type="checkbox" id="customCheck1" formControlName="linkWithCustomerPortal">
+                        <span class="slider round"><span>Yes</span></span>
+                      </label>
+                    </div>
+                  </div>
+
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <a class="btn btn-success text-white mr-2" (click)="SaveDataRecords()"><i class="feather-save"></i> Submit</a>
+        <button type="submit" class="btn btn-danger form-btns" (click)="Closemodel()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

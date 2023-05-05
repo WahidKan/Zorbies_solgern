@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h4 class="modal-title"><i *ngIf="html" class="fa fa-exclamation-triangle"></i> {{ title }}</h4>
+  <button type="button" class="close" (click)="close()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <ng-container *ngIf="!html;else elseblock;">{{message}}</ng-container>
+  <ng-template #elseblock>
+    <span class="ui-messages-detail" [innerHtml]="message"></span>
+  </ng-template>
+</div>
+<div class="modal-footer">
+  <!--{{showCancel}}-->
+  <button *ngIf="btnOkText!='Go To Applications'" type="button" class="btn btn-success" (click)="ok()"><i class="feather-check"></i> {{ btnOkText }}</button>
+
+  <button *ngIf="btnOkText=='Go To Applications'" type="button" class="btn btn-success" (click)="ok()">{{ btnOkText }}</button>
+
+  <button type="button" *ngIf="showCancel" class="btn btn-danger" (click)="cancel()"> <i class="feather-x text-white"></i> {{ btnCancelText }}</button>
+</div>  

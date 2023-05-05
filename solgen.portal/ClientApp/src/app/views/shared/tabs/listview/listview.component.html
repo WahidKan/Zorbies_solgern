@@ -1,0 +1,35 @@
+<div class="panel active">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a href="#list{{index}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+        <span>{{title}}</span>
+      </a>
+    </h4>
+  </div>
+  <div id="list{{index}}" class="panel-collapse collapse active show" style="">
+    <div class="panel-body p-2 mt-0">
+      <a *ngIf="showEditButton" href="javascript:void(0);" (click)="openEditUtilityAccount()" class="btn-in-panel"><span data-toggle="modal"><i class="fa fa-pencil mr-2"></i>Edit</span></a>
+      <div class="row my-2">
+        <div *ngFor="let item of data" [ngClass]="{'col-md-3': dataArray.layout_type =='four', 'col-md-4': dataArray.layout_type =='triple', 'col-md-6': dataArray.layout_type =='double', 'col-md-12': dataArray.layout_type =='single'}">
+          <label>
+            <strong>{{item.display_name | DisplayName}} : </strong>
+            <span title="" *ngIf="item.dt_code == 'select'">
+              <ng-container *ngIf="item.field_route;else elseBlock;">
+                <a href="{{item.field_route}}{{item.ref_value}}" title="{{item.field_value}}" target="_blank">{{item.field_value}}</a>
+              </ng-container>
+              <ng-template #elseBlock>
+                {{item.field_value}}
+              </ng-template>
+            </span>
+            <span title="" *ngIf="item.dt_code == 'datetime'">{{item.field_value | DateTimeToLocal}}</span>
+            <span title="" *ngIf="item.dt_code != 'select' && item.dt_code != 'datetime'">{{item.field_value}}</span>
+          </label>
+          <div class="form-group">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

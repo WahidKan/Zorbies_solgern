@@ -1,0 +1,215 @@
+<!-- Modal manage view edit popup start -->
+<div class="modal" id="myModal" role="dialog" bsModal #templateFilterView="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1">
+  <div class="modal-dialog" role="document" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Visibility Condition</h5>
+        <button type="button" (click)="close()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- filter  tab content -->
+        <form [formGroup]="searchFilterForm" autocomplete="off">
+          <div>
+
+            <table id="example" class="table" style="min-width:100%!important;">
+              <thead class="thead-bg">
+                <tr>
+                  <th style="min-width:30%" scope="col">Field Name</th>
+                  <th style="min-width:20%" scope="col">Conditional Operator</th>
+                  <th style="min-width:30%" scope="col">Value</th>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+
+                </tr>
+              </thead>
+              <tbody formArrayName="fields">
+                <tr [formGroupName]="i" *ngFor="let field of fields.controls; let i=index" class="position-relative">
+                  <td>
+                    <div class="form-group" style="width: 150px; padding: 0px;  margin: 0px; float: left;">
+                      <ng-select [items]="customFieldList1" [closeOnSelect]="true" placeholder="Select field name" formControlName="filedNameId" (change)="onChangeField($event,field,i)"
+                                 bindLabel="display" bindValue="value" [ngClass]="{'is-invalid': (field.controls.filedNameId.invalid && (field.controls.filedNameId.dirty || field.controls.filedNameId.touched) && field.controls.filedNameId.errors?.required) }"></ng-select>
+                      <small *ngIf="field.controls.filedNameId.invalid && (field.controls.filedNameId.dirty || field.controls.filedNameId.touched) && field.controls.filedNameId.errors?.required"
+                             style="color:red;">Please select Field Name</small>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group" style="width: 100%;">
+
+                      <ng-select [items]="operatorList" [closeOnSelect]="true" placeholder="Select operator" formControlName="operatorId" (change)="onChangeOperator($event,i)"
+                                 bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (field.controls.operatorId.invalid && (field.controls.operatorId.dirty || field.controls.operatorId.touched) && field.controls.operatorId.errors?.required) }"></ng-select>
+                      <small *ngIf="field.controls.operatorId.invalid && (field.controls.operatorId.dirty || field.controls.operatorId.touched) && field.controls.operatorId.errors?.required"
+                             style="color:red;">Please select Operator</small>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group" *ngIf="field.get('dtCode') != null && !field.get('dtCode').value  && field.get('fieldText').value!='datetime' && field.get('fieldText').value!='date' && field.controls.operatorId.value!='18' && field.controls.operatorId.value!='19' && field.controls.operatorId.value!='20'" style="max-width: 200px; min-width:100px;">
+                      <input type="text" class="form-control" formControlName="txtvaluefrom" maxlength="50" placeholder="Enter Value" (keyup)="onKey($event)"
+                             [ngClass]="{'is-invalid': (field.controls.txtvaluefrom.invalid && (field.controls.txtvaluefrom.dirty || field.controls.txtvaluefrom.touched) && (field.controls.txtvaluefrom.errors?.required || field.controls.txtvaluefrom.errors?.maxlength)) }">
+                      <small *ngIf="field.controls.txtvaluefrom.invalid && (field.controls.txtvaluefrom.dirty || field.controls.txtvaluefrom.touched) && field.controls.txtvaluefrom.errors?.required"
+                             class="text-danger">Value is required</small>
+                    </div>
+                    <div *ngIf="field.get('dtCode') != null && !field.get('dtCode').value && field.get('fieldText').value=='date'  && field.controls.operatorId.value!='19' && field.controls.operatorId.value!='20'" style="width: 100%; padding: 0px; margin: 0px; float: left;">
+                      <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date" formControlName="txtvaluefrom" hideOnDateTimeSelect="true"
+                                  [readonlyInput]="true"
+                                  [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+                      <small *ngIf="field.controls.txtvaluefrom.invalid && (field.controls.txtvaluefrom.dirty || field.controls.txtvaluefrom.touched) && field.controls.txtvaluefrom.errors?.required"
+                             class="text-danger">Value is required</small>
+                    </div>
+
+                    <div *ngIf="field.get('dtCode') != null && !field.get('dtCode').value && field.get('fieldText').value=='datetime'  && field.controls.operatorId.value!='19' && field.controls.operatorId.value!='20'" style="width: 100%; padding: 0px;  margin: 0px; float: left;">
+                      <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " formControlName="txtvaluefrom" hideOnDateTimeSelect="true"
+                                  [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"
+                                  [readonlyInput]="true"
+                                  [hourFormat]="(timeFormat==24)?24:12"></p-calendar>
+                      <small *ngIf="field.controls.txtvaluefrom.invalid && (field.controls.txtvaluefrom.dirty || field.controls.txtvaluefrom.touched) && field.controls.txtvaluefrom.errors?.required"
+                             class="text-danger">Value is required</small>
+                    </div>
+
+                    <div class="form-group" *ngIf="field.get('dtCode') != null && field.get('dtCode').value
+                             && field.controls.operatorId.value!='18' && field.controls.operatorId.value!='19' && field.controls.operatorId.value!='20'" style="width: 100%; padding: 0px; margin: 0px; float: left;  max-width: 196px;">
+
+                      <ng-select [items]="DdlValues[i]" [closeOnSelect]="true" placeholder="Select Value" formControlName="txtvaluefrom" [multiple]="true"
+                                 bindLabel="name" bindValue="value"
+                                 (clear)="onClearLang(DdlValues[i],i)"
+                                 (scrollToEnd)="onScrollToEnd(DdlValues[i],i)" [virtualScroll]="true" (keyup)="onKeySelect($event,DdlValues[i],i)"
+                                 [ngClass]="{'is-invalid': (field.controls.txtvaluefrom.invalid && (field.controls.txtvaluefrom.dirty || field.controls.txtvaluefrom.touched) && field.controls.txtvaluefrom.errors?.required) }">
+
+                      </ng-select>
+
+                      <small *ngIf="field.controls.txtvaluefrom.invalid && (field.controls.txtvaluefrom.dirty || field.controls.txtvaluefrom.touched) && field.controls.txtvaluefrom.errors?.required"
+                             style="color:red;">Please select Field Name</small>
+                    </div>
+                  </td>
+                  <td class="text-center" *ngIf="field.controls.operatorId.value=='8'">
+                    <div class="form-group" style="max-width: 200px; min-width:100px;">
+                      <input type="text" *ngIf="field.controls.operatorId.value=='8'" class="form-control" formControlName="txtvalueto" maxlength="50" placeholder="Enter Value"
+                             [ngClass]="{'is-invalid': (field.controls.txtvalueto.invalid && (field.controls.txtvalueto.dirty || field.controls.txtvalueto.touched) && (field.controls.txtvalueto.errors?.required || field.controls.txtvalueto.errors?.maxlength)) }">
+                      <small *ngIf="field.controls.txtvalueto.invalid && (field.controls.txtvalueto.dirty || field.controls.txtvalueto.touched) && field.controls.txtvalueto.errors?.required"
+                             class="text-danger">Value is required</small>
+                    </div>
+                  </td>
+                  <td style="min-width:85px">
+                    <div class="form-group mt-2 mb-0  d-inline-block float-left">
+                      <a *ngIf="i>0" href="javascript:void(0);" (click)="removeFields(i)"><i class="feather-trash-2 text-danger"></i></a>
+                    </div>
+                    <div *ngIf="field.controls.type.value!=null && field.controls.type.value!=''" class=" d-inline-block float-right">
+                      <span class="or-and rounded-circle">{{field.controls.type.value}}</span>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- <div class="col-lg-12 px-0 text-right mt-2 mb-4">
+           <a (click)="addFields()" class="btn btn-primary  mr-2" href="javascript:void(0);"><span><i class="feather-plus"></i> Add</span></a>
+        </div>
+        <div class="p-3 grey-bg mt-2 mb-4">
+          <b>Condition:</b> {/{customWhereCondition}}
+        </div>-->
+          <div class="col-lg-12 px-0 text-center mt-2 mb-4 bg-light py-2">
+            <!--<a href="javascript:void(0);" class="btn btn-success" (click)="addFields()"><i class="feather-plus pr-2"></i>Add</a>-->
+            <ng-select [items]="ddlData" #condition placeholder="Add Condition"
+                       bindLabel="name" bindValue="id" (change)="addFields($event.name)"  style="max-width:120px;display:inline-block;"></ng-select>
+          </div>
+          <div class="col-lg-12 px-0 text-right mt-2">
+            <!--<a (click)="addFields()" class="btn btn-primary  mr-2" href="javascript:void(0);"><span><i class="feather-plus"></i> Add</span></a>-->
+            <!--<ng-select [items]="ddlData" placeholder="Add" #condition
+             bindLabel="name" bindValue="id" (change)="addFields($event.name)" style="max-width:100px;display:inline-block;margin-right:10px;"></ng-select>-->
+
+
+
+            <a href="javascript:void(0);" (click)="SaveAllFields()" class="btn btn-success mr-2"><i class="feather-save pr-2"></i> Submit</a>
+            <a href="javascript:void(0);" (click)="close()" class="btn btn-danger"><i class="feather-x pr-2"></i> Cancel</a>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+
+  </div>
+</div>
+
+
+<!--<div class="modal my-popups right fade" id="myModal" role="dialog" bsModal #templateManageView="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1">
+  <div class="modal-dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Search</h4>
+          <button type="button" (click)="close()" class="close" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="panel">
+            <div class="panel-header pb-3">
+              <div class="row mt-2">
+                <div class="col-md-12">
+
+                </div>
+              </div>
+            </div>
+            <div class="panel-content pagination2 table-responsive no-padding">
+              <form [formGroup]="searchFilterForm" autocomplete="off">
+                <table class="table table-hover table-dynamic border-bottom">
+                  <thead>
+                    <tr>
+                      <th width="100" class="text-center">Field Name</th>
+                      <th width="100" class="text-center">Conditional Operator</th>
+                      <th width="100" class="text-center">Value</th>
+                      <th width="40" class="text-center"><a (click)="addFields()" class="btn btn-success mr-1" href="javascript:void(0);"><span><i class="feather-plus"></i> Add</span></a></th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="fields">
+                    <tr [formGroupName]="i" *ngFor="let field of fields.controls; let i=index">
+                      <td>
+                        <div class="form-group">
+                          <ng-select [items]="customFieldList1" [closeOnSelect]="true" placeholder="Select field name" formControlName="filedNameId" (change)="onChangeField($event)"
+                                     bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (field.controls.filedNameId.invalid && (field.controls.filedNameId.dirty || field.controls.filedNameId.touched) && field.controls.filedNameId.errors?.required) }"></ng-select>
+                          <small *ngIf="field.controls.filedNameId.invalid && (field.controls.filedNameId.dirty || field.controls.filedNameId.touched) && field.controls.filedNameId.errors?.required"
+                                 style="color:red;">Please select Field Name</small>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <div class="form-group">
+                          <ng-select [items]="operatorList" [closeOnSelect]="true" placeholder="Select operator" formControlName="operatorId" (change)="onChangeOperator($event)"
+                                     bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (field.controls.operatorId.invalid && (field.controls.operatorId.dirty || field.controls.operatorId.touched) && field.controls.operatorId.errors?.required) }"></ng-select>
+                          <small *ngIf="field.controls.operatorId.invalid && (field.controls.operatorId.dirty || field.controls.operatorId.touched) && field.controls.operatorId.errors?.required"
+                                 style="color:red;">Please select Operator</small>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <div class="form-group">
+                          <input type="text" class="form-control" formControlName="txtvaluefrom" maxlength="50" placeholder="Enter Value"
+                                 [ngClass]="{'is-invalid': (field.controls.txtvaluefrom.invalid && (field.controls.txtvaluefrom.dirty || field.controls.txtvaluefrom.touched) && (field.controls.txtvaluefrom.errors?.required || field.controls.txtvaluefrom.errors?.maxlength)) }">
+                          <small *ngIf="field.controls.txtvaluefrom.invalid && (field.controls.txtvaluefrom.dirty || field.controls.txtvaluefrom.touched) && field.controls.txtvaluefrom.errors?.required"
+                                 class="text-danger">Value is required</small>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <a *ngIf="i > 0" href="javascript:void(0);" (click)="removeFields(i)"><i class="feather-trash-2 text-danger"></i></a>
+                        </div>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </form>
+            </div>
+            <div class="col-lg-12 text-right mt-3">
+              <a href="javascript:void(0);" (click)="filtersearch()" class="btn btn-success"><i class="feather-search pr-2"></i>Search</a>
+              <a href="javascript:void(0);" (click)="close()" class="btn btn-danger"><i class="feather-x pr-2"></i>Cancel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>-->

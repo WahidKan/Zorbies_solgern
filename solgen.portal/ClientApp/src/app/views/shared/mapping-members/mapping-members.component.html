@@ -1,0 +1,65 @@
+<div class="panel-body row px-3">
+    <div class="table-responsive">
+      <div class="table table-striped">
+        <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                       [rows]="mappingMemberPagedData.data"
+                       [columnMode]="'force'"
+                       [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                       [headerHeight]="40"
+                       [footerHeight]="40"
+                       [externalPaging]="true"
+                       [externalSorting]="true"
+                       [loadingIndicator]="loadSave"
+                       [count]="mappingMemberPagedData.pager.totalItems"
+                       [offset]="currentPageAssignedRes"
+                       [limit]="pageSizeValueAssignedResList"
+                       (page)='setPageMappingMember($event)'
+                       (sort)="onSortMappingMembers($event)">
+          <ngx-datatable-column name="Name" prop="name" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.name|truncate}}
+            </ng-template>
+  
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Location" prop="locationMapping" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.locationMapping|truncate}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="text-center">
+                <a href="javascript:;" (click)="deleteMappingMember(row)"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template
+                         let-rowCount="rowCount"
+                         let-pageSize="mappingMemberPagedData.pager.pageSize"
+                         let-selectedCount="selectedCount"
+                         let-currentPage="mappingMemberPagedData.pager.currentPage"
+                         let-offset="offset"
+                         let-isVisible="isVisible">
+              <div class="page-count" *ngIf='(rowCount  > 0)'>
+                {{commonService.PageString(mappingMemberPagedData.pager.currentPage,mappingMemberPagedData.pager.pageSize,rowCount)}}
+              </div>
+              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                               [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                               [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                               [pagerNextIcon]="'fa fa-angle-double-right'"
+                               [page]="mappingMemberPagedData.pager.currentPage"
+                               [size]="mappingMemberPagedData.pager.pageSize"
+                               [count]="mappingMemberPagedData.pager.totalItems"
+                               [hidden]="!((rowCount / mappingMemberPagedData.pager.pageSize) > 1)"
+                               (change)="setPageNoMappingMembers($event)">
+              </datatable-pager>
+            </ng-template>
+          </ngx-datatable-footer>
+        </ngx-datatable>
+      </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,28 @@
+<div bsModal #generateleaseModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade  bd-example-modal-xl" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-info" [ngClass]="{'disabled':loadSave}" style="max-width:1100px;">
+    <div class="modal-content" role="document">
+      <div class="modal-header">
+        <h4 class="modal-title" *ngIf="!isGenerateLeaseDoc">GENERATE PROPOSAL DOCUMENT</h4>
+        <h4 class="modal-title" *ngIf="isGenerateLeaseDoc">DOWNLOAD PROPOSAL DOCUMENT</h4>
+
+        <button type="button" class="close" (click)="close()">&times;</button>
+      </div>
+
+
+      <div id="content" #content  (contextmenu)="onRightClick()" onCopy="disablecopypaste()" onmousedown="disablecopypaste()" onselectstart="disablecopypaste()">
+        <div class="modal-body lease-notice" id="contentToConvert">
+          <div [innerHtml]="LeaseTemplateContent | safeHtml"></div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="modal-footer">
+          <button type="submit" *ngIf="!isGenerateLeaseDoc" class="btn btn-success form-btns" (click)="generateLeasePDF()"><i class="feather-save"></i>Generate Proposal</button>
+          <a href="{{LeasePDFDocumentNameLink}}" *ngIf="isGenerateLeaseDoc" download class="btn btn-info form-btns"><i class="fa fa-download" title="download Lease"></i>Download Proposal</a>
+          <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i>Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

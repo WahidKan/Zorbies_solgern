@@ -1,0 +1,23 @@
+<div (contextmenu)="onRightClick()" onCopy="disablecopypaste()" onmousedown="disablecopypaste()" onselectstart="disablecopypaste()" bsModal #leasedocspdfviewModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " style="max-width:1100px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          LEASE PREVIEW
+        </h4>
+        <button type="button" class="close" (click)="close()">&times;</button>
+      </div>
+      <div class="modal-body lease-notice">
+        <pdf-viewer [src]="pdfSrc"
+                    [original-size]="false"></pdf-viewer>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" *ngIf="!isCustomerUser" class="btn btn-success form-btns" (click)="send()" data-dismiss="modal" aria-label="Close"><i class="fas fa-paper-plane"></i>Send For Signature</button>
+        <a href="{{leasePDFDocumentNameLink}}" *ngIf="isGenerateLeaseDoc && !isSalesUser" download class="btn btn-info form-btns"><i class="fa fa-download" title="download Lease"></i>Download Lease</a>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i>Close</button>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

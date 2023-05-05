@@ -1,0 +1,83 @@
+
+<li class="arrowright" [formGroup]="target" *ngIf="target.get('isConditionAdded').value">
+  <div class="shape_oval">
+    <h3 class="form-heading">Results</h3>
+    <table class="table table-hover table-dynamic rule-tab">
+      <tbody>
+        <tr *ngFor="let result of target.get('results').value;let i = index">
+          <td class="text-left">
+            <a data-toggle="modal" (click)="editResult(i)" class="text-white font-16 mt-2">
+              <i class="feather-edit-2"></i> {{result.name}}
+            </a>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+    <div class="col-sm-12 p-2" [ngClass]="{'invisible':(vwRuleId != null)}">
+      <a class="btn btn-white mr-1"  (click)="showResultModal()"><span style="margin-top: 0px;"><i class="feather-plus"></i> Add New </span></a>
+    </div>
+  </div>
+</li>
+
+
+<!-- Modal -->
+<div class="modal fade" bsModal #addResult="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content" style="min-height:500px !important">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Result</h5>
+        <button type="button" class="close" (click)="hideResultModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="resultForm">
+          <div class="row" [ngStyle]="vwRuleId != null ? {'pointer-events': 'none'} : {}">
+            <div class="col-4" >
+              <label>Name</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="name">
+              </div>
+            </div>
+            <div class="col-4">
+              <label>Action</label>
+              <div class="form-group">
+                <ng-select [items]="resultActionList" formControlName="action" (change)="onActionChange($event)"
+                           placeholder="Select Action" bindLabel="name" [appendTo]="'body'"
+                           [closeOnSelect]="true" [clearable]="false">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="border" *ngIf="resultForm.get('action').value" [ngStyle]="vwRuleId != null ? {'pointer-events': 'none'} : {}">
+                <ng-container *ngIf="resultForm.get('action').value.code=='update' || resultForm.get('action').value.code=='create'">
+                  <app-solgen-rule-engine-result-table-field [customFieldsList]="customFieldsList" [resultForm]="resultForm" [moduleId]="ruleEngineForm.get('moduleId').value.value" [subModuleId]="ruleEngineForm.get('subModuleId').value.sub_module_id"></app-solgen-rule-engine-result-table-field>
+                </ng-container>
+                <ng-container *ngIf="resultForm.get('action').value.code !='update' && resultForm.get('action').value.code !='create'">
+                  <input formControlName="resultCondition" class="form-control" placeholder="Please enter the validation message." type="text" />
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="row w-100">
+          <div class="col-md-6 text-left pl-0">
+            <button type="button" class="btn btn-danger" [ngClass]="{'invisible':(vwRuleId != null)}" *ngIf="resultForm.get('isEdit').value" data-dismiss="modal" (click)="deleteResultForm()"><i class="feather-trash-2"></i> Delete</button>
+          </div>
+          <div class="col-md-6 text-right">
+
+            <button type="button" class="btn btn-success mr-1" [ngClass]="{'invisible':(vwRuleId != null)}" (click)="saveResult()" [disabled]="!resultForm.valid"><i class="feather-save"></i> Save</button>
+            <button type="button" class="btn btn-danger" [ngClass]="{'invisible':(vwRuleId != null)}" (click)="hideResultModal()"><i class="feather-x"></i> Cancel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->

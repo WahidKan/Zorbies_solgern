@@ -1,0 +1,42 @@
+<div>
+  <table
+    [formGroup]="pricingTable"
+    class="table-bordered"
+    [style.height.px]="pricingTable.get('height').value"
+    [style.width.px]="pricingTable.get('width').value - 20"
+  >
+    <thead>
+      <tr formArrayName="pricingTableColumns">
+        <th *ngFor="let c of columns; let i = index">
+          <app-custom-input [formControlName]="i" isHeading="true" disabled="true" [header]="c.value.header" componentType="pricingTable"></app-custom-input>
+        </th>
+      </tr>
+    </thead>
+    <tbody formArrayName="pricingTableRows">
+      <tr *ngFor="let r of rows; let i = index" [formGroupName]="i">
+        <td *ngFor="let c of columns; let ci = index" class="col-md-2">
+          <div *ngIf="!pricingTable.get('disabled').value && c.value.calcluateValue">{{getSubTotal(r.value,c.value.calcluateValue)}}</div>
+          <app-custom-input [formControlName]="c.value.fieldCode" *ngIf="!c.value.calcluateValue" [textFieldType]="c.value.type"  componentType="pricingTable" [hiddenFieldName]="c.value.fieldCode" [disabled]="pricingTable.get('disabled').value">{{ r[ci] }}</app-custom-input>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div [formGroup]="pricingTable.get('aggreateTable')" style="float: right;margin-right: 10px;">
+  <div>
+    <label style="margin-right: 10px;">Sub total: </label>
+    <input formControlName="subTotal" type="number" style="border: none;" readonly/>
+  </div>
+  <div>
+    <label style="margin-right: 10px;">Discount: </label>
+    <input formControlName="discount" type="number" (input)="applyDiscount()"/>
+  </div>
+  <div>
+    <label style="margin-right: 10px;">Tax: </label>
+    <input formControlName="tax" type="number" (input)="applyTax()" style="margin-left: 35px;"/>
+  </div>
+  <div>
+    <label style="margin-right: 10px;">Total: </label>
+    <input formControlName="total" type="number" style="border: none;" readonly/>
+  </div>
+</div>

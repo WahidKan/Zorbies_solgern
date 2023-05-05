@@ -1,0 +1,113 @@
+<div *ngIf="cssModel" [formGroup]="cssModel" class="box-model-root">
+  <div class="box-model-spacing box-model-margin">
+    <div class="box-model-input top">
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-left"></i>
+        </button>
+      </div>
+      <div class="inputWrap"><input type="number" min="-1000" max="1000" class="input" value="0" formControlName="margin-top"></div>
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="box-model-input right">
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-up"></i>
+        </button>
+      </div>
+      <div class="inputWrap"><input type="number" min="-1000" max="1000" class="input" value="0" formControlName="margin-right"></div>
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-down"></i>
+        </button>
+      </div>
+    </div>
+    <div class="box-model-input bottom">
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-left"></i>
+        </button>
+      </div>
+      <div class="inputWrap"><input type="number" min="-1000" max="1000" class="input" value="0" formControlName="margin-bottom"></div>
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="box-model-input left">
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-up"></i>
+        </button>
+      </div>
+      <div class="inputWrap"><input type="number" min="-1000" max="1000" class="input" value="0" formControlName="margin-left"></div>
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-down"></i>
+        </button>
+      </div>
+    </div>
+    <div class="label">margin</div>
+  </div>
+  <div class="box-model-spacing box-model-padding">
+    <div class="box-model-input top">
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-left"></i>
+        </button>
+      </div>
+      <div class="inputWrap"><input type="number" min="0" max="1000" class="input" value="0" formControlName="padding-top"></div>
+      <div class="inputButtonWrap">
+        <button class="inputButton" disabled="">
+          <i class="fa fa-caret-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="box-model-input right">
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-up"></i>
+        </button>
+      </div>
+      <div class="inputWrap"><input type="number" min="0" max="1000" class="input" value="0" formControlName="padding-right"></div>
+      <div class="inputButtonWrap">
+        <button class="inputButton" disabled="">
+          <i class="fa fa-caret-down"></i>
+        </button>
+      </div>
+    </div>
+    <div class="box-model-input bottom">
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-left"></i>
+        </button>
+      </div>
+      <div class="inputWrap"><input type="number" min="0" max="1000" class="input" value="0" formControlName="padding-bottom"></div>
+      <div class="inputButtonWrap">
+        <button class="inputButton" disabled="">
+          <i class="fa fa-caret-left"></i>
+        </button>
+      </div>
+    </div>
+    <div class="box-model-input left">
+      <div class="inputButtonWrap">
+        <button class="inputButton">
+          <i class="fa fa-caret-up"></i>
+        </button>
+      </div>
+      <div class="inputWrap"><input type="number" min="0" max="1000" class="input" value="0" formControlName="padding-left"></div>
+      <div class="inputButtonWrap">
+        <button class="inputButton" disabled="">
+          <i class="fa fa-caret-down"></i>
+        </button>
+      </div>
+    </div>
+    <div class="label">padding</div>
+  </div>
+  <div class="box-model-innerRectangle"></div>
+</div>

@@ -1,0 +1,948 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- 
+<div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100">
+      <strong>Manage Service Appointments</strong>
+      <p class="d-inline-block pl-1 pl-md-3 mb-1"><i class="fa fa-list-alt p-0 pr-1"></i>{{ViewModel}}</p>
+    </h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+
+        <li class="active">Manage Service Appointments</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-header border-bottom btn-iconres">
+        <div class="row my-2 align-items-end">
+          <div class="col-md-12 col-xl-7">
+
+            <div class="row">
+              <div class="col-md-12 col-xl-2">
+                <ng-select *ngIf="currentView == 'Gantt View'" #ghantviewTypeSelect class="ghantdll" [items]="ghantviewtypes"
+                           placeholder="Select View Type" [(ngModel)]="viewDdl" bindValue="value" bindLabel="masterName"
+                           [closeOnSelect]="true"
+                           (change)="setViewType($event)" (clear)="restddl()">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="row searchfield ">
+
+              <div class="col-lg-4 float-left mb-lg-0 mb-2 " *ngIf="currentView !='Gantt View'">
+
+                <input class="form-control input-sm" type="text" [(ngModel)]='listFilter' placeholder="Search by Appt no. and Account Name" (keyup)='updateFilter($event)'>
+              </div>
+              <div class="col-lg-8 float-left pl-3 pl-lg-0" *ngIf="currentView !='Gantt View'">
+                <a class="btn btn-dark form-btns mr-2" href="javascript:void(0);" (click)="searchServiceAppointment()" tooltip="Search"><span><i class="feather-search"></i></span></a>
+                <a class="btn btn-dark form-btns mr-2" href="javascript:void(0);" (click)="switchClicked($event)" tooltip="Search"><span><i class="feather-search mr-1"></i> Search in all</span></a>
+                <a class="btn btn-success mr-2" href="javascript:void(0);" (click)="popUpOpen()" tooltip="Filter"><span><i class="feather-filter mr-1"></i> Filter</span></a>
+                <a class="btn btn-white form-btns" href="javascript:void(0);" (click)="reset()" tooltip="Reset"><span><i class="feather-repeat mr-1"></i> Reset</span></a>
+                <!-- <div class="d-inline-block align-middle pl-3">
+                  <label class="d-inline-block "><b>Search in all records</b></label>
+                  <div class="form-group d-inline-block align-middle m-0 ml-2">
+                    <label class="switch m-0"> -->
+                      <!--<input formcontrolname="isHOD" id="customCheck2" type="checkbox" ng-reflect-name="isHOD" class="ng-untouched ng-pristine ng-valid">-->
+                      <!-- <input type="checkbox" id="allRecords" formControlName="allRecords" [checked]="myCheckbox" (click)="switchClicked($event)">
+                      <span class="slider round">
+                        <span>Yes</span>
+                      </span>
+                    </label>
+                  </div>
+                </div> -->
+
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-xl-5">
+            <div class="dt-buttons noabso-res">
+
+              <div class="form-group d-inline-block align-top mr-1 mb-0 onlythisv">
+                <ng-select *ngIf="currentView !='Gantt View'" [items]="pagedDatafor.data" placeholder="Select View" bindValue="custom_view_id" bindLabel="view_name" [closeOnSelect]="true" (change)="SetManageViewValue($event.custom_view_id,$event.view_name)" [(ngModel)]="vewId">
+                </ng-select>
+
+              </div>
+
+              <!--<div class="form-group d-inline-block align-top mr-1 mb-0 onlythisv" style="width:auto;">
+                <ng-select [items]="lstbuttonsdata" placeholder="Select View" class="ghantdll" bindValue="value" bindLabel="text" [closeOnSelect]="true"
+                           (change)="CompleteRenderFn($event)" [(ngModel)]="DataOfValue">
+                  <ng-template ng-option-tmp let-item="item">
+                    <div title="{{item.text}}">{{item.text}}</div>
+                  </ng-template>
+                </ng-select>
+              </div>-->
+
+              <div class="dropdown d-inline-block align-top mr-1 exports">
+                <button class="btn btn-info dropdown-toggle" style = "background: #495585; border-color: #495585;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i [class]="dynamicClasss"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a (click)="SwitchListingView('Calender View')" class="dropdown-item p-2" href="javascript:void(0);">
+
+                    <span>
+                      <i class="fa fa-calendar"></i> Calendar View
+                    </span>
+                  </a>
+                  <a (click)="SwitchListingView('List View')" class="dropdown-item p-2" href="javascript:void(0);">
+                    <span>
+                      <i class="fa fa-list"></i> List View
+                    </span>
+                  </a>
+                  <a (click)="SwitchListingViewGhant('Gantt View')" class="dropdown-item p-2" href="javascript:void(0);">
+                    <span>
+                      <i class="fa fa-area-chart"></i> Gantt Chart View
+                    </span>
+                  </a>
+                  <a (click)="SwitchListingView('Map View')" class="dropdown-item p-2" href="javascript:void(0);">
+                    <span>
+                      <i class="fa fa-map-marker"></i> Map View
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- <div class="dropdown d-inline-block align-top mr-1 exports " *ngIf="isDisplayExportButton && currentView != 'Calender View' && currentView != 'Gantt View' && currentView != 'Map View'">
+                <button class="btn btn-success dropdown-toggle" style="background:#1D6F42; border-color:#1D6F42;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-download"></i> </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a (click)="download('excel')" *ngIf="isDisplayExportButton && currentView != 'Calender View' && currentView != 'Gantt View' && currentView != 'Map View'" class="dropdown-item p-2" href="javascript:void(0);"><span><i class="fa fa-file-excel-o"></i> Download Excel</span></a>
+                  <a (click)="download('pdf')" *ngIf="isDisplayExportButton && currentView != 'Calender View' && currentView != 'Gantt View' && currentView != 'Map View'" class="dropdown-item p-2" href="javascript:void(0);"><span><i class="fa fa-file-pdf-o"></i> Download Pdf</span></a>
+                </div>
+              </div> -->
+
+
+              <!--<a (click)="ExportTOExcel()" *ngIf="isDisplayExportButton && currentView != 'Calender View' && currentView != 'Gantt View' && currentView != 'Map View'" class="btn btn-success form-btns mr-1" href="javascript:void(0);" tooltip="Download Excel" style="background:#1D6F42; border-color:#1D6F42;"><span><i class="fa fa-file-excel-o"></i></span></a>
+              <a (click)="generatePdf()" *ngIf="isDisplayExportButton && currentView != 'Calender View' && currentView != 'Gantt View' && currentView != 'Map View'" class="btn btn-danger form-btns mr-1" href="javascript:void(0);" tooltip="Download Pdf" style="background:#c0392b; border-color:#c0392b;"><span><i class="fa fa-file-pdf-o"></i></span></a>-->
+              <!--<a *ngIf="currentView != 'Calender View'" (click)="SwitchListingView('Calender View')" class="btn btn-info form-btns mr-1" href="javascript:void(0);" tooltip="Calendar View"><span><i class="fa fa-calendar"></i></span></a>
+              <a *ngIf="currentView != 'List View'" (click)="SwitchListingView('List View')" class="btn btn-info form-btns mr-1" href="javascript:void(0);" tooltip="List View"><span><i class="fa fa-list"></i></span></a>
+              <a *ngIf="currentView != 'Gantt View'" (click)="SwitchListingViewGhant('Gantt View')" class="btn btn-info form-btns mr-1" href="javascript:void(0);" tooltip="Gantt Chart View"><span><i class="fa fa-area-chart"></i></span></a>
+              <a *ngIf="currentView != 'Map View'" (click)="SwitchListingView('Map View')" class="btn btn-success form-btns mr-1" href="javascript:void(0);" tooltip="Map View"><span><i class="fa fa-map-marker"></i></span></a>-->
+              <a *ngIf="currentView !='Gantt View'" class="btn btn-primary form-btns mr-1" href="javascript:void(0);" (click)="displayDetailDetail($event)" tooltip="Manage View"><span><i class="fa fa-list-alt"></i></span></a>
+              <a class="btn btn-info form-btns mr-1" href="javascript:void(0);" (click)="openSettingPopup()" tooltip="Settings"><span><i class="fa fa-cog"></i></span> Settings</a>
+              <a *ngIf="currentView !='Gantt View' && isAdd" class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="add()" tooltip="Add"><span><i class="feather-plus"></i></span> Add</a>
+              <a *ngIf="currentView !='Gantt View' && isDelete" class="btn btn-danger form-btns " href="javascript:void(0);" (click)="deleteAll()" tooltip="Delete"><span><i class="feather-trash-2"></i></span> Delete</a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-content p-3 pb-2 pagination2 table-responsive no-padding switchcalendar" *ngIf="!isMapView">
+        
+        <div class="header-chart mb-1">Service Appointments
+          <span class="float-right">
+            <!--<small class="pt-1 pr-1 h6 font-weight-normal">Download As: </small>-->
+            <a href="javascript:void(0);" (click)="ExportTOExcel()" title="Download Excel" class=" btn btn-success mr-1"
+              style="background:#1D6F42; border-color:#1D6F42;" tooltip="Download Excel"><i class="fa fa-file-excel-o"></i></a>
+            <a href="javascript:void(0);" (click)="generatePdf()" title="Download Pdf" class=" btn btn-danger mr-1"
+              style="background:#c0392b; border-color:#c0392b;" tooltip="Download Pdf"><i class="fa fa-file-pdf-o"></i> </a>
+          </span>
+        </div>
+
+        <div class="row" [ngSwitch]="currentView">
+
+          <ng-container *ngSwitchCase="'Gantt View'">
+
+            <div class="col-12">
+              <div class="control-section">
+                <div class="drag-sample-wrapper">
+                  <div class="row">
+                    <div [ngClass]="{'schedule-container col-12' : viewType =='Customer Type View','schedule-container col-9' :  viewType !='Customer Type View'}">
+                      <div class="lock-gantt-view ml-2" *ngIf="viewType !='Map Type View'">
+
+                        <a class="btn btn-primary form-btns mx-2" href="javascript:void(0);" (click)="ghantviewRefresh()" tooltip="Refresh"><span><i class="fa fa-refresh"></i></span></a>
+                        <a [ngClass]="changeFilterbtnColor == true ? 'btn btn-success form-btns mr-2' : 'btn btn-white form-btns mr-2'" href="javascript:void(0);" (click)="ghantviewFilter()" tooltip="Filter"><span><i class="fa fa-filter"></i></span></a>
+                        <a *ngIf="!isreadonly" class="btn btn-dark form-btns mr-2" href="javascript:void(0);" (click)="UnLock(isreadonly)" [tooltip]="locktooltip"><span><i class="fa fa-unlock"></i></span></a>
+                        <a *ngIf="isreadonly" class="btn btn-success form-btns mr-2" href="javascript:void(0);" (click)="UnLock(isreadonly)" [tooltip]="locktooltip"><span><i class="fa fa-lock"></i></span></a>
+                        <ng-select *ngIf="isShow" [items]="lstTimeZone" placeholder="Select Time Zone" class="ghantdll" [(ngModel)]="timeZoneId"
+                                   (change)="timeZoneChange($event)"
+                                   bindLabel="text" bindValue="value"></ng-select>
+                        <a *ngIf="!isShow" style="display:inline-flex;max-width: 300px;top: -9px;position: relative;" (click)="showDDL()">You ar currently working in {{showtimezone}} zone <i class="fa fa-pencil text-success"></i></a>
+
+
+
+                      </div>
+                      <div class="row " *ngIf="viewType =='Map Type View'">
+                        <div class="col-md-12">
+                          <div class="row pb-3">
+                            <div class="col-md-6 col-lg-4 cstm-btns">
+                              <p-calendar #myStartCalendar placeholder="From Date - To Date" [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true" inputId="range"
+                                          (onSelect)="OnChangedDateRange($event)" [monthNavigator]="true" [yearNavigator]="true" [showIcon]="true" yearRange="2000:2030"></p-calendar>
+                            </div>
+                            <div class="col-md-6 col-lg-4 pl-sm-0 pl-3">
+
+                              <a class="btn btn-primary form-btns mr-2" href="javascript:void(0);" (click)="ghantviewRefresh()" tooltip="Refresh"><span><i class="fa fa-refresh"></i></span></a>
+                              <a class="btn btn-white form-btns mr-2" href="javascript:void(0);" (click)="ghantviewFilter()" tooltip="Filter"><span><i class="fa fa-filter"></i></span></a>
+                              <!--<a *ngIf="!isreadonly" class="btn btn-dark form-btns mr-2" href="javascript:void(0);" (click)="UnLock(isreadonly)" [tooltip]="locktooltip"><span><i class="fa fa-unlock"></i></span></a>
+                              <a *ngIf="isreadonly" class="btn btn-success form-btns mr-2" href="javascript:void(0);" (click)="UnLock(isreadonly)" [tooltip]="locktooltip"><span><i class="fa fa-lock"></i></span></a>-->
+
+                            </div>
+                            <div class=" col-md-12 col-lg-4 text-lg-right cstm-btns ">
+                              <a href="javascript:void(0);" id="Day" (click)="mapDateFilter('day',$event)">Day</a>
+                              <a href="javascript:void(0);" id="Week" (click)="mapDateFilter('week',$event)">Week</a>
+                              <a href="javascript:void(0);" id="Month" (click)="mapDateFilter('month',$event)" class="active">Month</a>
+                            </div>
+                          </div>
+
+
+                        </div>
+                        <div class="col-12">
+                          <div class="custom-map-view">
+                            <div class="custom-map-view-left">
+                              <ul class="list-group">
+                                <li class="list-group-item" *ngFor="let t of employeeDataSource">
+                                  <div class="employee-category">
+                                    <img src="{{siteurl+t.profilepic}}" class="employee-image" style=" width: 32px; height: 32px; float: left; border-radius: 50%; margin-right: 10px;" />
+                                  </div><div class="employee-name">
+                                    {{t.Text}}
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="custom-map-view-right">
+                              <p-gmap [options]="optionsGhantMap" (onOverlayClick)="handleOverlayClickMap($event)"
+                                      [overlays]="overlaysMap" [style]="{'width':'100%','height':'calc(100vh - 250px)'}"></p-gmap>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <ejs-schedule *ngIf="viewType !='Map Type View'" #scheduleObj cssClass='schedule-block-events' width='100%' height='650px' [group]="group" [enablePersistence]="enablePersistence"
+                                    [currentView]="currView" [selectedDate]="selectedDate" [eventSettings]="eventSettings" [rowAutoHeight]="rowAutoHeight" [showTimeIndicator]="showTimeIndicator"
+                                    (eventRendered)="oneventRendered($event)" (actionComplete)="onActionComplete($event)" (renderCell)='onRenderCell($event,"inner")'
+                                    (popupOpen)='onPopupOpen($event)' (navigation)="onNavigation($event)" [readonly]="isreadonly">
+                        <ng-template #eventSettingsTooltipTemplate let-data>
+                          <div class="tooltip-wrap cstmdsgn">
+                            <p><strong><i class="fa fa-address-card"></i> Account Name:</strong> {{data.accountName}}</p>
+                            <p><strong><i class="fa fa-envelope"></i> Email:</strong> {{data.email}}</p>
+                            <p><strong><i class="fa fa-user"></i> Contact Name:</strong> {{data.contactName}}</p>
+                            <p><strong><i class="fa fa-phone"></i> Phone:</strong> {{data.mobilephone}}</p>
+                            <p><strong><i class="fa fa-map-marker"></i> Location:</strong> {{data.Address}}</p>
+                            <p><strong><i class="fa fa-map"></i> Service Teritory:</strong> {{data.TerritoryName}}</p>
+                            <p><strong><i class="fa fa-signal"></i> System Size:</strong> {{data.SystemSize}}</p>
+                            <p><strong><i class="fa fa-location-arrow"></i> WareHouse:</strong> {{data.warehouse}}</p>
+                            <p><strong><i class="fa fa-calendar-check-o"></i> Start Time:</strong> {{data.StartTime.toLocaleString()}}</p>
+                            <p><strong><i class="fa fa-calendar-times-o"></i> End Time:</strong> {{data.EndTime.toLocaleString()}}</p>
+                          </div>
+
+                        </ng-template>
+
+                        <e-resources>
+
+                          <e-resource field="EmployeeId"
+                                      title="Employees"
+                                      name="Employee"
+                                      [dataSource]="employeeDataSource"
+                                      [allowMultiple]="allowMultiple"
+                                      textField="Text"
+                                      idField="Id"
+                                      groupIDField="GroupId"
+                                      colorField="data.color">
+                          </e-resource>
+
+                          <e-resource *ngIf="viewType != 'Resource Type View'" field='crewId' title='Consultant' name='Consultants' [dataSource]='CrewDataSource' [allowMultiple]='allowMultiple' textField='Text' idField='Gid'
+                                      expanded="true" colorField='Color'>
+                          </e-resource>
+                        </e-resources>
+                        <ng-template #editorTemplate let-data>
+                          <div *ngIf="data != undefined" class="row">
+                            <a (click)="AddAssignedResources(data.Id)">{{data.Subject}}</a>
+                          </div>
+
+                        </ng-template>
+                        <ng-template #resourcetext>
+                          <a>andrew</a>
+
+                        </ng-template>
+                        <ng-template #resourceHeaderTemplate let-data>
+
+                          <div class="template-wrap" *ngIf="viewType == 'Resource Type View'">
+                            <div class="employee-category">
+                              <div>
+                                <img src="{{siteurl+data.resourceData.profilepic}}" class="employee-image" style=" width: 32px; height: 32px; float: left; border-radius: 50%; margin-right: 10px;" />
+                              </div>
+
+                              <div class="employee-name">
+
+                                <ng-container *ngIf="data.resourceData.IsCrew == '1';else elseBlock">
+                                  <a href="javascript:void(0);" (click)="OnServiceCrewClick(data.resourceData)">{{data.resourceData.Text |  titlecase }}</a>
+                                </ng-container>
+                                <ng-template #elseBlock>
+                                  {{data.resourceData.Text | titlecase }}
+                                </ng-template>
+
+
+                              </div>
+                              <div class="dcontainer" *ngIf="data.resourceData.zones != null">
+                                <div class="employee-designation added-space ">
+
+                                  <div class="sites-zone" [ngStyle]="{'background':item.color }" *ngFor="let item of data.resourceData.zones |convertToArrayList;let i=index">
+                                    <span>{{item.locationname}}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="template-wrap" *ngIf="viewType == 'Crew Type View'">
+                            <div class="employee-category">
+
+                              <div *ngIf="data.resourceData.ClassName == 'e-child-node';else elseBlock2" class="d-inline-block float-left">
+
+                                <img src="{{siteurl+data.resourceData.profilepic}}" class="employee-image" style=" width: 26px; height: 26px; float: left; border-radius: 50%; margin-right: 10px;" />
+                              </div>
+                              <ng-template #elseBlock2>
+                                <!--<img src="{{siteurl+data.resourceData.profilepic}}" class="employee-image" style=" width: 32px; height: 32px; float: left; border-radius: 50%; margin-right: 10px;" />-->
+                                <span class="gicon"><i class="fa fa-users"></i></span>
+
+                              </ng-template>
+
+
+
+                              <div class="employee-name">
+
+                                <ng-container *ngIf="data.resourceData.ClassName == 'e-child-node';else elseBlock">
+
+                                  <!--<a href="javascript:void(0);" (click)="OnServiceCrewClick(data.resourceData)">{{data.resourceData.Text |  titlecase }}</a>-->
+                                  {{data.resourceData.Text | titlecase }}
+
+
+                                </ng-container>
+                                <ng-template #elseBlock>
+                                  <span class="cat-Name--gantt text-truncate">{{data.resourceData.Text | titlecase }}</span>
+                                </ng-template>
+
+
+                              </div>
+                              <div class="employee-designation">{{data.resourceData.Designation}}</div>
+
+                            </div>
+                          </div>
+                          <div class="template-wrap" *ngIf="viewType == 'Customer Type View'" style="overflow:hidden">
+
+                            <div class="employee-category">
+                              <div *ngIf="data.resourceData.ClassName != 'e-child-node'" class="d-inline-block">
+
+                                <span class="gicon"><i class="fa fa-users"></i></span>
+                              </div>
+
+                              <!--<img src="{{siteurl+data.resourceData.profilepic}}" class="employee-image" style=" width: 32px; height: 32px; float: left; border-radius: 50%; margin-right: 10px;" />-->
+
+
+
+                              <div class="employee-name customer-trunc">
+
+                                <ng-container *ngIf="data.resourceData.ClassName == 'e-child-node';else elseBlock">
+
+                                  <span [ngStyle]="{'background':data.resourceData.Color }" tooltip="{{data.resourceData.Text}}" class="customer-badge-view"> {{data.resourceData.Text | titlecase }}</span>
+
+                                  <!--<a href="javascript:void(0);" (click)="OnServiceCrewClick(data.resourceData)">{{data.resourceData.Text |  titlecase }}</a>-->
+                                  <!--{{data.resourceData.Text | titlecase }}-->
+                                </ng-container>
+                                <ng-template #elseBlock>
+                                  <span class="cat-Name--gantt text-truncate" tooltip="{{data.resourceData.Text}}">{{data.resourceData.Text | titlecase }}</span>
+                                </ng-template>
+
+
+                              </div>
+                              <div class="employee-designation">{{data.resourceData.Designation}}</div>
+                            </div>
+
+                          </div>
+                        </ng-template>
+                        <ng-template #eventSettingsTemplate let-data>
+
+                          <div class='template-wrap'>
+
+                            <div *ngIf="!data.IsBlock" class="subject">{{data.Subject}}</div>
+                            <div *ngIf="data.IsBlock">
+
+                              <div class="subject"><span class="leave-activity"><i [class]="data.logo"></i> </span> {{data.Subject}}</div>
+                            </div>
+                          </div>
+                        </ng-template>
+
+                        <e-views>
+
+                          <e-view option='TimelineDay' displayName="Day"></e-view>
+                          <e-view option='TimelineWeek' displayName="Week" [timeScale]="timeScaleOptions"></e-view>
+                          <e-view option='TimelineMonth' displayName="Month"></e-view>
+                        </e-views>
+
+                        <ng-template #dateHeaderTemplate let-data>
+                          <div class="date-text">{{getDateHeaderText(data.date)}}</div>
+
+                        </ng-template>
+                      </ejs-schedule>
+                      <div class="sa-datenavi-container" *ngIf="viewType !='Map Type View'">
+                        <a class="btn btn-primary form-btns prevbtn mx-2" href="javascript:void(0);" (click)="leftMove()" tooltip="Previous"><span><i class="fa fa-angle-left"></i></span></a>
+                        <a class="btn btn-primary form-btns nxtbtn mx-2" href="javascript:void(0);" (click)="RightMove()" tooltip="Next"><span><i class="fa feather-chevron-left"></i></span></a>
+                      </div>
+                    </div>
+
+
+
+                    <div class="treeview-container col-3" *ngIf="viewType != 'Customer Type View'">
+                      <div class="title-container">
+                        <h1 class="title-text">
+                          Unscheduled List
+                          <span class="select-in-tag">
+                            <input class="form-control input-sm" type="text" [(ngModel)]='unscheduleFilter' placeholder="Search by Appt no" (keyup)='UnscheduleSearch($event)'>
+                          </span>
+                        </h1>
+
+                      </div>
+
+                      <ng-container *ngIf="waitingList?.length >0 ;else elseBlock;">
+                        <ejs-treeview #treeObj [fields]='field' cssClass='treeview-external-drag' dragArea=".drag-sample-wrapper" [allowDragAndDrop]='allowDragAndDrop' (nodeDragStop)="onTreeDragStop($event)" (nodeDragging)="onItemDrag($event)">
+                          <ng-template #nodeTemplate="" let-data="">
+
+                            <div id="waiting">
+                              <div id="waitdetails">
+                                <div id="waitlist" class="sa-srt-dtl">
+
+                                  <strong class="apmnt-no text-white p-2" (click)="showme(data.Id)"><i (click)="showme(data.Id)" class="fa fa-th" style="opacity: .6; cursor: all-scroll; padding-top: 1px; font-size: 12px; float: left;"></i> {{data.Name}}</strong>
+                                  <span class="apmnt-type text-white p-2" *ngIf="data.mastervalue == 'Fix'">{{data.mastervalue}}</span>
+
+                                  <span (click)="showme(data.Id)" [ngStyle]="{'background':data.color }" tooltip="{{data.Description}}" class="sa-color text-white p-2">{{data.Description}}</span>
+                                  <div class="sa-detail">
+                                    <!--<p><strong><i class="fa fa-file"></i> Description:</strong> {{data.Description}}</p>-->
+
+                                    <p><strong><i class="fa fa-address-card"></i> Account Name:</strong>{{data.accountName}}</p>
+                                    <p><strong><i class="fa fa-mail-forward"></i> Email:</strong> {{data.email}}</p>
+                                    <p><strong><i class="fa fa-user"></i> Contact Name:</strong> {{data.contactName}}</p>
+                                    <p><strong><i class="fa fa-phone"></i> Phone:</strong> {{data.mobilephone}}</p>
+                                    <p><strong><i class="fa fa-map-marker"></i> Location:</strong> {{data.Address}}</p>
+                                    <p><strong><i class="fa fa-map"></i> Service Teritory:</strong> {{data.TerritoryName}}</p>
+                                    <p><strong><i class="fa fa-map"></i> Status:</strong> {{data.SA_status}}</p>
+
+                                  </div>
+                                </div>
+
+                              </div>
+                              <p class="location-address">{{data.accountName}}</p>
+                              <span class="location-address">Status: <b> {{data.SA_status}}</b></span>
+                              <span *ngIf="data.zonename !=null" class="zone-address" [ngStyle]="{'background':data.zonecolor }">Zone: <b tooltip="{{data.zonename}}"> {{data.zonename}}</b></span>
+                              <p class="contct-dtl" *ngIf="data.contactName != null">
+                                <em>
+                                  <strong> <i class="fa fa-user"></i> {{data.contactName}}</strong> <i class="fa fa-phone"></i>
+                                  <ng-container *ngIf="data.mobilephone"><a href="javascript:void(0);" (click)="onNumberClick(data.mobilephone)">{{data.mobilephone}}</a></ng-container>
+                                </em>
+                              </p>
+                            </div>
+                          </ng-template>
+                        </ejs-treeview>
+                      </ng-container>
+                      <ng-template #elseBlock>
+                        <div class="text-center p-3 border">No record(s) found.</div>
+                      </ng-template>
+                      <!-- <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </ng-container>
+
+
+          <ng-container *ngSwitchCase="'List View'">
+            <div class="col-12 col-lg-12 col-md-12">
+              <lib-dynamic-list *ngIf="load" [jsoninput]="jsonDatapack" [currentPage]="currentPage" [pageSizeValue]="pageSizeValue" [lstPageSize]="lstPageSize"
+                                (MainMethod)="MainMethod($event)" (curPageemit)="curPageemit($event)" [sortDir]="sortDir" [sortColumn]="sortColumn"
+                                primaryid="SA" maxwidht="SA" (selectdata)="selectdata($event)" [companytype]="companyType" (goToPage)="goToPage($event)" [jsoncondition]="jsoncondition"
+                                [actionarray]="actionarray" [listFilter]="listFilter" [userinfodata]="userinfodata"
+                                [isAdd]="isAdd" [isUpdate]="isUpdate" [isDelete]="isDelete" isSearchPannel="true" isManageView="true"></lib-dynamic-list>
+            </div>
+
+          </ng-container>
+          <ng-container *ngSwitchCase="'Calender View'">
+            <div [ngClass]="{'col-md-6  service-appointment-calender-top-bar calendar-table':showCalendarList,'col-md-12 service-appointment-calender-top-bar calendar-table':!showCalendarList}">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <ng-select [items]="appointmenttypes"
+                               [loading]="loadSave"
+                               placeholder="Select Appointment Type"
+                               bindLabel="name"
+                               bindValue="id"
+                               [(ngModel)]="appointmentTypeSelectedId"
+                               (change)="appointmenttypedll($event.id)"
+                               [clearable]="false"
+                               [searchable]="false"></ng-select>
+                  </div>
+
+                </div>
+                <div class="col-md-4">
+                  <div (click)="ToggleCalendarList()"><i class="fa fa-toggle-on" *ngIf="showCalendarList" style="font-size: 40px; float: right; padding: 0px;"></i> <i class="fa fa-toggle-off" *ngIf="!showCalendarList" style="font-size: 40px; float: right; padding: 0px;"></i></div>
+
+                </div>
+                <div class="col-md-12"><hr /></div>
+              </div>
+
+              <ng-fullcalendar #fullcalendar
+                               deepChangeDetection="true"
+                               (clickButton)="clickButton($event)"
+                               (eventDragStop)="eventDragStop($event)"
+                               [eventsModel]="eventsModel"
+                               [options]="options"
+                               (eventRender)="eventRender($event)"
+                               (dateClick)="dateClick($event)"
+                               (eventClick)="eventClick($event)" [ngClass]="{'smallcalview':showCalendarList}"></ng-fullcalendar>
+
+
+            </div>
+
+
+
+            <div *ngIf="showCalendarList" class="col-md-6 pagintn-wid">
+              <ngx-datatable #tablecalender
+                             class="bootstrap table table-hover table-dynamic datatable-custom-height w-100"
+                             [rows]="columndata"
+                             [columnMode]="'force'"
+                             [headerHeight]="40"
+                             [footerHeight]="40"
+                             [rowHeight]="40"
+                             [externalPaging]="true"
+                             [externalSorting]="true"
+                             [loadingIndicator]="loadSave"
+                             [count]="totalRecords"
+                             [limit]="pageSizeValue"
+                             (sort)="onSort($event)"
+                             [offset]="currentPage"
+                             [scrollbarH]="true"
+                             [selectionType]="SelectionType.checkbox"
+                             [selectAllRowsOnPage]="false"
+                             [selected]="selected"
+                             (select)="onSelect($event)">
+                <ngx-datatable-column [width]="42"
+                                      [sortable]="false"
+                                      [canAutoResize]="false"
+                                      [draggable]="false"
+                                      [resizeable]="false"
+                                      [headerCheckboxable]="true"
+                                      [checkboxable]="true">
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngFor="let col of columnheading" [name]="col.DISPLAY_NAME" [prop]="col.COLUMN_NAME" [sortable]="col.SORTABLE">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div *ngIf="col.COLUMN_NAME == 'AppointmentNumber'">
+                      <a class=" view-list smview" [routerLink]="['/serviceappointment/view',row.id]" href="javascript:void(0);" [title]="row[col.COLUMN_NAME]">{{row[col.COLUMN_NAME] }}</a>
+                    </div>
+
+                    <div *ngIf="col.COLUMN_NAME != 'AppointmentNumber'">
+                      <div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE == 'bit'">
+                        <i *ngIf="row[col.COLUMN_NAME] == false" class="fa fa-times text-danger icon_tick"></i>
+                        <i *ngIf="row[col.COLUMN_NAME] == true" class="feather-check text-success icon_tick"></i>
+                      </div>
+                      <div [title]="(row[col.COLUMN_NAME] | DateTimeToLocal)" *ngIf="col.DATA_TYPE=='date' || col.DATA_TYPE=='datetime' || col.FieldType == 'datetime'">
+                        {{ (row[col.COLUMN_NAME] !== null) ? (row[col.COLUMN_NAME] | DateTimeToLocal) : "" }}
+                      </div>
+                      <div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE!='date' && col.DATA_TYPE!='datetime' && col.DATA_TYPE!='bit' && col.FieldType != 'select' && col.FieldType != 'datetime'">
+                        {{row[col.COLUMN_NAME]}}
+                      </div>
+                      <div *ngIf="col.FieldType == 'select'">
+                        <div [title]="row[col.COLUMN_NAME]" *ngIf="col.FieldFrom !=null">
+                          {{row[col.COLUMN_NAME]}}
+                        </div>
+                        <div *ngIf="col.FieldFrom==null">
+                          <div *ngFor="let itemColorCode of getListingColorCode(row[col.COLUMN_NAME]);">
+                            <div [title]="row[col.COLUMN_NAME]" *ngIf="itemColorCode.colorkey==undefined">
+                              {{itemColorCode.color}}
+                            </div>
+                            <div *ngIf="itemColorCode.colorkey!=undefined" style="max-width:150px !important;" class="status-box" [title]="itemColorCode.color" [ngStyle]="{background: itemColorCode.colorkey}">
+                              {{itemColorCode.color}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Action" [sortable]="false" [maxWidth]="200" headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span class="actions rw_act" style="padding: 1px;">
+                      <i class="feather-settings action_icon" [attr.attribute-id]="row.id" aria-hidden="true"></i>
+                      <span class="action-list-box sevenelement{{row.id}}">
+                        <span class="list-actions fsm-list" id="action-list" style="width:350px;">
+                          <a class="actions-onclick view-list smview" [routerLink]="['/serviceappointment/view',row.id]" href="javascript:void(0);" title="View Detail"><i class="fa text-info fa-eye pr-2"></i></a>
+
+                          <a *ngIf="isUpdate && (row.conditionstatus!='Completed' && row.conditionstatus!='Canceled')" class="actions-onclick view-list smview" [routerLink]="['/serviceappointment/addeditservicesappointment',row.id]" title="Edit"><i class="fa fa-pencil text-success mr-2"></i></a>
+                          <a *ngIf="isUpdate && (row.conditionstatus=='Completed' || row.conditionstatus=='Canceled')" class="actions-onclick view-list smview" title="Edit"><i class="fa fa-pencil text-secondary mr-2"></i></a>
+
+                          <a *ngIf="row.conditionstatus=='Completed' || row.conditionstatus=='Canceled'" class="actions-onclick view-list smview" href="javascript:void(0);"
+                             title="Scheduled Appointment"><i class="fa fa-clock-o text-secondary mr-2"></i></a>
+
+                          <a *ngIf="row.conditionstatus!='Completed' && row.conditionstatus!='Canceled'" class="actions-onclick view-list smview" (click)="AddAssignedResources(row.id)" href="javascript:void(0);"
+                             title="Scheduled Appointment"><i class="fa fa-clock-o text-primary mr-2"></i></a>
+
+                          <a *ngIf="row.conditionstatus=='Completed' && isAudit" class="actions-onclick view-list smview" (click)="auditpopup(row.id,false)" href="javascript:void(0);"
+                             title="Audit"><i class="fa fa-comment text-primary mr-2"></i></a>
+
+                          <a *ngIf="row.conditionstatus=='Completed'" class="actions-onclick view-list smview" (click)="auditpopup(row.id,true)" href="javascript:void(0);"
+                             title="View Audit"><i class="fa fa-list-ul text-primary mr-2"></i></a>
+
+
+                          <a class="actions-onclick view-list smview" (click)="showattendancemodel(row.id)" href="javascript:void(0);"
+                             title="Attendance"><i class="fa fa-calendar-check-o text-info mr-2"></i></a>
+
+                          <!--<a class="actions-onclick view-list" [routerLink]="['/serviceappointment/addeditservicesappointment',row.id]" title="Edit"><i class="fa fa-pencil text-success mr-2"></i></a>-->
+                          <a *ngIf='isDelete' class="actions-onclick view-list" title="Click to delete." (click)="Delete(row)" href="javascript:void(0);"><i class="feather-trash-2 text-danger"></i></a>
+                          <i class="fa fa-times close close-action" aria-hidden="true"></i>
+                        </span>
+                      </span>
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template
+                               let-rowCount="rowCount"
+                               let-pageSize="pageSize"
+                               let-selectedCount="selectedCount"
+                               let-currentPage="curPage"
+                               let-offset="offset"
+                               let-isVisible="isVisible">
+                    <div>
+                      <div style="color:black; margin-right:10px;" class="page-size-record" *ngIf='(rowCount  > 0)'>
+                        <span style="text-align:right; width:80px;vertical-align: middle;">
+                          <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                     bindLabel="text" bindValue="text"></ng-select>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+
+
+                      <!--Showing {{(curPage - 1 )* pageSizeValue + 1}}  to {{curPage * pageSizeValue}} out of {{totalRecords}}  enteries-->
+                      {{commonService.PageString(curPage,pageSizeValue,rowCount)}}
+                    </div>
+                    <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                     [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                     [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                     [pagerNextIcon]="'fa fa-angle-double-right'"
+                                     [page]="curPage"
+                                     [size]="pageSizeValue"
+                                     [count]="totalRecords"
+                                     [hidden]="!((rowCount / pageSize) > 1)"
+                                     (change)="setPage($event)"
+                                     [ngClass]="{'text-lg-right':true,'text-md-right':true}">
+                    </datatable-pager>
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+            </div>
+
+          </ng-container>
+          <ng-container *ngSwitchCase="'Map View'">
+            <div class="col-12 col-lg-12 col-md-12">
+              <p-gmap [options]="optionsMap" (onOverlayClick)="handleOverlayClick($event)" [overlays]="overlays" [style]="{'width':'100%','height':'calc(100vh - 210px)'}"></p-gmap>
+            </div>
+          </ng-container>
+
+        </div>
+      </div>
+      <!-- <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader> -->
+    </div>
+  </div>
+</div>
+<app-searchfilteradd (searchFilterCondition)="ApplyAdvanceFilter($event)" #templateFilterView moduleName="serviceappointment" subModuleName="serviceappointment"></app-searchfilteradd>
+<app-manageviewnew (customViewid)="GetcustomViewid($event)" #templateManageView moduleName="serviceappointment" subModuleName="serviceappointment"></app-manageviewnew>
+<app-addassignedresourcepopup #addAssignedResourcesPopup (AssignedResourceEmitter)="refreshList($event)"></app-addassignedresourcepopup>
+<app-auditpopup #auditsPopup></app-auditpopup>
+<app-filterpopup #filterPopup (getFilterData)="getFilterData($event)"></app-filterpopup>
+<app-auditchecklistpopup #auditCheckListsPopup></app-auditchecklistpopup>
+<app-service-crew-members-popup #ServiceCrewMembersList></app-service-crew-members-popup>
+
+
+<div bsModal #attendancemodel="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Attendance</h4>
+        <button type="button" class="close" (click)="closeattendancepopup()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; min-height:300px; max-height:600px">
+
+        <div class="col-lg-12">
+          <div class="table-responsive">
+            <form [formGroup]="attendanceform" autocomplete="off">
+              <div class="row">
+                <div class="col-lg-6">
+                  <label>Start Date<span class="text-danger"></span></label>
+                  <input type="text" class="form-control" formControlName="ScheduleStartDate" disabled>
+                </div>
+                <div class="col-lg-6">
+                  <label>End Date<span class="text-danger"></span></label>
+                  <input type="text" class="form-control" formControlName="ScheduleEndDate" disabled>
+                </div>
+              </div>
+              <br>
+              <div>
+                <ng-container>
+                  <div id="accordion">
+                    <div class="panel active" *ngFor="let date of attendanceData">
+
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                          <a href="#{{date}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                            <span>{{date}} {{ParseDate(date) > ParseDate(defaultDate) ?  '(View only)': ''}}</span>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="{{date}}" class="panel-collapse collapse active show" [ngStyle]="ParseDate(date) > ParseDate(defaultDate) ? {'pointer-events': 'none'} : {}">
+                        <div class="panel-body row px-3">
+                          <div class="table-responsive">
+                            <div class="table table-striped">
+                              <table class="table table-striped" style="min-width:auto;">
+                                <thead>
+                                  <tr>
+                                    <th>Resource Name</th>
+                                    <th>Present</th>
+                                    <th>Hours</th>
+                                  </tr>
+                                </thead>
+
+                                <tbody formArrayName="fields">
+                                  <tr [formGroupName]="i" *ngFor="let field of fields.controls; let i=index" class="position-relative">
+                                    <td *ngIf="field.get('attendanceDate') ? field.get('attendanceDate').value == date : false">
+                                      <div class="form-group">
+                                        <input type="text" class="form-control" formControlName="resourcename" disabled>
+                                      </div>
+                                    </td>
+                                    <td *ngIf="field.get('attendanceDate') ? field.get('attendanceDate').value == date : false">
+                                      <label class="switch">
+                                        <input class="custom-control-input" type="checkbox" formControlName="isPresent">
+                                        <span class="slider round"><span>Yes</span></span>
+
+                                      </label>
+                                    </td>
+                                    <td *ngIf="field.get('attendanceDate') ? field.get('attendanceDate').value == date : false">
+                                      <div class="form-group">
+                                        <input type="text" [readonly]="!field.get('isPresent').value" class="form-control" maxlength="3" (keypress)="numberOnly($event)" formControlName="hours" placeholder="Please enter hour">
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-success text-white" (click)="onSubmitattendance()"><i class="feather-save"></i> Submit</a>
+        <button type="submit" class="btn btn-danger text-white" (click)="closeattendancepopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #serviceAppointmentdetail="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Service Appointment Detail</h4>
+        <button type="button" class="close" (click)="closeAppointmentDetailpopup()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; min-height:300px; max-height:600px">
+        <div class="col-lg-12 p-1">
+          <div class="table-responsive">
+            <div class="tab-pane fade active show p-0 border-0" id="details" role="tabpanel" aria-labelledby="profile-tab" style="background:none">
+              <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                <form [formGroup]="form" *ngIf="form">
+                  <ng-container *ngFor="let item of formControlList">
+                    <div class="panel active">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                          <a href="#{{item.group_display_name}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                            <span> {{item.group_name}}</span>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="{{item.group_display_name}}" class="panel-collapse collapse active show" style="">
+                        <div class="panel-body row px-0 mt-0">
+                          <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let inner of item.InnerData;">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>{{ inner.display_name}}:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6">
+                                <span *ngIf='inner.dt_code=="datetime" ' class="py-2 d-block">
+                                  {{ inner.value | DateTimeToLocal}}
+                                </span>
+
+                                <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.field_route==null && inner.dt_code!='datetime'" class="py-2 d-block">
+                                  <span *ngIf="!(inner.value | split:'::':1)">{{ inner.value }}</span>
+                                  <span *ngIf="(inner.value | split:'::':1)" class="text-white p-1 rounded" [style.background-color]="inner.value | split:'::':1 ">  {{ inner.value| split:'::':0 }}</span>
+                                </span>
+                                <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.field_route!=null && inner.dt_code!='datetime'" class="py-2 d-block">
+                                  <a href="javascript:void(0);" [routerLink]="[inner.field_route,inner.ref_value]">{{ inner.value}}</a>
+                                </span>
+
+                                <!--============================== For CheckBox ===========================-->
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                                  <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox pl-0">
+                                      <label class="switch  mb-0">
+                                        <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                        <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!--============================== For CheckBox ===========================-->
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                                  <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox pl-0">
+                                      <label class="switch mb-0">
+                                        <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                        <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </form>
+
+                <div class="panel active">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#assignedResources" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                        <span>Assigned Resources ({{AssignedResourcesCount}})</span>
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="assignedResources" class="panel-collapse collapse active show" style="">
+                    <!--<a href="javascript:void(0);" class="btn-in-panel"
+                    (click)="AddAssignedResources()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add</a>-->
+
+                    <div class="panel-body row mt-0  px-3">
+                      <div class="table-responsive">
+                        <div class="table table-striped">
+                          <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                         [rows]="lstAssignedResources.data"
+                                         [columnMode]="'force'"
+                                         [scrollbarH]="true"
+                                         [rowHeight]="'40'"
+                                         [headerHeight]="40"
+                                         [footerHeight]="40"
+                                         [externalPaging]="true"
+                                         [externalSorting]="true"
+                                         [loadingIndicator]="loadSave"
+                                         [count]="lstAssignedResources.pager.totalItems"
+                                         [offset]="currentPageAssignedRes"
+                                         [limit]="pageSizeValueAssignedResList"
+                                         (page)='setPageAssignedResList($event)'
+                                         (sort)="onSortAssignedResList($event)">
+
+                            <ngx-datatable-column name="Service Appointment" prop="serviceAppointment" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Service Resource" prop="serviceResource" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Service Crew" prop="ServiceCrew" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Estimated Travel Time" prop="estimatedTravelTime" [sortable]="true">
+                            </ngx-datatable-column>
+                            <!--<ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="text-center">
+                                  <a href="javascript:void(0);" (click)="EditAssignedResource(row)" title="Edit"><i class="fa fa-pencil text-success pr-2"></i></a>
+                                  <a href="javascript:void(0);" (click)="deleteAssignedResource(row,'AssignedResource')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                                </div>
+
+                              </ng-template>
+                            </ngx-datatable-column>-->
+                            <ngx-datatable-footer>
+                              <ng-template ngx-datatable-footer-template
+                                           let-rowCount="rowCount"
+                                           let-pageSize="lstAssignedResources.pager.pageSize"
+                                           let-selectedCount="selectedCount"
+                                           let-currentPage="lstAssignedResources.pager.currentPage"
+                                           let-offset="offset"
+                                           let-isVisible="isVisible">
+                                <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                                  {{commonService.PageString(lstAssignedResources.pager.currentPage,lstAssignedResources.pager.pageSize,rowCount)}}
+                                </div>
+
+                                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                 [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                 [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                 [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                 [page]="lstAssignedResources.pager.currentPage"
+                                                 [size]="lstAssignedResources.pager.pageSize"
+                                                 [count]="lstAssignedResources.pager.totalItems"
+                                                 [hidden]="!((rowCount / lstAssignedResources.pager.pageSize) > 1)"
+                                                 (change)="setAssignedResourcesPageNo($event)">
+                                </datatable-pager>
+                              </ng-template>
+
+                            </ngx-datatable-footer>
+                          </ngx-datatable>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--<a class="btn btn-success text-white" (click)="onSubmitattendance()"><i class="feather-save"></i> Submit</a>-->
+        <button type="submit" class="btn btn-danger text-white" (click)="closeAppointmentDetailpopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+
+      </div>
+    </div>
+  </div>
+  <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>-->
+</div>
+<!-- <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader> -->
+
+<div bsModal #settingModel="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Select Default View</h4>
+        <button type="button" class="close" (click)="closeSettingPopup()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;">
+        <ng-select [items]="SA_viewTypes" placeholder="--Select Default View--" bindValue="value" bindLabel="text" [closeOnSelect]="true" (change)="setSa_View($event)" [(ngModel)]="viewtypeid">
+        </ng-select>
+
+      </div>
+      <div class="modal-footer">
+        <button *ngIf="!isViewNote" type="submit" (click)="saveSa_View()" class="btn btn-success mr-2" [disabled]="loadSave"><i class="feather-save"></i> Submit</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeSettingPopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white mr-1"></i> Close</button>
+      </div>
+      <!-- <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader> -->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,445 @@
+<!---------------------------------------Web View------------------------------------------------------->
+
+<div class="wrapper" style="background-color: #f2f3f9;;">
+    <div class="page-wrapper">
+        <!-- Header -->
+       
+        <!-- ====================================
+                ——— CONTENT WRAPPER
+                ===================================== -->
+        <div class="content-wrapper">
+            <div class="content">
+                <h2 class="page-subheading mb-4">Dashboard</h2>
+                <!-- Top Statistics -->
+                <div class="row">
+                    <div class="col-xl-9 col-lg-8 col-md-8">
+                        <div *ngIf="uploadDocumentData?.ReceivedDocs > 0" class="row m-0">
+                            <div class="col-xl-3 col-sm-6 widget"
+                                (click)="GetProposalData(proposalContarctStatus?.length ? proposalContarctStatus?.length : 0)">
+                                <div class="card card-primary" style="cursor: pointer;">
+                                    <div class="card-header">
+                                        <div class="card-info">
+                                            <p>Signed Proposal</p>
+                                            <h2>{{proposalContarctStatus?.length ? proposalContarctStatus?.length : 0}}</h2>
+                                        </div>
+                                        <div class="cardimg">
+                                            <img src="assets/images/service-request-icon.png"
+                                                alt="service-request-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 widget" (click)="GetContractData(ContarctStatus?.length ? ContarctStatus?.length : 0)">
+                                <div class="card card-success" style="cursor: pointer;">
+                                    <div class="card-header">
+                                        <div class="card-info">
+                                            <p>Signed Contract</p>
+                                            <h2>{{ContarctStatus?.length ? ContarctStatus?.length : 0}}</h2>
+                                        </div>
+                                        <div class="cardimg">
+                                            <img src="assets/images/total-contracts-icon.png"
+                                                alt="total-contracts-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 widget" (click)="GetUploadDocument()">
+                                <div class="card card-secondary" style="cursor: pointer;">
+                                    <div class="card-header">
+                                        <div class="card-info">
+                                            <p>Document Uploads</p>
+                                            <h2>{{documentList?.ReceivedDocs ? documentList?.ReceivedDocs : 0}}</h2>
+                                            <div class="pending-caret">{{documentList?.pendingDocs ? documentList?.pendingDocs : 0}} document pending
+                                            </div>
+
+                                        </div>
+                                        <div class="cardimg">
+                                            <img src="assets/images/document-upload-icon.png"
+                                                alt="document-upload-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 widget" (click)="GetDocumentHistoryListData(uploadDocumentData?.ReceivedDocs ? uploadDocumentData?.ReceivedDocs : 0)">
+                                <div class="card card-dark" style="cursor: pointer;">
+                                    <div class="card-header">
+                                        <div class="card-info">
+                                            <p>Signed Loan Documents</p>
+                                            <h2>{{uploadDocumentData?.ReceivedDocs ? uploadDocumentData?.ReceivedDocs : 0}}</h2>
+                                        </div>
+                                        <div class="cardimg">
+                                            <img src="assets/images/signed-loan-icon.png" alt="signed-loan-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="uploadDocumentData?.ReceivedDocs == 0" class="row m-0">
+                            <div class="col-xl-4 col-sm-6 widget" (click)="GetProposalData(proposalContarctStatus?.length ? proposalContarctStatus?.length : 0)">
+                                <div class="card card-primary" style="cursor: pointer;">
+                                    <div class="card-header">
+                                        <div class="card-info">
+                                            <p>Signed Proposal</p>
+                                            <h2>{{proposalContarctStatus?.length ? proposalContarctStatus?.length : 0}}</h2>
+                                        </div>
+                                        <div class="cardimg">
+                                            <img src="assets/images/service-request-icon.png"
+                                                alt="service-request-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 widget" (click)="GetContractData(ContarctStatus?.length ? ContarctStatus?.length : 0)">
+                                <div class="card card-success" style="cursor: pointer;">
+                                    <div class="card-header">
+                                        <div class="card-info">
+                                            <p>Signed Contract</p>
+                                            <h2>{{ContarctStatus?.length ? ContarctStatus?.length : 0}}</h2>
+                                        </div>
+                                        <div class="cardimg">
+                                            <img src="assets/images/total-contracts-icon.png"
+                                                alt="total-contracts-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-sm-6 widget" (click)="GetUploadDocument()">
+                                <div class="card card-secondary" style="cursor: pointer;">
+                                    <div class="card-header">
+                                        <div class="card-info">
+                                            <p>Document Uploads</p>
+                                            <h2>{{documentList?.ReceivedDocs ? documentList?.ReceivedDocs : 0}}</h2>
+                                            <div class="pending-caret">{{documentList?.pendingDocs ? documentList?.pendingDocs : 0}} document pending
+                                            </div>
+
+                                        </div>
+                                        <div class="cardimg">
+                                            <img src="assets/images/document-upload-icon.png"
+                                                alt="document-upload-icon" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ==================================== Select Project  ===================================== -->
+                        <div class="row">
+                            <div class="col-xl-12 col-sm-12 mt-4 mb-2">
+                                <div class="card card-default">
+                                    <div class="card-header border-bottom pt-3 pb-3">
+                                        <h2><span class="rounded-circle gradient-blue"><i class="zmdi zmdi-account"></i>
+                                            </span>Project</h2>
+
+                                        <div class=" w-auto">
+                                            <ng-select [items]="opportunityList" [clearable]="false"
+                                                [loading]="loadSave" placeholder="Select Opportunity"
+                                                [(ngModel)]="defaultopportunity" (change)="onOpportunityChange($event)"
+                                                bindLabel="text" bindValue="value"></ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div *ngIf="opportunityList?.length > 0">
+                                            <p><b>Project Name:</b> {{projectName}} </p>
+                                        
+                                        <app-stagemanagement  #stageManagement [submoduleName]="submoduleName"
+                                            [moduleName]="moduleName" [isadmin]="false"></app-stagemanagement>
+                                        </div>
+                                        
+                                            <div *ngIf="opportunityList?.length == 0">
+                                                <div class="list-underline">
+                                                    <div class="detail-con px-3 py-2">
+                                                        <div class="row cust-list">
+                                                            <div class="col-12 mb-2">
+                                                                <div class="noti-details py-2">
+                                                                    <span class="d-block text-center text-danger">
+                                                                        No project is available to show.</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ==================================== Upcoming Appoinments  ===================================== -->
+
+                            <div class="col-xl-6 col-lg-12 col-md-12">
+                                <div class="card card-default">
+                                    <div class="card-header  pt-3 pb-3">
+                                        <h2>Upcoming Appoinments <span *ngIf="loanApplicationAppointment"
+                                                class="rounded-circle orange-badge">{{loanApplicationAppointment[0]?.totalRecord
+                                                ? loanApplicationAppointment[0]?.totalRecord : 0 }}</span> </h2>
+                                        <a [routerLink]="['/calendar']" class="link">View All</a>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div *ngIf="!showAppMassage">
+                                            <div class="list-underline"
+                                                *ngFor="let Appointment of loanApplicationAppointment">
+                                                <a class="">
+                                                    <div class="list-items align-items-center pl-4  pr-4">
+                                                        <div class="rounded-circle circle-lightblue"><i
+                                                                class="zmdi zmdi-calendar-alt"></i></div>
+                                                        <div class="list-item-desc">
+                                                            <p><b>Subject : </b>{{Appointment.subject}}</p>
+                                                            <p><b>Date/Time : </b>{{Appointment.appointmentDueDate}}&nbsp;{{ Appointment.fromTime}}&nbsp; - &nbsp;{{Appointment.appointmentDueDate}}&nbsp;{{Appointment.toTime}}</p>
+                                                            <p><b>Created By : </b>{{Appointment.assignedUser}}</p>
+                                                        </div>
+
+                                                        <div class="list-arrow"><i class="zmdi zmdi-chevron-right"></i>
+                                                        </div>
+                                                    </div>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                        <div *ngIf="showAppMassage">
+                                            <div class="list-underline">
+                                                <div class="detail-con px-3 py-2">
+                                                    <div class="row cust-list">
+                                                        <div class="col-12 mb-2">
+                                                            <div class="noti-details py-2">
+                                                                <span class="d-block text-center text-danger">No
+                                                                    record(s) found.</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ==================================== Project Contacts  ===================================== -->
+                                <div class="card card-default mt-4">
+                                    <div class="card-header border-bottom pt-3 pb-3">
+                                        <h2>Project Contacts </h2>
+                                    </div>
+
+                                    <div *ngIf="showContentMesage" class="card-body d-flex align-items-center justify-content-between">
+                                       
+                                            <div  class="rounded-circle circleImg"><img [src]="ownerImage"
+                                                (error)="onOwnerError($event)" alt="user" /></div>
+                                        <div class="contact-detail">
+                                            <h4>{{OwnerName}}</h4>
+                                            <p>{{OwnerEmail}}</p>
+                                        </div>
+                                        <div class="links">
+                                            <a (click)="openDailer(OwnerPhone)" class="rounded-circle circle-success"><i
+                                                    class="zmdi zmdi-phone" style="color: white;"></i></a>
+                                            <a href="mailto:{{OwnerEmail}}" target="_blank"
+                                                class="rounded-circle circle-primary"><i class="zmdi zmdi-email"
+                                                    style="color: white;"></i></a>
+                                        </div>
+
+                                      
+                                       
+                                    </div>
+
+                                    <div *ngIf="!showContentMesage" class="card-body d-flex align-items-center justify-content-center">                                      
+                                            <div class="list-underline">
+                                                <div class="detail-con px-3 py-2">
+                                                    <div class="row cust-list">
+                                                        <div class="col-12 mb-2">
+                                                            <div class="noti-details py-2">
+                                                                <span class="d-block text-center text-danger">No
+                                                                    record(s) found.</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                         
+                                       
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ==================================== Notification  ===================================== -->
+
+                            <div class="col-xl-6 col-lg-12  col-md-12">
+                                <div class="card card-default">
+                                    <div class="card-header  pt-3 pb-3">
+                                        <h2>Notification <span *ngIf="loanApplicationNotification"
+                                                class="rounded-circle orange-badge">
+                                                {{loanApplicationNotification[0]?.totalRecord ?
+                                                loanApplicationNotification[0]?.totalRecord : 0 }}</span> </h2>
+                                        <a [routerLink]="['/notifications']" class="link">View All</a>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div *ngIf="!showMassage">
+                                            <div class="list-underline"
+                                                *ngFor="let noti of loanApplicationNotification">
+                                                <a class="">
+                                                    <div class="list-items align-items-center pl-4  pr-4">
+                                                        <div class="rounded-circle circle-lightblue"><i
+                                                                class="zmdi zmdi-calendar-alt"></i></div>
+                                                        <div class="list-item-desc">
+                                                            <div [innerHTML]="noti.message"></div>
+                                                            <!-- <h4 ng-bind-html="noti.message"></h4> -->
+
+                                                            <!-- <p> {{noti.createDate | date:'medium' }}</p> -->
+
+                                                        </div>
+
+                                                        <div class="list-arrow"><i class="zmdi zmdi-chevron-right"></i>
+                                                        </div>
+                                                    </div>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                        <div *ngIf="showMassage">
+                                            <div class="list-underline">
+                                                <div class="detail-con px-3 py-2">
+                                                    <div class="row cust-list">
+                                                        <div class="col-12 mb-2">
+                                                            <div class="noti-details py-2">
+                                                                <span class="d-block text-center text-danger">No
+                                                                    record(s) found.</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3  col-lg-4 col-md-4">
+
+                        <!-- ==================================== Your Project  ===================================== -->
+
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h2>Your Project</h2>
+                            </div>
+                            <div class="card-body  pb-2">
+                                <div class="img-project">
+                                    <img style="height: 100%; max-width:100%;" [src]="fileurl"
+                                        (error)="onProjectError($event)" alt="Not Found" />
+                                </div>
+                                <p class="mt-3 mb-2">{{BillingAddress}}</p>
+                            </div>
+
+                            <div class="card-footer pt-3 pb-3">
+                                <a (click)="GetUnSignedDocumentList(unsignedDocument?.length ? unsignedDocument?.length : 0)" class="btn btn-primary text-white">Un-Signed
+                                    Document(s) <span class="rounded-circle orange-badge">
+                                        {{unsignedDocument?.length ? unsignedDocument?.length : 0}}</span></a>
+                            </div>
+                        </div>
+
+                        <!-- ==================================== Service Appintments  ===================================== -->
+
+                        <div class="card card-default mt-2">
+                            <div class="card-header  pt-3 pb-0">
+                                <h2>Service Appointment(<span style="font-size: 18px; font-weight: bold;">s</span>) </h2>
+                                <a (click)="GetServiceAppoinment(serviceAppointment?.length ? serviceAppointment?.length : 0)" style="cursor: pointer; color: #007ad9;"
+                                    class="link">View All</a>
+                            </div>
+                            <div class="card-body d-flex align-items-center justify-content-between pb-2 pt-4">
+                                <h2> {{serviceAppointment?.length ? serviceAppointment?.length : 0}}</h2>
+                            </div>
+                        </div>
+
+                        <!-- ==================================== Submit refferral  ===================================== -->
+
+                        <!-- <div class="card card-default mt-4">
+                            <div class="owl-carousel">
+                                <div>
+                                    <div class="card-header card_bg">
+                                        <h2 class="text-white">Submit a Referral </h2>
+                                        <img class="img-fluid" src="assets/images/refferal_img.png" alt="refferal_img"/>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Do you know friends or family interested in solar? Submit a referral and earn $200 cash back or unique reward during one of our referral programs after their installation is completed. For submit a referral visit our website <a href="#">zolarsolarpower.com</a></p>
+                                        <a href="#" class="btn btn-primary">Submit a Referral!</a>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="card-header card_bg">
+                                        <h2 class="text-white">Submit a Referral </h2>
+                                        <img class="img-fluid" src="assets/images/refferal_img.png" alt="refferal_img"/>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Do you know friends or family interested in solar? Submit a referral and earn $200 cash back or unique reward during one of our referral programs after their installation is completed. For submit a referral visit our website <a href="#">zolarsolarpower.com</a></p>
+                                        <a href="#" class="btn btn-primary">Submit a Referral!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+
+                      
+                       
+                         <div class="row mb-3 mt-4">
+                            <div class="col-md-12">
+                                <div class="card card-default">
+                                    <div class="card-header  pt-3 pb-0">
+                                        <h2 style="font-size: 25px;">Announcement(<span
+                                                style="font-size: 18px; font-weight: bold;">s</span>)</h2>
+                                    </div>
+                                    <div class="card-body" style="padding: 1.25rem 0.50rem 0 0.50rem" *ngIf='announcement?.length > 0'>                                  
+                                        <carousel data-interval="true" [noPause]="true" >
+                                            <slide *ngFor="let announce of announcement ;let i=index">
+                                                <div>
+                                                    <div class="card-header card_bg">
+                                                        <h2 class="text-white">{{announce?.title}} </h2>
+                                                        <img class="img-fluid" src="{{announce?.url}}" alt="refferal_img" />
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p>{{announce?.description}}<a href="#"> zolarsolarpower.com</a></p>
+                                                        <a href="#" class="btn btn-primary">{{announce?.text}}</a>
+                                                    </div>
+                                                </div>
+                                            </slide>
+                                        </carousel>
+                                    </div>
+
+                                    <div class="detail-con px-3 py-2" *ngIf='announcement?.length == 0'>
+                                        <div class="row cust-list">
+                                            <div class="col-12 mb-2">
+                                                <div class="noti-details py-2">
+                                                    <span class="d-block text-center text-danger">No announcement
+                                                        available
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <!-- <footer class="footer mt-auto">
+            <div class="copyright bg-white text-center">
+                <p>Copyright © 2022 - <a href="https://zolar.zorbis.com/" target="_blank">Zolar</a>. All Rights
+                    Reserved.
+                </p>
+            </div>
+        </footer> -->
+    </div>
+</div>
+
+
+
+
+
+
+
+<!--===============================================================================================================================================-->
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+<app-loan-document-pop-model #popModelData></app-loan-document-pop-model>
+<app-fileupload #popModelfileUpload></app-fileupload>
+<app-service-appointment #serviceModel></app-service-appointment>
+<app-get-proposal-pop-up-model #proposalModel></app-get-proposal-pop-up-model>
+<app-get-contract-pop-up-model #contractModel></app-get-contract-pop-up-model>
+<app-un-signed-document-pop-up-model #unsignedDocumentModel></app-un-signed-document-pop-up-model>

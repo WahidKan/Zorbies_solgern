@@ -1,0 +1,135 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Manage Bank Information</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active">Manage Bank Information</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <div class="col-md-12 mt-4">
+              <form [formGroup]="addbankForm" autocomplete="off">
+                <div [ngClass]="{'disabled':loadSave}">
+                  <div class="row">
+
+                    <div class="col-12 col-md-12 col-lg-12">
+                      <label class="m-label-s">Bank Information:</label>
+                      <hr size="4" class="mt-0 border-secondary">
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Bank Name:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" formControlName="contactBankName" maxlength="100"
+                               [ngClass]="{'is-invalid': (contactBankName.invalid && (contactBankName.dirty || contactBankName.touched) && (contactBankName.errors?.required || contactBankName.errors?.maxlength)) }">
+                        <small *ngIf="addbankForm.get('contactBankName').touched && addbankForm.get('contactBankName').errors?.required" class="text-danger">
+                          Bank Name is required
+                        </small>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Bank Address:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" formControlName="contactBankAddress" maxlength="500"
+                               [ngClass]="{'is-invalid': (contactBankAddress.invalid && (contactBankAddress.dirty || contactBankAddress.touched) && (contactBankAddress.errors?.required || contactBankAddress.errors?.maxlength)) }">
+                        <small *ngIf="addbankForm.get('contactBankAddress').touched && addbankForm.get('contactBankAddress').errors?.required" class="text-danger">
+                          Bank Address is required
+                        </small>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>City:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter City" formControlName="contactBankCity"
+                               [ngClass]="{'is-invalid': (contactBankCity.invalid && (contactBankCity.dirty || contactBankCity.touched) && (contactBankCity.errors?.required || contactBankCity.errors?.maxlength)) }">
+                        <small *ngIf="contactBankCity.invalid && (contactBankCity.dirty || contactBankCity.touched) && contactBankCity.errors?.required"
+                               class="text-danger">City is required</small>
+                        <small *ngIf="contactBankCity.invalid && (contactBankCity.dirty || contactBankCity.touched) && contactBankCity.errors?.maxlength"
+                               class="text-danger">City name must be less than 100 characters.</small>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>County:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter County"
+                               formControlName="contactBankCounty"
+                               [ngClass]="{'is-invalid': (contactBankCounty.invalid && (contactBankCounty.dirty || contactBankCounty.touched) && (contactBankCounty.errors?.required || contactBankCounty.errors?.maxlength)) }">
+                        <small *ngIf="contactBankCounty.invalid && (contactBankCounty.dirty || contactBankCounty.touched) && contactBankCounty.errors?.required"
+                               class="text-danger">County is required</small>
+                        <small *ngIf="contactBankCounty.invalid && (contactBankCounty.dirty || contactBankCounty.touched) && contactBankCounty.errors?.maxlength"
+                               class="text-danger">County must be less than 100 characters.</small>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>State:</label>
+                      <div class="form-group">
+                       
+                        <ng-select [items]="lstStates"
+                                   placeholder="Select State" bindValue="value" bindLabel="text" formControlName="contactBankState"
+                                   [ngClass]="{'is-invalid': (contactBankState.invalid && (contactBankState.dirty || contactBankState.touched) && (contactBankState.errors?.required || contactBankState.errors?.maxlength)) }">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Zip Code:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter Zip Code" formControlName="contactBankZipcode"
+                               [ngClass]="{'is-invalid': (contactBankZipcode.invalid && (contactBankZipcode.dirty || contactBankZipcode.touched) && (contactBankZipcode.errors?.required || contactBankZipcode.errors?.maxlength)) }">
+                        <small *ngIf="contactBankZipcode.invalid && (contactBankZipcode.dirty || contactBankZipcode.touched) && contactBankZipcode.errors?.required"
+                               class="text-danger">Zip Code is required</small>
+                        <small *ngIf="contactBankZipcode.invalid && (contactBankZipcode.dirty || contactBankZipcode.touched) && contactBankZipcode.errors?.maxlength"
+                               class="text-danger">Zip Code can not be greater than 5 characters.</small>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Bank Routing Number:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" formControlName="contactBankRoutingNumber" maxlength="100"
+                               [ngClass]="{'is-invalid': (contactBankRoutingNumber.invalid && (contactBankRoutingNumber.dirty || contactBankRoutingNumber.touched) && (contactBankRoutingNumber.errors?.required || contactBankRoutingNumber.errors?.maxlength)) }">
+                        <small *ngIf="addbankForm.get('contactBankRoutingNumber').touched && addbankForm.get('contactBankRoutingNumber').errors?.required" class="text-danger">
+                          Bank Routing Number is required
+                        </small>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Bank Account Number:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" formControlName="contactBankAccountNum" maxlength="100"
+                               [ngClass]="{'is-invalid': (contactBankAccountNum.invalid && (contactBankAccountNum.dirty || contactBankAccountNum.touched) && (contactBankAccountNum.errors?.required || contactBankAccountNum.errors?.maxlength)) }">
+                        <small *ngIf="addbankForm.get('contactBankAccountNum').touched && addbankForm.get('contactBankAccountNum').errors?.required" class="text-danger">
+                          Bank Account Number is required
+                        </small>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </form>
+              <div class="col-12 p-0">
+                <a href="javascript:void(0);" class="btn btn-primary form-btns" (click)="save()"><i class="feather-save"></i> Submit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

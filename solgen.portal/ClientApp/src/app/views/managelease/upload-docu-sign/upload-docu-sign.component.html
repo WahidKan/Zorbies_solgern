@@ -1,0 +1,65 @@
+<form [formGroup]="uploadForm">
+  <div bsModal #uploadSign="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Upload Signed Lease Document</h4>
+          <button type="button" class="close" (click)="close()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-12">
+            <div class="row">
+
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Title:</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="documentTitle">
+                </div>
+              </div>
+
+              <div class="col-12 col-md-12 col-lg-6">
+                <label>Date Signed:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <p-calendar inputStyleClass="form-control start-date" [maxDate]="dateTime" formControlName="documentDate" placeholder="Date Signed" showButtonBar="true"
+                              [ngClass]="{'is-invalid': (documentDate.invalid && (documentDate.dirty || documentDate.touched) && (documentDate.errors?.required || documentDate.errors?.maxlength)) }"></p-calendar>
+                  <small *ngIf="documentDate.invalid && (documentDate.dirty || documentDate.touched) && documentDate.errors?.required"
+                         style="color:red;">Date Signed is required</small>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Reference#:</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="documentRefNumber" />
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Select Document:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input class="custom-file-input" type="file" name='file' (change)="setFile($event)" #fileInput formControlName="documentFileName">
+                      <label class="custom-file-label">{{fileName}}</label>
+
+                    </div>
+
+                  </div>
+                  <small *ngIf="!isValid"
+                         style="color:red;">Document is required</small>
+                </div>
+                <small><i class="text-primary">Valid documents format is .pdf,.docx,.doc,.xls,xlsx, image/x-png, image/gif, image/jpeg Valid image format is image/x-png, image/gif, image/jpeg and limit upto 30MB.</i> </small>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary form-btns" (click)="save()" data-dismiss="modal" aria-label="Close"><i class="feather-save text-white"></i>Submit</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</form>

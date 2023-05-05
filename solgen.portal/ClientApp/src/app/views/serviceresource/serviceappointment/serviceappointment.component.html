@@ -1,0 +1,149 @@
+<div class="modal fade in show" bsModal #ServiceAppointment="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">New Assigned Resources</h4>
+        <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; max-height:1000px; overflow:visible;">
+        <form [formGroup]="addForm" autocomplete="off">
+          <div class="row">
+            <div class="col-md-12">
+
+              <!--<h4>if would like Enerflo to automatically find the best apt time based on availalility.</h4>-->
+              <div class="row col-12">
+                <div class="col-md-12 col-lg-6">
+                  <label>Service Appointment:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <ng-select [items]="lstResourceAppointment" (clear)="onClearLang(lstResourceAppointment)" (keyup)="onKey($event,lstResourceAppointment)"
+                               (scrollToEnd)="onScrollToEnd(lstResourceAppointment)"  [virtualScroll]="true"
+                               placeholder="Please select service appointment" bindValue="value" bindLabel="text" formControlName="serviceAppointment"
+                               [closeOnSelect]="true"
+                               [ngClass]="{'is-invalid': (serviceAppointment.invalid && (serviceAppointment.dirty || serviceAppointment.touched) && serviceAppointment.errors?.required) }">
+                    </ng-select>
+                    <small *ngIf="serviceAppointment.invalid && (serviceAppointment.dirty || serviceAppointment.touched) && serviceAppointment.errors?.required"
+                           style="color:red;">Please select Service appointment</small>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Service Resource:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <!--<ng-select [items]="lstResource" [loading]="loadSave" placeholder="Service Resource" formControlName="serviceResourceId"
+                       bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (serviceResourceId.invalid && (serviceResourceId.dirty || serviceResourceId.touched) && serviceResourceId.errors?.required) }">
+            </ng-select>
+            <small *ngIf="serviceResourceId.invalid && (serviceResourceId.dirty || serviceResourceId.touched) && serviceResourceId.errors?.required"
+                   style="color:red;">Please select service resource</small>-->
+
+                    <ng-select [items]="lstResource"
+                               placeholder="Please select service Resource" bindValue="value" bindLabel="text" formControlName="serviceResourceId"
+                               [closeOnSelect]="true"
+                               [ngClass]="{'is-invalid': (serviceResourceId.invalid && (serviceResourceId.dirty || serviceResourceId.touched) && serviceResourceId.errors?.required) }">
+                    </ng-select>
+                    <small *ngIf="serviceResourceId.invalid && (serviceResourceId.dirty || serviceResourceId.touched) && serviceResourceId.errors?.required"
+                           style="color:red;">Please select service resource</small>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Estimated Travel Time (Minutes)</label>
+                  <div class="form-group">
+                    <input type="number" class="form-control" formControlName="estimatedTravelTime" maxlength="50" />
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Actual Travel Time (Minutes)</label>
+                  <div class="form-group">
+                    <input type="number" class="form-control" formControlName="actualTravelTime" maxlength="50" />
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Service Crew:</label>
+                  <div class="form-group">
+                    <ng-select [items]="serviceCrewNames"  placeholder="Select Service Crew" formControlName="serviceCrewId"
+                               bindLabel="text" bindValue="value"></ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Estimated Travel Time From Source:</label>
+                  <div class="form-group">
+                    <ng-select [items]="estimatedTravelTimeFromSourceNames"  placeholder="Please select Estimated Travel Time From Source" formControlName="estimatedTravelTimeFromSourceId"
+                               bindLabel="text" bindValue="value"></ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Approximate Travel Distance From:</label>
+                  <div class="form-group">
+                    <input type="number" class="form-control" formControlName="approximateTravelDistanceForm" maxlength="50" />
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Estimated Travel Time To Source:</label>
+                  <div class="form-group">
+                    <ng-select [items]="estimatedTravelTimeToSourceNames"  placeholder="Select Estimated Travel Time To Source" formControlName="estimatedTravelTimeToSourceId"
+                               bindLabel="text" bindValue="value"></ng-select>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Approximate Travel Distance To:</label>
+                  <div class="form-group">
+                    <input type="number" class="form-control" formControlName="approximateTravelDistanceTo" maxlength="50" />
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Last Updated Epoch:</label>
+                  <div class="form-group">
+                    <input type="number" class="form-control" formControlName="lastUpdatedEpoch" maxlength="50" />
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Approximate Travel Time From (Minutes):</label>
+                  <div class="form-group">
+                    <input type="number" class="form-control" formControlName="approximateTravelTimeForm" maxlength="50" />
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Updated By Optimization:</label>
+                  <div class="form-group">
+                    <label class="switch">
+                      <input type="checkbox" id="customCheck1" formControlName="isUpdatedByOptimization">
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Calculated Duration (Minutes):</label>
+                  <div class="form-group">
+                    <input type="text" class="form-control" formControlName="calculatedDurationMinutes" maxlength="50" />
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </form>
+    </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveAssignedResources()"><i class="feather-save text-white"></i> Save</button>
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>

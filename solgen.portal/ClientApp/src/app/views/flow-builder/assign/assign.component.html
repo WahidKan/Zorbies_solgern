@@ -1,0 +1,77 @@
+<div bsModal #assignModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" *ngIf="assignmentForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Assignment</h4>
+                <button type="button" class="close" (click)="closeAssignModal()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body mb-2" style="max-height: 800px ; overflow-y: auto;">
+                <div *ngIf="assignmentForm && nodeId" [formGroup]="assignmentForm">
+                    <div class="row mb-2">
+                        <div class="col-md-12 col-lg-12">
+                            <label> <span class="text-danger">*</span> Label (Max Char Limit 50)</label>
+                            <input type="text" formControlName="name" maxlength="50" class="form-control"  [ngClass]="{'is-invalid': (assignName.invalid && (assignName.dirty || assignName.touched) && (assignName.errors?.required || assignName.errors?.maxlength)) }">
+                            <small *ngIf="(assignName.invalid && (assignName.dirty || assignName.touched)) && assignName.errors?.required" class="text-danger">label is required</small>
+                            <small *ngIf="(assignName.invalid && (assignName.dirty || assignName.touched)) && assignName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <label class="form-label">Description (Max Char Limit 200)</label>
+                            <textarea formControlName="description" maxlength="200" class="form-control" [ngClass]="{'is-invalid': (assignDescription.invalid && (assignDescription.dirty || assignDescription.touched) && assignDescription.errors?.maxlength) }"></textarea>
+                            <small *ngIf="(assignDescription.invalid && (assignDescription.dirty || assignDescription.touched)) && assignDescription.errors?.maxlength" class="text-danger">Description should be less then 200</small>
+
+                        </div>
+                    </div>
+                    <hr class="mt-2 mb-2">
+                    <span class="h5">Set Variable Values</span>
+                    <p>Each variable is modified by the operator and value combination.</p>
+                    <div formArrayName="variableAssignments">
+                        <div *ngFor="let condition of conditions.controls;let i=index">
+                            <div class="row" [formGroup]="condition">
+                                <div class="col-2">
+                                    <label class="form-label">Variable</label>
+                                    <ng-select [items]="variableList" formControlName="variable" groupBy="groupName" (change)="onResourceChange($event,condition)" placeholder="Select Variable" bindLabel="displayName" bindValue="id" [appendTo]="'body'">
+                                    </ng-select>
+                                </div>
+                                <div class="col-3 pr-0" *ngIf="condition.get('isResource') && condition.get('isResource').value == true">
+                                    <label class="form-label">Field</label>
+                                    <ng-select [items]="condition.get('customfieldsList').value" placeholder="Select Field"
+                                        formControlName="customFieldId" bindLabel="displayName" bindValue="PrimaryTableColumn" (change)="onFieldChange($event,condition)" [appendTo]="'body'">
+                                    </ng-select>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">Operator</label>
+                                    <!-- <ng-select [items]="operatorList" placeholder="Select Operator" formControlName="operator" bindLabel="text" bindValue="value" [appendTo]="'body'">
+                                    </ng-select> -->
+                                    <ng-select [items]="Operators" bindLabel="text" bindValue="value" formControlName="operator" (change)="onOperatorChange($event,condition)" placeholder="Enter min. 3 characters to search..." [closeOnSelect]="true" [virtualScroll]="true">
+                                    </ng-select>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">Value</label>
+                                    <input type="text" name="value" class="form-control" formControlName="value" placeholder="Enter Value">
+
+                                </div>
+                                <div class="col-1 text-center mt-4">
+                                    <button [disabled]="conditions.length < 2" (click)="deleteCondition(i)" class="btn btn-danger form-btns" tooltip="Delete"><span><i class="feather-trash-2"></i></span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-3 col-lg-3">
+                            <button class="btn btn-success  float-left" (click)="addNewCondition()"><i class="feather-plus"></i>Add Condition</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-lg-12 col-sm-12 col-md-12 text-right">
+                    <a href="javascript:void(0);" (click)="Save()" class="btn btn-success mr-2"><i class="feather-save"></i>Submit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="closeAssignModal()"><i class="fa fa-times"></i>Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

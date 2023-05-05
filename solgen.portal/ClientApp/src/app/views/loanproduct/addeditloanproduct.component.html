@@ -1,0 +1,407 @@
+<!-- <div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>{{pageTitle}}</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li><a routerLink="/dashboard">Dashboard</a></li>
+      <li><a routerLink="/loanproduct">Manage Loan Product</a></li>
+      <li class="active">{{pageTitle}}</li>
+    </ol>
+  </div>
+
+</div> -->
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel cntainerwithoutbg clearfix">
+      <div class="panel-content border clearfix mb-4 p-0">
+        <!-- <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+          <li class="nav-item"> <a class="nav-link" [ngClass]="IsDetail ? 'show active' : 'hide'" (click)="detailTab()" id="manage-tab" data-toggle="tab" href="#manage-status" role="tab" aria-selected="false"><span class="circle">1</span> Detail</a> </li>
+          <li class="nav-item"> <a class="nav-link" [ngClass]="IsPrerequisitedocument ? 'show active' : 'hide'" (click)="prerequisiteTab()" id="lead-tab" data-toggle="tab" href="#prerequisitedocument" role="tab" aria-selected="true"><span class="circle">2</span> Prerequisite document</a> </li>
+          <li class="nav-item"> <a class="nav-link" [ngClass]="IsRuleEngine ? 'show active' : 'hide'" id="RuleEngine" (click)="c" data-toggle="tab" href="#rule" role="tab" aria-selected="false"><span class="circle">3</span> Rule Engine</a> </li>
+          <li class="nav-item"> <a class="nav-link" [ngClass]="IsDiscountCategory ? 'show active' : 'hide'" id="DisCategory" (click)="discountCategoryTab()" data-toggle="tab" href="#DiscountCategory" role="tab" aria-selected="false"><span class="circle">3</span> Discount Category</a> </li>
+
+        </ul> -->
+        <div class="tab-content" id="myTabContent">
+
+          <div class="tab-pane fade" [ngClass]="IsDetail ? 'show active' : 'hide'" id="manage-status" role="tabpanel">
+            <div class="row">
+              <div class="col-md-12" [ngClass]="{'disabled':loadSave}">
+                <!--<app-dynamicform moduleName="crm" submoduleName="lead"></app-dynamicform>-->
+                <form [formGroup]="form" *ngIf="form">
+                  <ng-container *ngFor="let item of formControlList">
+                    <h3 class="form-heading"><span>{{ item.group_display_name}} </span></h3>
+                    <div class="row mx-auto mb-2">
+
+                      <ng-container *ngFor="let inner of item.InnerData">
+                        <div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : inner.form_field_visibility == 'NO', 'col-12': inner.layout_type =='single', 'col-md-6': inner.layout_type =='double', 'col-lg-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                             inner.layout_type =='four' }"
+                             ngShow="inner.dependent_show_type == true">
+                          <input type="hidden" *ngIf="inner.form_field_visibility == 'NO'" />
+                          
+                          <label *ngIf="(inner.form_field_visibility == 'YES' && inner.display_name!='Company') && !hideCompany">{{ inner.display_name}}:<span class="text-danger" [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+                          
+                          <label *ngIf="inner.form_field_visibility == 'YES' && hideCompany">{{ inner.display_name}}:<span class="text-danger" [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+
+                          <div class="form-group" *ngIf="inner.form_field_visibility == 'YES'">
+
+
+
+                            <!--text  [placeholder]="inner.display_name"-->
+                            <!--text  [placeholder]="inner.display_name"-->
+                            <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                                   [formControlName]="inner.form_controlName" (ngModelChange)="validator(inner.form_controlName,inner.is_required,inner.actual_data_type)" [id]="inner.custom_field_id"
+                                   [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                   *ngIf="inner.picklist_options != 'Lookup' && inner.dt_code !='date' && inner.dt_code !='url'  && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='date' && inner.dt_code !='int' && inner.dt_code !='decimal' && inner.dt_code !='bigint'" />
+                            <!--<small *ngIf="inner.dt_code != 'int' && inner.dt_code!='url' && inner.dt_code != 'bigint' && inner.dt_code != 'decimal' && ((form.get(inner.form_controlName)?.invalid) && (form.get(inner.form_controlName).dirty) || (form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required))"
+  class="text-danger">{{inner.display_name}} is required</small>-->
+
+
+                            <input type="text" class="form-control" [readonly]="inner.is_readOnly" (ngModelChange)="validator(inner.form_controlName,inner.is_required,inner.actual_data_type)"
+                                   [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                                   [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                   *ngIf="inner.dt_code == 'int'" />
+                            <!--<small *ngIf="inner.dt_code == 'int' && inner.dt_code!='url'  && (form.get(inner.form_controlName).touched && form.get(inner.form_controlName).errors?.required)"
+  class="text-danger">{{inner.display_name}} is required</small>-->
+                            <small *ngIf="inner.dt_code == 'int' &&(form.get(inner.form_controlName)?.touched &&
+                       form.get(inner.form_controlName)?.errors?.pattern)"
+                                   class="text-danger">Please enter valid value</small>
+
+                            <input type="text" class="form-control" [readonly]="inner.is_readOnly" (ngModelChange)="validator(inner.form_controlName,inner.is_required,inner.actual_data_type)"
+                                   [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                                   [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                   *ngIf="inner.dt_code == 'bigint'" />
+                            <!--<small *ngIf="inner.dt_code == 'bigint'  && (form.get(inner.form_controlName).touched && form.get(inner.form_controlName).errors?.required)"
+  class="text-danger">{{inner.display_name}} is required</small>-->
+                            <small *ngIf="inner.dt_code == 'bigint' &&(form.get(inner.form_controlName)?.touched &&
+                       form.get(inner.form_controlName).errors?.pattern)"
+                                   class="text-danger">Please enter valid value</small>
+                            <!--(ngModelChange)="validatorcheck(inner.form_controlName,inner.is_required,inner.actual_data_type,inner.decimal_places)"-->
+                            <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                                   [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                                   [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                   *ngIf="inner.dt_code == 'decimal' && inner.dt_code!='url'  && inner.range_from==null" />
+
+                            <input type="text" class="form-control" [readonly]="inner.is_readOnly" (ngModelChange)="validatorRange(inner.form_controlName,inner.is_required,inner.actual_data_type,inner.range_from,inner.range_to)"
+                                   [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                                   [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)&&form.get(inner.form_controlName)?.errors?.min && form.get(inner.form_controlName)?.errors?.max) }"
+                                   *ngIf="inner.dt_code == 'decimal' && inner.dt_code!='url' && inner.range_from!=null" />
+                            <!--<small *ngIf="inner.dt_code == 'decimal' && inner.dt_code!='url' && (form.get(inner.form_controlName).touched &&
+  form.get(inner.form_controlName).errors?.required)"
+              class="text-danger">{{inner.display_name}} is required</small>-->
+
+                            <small *ngIf="inner.dt_code == 'decimal' && inner.dt_code!='url' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)"
+                                   class="text-danger">Please enter valid value</small>
+
+
+                            <!--Textarea [placeholder]="inner.display_name"-->
+                            <textarea class="form-control" *ngIf="inner.dt_code == 'textarea'" (ngModelChange)="validator(inner.form_controlName,inner.is_required,inner.actual_data_type)" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName).errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }" [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+
+
+
+                            <!--Ng Calendar [placeholder]="inner.display_name"-->
+
+                            <p-calendar inputStyleClass="form-control start-date" *ngIf="inner.dt_code == 'date'" (ngModelChange)="validator(inner.form_controlName,inner.is_required)"
+                                        [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                            <!--<div class="custom-file w-100">-->
+                            <!--<input class="custom-file-input form-control" #file type="file" name='file' *ngIf="inner.dt_code == 'url'" #fileInput accept="image/x-png,image/gif,image/jpeg" (change)="setFile($event,inner.form_controlName,i)" lang="es">
+  <label class="custom-file-label form-control" *ngIf="inner.dt_code == 'url' && inner.form_controlName=='618_Brochure'">
+    {{fileName}}
+
+  </label>
+  <label class="custom-file-label form-control" *ngIf="inner.dt_code == 'url' && inner.form_controlName!='618_Brochure'">
+    {{fileNameImage}}
+
+  </label>-->
+                            <!---Start File upload-->
+                            <div class="custom-file w-100" *ngIf="inner.dt_code == 'url' && inner.form_controlName=='618_Brochure'">
+                              <input class="custom-file-input " #file type="file" name='file' *ngIf="inner.dt_code == 'url'" #fileInput accept="image/x-png,image/gif,image/jpeg" (change)="setFile($event,inner.form_controlName,i)" lang="es">
+                              <label class="custom-file-label " *ngIf="inner.dt_code == 'url' && inner.form_controlName=='618_Brochure'">
+                                {{fileName}}
+
+                              </label>
+                            </div>
+                            <div class="custom-file w-100" *ngIf="inner.dt_code == 'url' && inner.form_controlName!='618_Brochure'">
+                              <input class="custom-file-input" #file type="file" name='file' *ngIf="inner.dt_code == 'url'" #fileInput accept="image/x-png,image/gif,image/jpeg" (change)="setFile($event,inner.form_controlName,i)" lang="es">
+                              <label class="custom-file-label" *ngIf="inner.dt_code == 'url' && inner.form_controlName!='618_Brochure'">
+                                {{fileNameImage}}
+
+                              </label>
+                            </div>
+
+                            <!---End  upload-->
+
+                            <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                              <div class="form-check form-check-inline">
+                                <div class="custom-control custom-checkbox pl-0">
+                                  <label class="switch">
+
+                                    <input type="checkbox" (ngModelChange)="validator(inner.form_controlName,inner.is_required)" (click)="SetCheckBoxValue(inner.form_controlName,$event)"
+                                           id="{{inner.form_controlName}}" [formControlName]="inner.form_controlName">
+                                    <span class="slider round" id="{{inner.form_controlName}}"><span>Yes</span></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                            <!--Radio button-->
+                            <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio'">
+                              <div class="form-check form-check-inline" *ngFor="let option of MakeArray(inner.picklist_options,inner.dt_code)">
+                                <div class="custom-control custom-radio mx-2  p-0">
+                                  <input id="'rdo_'+ {{inner.custom_field_id}}+ '_' + {{option.value}}" class="dynamic custom-control-input"
+                                         [formControlName]="inner.form_controlName" type="radio">
+                                  <label class="custom-control-label universalradio-custom-control-label pl-2 pr-1 dynamic" for="'rdo_'+ {{inner.custom_field_id}}+ '_' + {{option.value}}">{{option.name}}</label>
+                                </div>
+                              </div>
+                            </div>
+
+
+                            <select [(ngModel)]="inner.form_controlName" [formControlName]="inner.form_controlName" [ngClass]="{'form-control' : true,'invalid': inner.picklist_options == 'LOOKUP' && inner.dt_code=='select' && inner.dropdown_type=='normal' }" *ngIf="inner.picklist_options == 'LOOKUP' && inner.dt_code=='select' && inner.dropdown_type=='normal'" (change)='onOptionsSelected($event,inner)'>
+                              <option value="">Select</option>
+
+                              <option [value]="option.name"
+                                      *ngFor="let option of MakeNormalArray(inner.select_options)">
+                                {{option.name}}
+                              </option>
+                            </select>
+
+
+                            <!--Dropdown
+    picklist_options != Lookup (contain values to fill in dropdown)      dt_code==select  -- so fill dropdown with picklist_options
+  -->
+                            <!--<select [formControlName]="inner.form_controlName" class="form-control" [ngClass]="{'form-control' : true }" *ngIf="inner.picklist_options != 'LOOKUP' && inner.dt_code=='select' && inner.picklist_options!=''" [(ngModel)]="inner.form_controlName"
+          (change)='onOptionsSelected($event,inner)'>
+    <option value="">Select</option>
+    <option [value]="option.name"
+            *ngFor="let option of MakeArray(inner.picklist_options,inner.dt_code)">
+      {{option.name}}
+    </option>
+
+  </select>-->
+                            <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                                       *ngIf="((inner.dt_code=='select' && inner.picklist_options=='') && (inner.display_name!='Company' && inner.picklist_options!='true'))"
+                                       [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+
+                            </ng-select>
+
+
+                            <ng-select [items]="lstCompant" [id]="inner.form_controlName" [multiple]="true"  
+                                       [closeOnSelect]="true" placeholder="Select" (ngModelChange)="validator(inner.form_controlName,inner.is_required)"
+                                       *ngIf="((hideCompany && inner.display_name=='Company') && inner.picklist_options=='true')"
+                                       [formControlName]="inner.form_controlName" bindLabel="companyName"
+                                       bindValue="companyId">
+
+                            </ng-select>
+
+                            <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                                       *ngIf="inner.dt_code=='select' && inner.picklist_options=='true' && inner.display_name!='Company'"
+                                       [formControlName]="inner.form_controlName"
+                                       [multiple]="true" bindLabel="name" bindValue="value">
+
+                            </ng-select>
+                            <small *ngIf="((form.get(inner.form_controlName)?.invalid) && (form.get(inner.form_controlName).dirty) || (form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required))"
+                                   class="text-danger">{{inner.display_name}} is required</small>
+                          </div>
+
+
+                        </div>
+                      </ng-container>
+
+                    </div>
+                  </ng-container>
+                </form>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <form [formGroup]="configurationSetings">
+                      <div class="w-100" [ngClass]="{'disabled':loading}">
+                        <h3 class="form-heading mt-0"><span>Applicable CB</span></h3>
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="table-responsive">
+                              <table class="table mb-0">
+                                <thead class="thead-bg">
+                                  <tr>
+                                    <th>Credit Bureau</th>
+                                    <th>Soft Pull</th>
+                                    <th>Hard Pull</th>
+
+                                  </tr>
+                                </thead>
+                                <tbody formArrayName="fields">
+                                  <tr [formGroupName]="i" *ngFor="let field of fields.controls; let i=index">
+                                    <td>
+                                      <span id="{{'stagename' + i}}">{{field.get('bureauName').value}}</span>
+
+                                    </td>
+                                    <td>
+                                      <label class="switch" *ngIf="field.get('iscEnableSoftPull').value">
+                                        <input type="checkbox" formControlName="isEnableSoftPull" />
+
+                                        <span class="slider round"><span>Yes</span></span>
+                                      </label>
+                                    </td>
+                                    <td>
+                                      <label class="switch" *ngIf="field.get('iscEnableHardPull').value">
+                                        <input type="checkbox" formControlName="isEnableHardPull">
+                                        <span class="slider round"><span>Yes</span></span>
+                                      </label>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-sm-12 pt-3">
+                    <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="onSubmit()"><i class="feather-save"></i> Submit </a>
+                    <!--<i class="fa fa-angle-double-right"></i>-->
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="feather-x"></i> Cancel</a>
+                  </div>
+                </div>
+
+
+              </div>
+
+            </div>
+          </div>
+
+
+          <div class="tab-pane fade" id="prerequisitedocument" [ngClass]="IsPrerequisitedocument ? 'show active' : 'hide'" role="tabpanel">
+            <div class="addabsoultebtn ml-md-0" *ngIf="addOrUpdatePermission"><a href="javascript:void(0);" (click)="AddNewPrerequisiteDocument()" class="btn btn-primary"><i class="feather-plus"></i> Add New </a></div>
+            <div class="row  mb-3" [ngClass]="{'disabled':loadSave}">
+              <div class="col-md-12">
+                <form [formGroup]="configurationSetings">
+                  <div class="w-100" [ngClass]="{'disabled':loading}">
+                    <h3 class="form-heading mt-0"><span>Prerequisite Document</span></h3>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="pagination2 table-responsive">
+                          <table class="table mb-0">
+                            <thead class="thead-bg">
+                              <tr>
+                                <th>Document Type</th>
+                                <th>Visiblity</th>
+                                <th>Mandatory</th>
+                                <th class="text-center">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody formArrayName="fieldsPrerequisiteLoan">                              
+                              <tr [formGroupName]="i" *ngFor="let fieldName of fieldsPrerequisiteLoan.controls; let i=index">                              
+                                <td>
+                                  <span>{{fieldName.get('documentName').value}}</span>
+
+                                </td>
+
+                                <td>                                
+                                  <span *ngIf="fieldName.get('isVisible').value">Yes</span>
+                                  <span *ngIf="!fieldName.get('isVisible').value">No </span>
+
+                                </td>
+                                <td>
+                                  <span *ngIf="fieldName.get('isMandatory').value">Mandatory</span>
+                                  <span *ngIf="!fieldName.get('isVisible').value && !fieldName.get('isMandatory').value">No </span>
+                                  <span *ngIf="fieldName.get('isVisible').value && !fieldName.get('isMandatory').value">Optional</span>
+                                </td>
+                                <td align="center" *ngIf="addOrUpdatePermission">
+                                  <a title="Click to edit." class="mr-2"
+                                     href="javascript:void(0);" (click)="UpdatePrerequisiteDocument(fieldName)"><i class="fa fa-pencil text-info"></i></a>
+
+                                  <a title="Click to delete." (click)="DeletePrerequisiteLoan(fieldName.get('documentTypeId').value,fieldName.get('documentName').value)"
+                                     href="javascript:void(0);"><i class="feather-trash-2 text-danger"></i></a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+                <div class="row mb-1">
+                  <div class="col-md-12 pt-4">
+                    <a href="javascript:void(0);" class="btn btn-secondary mr-1" (click)="DiscountPrerequisitedocumentPrevious()"><i class="fa feather-chevrons-left"></i> Prevoius</a>
+                    <!--<a href="javascript:void(0);" class="btn btn-primary px-4 mr-1" (click)="DiscountPrerequisitedocumentPrevioud()">Prevoius <i class="fa fa-angle-double-right"></i></a>-->
+                    <a href="javascript:void(0);" class="btn btn-primary px-4 mr-1" (click)="PrerequisitedocumentNext()">Next <i class="fa fa-angle-double-right"></i></a>
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="feather-x"></i> Cancel</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="DiscountCategory" role="tabpanel" [ngClass]="IsDiscountCategory ? 'show active' : 'hide'">
+            <div class="addabsoultebtn ml-md-0" *ngIf="addOrUpdatePermission"><a href="javascript:void(0);" (click)="AddNewCategory()" class="btn btn-primary"><i class="feather-plus"></i> Add New Category </a></div>
+            <div class="row">
+              <div class="col-lg-12 " [ngClass]="{'disabled':loadSave}">
+                <form [formGroup]="configurationSetings">
+                  <div class="w-100" [ngClass]="{'disabled':loading}">
+                    <h3 class="form-heading mt-0"><span _ngcontent-c1="">Discount Category</span></h3>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="pagination2 table-responsive">
+                          <table class="table mb-0">
+                            <thead class="thead-bg">
+                              <tr>
+                                <th>Category Name</th>
+                                <th>Active</th>
+                                <th>Discount %</th>
+                                <th class="text-center" *ngIf="addOrUpdatePermission">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody formArrayName="loanProductDiscountCategory">
+                              <tr [formGroupName]="i" *ngFor="let discountFieldName of loanProductDiscountCategory.controls; let i=index">
+                                <td>
+                                  <span>{{discountFieldName.get('documentName').value}}</span>
+
+                                </td>
+                                <td>
+                                  <label class="switch">
+                                    <input type="checkbox" formControlName="mendatory" />
+
+                                    <span class="slider round"><span>Yes</span></span>
+                                  </label>
+                                </td>
+                                <td>
+                                  <div class="form-group">
+                                    <input type="text" placeholder="Enter Discount" class="form-control" maxlength="50" formControlName="discount" />
+                                  </div>
+                                </td>
+                                <td align="center" *ngIf="addOrUpdatePermission">
+                                  <a title="Click to delete." (click)="DeleteDiscountCategory(discountFieldName.get('documentId').value,discountFieldName.get('documentName').value)"
+                                     href="javascript:void(0);"><i class="feather-trash-2 text-danger"></i></a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <div class="row mb-3">
+                  <div class="col-md-12 pt-4">
+                    <a href="javascript:void(0);" class="btn btn-secondary mr-2" (click)="DiscountPrevious()"><i class="fa feather-chevrons-left"></i> Prevoius </a>
+                    <a href="javascript:void(0);" *ngIf="addOrUpdatePermission" class="btn btn-success mr-2" (click)="onSubmit()"><i class="feather-save"></i> Submit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="feather-x"></i> Cancel</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>
+<app-addprerequisitedocument #presiteDocument (prerequisiteDocument)="prerequisiteDocument($event)"></app-addprerequisitedocument>
+<app-discountcategory #discountDocument (discountDocuments)="discountDocuments()"></app-discountcategory>
+<app-updateprerequisitedocument #updatePresiteDocuments (updatePresiteDocument)="updatePresiteDocument($event)"></app-updateprerequisitedocument>
+<!--<app-updateprerequisitedocument #updatePresiteDocuments ></app-updateprerequisitedocument>-->

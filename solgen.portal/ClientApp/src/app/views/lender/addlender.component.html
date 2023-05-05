@@ -1,0 +1,292 @@
+<div class="header float-left w-100 mb-2">
+    <h2 class="float-left pr-2"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper">
+        <ol class="breadcrumb">
+            <li><a routerLink="/dashboard">Dashboard</a></li>
+            <li><a routerLink="/lender">Manage {{pageModuleName }}</a></li>
+            <li class="active">{{pageTitle}}</li>
+        </ol>
+    </div>
+
+</div>
+<div class="clearfix"></div>
+<div class="panel">
+    <div class="panel-content " [ngClass]="{'disabled':loadSave}">
+        <form [formGroup]="form" *ngIf="form">
+            <ng-container *ngFor="let item of formControlList">
+                <!--<h3 class="form-heading"> <span>{{ item.group_display_name}}</span></h3>-->
+                <div class="row  mb-2">
+                    <ng-container *ngFor="let inner of item.InnerData">
+                        <div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : inner.form_field_visibility == 'NO', 'col-12': inner.layout_type =='single', 'col-md-6': inner.layout_type =='double', 'col-lg-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                             inner.layout_type =='four' }" ngShow="inner.dependent_show_type == true">
+                            <!---->
+                            <input type="hidden" *ngIf="inner.form_field_visibility == 'NO'" />
+                            <!--v-model="item.value" v-bind:id="item.name"     -->
+                            <label *ngIf="inner.form_field_visibility == 'YES'">{{ inner.display_name}}:<span class="text-danger" [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+                            <!--<a href="javascript:void(0);" v-bind:tabindex="-1" data-toggle="popoveruserguide" v-bind:data-content="GetLocalizedValue(item.user_guide)">-->
+                            <!--<a href="javascript:void(0);" data-toggle="popoveruserguide" data-content="inner.user_guide" [title]="inner.">
+            <i class="fa fa-question-circle-o text-popover" style="font-size: 14px;" ></i>
+          </a>-->
+                            <div class="form-group" *ngIf="inner.form_field_visibility == 'YES'">
+
+                                <!--text  [placeholder]="inner.display_name"-->
+                                <input type="text" class="form-control" [readonly]="inner.is_readOnly" [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    *ngIf="inner.picklist_options != 'Lookup' && inner.dt_code !='date'  && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='date' && inner.dt_code !='int' && inner.dt_code !='decimal' && inner.dt_code !='bigint'"
+                                />
+                                <!--<small *ngIf="inner.dt_code != 'int' && inner.dt_code != 'bigint' && inner.dt_code != 'decimal' && ((form.get(inner.form_controlName)?.invalid) && (form.get(inner.form_controlName).dirty) || (form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required))"
+            class="text-danger">{{//inner.display_name}} is required</small>-->
+
+
+                                <input type="text" class="form-control" [readonly]="inner.is_readOnly" [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    *ngIf="inner.dt_code == 'int'" />
+                                <!--<small *ngIf="inner.dt_code == 'int'  && (form.get(inner.form_controlName).touched && form.get(inner.form_controlName).errors?.required)"
+            class="text-danger">{{//inner.display_name}} is required</small>-->
+                                <small *ngIf="inner.dt_code == 'int' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)" class="text-danger">Please enter valid value</small>
+
+                                <input type="text" class="form-control" [readonly]="inner.is_readOnly" [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    *ngIf="inner.dt_code == 'bigint'" />
+                                <!--<small *ngIf="inner.dt_code == 'bigint'  && (form.get(inner.form_controlName).touched && form.get(inner.form_controlName).errors?.required)"
+            class="text-danger">{{ //inner.display_name}} is required</small>-->
+                                <small *ngIf="inner.dt_code == 'bigint' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)" class="text-danger">Please enter valid value</small>
+
+                                <input type="text" class="form-control" [readonly]="inner.is_readOnly" [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    *ngIf="inner.dt_code == 'decimal'" />
+
+                                <!--<small *ngIf="inner.dt_code == 'decimal' && (form.get(inner.form_controlName).touched &&
+            form.get(inner.form_controlName).errors?.required)"
+            class="text-danger">{{//inner.display_name}} is required</small>-->
+
+                                <small *ngIf="inner.dt_code == 'decimal' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)" class="text-danger">Please enter valid value</small>
+
+                                <!--Textarea [placeholder]="inner.display_name"-->
+                                <textarea class="form-control" *ngIf="inner.dt_code == 'textarea'" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName).errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+
+                                <!--Ng Calendar [placeholder]="inner.display_name"-->
+
+                                <p-calendar inputStyleClass="form-control start-date" *ngIf="inner.dt_code == 'date'" [formControlName]="inner.form_controlName" [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                                <!--<p-calendar  inputStyleClass="form-control start-date" formControlName="leaseDate" placeholder="Select Date of Lease" [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+            [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseDate').invalid && (leaseDetailForm.get('leaseDate').dirty || leaseDetailForm.get('leaseDate').touched) && (leaseDetailForm.get('leaseDate').errors?.required)) }"></p-calendar>-->
+                                <!--end calandar-->
+                                <!--Checkbox-->
+
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox' ">
+
+                                    <div *ngFor="let options of inner.listoptions">
+
+                                        <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+
+
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input id="chk_{{inner.custom_field_id}}_{{option}}_{{i}}" value="5555" [checked]="checkvalue(inner.value,option)" (change)="onCheckboxChange($event,item,inner)" class="dynamic custom-control-input" type="checkbox">
+                                                <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="chk_{{inner.custom_field_id}}_{{option}}_{{i}}">{{option}}</label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+
+                                    <div class="form-group">
+                                        <label class="switch">
+                        <input id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName"
+                               class="dynamic custom-control-input" type="checkbox">
+                        <span class="slider round"><span>Yes</span></span>
+                      </label>
+                                        <!--<input id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName"
+                             class="dynamic custom-control-input" type="checkbox">
+                      <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="chk_{{inner.custom_field_id}}">{{inner.display_name}}</label>-->
+                                    </div>
+
+                                </div>
+
+                                <!--Radio button-->
+                                <!--<div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio' && solarInstall == true  ">
+              <div *ngFor="let options of inner.listoptions">
+                <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                  <div class="custom-control custom-radio mx-2  p-0">
+
+
+
+                    <input id="radio-{{inner.custom_field_id}}_{{option}}" [formControlName]="inner.form_controlName" [value]="option" type="radio">
+                    <label for="radio-{{inner.custom_field_id}}_{{option}}" class="radio-label">{{option}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>-->
+                                <!--Ng Dropdown-->
+                                <!--Dropdown
+            picklist_options = Lookup       dt_code==select    dropdown_type==normal--- so fill dropdown with select_options- coming from db
+            -->
+                                <!--<select [formControlName]="inner.form_controlName" [ngClass]="{'form-control' : true,'invalid': inner.dt_code=='select' }" *ngIf="inner.dt_code=='select' && inner.select_options==''">
+              <option value="">Select</option>
+              <option [value]="option.id"
+                      *ngFor="let option of MakeNormalArray(inner.selectlistvalues)">
+                {{option.value}}
+              </option>
+            </select>-->
+
+                                <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select" *ngIf="inner.dt_code=='select' && inner.picklist_options==''" [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+                                </ng-select>
+
+                                <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select" *ngIf="inner.dt_code=='select' && inner.picklist_options=='true'" [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name"
+                                    bindValue="value">
+                                </ng-select>
+
+                                <small *ngIf="((form.get(inner.form_controlName)?.invalid) && (form.get(inner.form_controlName).dirty) || (form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required))" class="text-danger">{{inner.display_name}} is required</small>
+                                <!--Dropdown
+              picklist_options != Lookup (contain values to fill in dropdown)      dt_code==select  -- so fill dropdown with picklist_options
+            -->
+                                <!--<select [formControlName]="inner.form_controlName" class="form-control" [ngClass]="{'form-control' : true }" *ngIf="inner.picklist_options != 'LOOKUP' && inner.dt_code=='select'" [(ngModel)]="inner.form_controlName"
+                    (change)='onOptionsSelected($event,inner)'>
+              <option value="">Select</option>
+              <option [value]="option.name"
+                      *ngFor="let option of MakeArray(inner.picklist_options,inner.dt_code)">
+                {{option.name}}
+              </option>
+            </select>-->
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-12">
+                    <a *ngIf='addOrUpdatePermission' href="javascript:void(0);" class="btn btn-success mr-2" (click)="onSubmit()"><i class="feather-save"></i> Submit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<!--<div *ngIf="Id" class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel cntainerwithoutbg clearfix">
+      <div class="panel-content clearfix mb-4 p-0">
+        <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+          <li class="nav-item">
+          <a class="nav-link active show" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-selected="true">Bank Documents</a></li>
+          <li class="nav-item">
+          <a class="nav-link" id="routes-tab" data-toggle="tab" href="#routes" role="tab" aria-selected="true">Data Routes</a></li>
+          <li class="nav-item">
+          <a class="nav-link" id="mappings-tab" data-toggle="tab" href="#mappings" role="tab" aria-selected="true">Document/Data Route Mappings</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade active show" id="documents" role="tabpanel">
+            <div class="addabsoultebtn"><a class="btn btn-primary" href="javscript:;" (click)="uploadFormStackDocument()"><i class="fa fa-upload"></i> Upload Document</a></div>
+            <div class="panel-content p-0 pagination2 table-responsive no-padding " [ngClass]="{'disabled':loadSave}">
+              <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                             [rows]="loanDocuments"
+                             [columnMode]="'force'"
+                             [headerHeight]="40"
+                             [footerHeight]="40"
+                             [rowHeight]="'auto'"
+                             
+                             [loadingIndicator]="loadSave">
+                <ngx-datatable-column name="Document Name" prop="name"></ngx-datatable-column>
+                <ngx-datatable-column name="Document Id" prop="id"></ngx-datatable-column>
+                <ngx-datatable-column name="Path" prop="DateOpened">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.folder}}/{{row.name}}
+                  </ng-template>
+                </ngx-datatable-column>-->
+<!--<ngx-datatable-column name="Edit">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="OpenMapping(row)"><i class="fa fa-pencil"></i> Edit Mapping</a>
+        </ng-template>
+      </ngx-datatable-column>-->
+<!--<ngx-datatable-column name="Edit">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="EditDocument(row)"><i class="fa fa-pencil"></i> Edit Document</a>
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+              <app-loader [size]=60 [color]="'white'" *ngIf="loadDocuments" class="loader"></app-loader>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="routes" role="tabpanel">
+            <div class="addabsoultebtn"><a class="btn btn-primary" href="javscript:;" (click)="createDataRoute()"><i class="feather-plus"></i> Create Data Route</a></div>
+
+            <div class="panel-content p-0 pagination2 table-responsive no-padding " [ngClass]="{'disabled': loadSave}">
+              <ngx-datatable #table2 class="bootstrap table table-hover table-dynamic"
+                             [rows]="dataRoutes"
+                             [columnMode]="'force'"
+                             [headerHeight]="40"
+                             [footerHeight]="40"
+                             [rowHeight]="'auto'"
+                             
+                             [loadingIndicator]="loadSave">
+                <ngx-datatable-column name="Data Route Name" prop="name"></ngx-datatable-column>
+                <ngx-datatable-column name="Data Route Id" prop="id"></ngx-datatable-column>
+                <ngx-datatable-column name="Path" prop="DateOpened">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.folder}}/{{row.name}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Edit">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="OpenRoute(row)"><i class="fa fa-pencil"></i> Edit Data Route</a>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Manage">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="OpenRouteDelivery(row)"><i class="fa fa-pencil"></i>Manage Delivery</a>
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="mappings" role="tabpanel">
+            <div class="addabsoultebtn"><a class="btn btn-primary" href="javscript:;" (click)="createWebmergeMapping()"><i class="feather-plus"></i> Create Document/Data Route Mapping</a></div>
+            <div class="panel-content p-0 pagination2 table-responsive no-padding " [ngClass]="{'disabled': loadSave}">
+              <ngx-datatable #table2 class="bootstrap table table-hover table-dynamic"
+                             [rows]="webmergeMappingsPagedData.data"
+                             [columnMode]="'force'"
+                             [headerHeight]="40"
+                             [footerHeight]="40"
+                             [rowHeight]="'auto'"
+                             
+                             [loadingIndicator]="loadSave">
+                <ngx-datatable-column name="Mapping Name" prop="Name"></ngx-datatable-column>
+                <ngx-datatable-column name="Mapping Object Id" prop="WebmergeObjectId"></ngx-datatable-column>
+                <ngx-datatable-column name="Mapping Object Type" prop="WebmergeObjectType"></ngx-datatable-column>
+                <ngx-datatable-column name="Is Default" prop="IsDefault">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <label class="switch">
+                      <input type="checkbox" [checked]="row.IsDefault == true" (change)="onIsDefaultChange(row)" />
+                      <span class="slider round">
+                        <span>Yes</span>
+                      </span>
+                    </label>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Edit">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="updateWebmergeMapping(row)"><i class="fa fa-pencil"></i> Edit Mapping</a>
+                  </ng-template>
+                </ngx-datatable-column>
+                
+              </ngx-datatable>
+              <app-loader [size]=60 [color]="'white'" *ngIf="loadWebmergeMappingsPagedData" class="loader"></app-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>-->
+
+<app-data-routing #dataRouting (dataRoutingEmit)="dataRoutingEmit()"></app-data-routing>
+<app-upload-document #uploadDocument (uploadDocuments)="uploadDocuments()"></app-upload-document>
+<app-documentmapping #documentMapping (documentMappings)="documentMappings()"></app-documentmapping>
+<app-routing-delivery #delivery></app-routing-delivery>

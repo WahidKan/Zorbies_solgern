@@ -1,0 +1,28 @@
+<div bsModal #treeviewpopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-info " style="min-width:600px;" [ngClass]="{'disabled':loadSave}">
+      <div class="modal-content">
+       
+        <div class="modal-header">
+          <h4 class="modal-title">Add/Edit File Type</h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-bottom:10px; max-height:600px; overflow-y:auto;">
+          <div class="col-md-12">
+            <ejs-treeview id='treeelement' #treeelement [fields]='field'  (nodeChecked)='nodeChecked($event)' [showCheckBox]="true">
+            </ejs-treeview>
+          </div>
+        </div>
+        <div class="modal-footer">
+          
+           <a href="javascript:;"  class="btn btn-success mr-2" (click)="submit()">
+            <i class="feather-save mr-1"></i> Submit
+          </a>
+          <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="feather-x"></i> Cancel</a>
+        </div>
+        <!-- <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader> -->
+      </div>
+    </div>
+  </div>
+  

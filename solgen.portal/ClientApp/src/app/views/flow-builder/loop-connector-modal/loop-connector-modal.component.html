@@ -1,0 +1,28 @@
+<div bsModal #loopConnectorModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select outcome for decision connector</h5>
+                <button type="button" (click)="close()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div class="row" *ngIf="LoopConnectorModalForm && targetId && sourceId" [formGroup]="LoopConnectorModalForm">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="custom-control custom-checkbox">
+                                    <input checked type="checkbox" class="custom-control-input" id="isBreakAwayCondition" formControlName="isBreakAwayCondition">
+                                    <label class="custom-control-label" for="isBreakAwayCondition">is break away condition?</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success form-btns" (click)="save()"><i class="feather-save text-white pr-2"></i>Submit</button>
+                <button type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

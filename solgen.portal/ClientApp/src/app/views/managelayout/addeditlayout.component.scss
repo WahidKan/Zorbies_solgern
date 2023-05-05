@@ -1,0 +1,90 @@
+.list-group.custom-field-layout {
+width: 100%;
+float: left;
+display: block;
+padding: 10px !important;
+background: #fff;
+border: 1px solid #cdd4da;
+}
+
+.custom-field-layout li {
+width: 98%;
+margin: 1%;
+display: inline-block;
+cursor: all-scroll;
+border-radius: 0px !important;
+background: #f9f9f9;
+border: 1px solid #e5e9ec;
+}
+
+.custom-field-layout li a {
+color: #777777;
+font-size: 16px;
+font-weight: 500;
+cursor: all-scroll;
+}
+
+.draged-item {
+background: #f1f1f1;
+padding: 5px 10px;
+margin-bottom: 10px;
+border: 1px solid #dcdcdc;
+}
+
+.drop[_ngcontent-c1] {
+border: 1px solid #ccc;
+/*padding: 10px;*/
+padding:0px;
+margin-top: 0;
+}
+.side_panel-heading {
+background: #2f4050;
+color: #fff;
+padding: 10px;
+margin: 0px !important;
+font-weight: 500;
+font-size: 150% !important;
+}
+.drop_right_heading {
+background: #f9f9f9;
+border-bottom: 1px solid #cdd4da; padding:0.5rem 0px;}
+.custom_feild_box{padding:15px;}
+.drop_right_heading .form-group{margin:0rem;}
+/*
+
+.custom-field-layout-left-panel {background: #fff !important; border: 1px solid red;}
+.custom-field-layout-left-panel li { width: 100% !important; border: 1px solid red; border-radius:0px !important;}
+
+
+(4:30:03 PM) Ajay Aneja - DES: background: f9f9f9
+(4:30:14 PM) Ajay Aneja - DES: border e5e9ec
+(4:30:23 PM) Ajay Aneja - DES: headign bg 
+(4:30:24 PM) Ajay Aneja - DES: 2f4050
+(4:30:55 PM) Ajay Aneja - DES: outer bg- cdd4da
+
+
+*/
+.container-new {
+background-color: forestgreen;
+height: 50px;
+width: 50px;
+display: block;
+float: left;
+margin-left: 30px;
+margin-top: 30px;
+padding: 10%;
+visibility: visible;
+color: red;
+}
+
+.projectcontainer {
+background-color: lightsteelblue;
+display: block;
+height: 500px;
+width: 600px;
+margin-top: 5%;
+visibility: visible;
+}
+
+
+

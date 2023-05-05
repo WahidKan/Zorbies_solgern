@@ -1,0 +1,17 @@
+#contentTitle { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 16px; font-weight: 600; }
+.component-container{ width:100%; margin-bottom:20px;}
+.component-container h6 { color: #9c9c9c; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin: 10px 0px 8px 0px; }
+.buttonGroup .btn-cntnr { width: 50%; display: inline-block; margin-bottom: 8px;  }
+.buttonGroup .btn-cntnr:nth-child(2n+1){ padding-right:2%;}
+.buttonGroup .btn-cntnr:nth-child(2n+2){ padding-left:2%;}
+.buttonGroup .btn-cntnr button { width: 100%; background: #f7f7f7; border: 1px solid #e0e0e0; height: 50px; user-select: none; color: #656565; position: relative; padding: 3px 38px 9px 6px; display: flex; transition: all ease 0.5s; line-height: 17px; text-align: left; font-size: 13px; font-weight: 600; } 
+.buttonGroup .btn-cntnr button i{position: absolute; right: 7px; top: 6px; font-size: 16px; color: #989898; transition: all ease 0.2s; }
+.buttonGroup .btn-cntnr button span.drag-icon { position: absolute; display: flex; -moz-box-align: center; align-items: center; height: 100%; width: 22px; transition: opacity 0.15s ease 0s, visibility 0.15s ease 0s; opacity: 0; visibility: hidden; background: #ebebeb; left: 0; top: 0; justify-content: center;}
+.buttonGroup .btn-cntnr button span.drag-icon i { position: relative; right: 0; top: 0; font-size: 14px; color: #989898; }
+.buttonGroup .btn-cntnr button:hover { padding: 3px 5px 9px 28px; cursor: move; box-shadow: rgba(56, 57, 63, 0.04) 0px 0px 2px 0px, rgba(56, 57, 63, 0.12) 0px 4px 8px 0px; border-color: rgba(118, 118, 118, 0.16); transition: all ease 0.5s;}
+.buttonGroup .btn-cntnr button:hover i{ opacity:0; visibility: hidden; transition: all ease 0.2s;}
+.buttonGroup .btn-cntnr button:hover span.drag-icon, .buttonGroup .btn-cntnr button:hover span.drag-icon i {  opacity: 1; visibility: visible; transition: all ease 0.5s;}
+.buttonGroup .btn-cntnr button.contentItemField{ background:#ebf2f2; border: 1px solid #b6cfcc; color: #555;}
+.buttonGroup .btn-cntnr button.contentItemField i{ color: #91aca9; }
+.buttonGroup .btn-cntnr button.contentItemField span.drag-icon{background: #c6dfdc;}
+.buttonGroup .btn-cntnr button.contentItemField span.drag-icon i{ color: #787878;}

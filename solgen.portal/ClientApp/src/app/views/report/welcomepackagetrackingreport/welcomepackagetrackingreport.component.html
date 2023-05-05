@@ -1,0 +1,134 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Welcome Package Tracking </span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active">Welcome Package Tracking </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <div class="col-md-12 bg-light py-3">
+              <div class="row">
+                <div class="col-md-12 col-lg-12 col-xl-12">
+                  <div class="row">
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-3">
+                      <div class="form-group mb-xl-0">
+                        <input class="form-control" type="text" [(ngModel)]='searhName' placeholder="Search By Business Name" (keyup)='updateFilter($event)'>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-3">
+                      <div class="form-group">
+                        <p-calendar inputStyleClass="form-control start-date" placeholder="From" [(ngModel)]="From" [maxDate]="To" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-3">
+                      <div class="form-group">
+                        <p-calendar inputStyleClass="form-control start-date" placeholder="To" [(ngModel)]="To" [minDate]="From" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-3">
+                      <div class="form-group mb-xl-0">
+                        <input type="button" class="btn btn-primary src-icon" (click)="SearchLease()" value="Search">
+                        <input type="button" class="btn btn-danger reset-icon" value="Reset" (click)="ResetSearch()" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-12 col-xl-12 text-xl-right"></div>
+              </div>
+            </div>
+            <div class="col-md-12 mt-4 mb-2">
+              <h3 class="heading float-left w-100" *ngIf="pagedData.data.length>0">
+                <div class="text-right float-md-right mt-2 mt-md-0">
+                  <div class="mb-0">
+                    <div class="input-group">
+                      <small class="pt-1 pr-1 h6 font-weight-normal">Download As: </small>
+                      <a href="javascript:void(0);" (click)="ExportTOExcel()" class=" text-success mb-3 mb-xl-0 px-1"><i class="fa fa-file-excel" style="font-size:22px;"></i></a>
+                      <a href="javascript:void(0);" (click)="generatePdf()" class=" text-danger mb-3 mb-xl-0 px-1"><i class="fas fa-file-pdf" style="font-size:22px;"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </h3>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12">
+              <div class="table-responsive" id="leaseReportTable">
+                <div class="table table-striped">
+                  <ngx-datatable  #table class="bootstrap table table-hover table-dynamic"
+                                 [rows]="pagedData.data"
+                                 [columnMode]="'force'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="40"
+                                 [rowHeight]="'auto'"
+                                 
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="pagedData.pager.totalItems"
+                                 [offset]="pagedData.pager.currentPage"
+                                 [limit]="pagedData.pager.pageSize"
+                                 (page)='setPage($event)'
+                                 (sort)="onSort($event)">
+                    <ngx-datatable-column [width]="80" name="Sent By" prop="SentBy" [sortable]="true">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Business Name" prop="BusinessName" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="ContactName" prop="ContactName" [sortable]="true"></ngx-datatable-column>
+                    
+                    <ngx-datatable-column name="Email" prop="Email" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Business Phone" prop="BusinessPhone" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Contact Phone" prop="ContactPhone" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Package Sent Date" prop="PackageSentDate" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="currentPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count" style="max-width:170px;">
+                          {{rowCount}} total
+                        </div>
+                        <div>
+                          <div style="color:black; margin-right:10px;" class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                         [pagerPreviousIcon]="'fa fa-angle-left'"
+                                         [pagerNextIcon]="'fa feather-chevron-left'"
+                                         [page]="pagedData.pager.currentPage+1"
+                                         [size]="pageSizeValue"
+                                         [count]="pagedData.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPage($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

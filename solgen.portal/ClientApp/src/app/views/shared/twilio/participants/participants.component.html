@@ -1,0 +1,18 @@
+<div id="participant-list">
+  <div id="alone" [ngClass]="{ 'table':isAlone , 'd-none': !isAlone }">
+    <p class="text-center text-monospace h3 font-weight-bold" style="display: table-cell; color: whitesmoke">
+     {{isFull ? "Room is already full. You cannot join!" : "No User Connected" }}  <i class="far fa-frown"></i>
+    </p>
+  </div>
+  <div [ngClass]="{ 'd-none': isAlone }">
+    <div class="row m-0">
+      <!-- <p class="col-8 text-white">Hello World!</p> -->
+      <div class="col-12">
+        <!-- <button  type="button" class="btn btn-lg leave-room" title="Click to leave this room." (click)="remove($event)">Leave call?</button> -->
+        <!-- <button *ngIf="!isOwner" type="button" class="btn btn-lg leave-room" title="Click to leave this room." (click)="onLeaveRoom($event)"> Remove?</button>-->
+      </div> 
+    <!-- </div> -->
+    <div class="part-list" #list>
+    </div>
+  </div>
+</div>

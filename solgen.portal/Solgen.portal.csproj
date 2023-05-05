@@ -1,0 +1,102 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TypeScriptToolsVersion>4.3</TypeScriptToolsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ClientApp\src\app\views\contactlist\**" />
+    <Compile Remove="ClientApp\src\app\views\manage-roles\**" />
+    <Compile Remove="ClientApp\src\app\views\man&#xD;&#xA;			 ageinsurancerequest\titeworkrequest\**" />
+    <Compile Remove="ClientApp\src\app\views\masternames\**" />
+    <Content Remove="ClientApp\src\app\views\contactlist\**" />
+    <Content Remove="ClientApp\src\app\views\manage-roles\**" />
+    <Content Remove="ClientApp\src\app\views\manageinsurancerequest\titeworkrequest\**" />
+    <Content Remove="ClientApp\src\app\views\masternames\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\views\contactlist\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\views\manage-roles\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\views\manageinsurancerequest\titeworkrequest\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\views\masternames\**" />
+    <None Remove="ClientApp\src\app\views\contactlist\**" />
+    <None Remove="ClientApp\src\app\views\manage-roles\**" />
+    <None Remove="ClientApp\src\app\views\manageinsurancerequest\titeworkrequest\**" />
+    <None Remove="ClientApp\src\app\views\masternames\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\src\app\views\flow-builder\resources\index.ts" />
+    <None Remove="ClientApp\src\app\views\lender\lender.service.ts" />
+    <None Remove="ClientApp\src\app\views\lender\lenderlist.service.ts" />
+    <None Remove="ClientApp\src\app\views\lender\lenderrouting.module.ts" />
+    <None Remove="ClientApp\src\app\views\manageuser\listusers.component.ts" />
+    <None Remove="ClientApp\src\app\views\manageuser\user-routing.module.ts" />
+    <None Remove="ClientApp\src\app\views\manageuser\user.module.ts" />
+    <None Remove="ClientApp\src\app\views\notifications\listnotification.component.ts" />
+    <None Remove="ClientApp\src\app\views\notifications\notification-routing.module.ts" />
+    <None Remove="ClientApp\src\app\views\notifications\notification.module.ts" />
+    <None Remove="ClientApp\src\app\views\notifications\notification.service.ts" />
+    <None Remove="ClientApp\src\app\views\shared\custom-validation\AtLeastOne-Validator.ts" />
+    <None Remove="ClientApp\src\app\views\shared\manageviewnew\manageviewnew.service.ts" />
+    <None Remove="ClientApp\src\app\views\shared\manageview\manageview.service.ts" />
+    <None Remove="ClientApp\src\app\views\vendor\vendor-routing.module.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\views\flow-builder\resources\index.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\lender\lenderlist.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\lender\lenderrouting.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\manageuser\addedituser.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\manageuser\listusers.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\manageuser\user-routing.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\manageuser\user.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\notifications\listnotification.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\notifications\notification-routing.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\notifications\notification.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\notifications\notification.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\shared\custom-validation\AtLeastOne-Validator.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\shared\manageviewnew\manageviewnew.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\shared\manageview\manageview.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\views\vendor\vendor-routing.module.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp\src\app\views\calendar\makeappointment\" />
+    <Folder Include="ClientApp\src\app\views\calendar\callanderdetail\" />
+    <Folder Include="ClientApp\src\app\views\dashboard\otheruserdashboard\" />
+    <Folder Include="ClientApp\src\app\views\leasefundingpackage\leasefundingpackageview\" />
+    <Folder Include="ClientApp\src\app\views\loanapplication\loanapplicationpopup\" />
+    <Folder Include="ClientApp\src\app\views\loanapplication\coapplicantdetail\" />
+    <Folder Include="ClientApp\src\app\views\loanapplication\cbilscore\" />
+    <Folder Include="ClientApp\src\app\views\bank\" />
+    <Folder Include="ClientApp\src\app\views\loanproduct\addprerequisitedocument\" />
+    <Folder Include="ClientApp\src\app\views\manageinsurancerequest\insurancerequestdetail\" />
+    <Folder Include="ClientApp\src\app\views\managelayout\viewpopupwindow\" />
+    <Folder Include="ClientApp\src\app\views\managelease\leasedocumentforuploaded\" />
+    <Folder Include="ClientApp\src\app\views\managelease\leaseapproveforpurchasedetail\" />
+    <Folder Include="ClientApp\src\app\views\managelease\creditscoredetail\" />
+    <Folder Include="ClientApp\src\app\views\managelease\titleworkrequest\" />
+    <Folder Include="ClientApp\src\app\views\managelease\fundingpackage\" />
+    <Folder Include="ClientApp\src\app\views\managevendorleaserequest\vendorrequestdetail\" />
+    <Folder Include="ClientApp\src\app\views\report\leasetrackingreport\" />
+    <Folder Include="ClientApp\src\app\views\report\titlworkrequestreport\" />
+    <Folder Include="ClientApp\src\app\views\shared\leasetemplatedetail\" />
+    <Folder Include="ClientApp\src\app\views\shared\googlemap\" />
+    <Folder Include="ClientApp\src\app\views\shared\twilio\" />
+    <Folder Include="ClientApp\src\app\views\shared\search-as-type\" />
+    <Folder Include="ClientApp\src\app\views\task\" />
+    <Folder Include="ClientApp\src\app\views\tracker\" />
+    <Folder Include="ClientApp\src\app\views\welcome-package\" />
+    <Folder Include="ClientApp\src\app\views\shared\uploaddocument\" />
+    <Folder Include="ClientApp\src\app\views\work-flow\mappingpopup\" />
+    <Folder Include="ClientApp\src\assets\uploads\UploadAnnouncementsData\" />
+  </ItemGroup>
+
+</Project>

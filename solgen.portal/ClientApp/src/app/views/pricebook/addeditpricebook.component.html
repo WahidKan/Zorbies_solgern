@@ -1,0 +1,87 @@
+<div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Add Price book</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li><a routerLink="/dashboard">Dashboard</a></li>
+      <li><a routerLink="/pricebook">Manage Price Book</a></li>
+      <li class="active">{{pageTitle}}</li>
+    </ol>
+  </div>
+
+</div>
+<div class="clearfix"></div>
+
+
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-content">
+        <form [formGroup]="priceBook" autocomplete="off">
+          <div class="row  mb-2">
+            <div class="col-sm-12 col-md-4">
+              <label>Price Book:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Please Book Price" formControlName="bookPrice"
+                       [ngClass]="{'is-invalid': (bookPrice.invalid && (bookPrice.dirty || bookPrice.touched) && (bookPrice.errors?.required || bookPrice.errors?.maxlength)) }">
+
+                <small *ngIf="bookPrice.invalid && (bookPrice.dirty || bookPrice.touched) && bookPrice.errors?.required"
+                       class="text-danger">Book Price is required</small>
+                <small *ngIf="bookPrice.invalid && (bookPrice.dirty || bookPrice.touched) && bookPrice.errors?.maxlength"
+                       class="text-danger">Book Price must be less than 50 characters.</small>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>Book Price Type:</label>
+              <div class="form-group">
+                <ng-select [items]="lstPriceBook" placeholder="Select Book Price Type" bindValue="value" bindLabel="text" formControlName="bookPriceType"
+                           [ngClass]="{'is-invalid': (bookPriceType.invalid && (bookPriceType.dirty || bookPriceType.touched) && bookPriceType.errors?.required)}"></ng-select>
+                <small *ngIf="bookPriceType.invalid && (bookPriceType.dirty || bookPriceType.touched) && bookPriceType.errors?.required"
+                       class="text-danger">Please select Company Type</small>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>Active:</label>
+              <div class="form-group">
+                <label class="switch">
+                  <input type="checkbox" formControlName="isActive" />
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>Is Standard Price Book:</label>
+              <div class="form-group">
+                <label class="switch">
+                  <input type="checkbox" formControlName="isStandardPriceBook" />
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+            </div>
+            <!--<div class="col-sm-12 col-md-4">
+              <label>Visible To Proposal:</label>
+              <div class="form-group">
+                <label class="switch">
+                  <input type="checkbox" formControlName="isVisibleToProposal" />
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+            </div>-->
+            <div class="col-sm-12">
+              <label>Description:</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" formControlName="Description"></textarea>
+                <!--<small *ngIf="Description.invalid && (Description.dirty || Description.touched) && Description.errors?.required"
+             style="color:red;">Template  is required</small>-->
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-12 text-right">
+              <a href="javascript:void(0);" *ngIf="addOrUpdatePermission" class="btn btn-success mr-2" (click)="save()"><i class="feather-save"></i> Submit</a>
+              <a class="btn btn-danger" href="javascript:void(0);" (click)="Cancel()"><span><i class="feather-x"></i> Cancel</span></a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Schedular</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+      <li><a class="smview"  routerLink="/serviceappointment">Manage Service Appointment</a></li>
+      <li class="active">Schedular</li>
+    </ol>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="panel">
+  <div class="panel-content px-3 pagination2 table-responsive no-padding">
+    <app-mapview moduleName="serviceappointment" subModuleName="serviceappointment" ></app-mapview>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>
+
+

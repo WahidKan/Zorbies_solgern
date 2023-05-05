@@ -1,0 +1,520 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Requirement Details</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+        <li><a class="smview" routerLink="/requirement">Requirements</a></li>
+        <li class="active">Requirement Details</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+<div class="clearfix"></div>
+
+<!-- <div class="card mb-3 mb-4 border item-view">
+  <span class="text-capitalize p-3 font-weight-bold border-bottom heading-above-subhead">
+    <i class="feather-file-text text-dark float-left mr-2" style="font-size:27px;"></i>
+    <span class="float-left w-85-res" style="font-size:18px;"><span>Requirement</span> {{ContractNumber}}</span>
+    <span class="cntnt-right-btn mr15 btn-iconres">
+      <a href="javascript:void(0);" [routerLink]="['/requirement/editrequirement',Id]" class="btn btn-success text-white mr-2 smview"><i class="fa fa-pencil mr-1"></i> Edit</a>
+      <a href="javascript:void(0);" class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="fa fa-arrow-left mr-1"></i> Back</a>
+    </span>
+  </span>
+</div>     -->
+
+<div class="clearfix"></div>
+<!-- <ng-container *ngFor="let item of groupTop">
+  <div *ngIf="item.IsVisible" class="card m-0 border">
+    <span class="text-capitalize p-3 font-weight-bold text-center " style="font-size: 24px;">
+      {{item.default_value}}
+    </span>
+  </div>
+</ng-container> -->
+<app-newnoteslist #listnotesmodel1 subModuleName="Requirements" [view]="true"  [AccountId]="accountId" [ObjectRefId]="Id" (newItemEvent)="addItem($event)">
+</app-newnoteslist>
+<div class="card border-0" >
+  <div class="panel">
+    <div class="row">
+      
+      <div class="col-lg-12 border-bottom">
+        <div class="panel-content w-100 bg-white p-2 px-3 border-0">   
+          <app-view-filter-bar-manager  [submoduleName]="'Requirements'" [titleName]="ContractNumber"  
+          [customCompnentValuesTop]="''" [logoClass]="'feather-file-text'" 
+          [pageLink]="'/requirement/editrequirement'"  ></app-view-filter-bar-manager>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="panel-content w-100 bg-white border-0 p-3 scroll-in-content">
+          <div class="row">
+            <div class="col-sm-12 col-lg-8">
+              <h3 class="form-heading mt-0"><span>Details</span></h3>
+                <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                  <form [formGroup]="form" *ngIf="form">
+                    <ng-container *ngFor="let item of formControlList">
+                      <div *ngIf="item.IsVisible" class="panel active">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a href="#{{item.group_display_name}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                              <span> {{item.group_name}}</span>
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="{{item.group_display_name}}" class="panel-collapse collapse active show" style="">
+                          <div class="panel-body row px-0 mt-0">
+                            <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let inner of item.InnerData;">
+                              <div class="input-group border-bottom">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>{{ inner.display_name}}:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                  <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.field_route==null && inner.dt_code!='href'" class="py-2 d-block">
+                                    <ng-container *ngIf="inner.dt_code=='date'">{{ inner.value | date: 'MM-dd-yyyy'}}</ng-container>
+                                    <ng-container *ngIf="inner.dt_code=='datetime'">{{ inner.value | date: 'MM-dd-yyyy, h:mm a'}}</ng-container>
+                                    <ng-container *ngIf="inner.dt_code!='datetime' && inner.dt_code!='date'">{{ inner.value}}</ng-container>
+                                  </span>
+                                  <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.field_route!=null && inner.dt_code!='href'" class="py-2 d-block">
+                                    <a href="javascript:void(0);" [routerLink]="[inner.field_route,inner.ref_value]">{{inner.value}}</a>
+                                  </span>
+
+                                  <!--===================================================== For href Link ============================================================-->
+                                  <span *ngIf="inner.dt_code=='href'" class="py-2 d-block">
+                                    <a href="{{inner.value}}" target="_blank">{{inner.value}} </a>
+                                  </span>
+                                  <!--======================================================================================================================================-->
+                                  <!--============================== For CheckBox ===========================-->
+                                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean' || inner.dt_code=='checkbox'">
+                                    <div class="form-check form-check-inline">
+                                      <div class="custom-control custom-checkbox pl-0">
+                                        <label class="switch  mb-0">
+                                          <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                          <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </form>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-4 relatedtab">
+              <h3 class="form-heading mt-0"><span>Related</span></h3>
+              <div id="accordion" *ngIf="relatedObjects">
+                <ng-container *ngFor="let item of relatedObjects;let i=index;">
+                  <ng-container *ngIf="item.IsVisible">
+                    <ng-container *ngIf="item.layout_type != 'notes' && item.layout_type != 'table' && item.layout_type != 'files' && item.layout_type != 'textarea'">
+                      <app-listview [data]="item" [index]="i"></app-listview>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'textarea' && item.default_value">
+                      <div class="w-100 p-3 mb-2 text-center information-section">
+                        <span class="text-capitalize font-weight-bold" style="font-size: 24px;">
+                          {{item.default_value}}
+                        </span>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'table'">
+                      <app-tableview [data]="item" [index]="i" [SubModuleName]="submoduleName" [RecordId]="Id" (refreshEmitter)="RefreshRelatedObjects($event)"></app-tableview>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'notes'">
+                      <app-newnoteslist #listnotesmodel [view]="false" [DisplayOnEmpty]="true"  subModuleName="{{submoduleName}}" [AccountId]="accountId" [ObjectRefId]="Id"></app-newnoteslist>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'files'">
+                      <app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="{{Id}}"></app-files>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </div>
+
+
+
+              <!--<div id="accordion" [ngClass]="{'disabled':loadSave}">
+      <div class="panel active">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a href="#proposerdetail" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+              <span>Proposal Details</span>
+            </a>
+          </h4>
+        </div>
+        <div id="proposerdetail" class="panel-collapse collapse active show" style="">
+          <div class="panel-body row px-3">
+            <ng-container *ngFor="let item of customValuesTempData">
+              <div class="col-sm-12 col-md-6 col-lg-6" *ngIf="item!=null && item!=''">
+                <div class="input-group border-bottom">
+                  <div class="col-sm-12 col-md-6 px-0">
+                    <span class="py-2 d-block">
+                      <strong>{{ item.display_name}}:</strong>
+                    </span>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <span *ngIf="item.field_route != null" class="py-2 d-block">
+                      <a href="javascript:void(0);" [routerLink]="[item.field_route,item.ref_value]">{{ item.value}}</a>
+                    </span>
+                    <span *ngIf="item.dt_code!='boolean' && item.dt_code!='checkbox' && item.field_route==null" class="py-2 d-block">
+                      {{ item.value }}
+                    </span>-->
+              <!--============================== For CheckBox ===========================-->
+              <!--<div class="form-control pl-0 border-0 bg-transparent" *ngIf="item.dt_code=='boolean'">
+      <div class="form-check form-check-inline">
+        <div class="custom-control custom-checkbox pl-0">
+          <label class="switch  mb-0">
+            <input type="checkbox" id="chk_{{item.custom_field_id}}" disabled>
+            <span class="slider round" id="{{item.custom_field_id}}"><span>Yes</span></span>
+          </label>
+        </div>
+      </div>
+    </div>-->
+              <!--============================== For CheckBox ===========================-->
+              <!--<div class="form-control pl-0 border-0 bg-transparent" *ngIf="item.dt_code=='checkbox'">
+                    <div class="form-check form-check-inline">
+                      <div class="custom-control custom-checkbox pl-0">
+                        <label class="switch mb-0">
+                          <input type="checkbox" id="chk_{{item.custom_field_id}}" disabled>
+                          <span class="slider round" id="{{item.custom_field_id}}"><span>Yes</span></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+    <app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="{{Id}}"></app-files>-->
+              <!--<div class="panel active">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a href="#notes" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+            <span>Notes ({{NotesCount}})</span>
+          </a>
+        </h4>
+      </div>
+      <div id="notes" class="panel-collapse collapse active show" style="">
+        <a href="javascript:void(0);" class="btn-in-panel" (click)="AddNotes()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add</a>
+        <div class="panel-body p-2 mt-0">
+          <div class="table-responsive ngxtbl">
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                          [rows]="NotespagedData.data"
+                          [columnMode]="'force'"
+                          [scrollbarH]="true"
+                          [rowHeight]="'40'"
+                          [headerHeight]="40"
+                          [footerHeight]="40"
+                          [externalPaging]="true"
+                          [externalSorting]="true"
+                          [loadingIndicator]="loadSave"
+                          [count]="NotespagedData.pager.totalItems"
+                          [offset]="NotespagedData.pager.currentPage"
+                          [limit]="NotespagedData.pager.pageSize"
+                          (page)='setPageNotes($event)'
+                          (sort)="onSortNotes($event)">
+
+              <ngx-datatable-column name="Note Title" prop="note_name" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.note_name|truncate}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Description" sortable="false" prop="note_description" [sortable]="true" [minWidth]="150">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div *ngIf='row.note_description!=null || row.note_description!=""'>
+                    <span>{{row.note_description}}</span>
+                  </div>
+                  <div *ngIf='row.note_description==null || row.note_description==""'>
+                    <span>N/A</span>
+                  </div>
+                </ng-template>
+
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Created By" sortable="false" prop="createdby" [sortable]="true" [minWidth]="150"></ngx-datatable-column>
+              <ngx-datatable-column name="Created on" prop="created_on" [sortable]="true" [minWidth]="130">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.created_on | DateTimeToLocal}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="text-center">
+                    <a href="javascript:;" (click)="ViewNotes(row)" title="View Notes"><i class="feather-eye pr-2"></i></a>
+                    <a href="javascript:void(0);" (click)="EditNotes(row)" title="Edit Notes"><i class="fa fa-pencil text-success pr-2"></i></a>
+                    <a href="javascript:void(0);" (click)="DeleteNote(row,'AssignedResource')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                  </div>
+
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template
+                            let-rowCount="rowCount"
+                            let-pageSize="pageSize"
+                            let-selectedCount="selectedCount"
+                            let-currentPage="NotespagedData.pager.currentPage"
+                            let-offset="offsetnotes"
+                            let-isVisible="isVisible">
+                  <div class="page-count" *ngIf='(rowCount  > 0)'>
+                    {{commonService.PageString(curPageNotes,pageSizeValuenotes,rowCount)}}
+                  </div>
+
+                  <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                  [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                  [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                  [pagerNextIcon]="'fa fa-angle-double-right'"
+                                  [page]="curPageNotes"
+                                  [size]="pageSizeValuenotes"
+                                  [count]="NotespagedData.pager.totalItems"
+                                  [hidden]="!((rowCount / pageSize) > 1)"
+                                  (change)="setPageNotes($event)">
+                  </datatable-pager>
+                </ng-template>
+
+              </ngx-datatable-footer>
+            </ngx-datatable>
+
+          </div>
+        </div>
+      </div>
+
+    </div>-->
+              <!--<div class="panel active">-->
+              <!--<div class="panel-heading">
+      <h4 class="panel-title">
+        <a href="#notes" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+          <span>Notes ({{notescount}}) </span>
+        </a>
+      </h4>
+    </div>-->
+              <!--<div id="panelBodynine" class="panel-collapse active show p-0 border-0" data-parent="#accordion">
+
+
+
+
+        <div id="notes" class="panel-collapse collapse active show">
+          <a href="javascript:void(0);" class="btn-in-panel"
+            (click)="AddNotes()" data-toggle="modal"><i class="feather-plus mr-2"></i> New</a>
+          <app-newnoteslist #listnotesmodel subModuleName="Contract" [AccountId]="accountId" [ObjectRefId]="Id" (newItemEvent)="addItem($event)">
+
+          </app-newnoteslist>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="panel active">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a href="#oppurtunity" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+            <span>Opportunity  ({{OpportunityCount}})</span>
+          </a>
+        </h4>
+      </div>
+      <div id="oppurtunity" class="panel-collapse collapse active show" style="">
+        <div class="panel-body p-2 mt-0">
+          <div class="table-responsive ngxtbl">
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                          [rows]="lstOpportunity.data"
+                          [columnMode]="'force'"
+                          [scrollbarH]="true"
+                          [rowHeight]="'40'"
+                          [headerHeight]="40"
+                          [footerHeight]="40"
+                          [externalPaging]="true"
+                          [externalSorting]="true"
+                          [loadingIndicator]="loadSave"
+                          [count]="lstOpportunity.pager.totalItems"
+                          [offset]="lstOpportunity.pager.currentPage"
+                          [limit]="lstOpportunity.pager.pageSize"
+                          (page)='setOpportunityPageNo($event)'
+                          (sort)="onOpportunitySort($event)">
+              <ngx-datatable-column name="Opportunity Name" prop="OpportunityName" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a href="javascript:void(0);" [routerLink]="['/opportunity/view',row.Id]">{{row.OpportunityName}}</a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Account Name" prop="AccountName" [sortable]="true"></ngx-datatable-column>
+              <ngx-datatable-column name="Close Date" prop="CloseDate" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.CloseDate | DateTimeToLocal}}
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template
+                            let-rowCount="rowCount"
+                            let-pageSize="lstOpportunity.pager.pageSize"
+                            let-selectedCount="selectedCount"
+                            let-currentPage="lstOpportunity.pager.currentPage+1"
+                            let-offset="offset"
+                            let-isVisible="isVisible">
+                  <div class="page-count" *ngIf='(rowCount  > 0)'>
+                    {{commonService.PageString(lstOpportunity.pager.currentPage+1,lstOpportunity.pager.pageSize,rowCount)}}
+                  </div>
+                  <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                  [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                  [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                  [pagerNextIcon]="'fa fa-angle-double-right'"
+                                  [page]="lstOpportunity.pager.currentPage"
+                                  [size]="lstOpportunity.pager.pageSize"
+                                  [count]="lstOpportunity.pager.totalItems"
+                                  [hidden]="!((rowCount / lstOpportunity.pager.pageSize) > 1)"
+                                  (change)="setOpportunityPageNo($event)">
+                  </datatable-pager>
+                </ng-template>
+              </ngx-datatable-footer>
+            </ngx-datatable>-->
+              <!--<a href="javascript:void(0);" (click)="displaynotedetail(row)">{{row.note_description | truncate : 50}}</a>-->
+              <!--</div>
+        </div>
+      </div>
+    </div>-->
+              <!--WorkOrderlineItem-->
+              <!--<div class="panel active">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a href="#LineItem" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+            <span>Work Orders ({{lineItemCount}})</span>
+          </a>
+        </h4>
+      </div>
+      <div id="LineItem" class="panel-collapse collapse active show" style="">-->
+              <!--<a href="javascript:void(0);" class="btn-in-panel" (click)="AddNotes()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add</a>-->
+              <!--<div class="panel-body p-2 mt-0">
+      <div class="table-responsive ngxtbl">
+        <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                      [rows]="LineItempagedData.data"
+                      [columnMode]="'force'"
+                      [scrollbarH]="true"
+                      [rowHeight]="'40'"
+                      [headerHeight]="40"
+                      [footerHeight]="40"
+                      [externalPaging]="true"
+                      [externalSorting]="true"
+                      [loadingIndicator]="loadSave"
+                      [count]="LineItempagedData.pager.totalItems"
+                      [offset]="LineItempagedData.pager.currentPage"
+                      [limit]="LineItempagedData.pager.pageSize"
+                      (page)='setPageLineItem($event)'
+                      (sort)="onSortLineItems($event)">
+
+          <ngx-datatable-column name="Contract Line Item Number" prop="LineItemNumber" [sortable]="true"></ngx-datatable-column>
+
+
+          <ngx-datatable-column name="Subject" sortable="false" prop="Subject" [sortable]="true" [minWidth]="150"></ngx-datatable-column>
+          <ngx-datatable-column name="Description" sortable="false" prop="Description" [sortable]="true" [minWidth]="150"></ngx-datatable-column>
+          <ngx-datatable-column name="Status" sortable="false" prop="StatusCategory" [sortable]="true" [minWidth]="150"></ngx-datatable-column>
+          <ngx-datatable-column name="Completed" sortable="false" prop="Completed_Date__c" [sortable]="true" [minWidth]="150"></ngx-datatable-column>
+          <ngx-datatable-column name="Sort Order" sortable="false" prop="Sort_Order__c" [sortable]="true" [minWidth]="150"></ngx-datatable-column>-->
+              <!--<ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <div class="text-center">
+          <a href="javascript:void(0);" (click)="EditNotes(row)" title="Edit Notes"><i class="fa fa-pencil text-success pr-2"></i></a>
+          <a href="javascript:void(0);" (click)="DeleteNote(row,'AssignedResource')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+        </div>
+
+      </ng-template>
+    </ngx-datatable-column>-->
+              <!--<ngx-datatable-footer>
+      <ng-template ngx-datatable-footer-template
+                  let-rowCount="rowCount"
+                  let-pageSize="pageSize"
+                  let-selectedCount="selectedCount"
+                  let-currentPage="LineItempagedData.pager.currentPage"
+                  let-offset="offset"
+                  let-isVisible="isVisible">
+        <div class="page-count" *ngIf='(rowCount  > 0)'>-->
+              <!--Showing {{(LineItempagedData.pager.currentPage - 1 )* pageSizeValueLineitem + 1}}  to {{LineItempagedData.pager.currentPage * pageSizeValueLineitem}} out of {{rowCount}}  enteries-->
+              <!--{{commonService.PageString(LineItempagedData.pager.currentPage,LineItempagedData.pager.pageSize,rowCount)}}
+                  </div>
+
+                  <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                  [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                  [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                  [pagerNextIcon]="'fa fa-angle-double-right'"
+                                  [page]="LineItempagedData.pager.currentPage"
+                                  [size]="pageSizeValueLineitem"
+                                  [count]="LineItempagedData.pager.totalItems"
+                                  [hidden]="!((rowCount / pageSize) > 1)"
+                                  (change)="setPageLineItem($event)">
+                  </datatable-pager>
+                </ng-template>
+
+              </ngx-datatable-footer>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+
+    </div>-->
+              <!--End-->
+              <!--</div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+
+</div>
+
+
+
+<!--===============================================================================================================================-->
+<!--===================================================== Fix Order Model========================================================-->
+<!--<div class="modal fade in show" bsModal #FixOrder="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="closeFixOrderPopupModelPopup()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; height:290px;">
+        <form [formGroup]="addFixOrderForm" [ngClass]="{'disabled':loadSave}">
+          <div class="row mb-2">
+            <div class="col-md-12 col-lg-6">
+              <label>Department<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstdepartment" placeholder="Select Department" formControlName="departmentId"
+                           bindLabel="text" bindValue="value"
+                           [ngClass]="{'is-invalid': (departmentId.invalid && (departmentId.dirty || departmentId.touched) && departmentId.errors?.required)}"></ng-select>
+                <small *ngIf="departmentId.invalid && (departmentId.dirty || departmentId.touched) && departmentId.errors?.required"
+                       class="text-danger">Please select Department</small>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Description:</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" style="min-height:120px;" placeholder="Enter Description" formControlName="fixOrderDescription" #machineDescription maxlength="1000"></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveFixOrder()"><i class="feather-save text-white"></i> Save</button>
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeFixOrderPopupModelPopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>-->
+<!--===============================================================================================================================-->

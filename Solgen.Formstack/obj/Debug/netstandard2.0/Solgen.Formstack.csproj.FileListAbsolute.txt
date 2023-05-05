@@ -1,0 +1,9 @@
+D:\ZolarWorkSpace\Solgen\Solgen.Formstack\bin\Debug\netstandard2.0\Solgen.Formstack.deps.json
+D:\ZolarWorkSpace\Solgen\Solgen.Formstack\bin\Debug\netstandard2.0\Solgen.Formstack.dll
+D:\ZolarWorkSpace\Solgen\Solgen.Formstack\bin\Debug\netstandard2.0\Solgen.Formstack.pdb
+D:\ZolarWorkSpace\Solgen\Solgen.Formstack\obj\Debug\netstandard2.0\Solgen.Formstack.GeneratedMSBuildEditorConfig.editorconfig
+D:\ZolarWorkSpace\Solgen\Solgen.Formstack\obj\Debug\netstandard2.0\Solgen.Formstack.AssemblyInfoInputs.cache
+D:\ZolarWorkSpace\Solgen\Solgen.Formstack\obj\Debug\netstandard2.0\Solgen.Formstack.AssemblyInfo.cs
+D:\ZolarWorkSpace\Solgen\Solgen.Formstack\obj\Debug\netstandard2.0\Solgen.Formstack.csproj.CoreCompileInputs.cache
+D:\ZolarWorkSpace\Solgen\Solgen.Formstack\obj\Debug\netstandard2.0\Solgen.Formstack.dll
+D:\ZolarWorkSpace\Solgen\Solgen.Formstack\obj\Debug\netstandard2.0\Solgen.Formstack.pdb

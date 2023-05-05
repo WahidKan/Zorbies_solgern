@@ -1,0 +1,116 @@
+<form [formGroup]="prepareUCCForm">
+  <div bsModal #prepareUCC="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">UCC Filling</h4>
+          <button type="button" class="close" (click)="close()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="form-group">
+                  <div class="form-check-inline">
+                    <div class="custom-control custom-radio">
+                      <input type="radio" class="custom-control-input" id="radiodirectupload" name="prepareUCCFillingRequestAction" value="directupload" formControlName="prepareUCCFillingRequestAction" [checked]="true">
+                      <label class="custom-control-label" for="radiodirectupload">Direct Upload </label>
+                    </div>
+                  </div>
+                  <div class="form-check-inline">
+                    <div class="custom-control custom-radio">
+                      <input type="radio" class="custom-control-input" id="radioWithdraft" name="prepareUCCFillingRequestAction" value="withdraft" formControlName="prepareUCCFillingRequestAction">
+                      <label class="custom-control-label" for="radioWithdraft">With Draft</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6"></div>
+              <!-- Direct Upload -->
+
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="prepareUCCFillingRequestAction.value==='directupload'">
+                <label>Title:</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="documentTitle">
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="prepareUCCFillingRequestAction.value==='directupload'">
+                <label>UCC Filing#:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="documentRefNumber"
+                         [ngClass]="{'is-invalid': (documentRefNumber.invalid && (documentRefNumber.dirty || documentRefNumber.touched) && (documentRefNumber.errors?.required || documentRefNumber.errors?.maxlength)) }">
+                  <small *ngIf="documentRefNumber.invalid && (documentRefNumber.dirty || documentRefNumber.touched) && documentRefNumber.errors?.required"
+                         style="color:red;">UCC Filing# is required</small>
+
+
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="prepareUCCFillingRequestAction.value==='directupload'">
+                <label>State:</label>
+                <div class="form-group">
+                  <ng-select [items]="lstStates"
+                             placeholder="Select State" bindValue="value" bindLabel="text" formControlName="uccFilingState">
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="prepareUCCFillingRequestAction.value==='directupload'">
+                <label>Select Document:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input class="custom-file-input" type="file" name='file' (change)="setFile($event)" #fileInput formControlName="documentFileName">
+                      <label class="custom-file-label">{{fileName}}</label>
+                    </div>
+                  </div>
+                  <small *ngIf="!isValid"
+                         style="color:red;">Document is required</small>
+                </div>
+                <small><i class="text-primary">Valid documents format is .pdf,.docx,.doc,.xls,xlsx, image/x-png, image/gif, image/jpeg Valid image format is image/x-png, image/gif, image/jpeg and limit upto 30MB.</i> </small>
+              </div>
+
+              <!-- With draft -->
+
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="prepareUCCFillingRequestAction.value==='withdraft'">
+                <label>TX UCC Draft:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="tXUCCDraft"
+                         [ngClass]="{'is-invalid': (tXUCCDraft.invalid && (tXUCCDraft.dirty || tXUCCDraft.touched) && (tXUCCDraft.errors?.required || tXUCCDraft.errors?.maxlength)) }">
+                  <small *ngIf="tXUCCDraft.invalid && (tXUCCDraft.dirty || tXUCCDraft.touched) && tXUCCDraft.errors?.required"
+                         style="color:red;">TX UCC Draft is required</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="prepareUCCFillingRequestAction.value==='withdraft'">
+                <label>Receipt#:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="receiptNumDraft"
+                         [ngClass]="{'is-invalid': (receiptNumDraft.invalid && (receiptNumDraft.dirty || receiptNumDraft.touched) && (receiptNumDraft.errors?.required || receiptNumDraft.errors?.maxlength)) }">
+                  <small *ngIf="receiptNumDraft.invalid && (receiptNumDraft.dirty || receiptNumDraft.touched) && receiptNumDraft.errors?.required"
+                         style="color:red;">Receipt# is required</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="prepareUCCFillingRequestAction.value==='withdraft'">
+                <label>Reminder Date:</label>
+                <div class="form-group">
+                  <p-calendar inputStyleClass="form-control start-date" [minDate]="dateTime" formControlName="prepareUCCFillingRequestReminder" showButtonBar="true"></p-calendar>
+                </div>
+              </div>
+              <div class="col-lg-12 bg-infoli lead">
+                <small>Information will not be saved if you skip the step.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary form-btns" (click)="save()" data-dismiss="modal" aria-label="Close"><i class="feather-save text-white"></i>Submit</button>
+          <button type="submit" class="btn btn-secondary form-btns" (click)="skip()" data-dismiss="modal" aria-label="Close"><i class="feather-save text-white"></i> Skip the Step</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i>Cancel</button>
+        </div>
+      </div>
+       
+    </div>
+  </div>
+ 
+</form>

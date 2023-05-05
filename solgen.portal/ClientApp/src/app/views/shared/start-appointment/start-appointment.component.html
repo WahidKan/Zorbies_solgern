@@ -1,0 +1,104 @@
+<div *ngIf="AppointmentListingData.length>0" id="phone" class="activedialer" [ngClass]="{'minimize':isDialerMinimize}">
+
+  <div [ngClass]="{'d-heading':selectedId>0,'s-heading':selectedId==0}">{{title}} <span
+      *ngIf="selectedId==0">({{AppointmentListingData.length}})</span> <a href="javascript:void(0);"
+      class="float-right text-white" (click)="onToggleClick()"><i
+        [ngClass]="(isDialerMinimize)?'fa fa-angle-up':'fa fa-angle-down'"></i></a>
+  </div>
+
+
+  <div id="numberDisplay">
+
+    <div *ngFor="let appointment of AppointmentListingData" class="row app-maindiv">
+     <div class="mt-1" style="width:100%;">
+      <div class="card-header app-card-header">
+        <div class="row">
+          <div style="font-weight:bold;" class="col col-md-6">
+            
+            Appointment Type
+          </div>
+          <span class="app-span">: </span>
+          <div style="font-weight:bold;" class="col col-md-6">
+           
+            {{appointment.appointmentStatus}}
+          </div>
+        </div>
+      
+      </div>
+      <div class="card col-sm-12 border-outer" >
+      
+        <div class="card-body mt-0" style="padding-bottom:10px !important;padding-top:3px;padding-left:3px;padding-right:3px;">
+          <div class="row">
+            <div style="font-weight:bold;" class="col col-md-6">
+            Date
+            </div>
+            <span class="app-span">: </span>
+            <div class="col col-md-6">
+              
+              {{appointment.FromTime | DateTimeToLocal | date }}
+            </div>
+          </div>
+        
+        
+          <div class="row">
+            <div style="font-weight:bold;" class="col col-md-6">
+              Start Time
+            </div>
+            <span class="app-span">: </span>
+            <div class="col col-md-6">
+              {{commonService.getUserUTCToSelectedZoneTime(appointment.FromTime)}}
+              <!-- {{appointment.FromTime | DateTimeToLocal | date :'mediumTime'}} -->
+            </div>
+           
+          </div>
+          <div class="row">
+            <div style="font-weight:bold;" class="col col-md-6">
+              End Time
+            </div>
+            <span class="app-span">:</span>
+            <div class="col col-md-6">
+              {{commonService.getUserUTCToSelectedZoneTime(appointment.ToTime)}}
+              <!-- {{appointment.ToTime | DateTimeToLocal | date :'mediumTime'}} -->
+            </div>
+           
+          </div>
+          <div class="row">
+            <div style="font-weight:bold;" class="col col-md-6">
+              Participant
+            </div>
+            <span class="app-span">:</span>
+            <div class="col col-md-6">
+              {{appointment.participant}} ({{appointment.participantMobile}})
+            </div>
+           
+          </div>
+          <div style="padding-top: 4px;" class="row">
+            <div style="font-weight:bold;" class="col col-md-6">
+              Description
+            </div>
+            <label class="col-md-12 app-desc-label">{{appointment.Description }}</label>
+          </div>
+          <div class="row">
+            <div *ngIf="!appointment.isStarted" class="col">
+              <button  [disabled]="selectedId>0 && appointment.AppointmentIDAuto!=selectedId" type="button"
+                class="btn btn-success form-btns col app-button"
+                (click)="UpdateScheduledAppointmentStatus('start',appointment.AppointmentIDAuto,appointment.Contact_Id,appointment.subModuleName,appointment.OpportunityId)">
+                Start Appointment</button>
+            </div>
+            <div *ngIf="!appointment.isStarted" class="col">
+              <button  [disabled]="selectedId>0 && appointment.AppointmentIDAuto!=selectedId" type="button" class="btn btn-danger form-btns col app-button"
+                (click)="CancelAppointment('Cancel',appointment.AppointmentIDAuto,appointment.Contact_Id)" data-dismiss="modal"
+                aria-label="Close">Cancel</button>
+            </div>
+            <div *ngIf="appointment.isStarted" class="col">
+              <button type="button" class="btn btn-danger form-btns app-button "
+                (click)="EndAppointment('end',appointment.AppointmentIDAuto,appointment.Contact_Id,appointment.subModuleName)"
+                data-dismiss="modal" aria-label="Close">End Appointment</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

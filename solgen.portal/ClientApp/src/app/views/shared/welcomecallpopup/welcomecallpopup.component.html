@@ -1,0 +1,129 @@
+<!--<div bsModal #welcomeCall="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Welcome Call</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body scrolable-height" style=" max-height:600px; overflow-y:auto;">-->
+  <div class="w-heading">Welcome Call <a href="javascript:void(0);" (click)="close()" class="float-right text-white"><i class="fa fa-times"></i></a></div>
+  <div class="col-md-12" style=" height:100%;">
+  <div class="pb-5" style="overflow-y:auto; height:92%;">
+    <form [formGroup]="manageForm" autocomplete="off" >
+      <div id="container" class="mb-3" *ngFor="let control of showData; let controlIndex = index">
+        <ng-container *ngIf="control.field_type != 'texteditor'">
+          <label class="text-capitalize">{{control.is_system_generated ==false ? control.name : control.display_name}} <span *ngIf="control.is_required" class="text-danger">*</span></label>
+        </ng-container>
+        <p *ngIf="control.field_type=='texteditor'" [innerHtml]="control.default_value" class="brnone"></p>
+        <!--for input value and field type text-->
+        <input *ngIf="control.field_type=='textbox'" [formControlName]="control.form_controlName" id="input_{{controlIndex}}" name="input_{{controlIndex}}" class="form-control" type="text" placeholder="{{control.is_system_generated ==false ? control.name : control.display_name}}" />
+
+        <!--for input value and field type textarea-->
+        <textarea *ngIf="control.field_type=='textarea'" [formControlName]="control.form_controlName" class="form-control" rows="4" id="textarea_{{controlIndex}}" name="textarea_{{controlIndex}}" placeholder="{{control.is_system_generated ==false ? control.name : control.display_name}}"></textarea>
+
+
+
+
+
+        <!--for input value and field type editor-->
+        <!--<ng-container *ngIf="control.field_type=='texteditor'" >
+    <p-editor id="editor{{controlIndex}}" [formControlName]="control.form_controlName"><p-header> </p-header></p-editor>
+  </ng-container>-->
+        <!--for input value and field type date-->
+      <div class="row">
+        <div class="col-md-4">
+          <p-calendar [formControlName]="control.form_controlName" [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " *ngIf="control.field_type=='date'" hideOnDateTimeSelect="true"
+                      inputId="cald_{{controlIndex}}" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+        </div>
+        <div class="col-md-4">
+
+          <p-calendar [formControlName]="control.form_controlName" [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " *ngIf="control.field_type=='datetime'" [hourFormat]="(timeFormat==24)?'24':'12'" hideOnDateTimeSelect="true"
+                      [showTime]="true" inputId="caldt_{{controlIndex}}" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+        </div>
+      </div>
+        
+        <!--for input value and field type datetime-->
+        
+
+        <!--for input value and field type number-->
+        <input *ngIf="control.field_type=='number' " min="0" value="0" step="0.01" id="input_{{controlIndex}}" name="input_{{controlIndex}}" [formControlName]="control.form_controlName" class="form-control" type="number" placeholder="{{control.is_system_generated ==false ? control.name : control.display_name}}" />
+
+        <!--for input value and field type number-->
+        <input *ngIf="control.field_type=='decimal'" [formControlName]="control.form_controlName" pattern="^\d*(\.\d{0,2})?$" min="0" value="0" step="0.01" id="input_{{controlIndex}}" name="input_{{controlIndex}}" class="form-control" type="number" placeholder="{{control.is_system_generated ==false ? control.name : control.display_name}}" />
+
+
+        <!--for input value and field type dropdown-->
+        <ng-container *ngIf="control.field_type=='dropdown'">
+
+          <div class="clearfix"></div>
+          <ng-select id="ddl_{{controlIndex}}" [items]="control.select_options" [formControlName]="control.form_controlName"
+                     bindLabel="name"   (clear)="onClearLang(control,j)"
+                           (scrollToEnd)="onScrollToEnd(control,j)" [virtualScroll]="true" (keyup)="onKey($event,control,j)" bindValue="value" placeholder="{{control.is_system_generated ==false ? control.name : control.display_name}}">
+            <!--<ng-template ng-option-tmp let-item="item" let-index="index">
+        <span>{{item.value}} <span *ngIf="item.color!=''">&nbsp;&nbsp;&nbsp;&nbsp;<span [style.background-color]="item.color">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp; {{item.color}}</span></span>
+      </ng-template>-->
+          </ng-select>
+        </ng-container>
+
+        <!--for input value and field type radio-->
+        <ng-container *ngIf="control.field_type=='radioButton'">
+          <div class="clearfix"></div>
+          <ng-container *ngIf="control.picklist_options">
+            <ng-container *ngFor="let item of control.picklist_options.split(',');let radioIndex=index;">
+              <span class="mr-3">
+
+                <input [formControlName]="control.form_controlName" id="radio-{{controlIndex}}_{{radioIndex}}" [value]="item" type="radio" class="mr-15" (click)="check($event,item,control,control.form_field_id)">
+                <label for="radio-{{controlIndex}}_{{radioIndex}}" class="radio-label mr-15">{{item}}</label>
+              </span>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+
+        <!--for input value and field type checkbox-->
+        <ng-container *ngIf="control.field_type=='checkbox'">
+          <div class="clearfix"></div>
+          <ng-container *ngIf="control.picklist_options">
+            <ng-container *ngFor="let item of control.picklist_options.split(',');let checkIndex=index;">
+              <span class="mr-3">
+                <input id="chk-{{a}}_{{controlIndex}}_{{checkIndex}}" [formControlName]="control.form_controlName" [value]="" type="checkbox" class="mr-15">
+                <label for="chk-{{a}}_{{controlIndex}}_{{checkIndex}}" class="radio-label">{{item}}</label>
+              </span>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+
+        <!--for input value and field type boolean-->
+        <ng-container *ngIf="control.field_type=='boolean'">
+          <div class="clearfix"></div>
+          <label class="switch  mb-0">
+            <input type="checkbox" id="bool{{controlIndex}}" [formControlName]="control.form_controlName" (change)="onChange($event,control.form_field_id,control)" [checked]="control.default_value">
+            <span class="slider round" id="bool{{controlIndex}}"><span>Yes</span></span>
+          </label>
+        </ng-container>
+
+      </div>
+    </form>
+    </div>
+  <div class="stiky-btn-btm">
+    <button *ngIf="currentpage!=0" type="button" class="btn btn-secondary mr-2" (click)="Previous()"><i class="fa  fa-chevron-left mr-1"></i> Previous</button>
+
+    <button type="submit" class="btn btn-info" (click)="Next()">Next <i class="fa  fa-chevron-right ml-1"></i></button>
+  </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>
+<!--</div>
+<div class="modal-footer" style="justify-content: space-between;">
+
+  <div>
+    <button *ngIf="currentpage!=0" type="button" class="btn btn-secondary mr-2" (click)="Previous()"><i class="fa  fa-chevron-left mr-1"></i> Previous</button>
+    <button type="submit" class="btn btn-info" (click)="Next()">Next <i class="fa  fa-chevron-right ml-1"></i></button>
+  </div>-->
+<!--*ngIf="totalLength != currentpage+1"-->
+<!--<button type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>-->
+<!--</div>
+      
+    </div>
+  </div>
+</div>-->

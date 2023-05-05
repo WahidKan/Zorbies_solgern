@@ -1,0 +1,138 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>RULE ENGINE</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Rule Engine</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-header border-bottom ">
+        <div class="row my-2">
+          <div class="col-md-6 col-lg-3 mb-lg-0 mb-2 pr-md-0">
+            <ng-select [items]="modulelist" placeholder="Select Module" bindValue="moduleId" [(ngModel)]="moduleId"
+              bindLabel="text" (change)="onModuleSelect($event)" [clearable]="true">
+            </ng-select>
+          </div>
+          <div class="col-md-6 col-lg-3 mb-lg-0 mb-2">
+            <ng-select [items]="subModulelist" placeholder="Select SubModule" bindValue="sub_module_id"
+              [(ngModel)]="subModuleId" bindLabel="sub_module_name" (change)="onSubModuleSelect($event)"
+              [clearable]="true">
+            </ng-select>
+          </div>
+          <div class="col-md-12 col-lg-6">
+            <div class="dt-buttons mt-0">
+              <a href="javascript:void(0);" routerLink="/solgen-rule-engine/add-rule"
+                class="btn btn-success form-btns mr-2" tooltip="Add Rule Engine"><i class="feather-plus mr-1"></i>
+                Add</a>
+              <a class="btn btn-danger form-btns" href="javascript:void(0);" (click)="remove()"
+                tooltip="Delete"><span><i class="feather-trash-2 mr-1"></i> Delete</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-content px-3 pagination2 table-responsive no-padding">
+        <div class="header-chart mb-1">Rule Engine</div>
+        <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data"
+          [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40"
+          [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+          [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage" [limit]="pagedData.pager.pageSize"
+          (page)='setPage($event)' (sort)="onSort($event)" [selectionType]="SelectionType.checkbox"
+          [selectAllRowsOnPage]="false" [selected]="selected" (select)="onSelect($event)">
+          <ngx-datatable-column [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+            [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="true">
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Module" [sortable]="true" prop="ModuleName"></ngx-datatable-column>
+          <ngx-datatable-column name="SubModule" [sortable]="true" prop="SubModuleName"></ngx-datatable-column>
+          <ngx-datatable-column name="Rule Name" prop="RuleName" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div><a [routerLink]="['/solgen-rule-engine/edit',row.RuleId]">{{row.RuleName }}</a></div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Execution Order" [sortable]="true" prop="DisplayOrder"></ngx-datatable-column>
+          <ngx-datatable-column name="Status" prop="StatusId" sortable="false" headerClass="text-center">
+           
+           
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="text-center" *ngIf="row.StatusId == 1002">
+                <div class="status-box" style="background-color: #dc3545;max-width:150px !important" title="Click to disable ." (click)="disable(row)" *ngIf="row.StatusId == 1002">InActive</div>
+                <!-- <span class="status-box bg-danger" title="Click to disable ." (click)="disable(row)" *ngIf="row.StatusId == 1002">InActive</span> -->
+              </div>
+              <div class="text-center" *ngIf="row.StatusId == 1001">
+                <div class="status-box" style="background-color: #28a745;max-width:150px !important" title="Click to enable." (click)="enable(row)" *ngIf="row.StatusId == 1001">Active</div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+
+          <ngx-datatable-column [width]="80" name="Action" [sortable]="false" [maxWidth]="200"
+            headerClass="text-center">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="text-center">
+                <a class="btn-edit" [routerLink]="['/solgen-rule-engine/view',row.RuleId]" title="View Detail"><i
+                    class="feather-eye pr-2 "></i></a>
+                <a *ngIf="row.IsFromSubModule" class="btn-edit " href="javascript:void(0);"
+                  [routerLink]="['/solgen-rule-engine/edit',row.RuleId]"><i title="Add/Edit Rule Engine"
+                    class="feather-edit-2 text-success pr-2"></i></a>
+                <a *ngIf="!row.IsFromSubModule" class="btn-edit" href="javascript:void(0);"
+                  [routerLink]="['/solgen-rule-engine/edit',row.RuleId]"><i title="Add/Edit Rule Engine"
+                    class="feather-edit-2 text-success pr-2"></i></a>
+
+                <a *ngIf="row.IsFromSubModule" class="btn-edit disabled" href="javascript:void(0);"><i
+                    class="feather-trash-2 text-secondary pr-2" title="Delete Form"></i></a>
+                <a *ngIf="!row.IsFromSubModule" (click)="DeleteRule(row)" class="btn-edit" href="javascript:void(0);"><i
+                    class="feather-trash-2 text-danger pr-2" title="Delete Rule Engine"></i></a>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+              let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset"
+              let-isVisible="isVisible">
+
+              <div>
+                <div style="color:black; margin-right:10px;" class="page-size-record">
+                  <span style="text-align:right; width:80px;vertical-align: middle;">
+                    <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue'
+                      dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false"
+                      [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                  </span>
+                </div>
+              </div>
+              <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                {{commonService.PageString(pagedData.pager.currentPage+1,pageSizeValue,rowCount)}}
+              </div>
+
+
+
+              <!--<div class="page-count">
+Showing {{(pagedData.pager.currentPage )* pagedData.pager.pageSize + 1}}  to {{(pagedData.pager.currentPage+1) * pagedData.pager.pageSize}} out of {{rowCount}}  enteries
+</div>     "pagedData.pager.currentPage+1"-->
+              <datatable-pager [pagerLeftArrowIcon]="'feather-chevrons-left'"
+                [pagerRightArrowIcon]="'feather-chevrons-right'" [pagerPreviousIcon]="'feather-chevron-left'"
+                [pagerNextIcon]="'feather-chevron-right'" [page]="pagedData.pager.currentPage+1" [size]="pageSizeValue"
+                [count]="pagedData.pager.totalItems" [hidden]="!((rowCount / pageSize) > 1)" (change)="setPage($event)">
+              </datatable-pager>
+            </ng-template>
+          </ngx-datatable-footer>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

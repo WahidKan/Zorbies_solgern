@@ -1,0 +1,1065 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+        <h2 class="float-left pr-2 w-100"><strong>ADD/EDIT LAYOUT FIELDS</strong></h2>
+        <div class="breadcrumb-wrapper w-100">
+            <ol class="breadcrumb">
+                <li><a routerLink="/dashboard">Dashboard</a></li>
+                <li><a routerLink="/customlayoutlist/customlayoutlist">Manage Layout</a></li>
+                <li class="active">ADD/EDIT LAYOUT FIELDS</li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+        <a href="javascript:;" class="btn btn-primary"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+
+<!--(onDrop)="dropRemove($event)"  pDroppable="color"-->
+
+<div class="row">
+    <div class="col-lg-12 portlets ">
+        <div class="panel">
+            <div class="panel-content border p-3">
+                <form [formGroup]="manageLayout" autocomplete="off">
+                    <div class="row" [ngClass]="{'disabled':loadSave}">
+                        <div id="FixedDiv" class="col-md-2 col-lg-2 pr-2">
+                            <!-- <div class="d-flex flex-row-reverse  mb-3">
+                                <a href="javascript:void(0);" (click)="showUserDefinedFieldsModal()" class="btn btn-success"><i class="feather-plus"></i>Add</a>
+                            </div> -->
+                            <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                                <div class="panel active">
+                                    <div class="panel-heading d-flex d-flex justify-content-between p-1">
+                                        <h4 class="panel-title">
+                                            <a href="#LeadSMSs" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+                                                <span>
+                                                    Available Fields
+                                                </span>
+                                            </a>
+                                        </h4>
+
+                                        <div>
+                                            <a href="javascript:void(0);" class="btn btn-success" (click)="showUserDefinedFieldsModal()" data-toggle="modal"><i
+                                            class="feather-plus mr-2"></i> Add</a>
+                                        </div>
+
+
+                                    </div>
+                                    <div id="LeadSMSs" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row p-0 mt-0">
+                                            <div class="w-100">
+                                                <p class="bg-light p-3 mb-0">
+                                                    <input type="text" class="form-control w-100" formControlName="SearchFieldName" (keyup)="onKeyup($event)" maxlength="500" placeholder="Search field here">
+                                                </p>
+                                                <hr class="mb-0" />
+                                                <div class="bordered-content">
+                                                    <ul class="types columnlist acf-seclectf list-group custom-field-layout custom-field-layout-left-panel mb-0 border-0" style="max-height: calc(100vh - 120px ); overflow-x: auto; margin: 0px !important;">
+                                                        <li class="list-group-item {{color.is_system_generated ==false?'customdieldbg': 'selected'}}" id="1" code="string" maxlength="100" *ngFor="let color of colors" pDraggable="color" (onDragStart)="dragStart($event,color,'Add')" (onDragEnd)="dragEnd($event,'detail')">
+                                                            <a href="javascript:void(0);"><i
+                                                                    class="{{color.display_name}}"></i><span>{{color.display_name}}</span></a>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="panel active" *ngIf="screenType == 'View'">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#Notes" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+                                                <span>Compact View</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="Notes" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row p-0">
+
+                                            <!-- <h3 class="side_panel-heading">Compact View</h3> -->
+                                            <!-- <p>
+          <input type="text" class="form-control w-100" formControlName="SearchFieldName" (keyup)="onKeyup($event)" maxlength="500" placeholder="Search field here">
+        </p> -->
+                                            <div class="bordered-content w-100">
+
+                                                <div *ngIf="CompactViewMain.length > 0" class="w-100">
+                                                    <ul class="types columnlist acf-seclectf list-group custom-field-layout custom-field-layout-left-panel mb-3 border-0">
+
+                                                        <li class="list-group-item selected cursor-pointer" id="1" code="string" maxlength="100" *ngFor="let CompactView of CompactViewMain" pDraggable="color" (onDragStart)="dragStart($event,CompactView,'related')" (onDragEnd)="dragEnd($event,'related')" title="Drag Me to Add New Compact View">
+                                                            <div class=" cursor-pointer">
+                                                                <i class="feather-move"></i>
+                                                                <label class=" cursor-pointer">{{CompactView.view_name}}
+                                                                    ({{CompactView.DisplayName}})</label>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div *ngIf="CompactViewMain.length==0" class="text-danger text-center text-justify ml-3">
+                                                    <P class="errors?">No record found</P>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel active" *ngIf="screenType != 'CompactView'">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#Others" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+                                                <span>Others</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="Others" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row p-0">
+                                            <div class="bordered-content w-100">
+                                                <div class="w-100">
+                                                    <ul class="types columnlist acf-seclectf list-group custom-field-layout custom-field-layout-left-panel mb-3 border-0" style="max-height: calc(100vh - 120px ); overflow-x: auto; margin: 0px !important;">
+
+                                                        <li class="list-group-item selected cursor-pointer" id="1" code="string" maxlength="100" pDraggable="color" (onDragStart)="dragStart($event,'','text')" (onDragEnd)="dragEnd($event,'text')" title="Drag Me to Add New Textarea">
+                                                            <div class=" cursor-pointer">
+                                                                <i class="feather-move"></i>
+                                                                <label class=" cursor-pointer"> Text Area</label>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="panel active" *ngIf="screenType == 'Add'">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#CustomFields" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+                                                <span>Custom Fields</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="CustomFields" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row p-0">
+                                            <div class="bordered-content w-100">
+                                                <div class="w-100">
+                                                    <ul class="types columnlist list-group custom-field-layout custom-field-layout-left-panel mb-3">
+                                                        <li class="list-group-item selected" id="1" code="string" maxlength="100" *ngFor="let row of filedLists" pDraggable="color" (onDragStart)="dragStart($event,row,'Add')" (onDragEnd)="dragEnd($event,'detail')">
+                                                            <a href="javascript:void(0);">
+                                                                <i class="{{row.class_name}}"></i>
+                                                                <span>
+                                                              {{row.name}}
+                                                            </span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="panel active" *ngIf="screenType == 'View'">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#flows" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+                                                <span>
+                                                    Flows
+                                                </span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="flows" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row p-0 mt-0">
+                                            <div class="w-100">
+                                                <hr class="mb-0" />
+                                                <div class="bordered-content">
+
+                                                    <ul class="types columnlist acf-seclectf list-group custom-field-layout custom-field-layout-left-panel mb-0 border-0" style="max-height: calc(100vh - 120px ); overflow-x: auto; margin: 0px !important;">
+
+                                                        <li class="list-group-item selected" id="1" code="string" maxlength="100" pDraggable="color" (onDragStart)="dragStart($event,'','flow')" (onDragEnd)="dragEnd($event,'flow')">
+                                                            <div class=" cursor-pointer">
+                                                                <i class="feather-move"></i>
+                                                                <label class=" cursor-pointer">Flow</label>
+                                                            </div>
+                                                            <!-- <a href="javascript:void(0);"><i></i><span>Flow</span></a> -->
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-10">
+                            <div *ngIf="screenType != 'CompactView'" class="w-100 py-3 drop" [ngClass]="{'disableDiv':(dragDetail || dragRelated)?true:false}" pDroppable="color" (onDrop)="drop($event,'textAreaTop')" style="overflow-y:auto;max-height:380px;overflow-x: hidden; position:relative;     min-height: 52px;">
+                                <div class="bg_ovelay_full-width text_design" *ngIf="dragTextArea">
+                                    <div class="brd_inside">Drop Here</div>
+                                </div>
+                                <div class="bg_ovelay_full-width text_design" *ngIf="GroupTop.length == 0">
+                                    <div class="brd_inside">Drop Here</div>
+                                </div>
+                                <div dnd-sortable-container [sortableData]="GroupTop" [dropZones]="['container-dropZone']">
+
+                                    <div id="container" class=" mb-3 border" *ngFor="let field of GroupTop; let a = index" dnd-sortable [sortableIndex]="a" [dragEnabled]="dragOperation" (onDropSuccess)="onDropSuccess($event)">
+
+                                        <div dnd-sortable-container [sortableData]="field.controls" [dropZones]="['widget-dropZone']">
+                                            <div class="drop_right_heading">
+                                                <div class="col-md-12 col-lg-12">
+                                                    <div class="form-group d-flex justify-content-between" (mousedown)="fordragcontainer()" style="padding-left:20px;">
+                                                        <i class="feather-grid drag-icon"></i>
+                                                        <span class="h5 m-1">{{field.group_name}}</span>
+
+                                                        <div class="dropdown form-group {{(screenType != 'CompactView')?'addOnDelete':''}}">
+                                                            <a href="javascript:void(0);" class="column-setting py-2 d-inline-block">
+                                                                <i class="feather-settings text-dark" style="font-size: 20px;"></i>
+                                                                <span class="dropdown-menu selctlay" id="column-setting">
+                                                                    <span class="hedlay">Select Layout</span>
+                                                                <div *ngIf="screenType != 'CompactView'">
+                                                                    <a href="javascript:void(0);" (click)="OpenConditionPopup(field.visibility_condition_label,a,'groupTop')" class="dropdown-item" draggable="false"><i
+                                                                                class="fa fa-code text-primary"
+                                                                                style="font-size: 20px;"></i> <span
+                                                                                class="ml-1 text-dark"
+                                                                                style="font-size: 14px;">{{(field.visibility_condition)?"Edit":"Add"}}
+                                                                                Condition</span></a>
+                                                                </div>
+                                                                <div *ngIf="field.visibility_condition && screenType != 'CompactView'">
+                                                                    <a href="javascript:void(0);" (click)="RemoveCondition(a,'groupTop')" class="dropdown-item" draggable="false"><i
+                                                                                class="feather-trash-2 text-danger"
+                                                                                style="font-size: 20px;"></i> <span
+                                                                                class="ml-1 text-dark"
+                                                                                style="font-size: 14px;">Remove
+                                                                                Condition</span></a>
+                                                                </div>
+
+                                                                </span>
+                                                            </a>
+                                                            <a *ngIf="screenType != 'CompactView'" href="javascript:void(0);" (click)="Removelayout(a,'groupTop')" class="d-inline-block" draggable="false" title="Delete Section"><i
+                                                                    class="feather-trash-2 text-danger"
+                                                                    style="font-size: 20px;"></i></a>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row custom_feild_box py-0">
+                                                <ng-container>
+                                                    <textarea class="form-control w-100" placeholder="type here ..." rows="2" (keyup)="OnKeyUp($event,a,'groupTop')">{{field.default_value}}</textarea>
+                                                </ng-container>
+                                                <ng-container *ngIf="field.visibility_condition">
+                                                    <div class="col-12 alert alert-primary mb-0">
+                                                        <p class="m-0 p-0">
+                                                            <strong>Condition Apply : </strong>
+                                                            <ng-container *ngFor="let condition of field.visibility_condition_label | convertToArrayList">
+                                                                {{condition.column_display_name}} {{condition.operator}} {{condition.display_value }} {{condition.extended_operator}}
+                                                            </ng-container>
+                                                        </p>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 col-lg-8 px-3">
+
+                                    <h3 class="form-heading"><span>Details</span></h3>
+                                    <div class="drop" pDroppable="color" (onDrop)="drop($event)" style="display:none">
+                                        <div class="col-md-12 col-lg-12">
+
+                                            <div class="form-group d-flex justify-content-between" style="padding-left:20px;">
+                                                <i class="feather-grid drag-icon"></i>
+                                                <input type="text" class="form-control w-50" formControlName="fieldName" maxlength="50" placeholder="Enter section name" [attr.disabled]="(screenType == 'CompactView')">
+                                                <div class="dropdown form-group">
+                                                    <a href="javascript:void(0);" class="column-setting py-2 d-block" (click)="toggleClass($event,'show')"><i
+                                                            class="feather-settings text-dark"
+                                                            style="font-size: 20px;"></i></a>
+                                                    <div class="dropdown-menu" [ngClass]="condition ? 'show' : 'hide'" id="column-setting">
+                                                        Select Layout
+                                                        <div class="custom-control custom-radio">
+                                                            <input type="radio" class="custom-control-input" id="customRadio1" name="contactPreferredDocumentSignedBy" (click)="toggleClassRadioButton($event,'double')" value="double">
+                                                            <label class="custom-control-label" for="customRadio1">Double Columns</label>
+                                                        </div>
+                                                        <div class="custom-control custom-radio" *ngIf="screenType != 'CompactView'">
+                                                            <input type="radio" class="custom-control-input" id="tripleColumns" name="contactPreferredDocumentSignedBy" (click)="toggleClassRadioButton($event,'triple')" value="triple">
+                                                            <label class="custom-control-label" for="tripleColumns">Triple Columns</label>
+                                                        </div>
+                                                        <div class="custom-control custom-radio" *ngIf="screenType != 'CompactView'">
+                                                            <input type="radio" class="custom-control-input" id="fourColumns" (click)="toggleClassRadioButton($event,'four')" name="contactPreferredDocumentSignedBy" value="four" checked>
+                                                            <label class="custom-control-label" for="fourColumns">Four
+                                                                Columns</label>
+                                                        </div>
+                                                        <div class="custom-control custom-radio">
+                                                            <input type="radio" class="custom-control-input" id="tableColumns" (click)="toggleClassRadioButton($event,'table')" name="contactPreferredDocumentSignedBy" value="table" checked>
+                                                            <label class="custom-control-label" for="tableColumns">Table</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="left-panel-dragdrop " dnd-sortable-container [sortableData]="group" [dropZones]="['container-dropZone']" [ngClass]="{'disableDiv':(dragRelated||dragflow)}">
+
+                                        <div class="bg_ovelay_full-width text_design" *ngIf="dragTextArea">
+                                            <div class="brd_inside">Drop Here</div>
+                                        </div>
+
+                                        <div id="container" class=" mb-3 border drop" *ngFor="let field of group; let a = index" dnd-sortable [sortableIndex]="a" [dragEnabled]="dragOperation" (onDropSuccess)="onDropSuccess($event)">
+
+                                            <div dnd-sortable-container pDroppable="color" (onDrop)="dropNewGrop($event,a)" [sortableData]="field.controls" [dropZones]="['widget-dropZone']">
+                                                <div class="drop_right_heading">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <div class="form-group d-flex justify-content-between" (mousedown)="fordragcontainer()" style="padding-left:20px;">
+                                                            <i class="feather-grid drag-icon"></i>
+                                                            <input type="text" class="form-control w-50" [value]="field.group_name" (keyup)="changegroup($event,a)" maxlength="50" [disabled]="field.group_layout_type == 'textarea'" placeholder="Enter section name">
+                                                            <!-- [readonly]="screenType == 'CompactView'"> -->
+                                                            <div class="dropdown form-group {{(screenType != 'CompactView')?'addOnDelete':''}}">
+                                                                <a href="javascript:void(0);" class="column-setting py-2 d-inline-block" draggable="false">
+                                                                    <i class="feather-settings text-dark" style="font-size: 20px;"></i>
+                                                                    <span class="dropdown-menu selctlay" id="column-setting">
+                                                                        <span class="hedlay">Select Layout</span>
+                                                                    <ng-container *ngIf="field.group_layout_type != 'textarea'">
+                                                                        <div class="custom-control custom-radio" *ngIf="screenType != 'CompactView'">
+                                                                            <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'single')">
+                                                                                <input type="radio" [checked]="field.group_layout_type == 'single'" class="custom-control-input" id="singlecustomRadioNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="single">
+                                                                                <label class="custom-control-label" for="singlecustomRadioNewGrp{{a}}">Single
+                                                                                        Columns</label>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="custom-control custom-radio" *ngIf="screenType != 'CompactView'">
+                                                                            <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'double')">
+                                                                                <input type="radio" [checked]="field.group_layout_type == 'double'" class="custom-control-input" id="doublecustomRadioNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="double">
+                                                                                <label class="custom-control-label" for="doublecustomRadioNewGrp{{a}}">Double
+                                                                                        Columns</label>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="custom-control custom-radio" *ngIf="screenType != 'CompactView'">
+                                                                            <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'triple')">
+                                                                                <input type="radio" [checked]="field.group_layout_type == 'triple'" class="custom-control-input" id="tripleColumnsNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="triple">
+                                                                                <label class="custom-control-label" for="tripleColumnsNewGrp{{a}}">Triple
+                                                                                        Columns</label>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="custom-control custom-radio" *ngIf="screenType != 'CompactView'">
+                                                                            <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'four')">
+                                                                                <input type="radio" [checked]="field.group_layout_type == 'four'" class="custom-control-input" id="fourColumnsNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="four" checked>
+                                                                                <label class="custom-control-label" for="fourColumnsNewGrp{{a}}">Four
+                                                                                        Columns</label>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="custom-control custom-radio" *ngIf="screenType == 'CompactView'">
+                                                                            <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'form')">
+                                                                                <input type="radio" [checked]="field.group_layout_type == 'form'" class="custom-control-input" id="fourColumnsNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="form" checked>
+                                                                                <label class="custom-control-label" for="fourColumnsNewGrp{{a}}">Form
+                                                                                        View</label>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="custom-control custom-radio">
+                                                                            <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'table')">
+                                                                                <input type="radio" [checked]="field.group_layout_type == 'table'" class="custom-control-input" id="tableColumnsNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="four">
+                                                                                <label class="custom-control-label" for="tableColumnsNewGrp{{a}}">Table
+                                                                                        View</label>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div *ngIf="screenType == 'View'">
+                                                                            <a href="javascript:void(0);" (click)="OpenConditionPopup(field.visibility_condition_label,a,'detailView')" class="dropdown-item" draggable="false"><i
+                                                                                        class="fa fa-code text-primary"
+                                                                                        style="font-size: 20px;"></i>
+                                                                                    <span class="ml-1 text-dark"
+                                                                                        style="font-size: 14px;">{{(field.visibility_condition)?"Edit":"Add"}}
+                                                                                        Condition</span></a>
+                                                                        </div>
+                                                                        <div *ngIf="field.visibility_condition && screenType == 'View'">
+                                                                            <a href="javascript:void(0);" (click)="RemoveCondition(a,'detailView')" class="dropdown-item" draggable="false"><i
+                                                                                        class="feather-trash-2 text-danger"
+                                                                                        style="font-size: 20px;"></i>
+                                                                                    <span class="ml-1 text-dark"
+                                                                                        style="font-size: 14px;">Remove
+                                                                                        Condition</span></a>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                    </span>
+                                                                </a>
+                                                                <a class="d-inline-block" *ngIf="screenType == 'View'" href="javascript:void(0);" (click)="Removelayout(a)" draggable="false" title="Delete Section"><i
+                                                                        class="feather-trash-2 text-danger"
+                                                                        style="font-size: 20px;"></i></a>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row custom_feild_box {{(field.group_layout_type == 'textarea')?'p-0 m-0':''}}" style="position:relative">
+                                                    <div class="bg_ovelay_full text_design text_medium" *ngIf="field.group_layout_type != 'textarea' && dragDetail">
+                                                        <div class="brd_inside_full">Drop Here</div>
+                                                    </div>
+
+                                                    <ng-container *ngIf="field.group_layout_type == 'table' || field.group_layout_type == 'form'">
+                                                        <!--*****************added-items*********************-->
+                                                        <div class="col-12 px-2">
+                                                            <div class="table-responsive no-padding">
+                                                                <table class="table table-hover table-dynamic" style="min-width:auto;">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Field Name</th>
+                                                                            <th class="text-center" width="120">Action
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr lass="draged-item" dnd-sortable [sortableIndex]="i" [dragEnabled]="!dragOperation" (mousedown)="fordragcontrol()" (onDragStart)="dragStart($event,c,'Remove')" [dragData]="c" [ngClass]="{'customdieldbg': c.is_system_generated ==false}" *ngFor="let c of field.controls; let i=index">
+                                                                            <td>{{c.display_name }}</td>
+                                                                            <td class="text-center">
+                                                                                <a href="javascript:void(0);" (click)="EditCustomFields(a,c.id,c,i,'NewGroupCreated')" class="text-green font-16" draggable="false"><i
+                                                                                        class="feather-edit-2"></i></a>
+                                                                                <a href="javascript:void(0);" (click)="RemoveCustomFields(a,i,a+''+i,c)" class="text-red font-16" draggable="false"><i
+                                                                                        class="feather-trash-2"></i></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <!--<a href="javascript:void(0);" class="btn btn-info float-right"><i class="feather-eye pr-1"></i> View</a>-->
+                                                        </div>
+                                                        <!--*****************end-added-items*********************-->
+                                                    </ng-container>
+                                                    <ng-container *ngFor="let c of field.controls; let i=index">
+                                                        <div *ngIf="field.group_layout_type != 'table' && field.group_layout_type != 'form' && field.group_layout_type != 'textarea'" [ngClass]="{'col-lg-4':true,'col-12': field.group_layout_type =='single', 'col-md-6': field.group_layout_type =='double', 'col-lg-4':field.group_layout_type =='triple', 'col-lg-3 col-xl-3': field.group_layout_type =='four' }">
+                                                            <div class="draged-item" dnd-sortable [sortableIndex]="i" [dragEnabled]="!dragOperation" (mousedown)="fordragcontrol()" (onDragStart)="dragStart($event,c,'Remove')" [dragData]="c" [ngClass]="{'customdieldbg': c.is_system_generated ==false}">
+                                                                <span class="form-control 100 float-left">{{c.display_name
+                                                                    }}</span>
+                                                                <span class="w-25 float-right" style="padding-top:10px; position: absolute; right: 0px;">
+                                                                    <a href="javscript:;">
+                                                                        <span>
+                                                                            <!-- start-->
+                                                                            <span [attr.aria-disabled]="c.is_default? true: false"
+                                                                                (click)="hideme[a+''+i] =! hideme[a+''+i]"><i
+                                                                                    class="feather-more-horizontal text-secondary float-right anchodeshowdrop"></i></span>
+                                                                <!--end-->
+
+                                                                <div class="dropdown-menu  float-right hideshowdropdown quickkact" [ngClass]="{'hide' : hideme[a+''+i] == false,'show' : hideme[a+''+i] == true}" id="column-setting{{a}}{{i}}">
+                                                                    <div>
+                                                                        <a href="javascript:void(0);" *ngIf="userType=='Company Administrator'" (click)="EditCustomFields(a,c.id,c,i,'NewGroupCreated')" class="dropdown-item px-2" draggable="false"><i
+                                                                                            class="feather-edit-2 text-success"></i>
+                                                                                        <span
+                                                                                            class="ml-1 text-secondary"
+                                                                                            style="font-size: 14px;">View
+                                                                                            Properties</span></a>
+                                                                    </div>
+                                                                    <div>
+                                                                        <a href="javascript:void(0);" (click)="RemoveCustomFields(a,i,a+''+i,c)" class="dropdown-item px-2" draggable="false"><i
+                                                                                            class="feather-trash-2 text-danger"></i>
+                                                                                        <span class="ml-1 text-dark"
+                                                                                            style="font-size: 14px;">Remove
+                                                                                            Field</span></a>
+                                                                    </div>
+
+                                                                </div>
+                                                                </span>
+                                                                </a>
+                                                                </span>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </div>
+
+                                                    </ng-container>
+                                                    <ng-container *ngIf="field.group_layout_type == 'textarea'">
+                                                        <textarea class="form-control w-100" placeholder="type here ..." rows="6" (keyup)="OnKeyUp($event,a,'group')">{{field.default_value}}</textarea>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="field.visibility_condition">
+                                                        <div class="col-12 alert alert-primary mb-0">
+                                                            <p>
+                                                                <strong>Condition Apply : </strong>
+                                                                <ng-container *ngFor="let condition of field.visibility_condition_label | convertToArrayList">
+                                                                    {{condition.column_display_name}} {{condition.operator}} {{condition.display_value }} {{(condition.second_value)?' And ' + condition.second_value :'' }} {{condition.extended_operator}}
+                                                                </ng-container>
+                                                            </p>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="left-panel-dragdrop " dnd-sortable-container [sortableData]="flowAutomationDrop" [dropZones]="['container-dropZone']" [ngClass]="{'disableDiv':(dragRelated||dragDetail)}">
+                                                <div class="w-100 py-3 drop" [ngClass]="{'disableDiv':(dragRelated||dragDetail)?true:false}" pDroppable="color" (onDrop)="drop($event,'flow')" style="overflow-y:auto;max-height:380px;overflow-x: hidden; position:relative;     min-height: 52px;">
+                                                    <div class="bg_ovelay_full-width text_design" *ngIf="flowAutomationDrop.length==0">
+                                                        <div class="brd_inside">Drop Flow Here</div>
+                                                    </div>
+                                                    <div class="bg_ovelay_full-width text_design" *ngIf="dragflow">
+                                                        <div class="brd_inside">Drop Flow Here</div>
+                                                    </div>
+                                                    <div id="container" class=" mb-3 border drop" *ngFor="let field of flowAutomationDrop; let a = index" dnd-sortable [sortableIndex]="a" [dragEnabled]="dragOperation" (onDropSuccess)="onDropSuccess($event)">
+                                                        <div class="drop_right_heading " style="height:35px !important">
+                                                            <div class="col-md-12 col-lg-12 ">
+                                                                <div class="float-left">
+                                                                    {{field.automationFlowName}}
+                                                                </div>
+                                                                <div class="form-group d-flex justify-content-between " style="padding-left:20px;float: right !important;">
+                                                                    <div>
+                                                                        <a class="d-inline-block " href="javascript:void(0);" (click)="OpenFlowPopup(a, field)" draggable="false" title="Edit Flow"><i
+                                                                                class="feather-edit-2 text-success"
+                                                                                style="font-size: 20px;"></i></a>
+                                                                        <a class="d-inline-block " href="javascript:void(0);" (click)="RemoveFlow(a,field)" draggable="false" title="Delete Flow">
+                                                                            <i class="feather-trash-2 text-danger " style="font-size: 20px;">
+                                                                            </i></a>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div dnd-sortable-container [sortableData]="GroupTop" [dropZones]="['container-dropZone']">
+                                                            <div class="row mt-1">
+
+                                                                <div class="col-12">
+                                                                    <div class="float-left ml-2">
+                                                                        <div style="height: 40px !important;width:40px !important;">
+                                                                            <svg focusable="false" data-key="flow" aria-hidden="true" viewBox="0 0 100 120" class="slds-icon slds-icon_small" fill="white">
+                                                                                <rect width="100" rx="15" height="90"
+                                                                                    fill="rgb(1, 118, 211)" />
+                                                                                <g>
+                                                                                    <path
+                                                                                        d="M79.9 30.7c-2.6-5.1-9.2-14.6-21.5-9-7.6 3.5-11.9 5.5-11.9 5.5l-11 4.8c-3.1 1.5-9.9-.6-13.7-2-1.1-.4-2.1.8-1.6 1.9 2.6 5.1 9.2 14.6 21.5 9 7.6-3.5 22.9-10.1 22.9-10.1 3.1-1.5 9.9.6 13.7 2 1.1.2 2.1-.9 1.6-2.1zM53.5 46.8c-1.4.8-6.9 3.3-6.9 3.3l-5.5 2.4C38.4 54 32.5 52 29 50.6c-1-.5-1.9.8-1.4 1.8 2.2 5 8.1 14 18.9 8.5 6.7-3.4 12.4-5.6 12.4-5.6 2.7-1.5 8.6.5 12.1 1.9 1 .4 1.9-.8 1.4-1.9-2.3-5-8.2-14-18.9-8.5zM49.5 68.9c-1.1.6-3 1.8-3 1.8-2.1 1.3-6.5-.4-9.1-1.7-.7-.4-1.4.8-1 1.8 1.6 4.5 6 12.6 14.1 7.6 3-1.9 3-1.8 3-1.8 2.2-1.1 6.5.4 9.1 1.6.7.4 1.4-.8 1-1.8-1.6-4.4-5.7-12.1-14.1-7.5z">
+                                                                                    </path>
+                                                                                </g>
+                                                                            </svg>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="float-left ml-1" style="margin-top: -1px !important;">
+                                                                        <div>
+                                                                            Flow Component
+                                                                        </div>
+                                                                        <div>
+                                                                            {{field.automationFlowName}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mt-2 ml-2">
+                                                                <h6>This is a placeholder. Flow don’t run in the canvas.
+                                                                </h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 p-0">
+                                        <a href="javascript:void(0);" class="btn btn-danger float-right" (click)="Cancel()"><i class="feather-x pr-1"></i> Cancel</a>
+                                        <a href="javascript:void(0);" class="btn btn-success mr-2 float-right" (click)="AddLayoutForCustomField()"><i class="feather-save pr-1"></i>
+                                            Submit</a>
+                                        <a *ngIf="screenType != 'CompactView'" href="javascript:void(0);" title="" class="btn btn-primary formbtn widthhalf  mr-2 float-right" (click)="NewGrop('NewGroup')" tooltip="Create New Section"><i
+                                                class="feather-user pr-1"></i>New Section</a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-md-4 col-lg-4 px-3 related-tab-pview" *ngIf="screenType == 'View'">
+
+                                    <h3 class="form-heading mt-0"><span>Related</span></h3>
+
+                                    <div class="drop" style="display:none" pDroppable="color" (onDrop)="drop($event)">
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="form-group d-flex justify-content-between" style="padding-left:20px;">
+                                                <i class="feather-grid drag-icon"></i>
+                                                <input type="text" class="form-control w-50" formControlName="fieldName" maxlength="50" placeholder="Enter section name" readonly>
+                                                <div class="dropdown form-group {{(screenType != 'CompactView')?'addOnDelete':''}}">
+                                                    <a href="javascript:void(0);" class="column-setting py-2 d-block" (click)="toggleClass($event,'show')"><i
+                                                            class="feather-settings text-dark"
+                                                            style="font-size: 20px;"></i></a>
+                                                    <div class="dropdown-menu" [ngClass]="condition ? 'show' : 'hide'" id="column-setting">
+                                                        Select Layout
+                                                        <div class="custom-control custom-radio">
+                                                            <input type="radio" class="custom-control-input" id="customRadio1" name="contactPreferredDocumentSignedBy" (click)="toggleClassRadioButton($event,'double')" value="double">
+                                                            <label class="custom-control-label" for="customRadio1">Double Columns</label>
+                                                        </div>
+                                                        <div class="custom-control custom-radio" *ngIf="screenType != 'CompactView'">
+                                                            <input type="radio" class="custom-control-input" id="tripleColumns" name="contactPreferredDocumentSignedBy" (click)="toggleClassRadioButton($event,'triple')" value="triple">
+                                                            <label class="custom-control-label" for="tripleColumns">Triple Columns</label>
+                                                        </div>
+                                                        <div class="custom-control custom-radio" *ngIf="screenType != 'CompactView'">
+                                                            <input type="radio" class="custom-control-input" id="fourColumns" (click)="toggleClassRadioButton($event,'four')" name="contactPreferredDocumentSignedBy" value="four" checked>
+                                                            <label class="custom-control-label" for="fourColumns">Four
+                                                                Columns</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <style>
+                                        .customdieldbg {
+                                            background-color: #effaff;
+                                        }
+                                    </style>
+                                    <div class="left-panel-dragdrop" [ngClass]="{'disableDiv':(dragDetail||dragflow)}">
+                                        <div class="drop" pDroppable="color" (onDrop)="dropTextArea($event,'related')" dnd-sortable-container [sortableData]="relation" [dropZones]="['container-dropZone']">
+                                            <div class="bg_ovelay text_design text_small" *ngIf="dragRelated || dragTextArea || relation.length == 0" style="min-height:250px;">
+                                                <div class="brd_inside_full">Drop {{(relation.length == 0)?'Compact View / Text Area':''}} Here
+                                                </div>
+                                            </div>
+
+
+                                            <div id="container" class=" mb-3 border" *ngFor="let field of relation; let b = index" dnd-sortable [sortableIndex]="b" [dragEnabled]="dragOperation" (onDropSuccess)="onRelatedDropSuccess($event)">
+
+                                                <div>
+                                                    <div class="drop_right_heading">
+                                                        <div class="col-md-12 col-lg-12">
+                                                            <div class="form-group d-flex justify-content-between" (mousedown)="fordragcontainer()" style="padding-left:20px;">
+                                                                <i class="feather-grid drag-icon"></i>
+                                                                <ng-container *ngIf="field.view_name != 'textarea';else elseBlock">
+                                                                    <input type="text" class="form-control w-50" [value]="field.view_name | titlecase" (keyup)="onChangeRelatedTabName($event,b)" maxlength="500" required placeholder="Enter Display name">
+                                                                </ng-container>
+                                                                <ng-template #elseBlock>
+                                                                    <span class="h5 m-1">{{field.view_name |
+                                                                        titlecase}}</span>
+                                                                </ng-template>
+
+                                                                <div class="dropdown form-group">
+
+                                                                    <a href="javascript:void(0);" class="column-setting py-2 d-inline-block">
+                                                                        <i class="feather-settings text-dark" style="font-size: 20px;"></i>
+
+                                                                        <span class="dropdown-menu selctlay" [ngClass]="{'hide' : relatedHidemeNewGrp[b] == false,'show' : relatedHidemeNewGrp[b] == true}" id="column-setting">
+                                                                            <span class="hedlay">Select Layout</span>
+                                                                        <div>
+                                                                            <a href="javascript:void(0);" (click)="OpenConditionPopup(field.visibility_condition_label,b,'compactView')" class="dropdown-item" draggable="false"><i
+                                                                                        class="fa fa-code text-primary"
+                                                                                        style="font-size: 20px;"></i>
+                                                                                    <span class="ml-1 text-dark"
+                                                                                        style="font-size: 14px;">{{(field.visibility_condition_label)?"Edit":"Add"}}
+                                                                                        Condition</span></a>
+                                                                            <a *ngIf="field.visibility_condition_label" href="javascript:void(0);" (click)="RemoveCondition(b,'compactView')" class="dropdown-item" draggable="false"><i
+                                                                                        class="feather-trash-2 text-danger"
+                                                                                        style="font-size: 20px;"></i>
+                                                                                    <span class="ml-1 text-dark"
+                                                                                        style="font-size: 14px;">Remove
+                                                                                        Condition</span></a>
+
+
+                                                                        </div>
+                                                                        </span>
+
+                                                                    </a>
+                                                                    <a href="javascript:void(0);" (click)="RemovelayoutRelated(b)" class="d-inline-block" draggable="false" title="Delete Section"><i
+                                                                            class="feather-trash-2 text-danger"
+                                                                            style="font-size: 20px;"></i></a>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row custom_feild_box preview_elements {{(field.view_name == 'textarea')?'pt-0':''}}">
+
+                                                        <ng-container *ngIf="relatedDynamicLayoutNewSection[b] == 'table' && ( field.view_name!='Appointments' || field.view_name!='Notes' || field.view_name!='Files' || field.view_name!='Documents')">
+                                                            <div class="panel-content px-3 pagination2 table-responsive no-padding">
+                                                                <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'auto'" [headerHeight]="40" [footerHeight]="40" [externalSorting]="true">
+
+                                                                    <ngx-datatable-column [name]="c.display_name" *ngFor="let c of field.groups; let i=index" [sortable]="false" [prop]="c.display_name">
+                                                                        <ng-template let-row="c" ngx-datatable-header-template>
+                                                                            <div class="draged-item" dnd-sortable [sortableIndex]="i" [dragEnabled]="!dragOperation" (mousedown)="fordragcontrol()" (onDragStart)="dragStart($event,c,'Remove')" [dragData]="c" [ngClass]="{'customdieldbg': c.is_system_generated ==false}">
+
+                                                                                <span class="form-control 100 float-left">{{c.display_name
+                                                                                    }}</span>
+                                                                                <span class="w-25 float-right" style="padding-top:10px; position: absolute; right: 0px; z-index: 1">
+                                                                                    <a href="javscript:;">
+                                                                                        <span>
+                                                                                            <!-- start-->
+                                                                                            <span
+                                                                                                (click)="hideme[a+''+i] =! hideme[a+''+i]"><i
+                                                                                                    class="feather-more-horizontal text-secondary float-right anchodeshowdrop"></i></span>
+                                                                                <!--end-->
+
+                                                                                <div class="dropdown-menu  float-right hideshowdropdown quickkact" [ngClass]="{'hide' : hideme[a+''+i] == false,'show' : hideme[a+''+i] == true}" id="column-setting{{a}}{{i}}">
+                                                                                    <div>
+                                                                                        <a href="javascript:void(0);" (click)="EditCustomFields(a,c.id,c,i,'NewGroupCreated')" class="dropdown-item px-2" draggable="false"><i
+                                                                                                            class="feather-edit-2 text-success"></i>
+                                                                                                        <span
+                                                                                                            class="ml-1 text-secondary"
+                                                                                                            style="font-size: 14px;">View
+                                                                                                            Properties</span></a>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <a href="javascript:void(0);" (click)="RemoveCustomFields(a,i,a+''+i,c)" class="dropdown-item px-2" draggable="false"><i
+                                                                                                            class="feather-trash-2 text-danger"></i>
+                                                                                                        <span
+                                                                                                            class="ml-1 text-dark"
+                                                                                                            style="font-size: 14px;">Remove
+                                                                                                            Field</span></a>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                                </span>
+                                                                                </a>
+                                                                                </span>
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </ng-template>
+                                                                    </ngx-datatable-column>
+                                                                </ngx-datatable>
+                                                            </div>
+                                                        </ng-container>
+
+                                                        <ng-container *ngIf="field.view_name!='Notes' && field.view_name!='Call History' && field.view_name!='Sms History' && field.view_name!='Files' && field.view_name!='Documents' && field.view_name!='Appointments'">
+                                                            <ng-container *ngFor="let c of field.groups; let i=index">
+                                                                <div *ngIf="c.layout_type != 'table'" [ngClass]="{'col-lg-4':true,'col-12': c.layout_type =='single', 'col-md-6': (c.layout_type =='double' ||  c.layout_type =='form'), 'col-lg-4':c.layout_type =='triple', 'col-lg-3 col-xl-3': c.layout_type =='four' }">
+                                                                    <div class="draged-item" dnd-sortable [sortableIndex]="i" [dragEnabled]="!dragOperation" (mousedown)="fordragcontrol()" (onDragStart)="dragStart($event,c,'Remove')" [dragData]="c" [ngClass]="{'customdieldbg': c.is_system_generated ==false}">
+
+                                                                        <span class="form-control 100 float-left">{{c.display_name
+                                                                            }}</span>
+                                                                        <span class="w-25 float-right" style="padding-top:10px; position: absolute; right: 0px;">
+                                                                            <a href="javscript:void(0);">
+                                                                                <span>
+                                                                                    <!-- start-->
+                                                                                    <span
+                                                                                        (click)="hideme[a+''+i] =! hideme[a+''+i]"><i
+                                                                                            class="feather-more-horizontal text-secondary float-right anchodeshowdrop"></i></span>
+                                                                        <!--end-->
+
+                                                                        <div class="dropdown-menu float-right hideshowdropdown quickkact" [ngClass]="{'hide' : hideme[a+''+i] == false,'show' : hideme[a+''+i] == true}" id="column-setting{{a}}{{i}}">
+                                                                            <div>
+                                                                                <a href="javascript:void(0);" (click)="EditCustomFields(a,c.id,c,i,'NewGroupCreated')" class="dropdown-item px-2" draggable="false"><i
+                                                                                                    class="feather-edit-2 text-success"></i>
+                                                                                                <span
+                                                                                                    class="ml-1 text-secondary"
+                                                                                                    style="font-size: 14px;">View
+                                                                                                    Properties</span></a>
+                                                                            </div>
+                                                                            <div>
+                                                                                <a href="javascript:void(0);" (click)="RemoveCustomFields(a,i,a+''+i,c)" class="dropdown-item px-2" draggable="false"><i
+                                                                                                    class="feather-trash-2 text-danger"></i>
+                                                                                                <span
+                                                                                                    class="ml-1 text-dark"
+                                                                                                    style="font-size: 14px;">Remove
+                                                                                                    Field</span></a>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        </span>
+                                                                        </a>
+                                                                        </span>
+                                                                        <div class="clearfix"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                        </ng-container>
+
+                                                        <ng-container *ngIf="field.view_name=='Notes'">
+                                                            <div class="card card-block ng-star-inserted p-2">
+                                                                <div class="card-main">
+                                                                    <h5 class="card-title mt-3 mb-3">
+                                                                        <strong>Notes Title</strong>
+                                                                        <a class="float-right" href="javascript:void(0);"><i
+                                                                                class="feather-eye text-info"
+                                                                                title="View"></i></a>
+                                                                    </h5>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-6">
+                                                                            <p><strong>Status:</strong> In Progress</p>
+                                                                        </div>
+                                                                        <div class="col-md-12 col-lg-6 ng-star-inserted">
+                                                                            <p><strong>Resource:</strong> Zorbis</p>
+                                                                        </div>
+                                                                        <div class="col-md-12 col-lg-6">
+                                                                            <p><strong>Notify User(s):</strong> Charlie, Kane </p>
+                                                                        </div>
+                                                                        <div class="col-md-12 col-lg-6">
+
+                                                                            <span class="comments-count border-0 ng-star-inserted"><i
+                                                                                    class="feather-message-circle pr-2"></i>0
+                                                                                comments </span>
+                                                                        </div>
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <p><strong>Description:</strong> Lorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <a class="btn btn-primary mb-2" href="javascript:void(0);"><i
+                                                                        calss="feather-eye mr-1"></i>View All</a>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="field.view_name=='Files'">
+                                                            <div class="p-2">
+                                                                <app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="0" [header]="false"></app-files>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="field.view_name=='Appointments'">
+                                                            <div class="p-2">
+                                                                <app-appointments title="Appointments" submoduleName="{{submoduleName}}" primaryKey="0" [header]="false"></app-appointments>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="field.view_name=='Documents'">
+                                                            <div class="p-2">
+                                                                <app-shared-documents title="Documents" subModuleName="{{submoduleName}}" primaryKey="0" [header]="false"></app-shared-documents>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="field.view_name == 'textarea'">
+                                                            <div class="w-100">
+                                                                <textarea class="form-control" rows="6" placeholder="type here..." (keyup)="OnKeyUp($event,b,'related')">{{field.default_value}}</textarea>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="field.view_name=='Call History'">
+                                                            <div class="p-2">
+                                                                <div class="card card-block">
+                                                                    <!-- <div class="card-main"> -->
+                                                                    <h5 class="card-title border-bottom mt-3 mb-3">
+                                                                        <div class="row">
+                                                                            <div class="col-6">To: +15094122002</div>
+                                                                            <div class="col-6">From: +15098664302</div>
+                                                                        </div>
+                                                                    </h5>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <p><strong>Vender:</strong> Twilio</p>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <p><strong>Date:</strong> 04-29-2021</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <p><strong>Result:</strong> Call connected
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <p><strong>Start Time:</strong> 1:49:59 AM
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <p><strong>End Time:</strong> 1:49:59 AM</p>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <p><strong>Duration(sec):</strong> 40</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <p><strong>Call Type:</strong> Voice</p>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <p><strong>Direction:</strong> Inbound</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="field.view_name=='Sms History'">
+                                                            <div class="p-2">
+                                                                <div class="card card-block">
+                                                                    <!-- <div class="card-main"> -->
+                                                                    <h5 class="card-title border-bottom mt-3 mb-3">
+                                                                        <div class="row">
+                                                                            <div class="col-6">
+                                                                                <p><strong>To: </strong>+15094122002</p>
+                                                                            </div>
+                                                                            <div class="col-6">
+                                                                                <p><strong>From: </strong>+15098664302
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </h5>
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <p><strong>Body:</strong> Your Appointment has been booked.</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <p><strong>Date:</strong> 11/08/2021 1:49:59 AM
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <p><strong>Sms Status:</strong> Delivered
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+
+
+                                                        <ng-container *ngIf="field.view_name=='Video Call History'">
+                                                            <div class="p-2">
+                                                                <div class="card card-block">
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <p><strong>Start Time:</strong>12-15-2021 02:12 AM</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <p><strong>Total Duration:</strong>40 sec
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <p><strong>Owner Name</strong>Test</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                    </div>
+                                                </div>
+                                                <ng-container *ngIf="field.visibility_condition">
+                                                    <div class="col-12 alert alert-primary mb-0">
+                                                        <strong>Condition Apply on {{field.view_name}} : </strong>
+                                                        <p>
+                                                            <ng-container *ngFor="let condition of field.visibility_condition_label | convertToArrayList">
+                                                                {{condition.column_display_name}} {{condition.operator}} {{condition.display_value }} {{condition.extended_operator}}
+                                                            </ng-container>
+                                                        </p>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <!-- <ul class="list-group" dnd-sortable-container [sortableData]="relation">
+        <li class="list-group-item p-2" *ngFor="let coordOption of relation; let i = index" dnd-sortable [sortableIndex]="i">
+          <div class="custom-control custom-checkbox" style="font-size: 16px;">
+            <input type="checkbox" class="custom-control-input" (change)="onChangeMainCheckbox($event,coordOption)" [checked]="coordOption.isVisible" [id]="coordOption.related_name">
+            <label class="custom-control-label" [for]="coordOption.related_name">{{coordOption.related_name}}</label>
+          </div>
+          <i class="fa fa-th drag-icon" style="right: 5px; left: auto; z-index: 1;"></i>
+        </li>
+      </ul> -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<app-loader *ngIf="loadSave" [size]=60 [color]="'white'" class="loader"></app-loader>
+
+<app-propertiespopupcustom #propertiesPopupcustom (customFieldLayOut)="customFieldLayOut()"></app-propertiespopupcustom>
+
+<app-conditionpopup (searchFilterCondition)="ApplyAdvanceFilter($event)" #templateFilterView moduleName="{{moduleName}}" subModuleName="{{submoduleName}}"></app-conditionpopup>
+
+<div class="modal fade in show" [config]="{backdrop: 'static'}" bsModal #flowpopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-lg modal-info ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Flow</h4>
+                <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="margin-bottom:10px; height:300px;">
+                <form [formGroup]="flowForm" [ngClass]="{'disabled':loadSave}">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <label>Flow:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="flowAutomationitem" (change)="changeFieldIDValue($event)" placeholder="Select Flow" formControlName="flowName" bindLabel="name" bindValue="id" [appendTo]="'body'">
+                                </ng-select>
+                                <small *ngIf="(Name.invalid && (Name.dirty || Name.touched)) && Name.errors?.required" class="text-danger">Flow is required</small>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6" style="display: none !important;">
+                            <label>Layout:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="LayoutType" placeholder="Select condition" formControlName="flowlayoutType" bindLabel="text" bindValue="value" [appendTo]="'body'">
+                                </ng-select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="form-heading mt-0"><span>Set Component Visibility:</span></h3>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2 mb-2">
+                        <div class="col-md-6 col-lg-6">
+                            <label> <span class="text-danger">*</span>Condition Requirements</label>
+                            <ng-select [closeOnSelect]="true" [appendTo]="'body'" [items]="decisionList" placeholder="Select" formControlName="visibilityCondition" bindLabel="name" bindValue="value">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+
+
+                            <div formArrayName="filterConditions">
+                                <div class="row mb-2" *ngFor="let condit of filterConditions.controls;let i=index" [formGroupName]="i">
+                                    <div class="col-4 ">
+                                        <label>Field</label>
+                                        <ng-select [items]="allCustomfield" [appendTo]="'body'" formControlName="field" placeholder="Select Variable" bindLabel="label" bindValue="form_field_id">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label>Operator</label>
+                                        <ng-select [items]="Operators" [appendTo]="'body'" placeholder="Select Operator" formControlName="operator" bindLabel="text" bindValue="value">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label>Value</label>
+                                        <input type="text" class="form-control w-100" formControlName="value" maxlength="500" placeholder="Add Value">
+                                    </div>
+                                    <div class="col-1 text-center mt-4">
+                                        <button [disabled]="filterConditions.length < 2" (click)="deleteCondition(i)" class="btn btn-danger form-btns" tooltip="Delete">
+                                            <span><i class="feather-trash-2"></i></span>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-3 col-lg-3">
+                                    <button class="btn btn-success  float-left" (click)="addNewCondition()"><i
+                                            class="feather-plus"></i>Add
+                                        Condition</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+
+                <div class="col-12 p-0">
+                    <button class="btn btn-danger  float-right ml-2" (click)="close()">Cancel</button>
+                    <button class="btn btn-success  float-right " (click)="SubmitFlow()">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<app-user-defined-fields-pop-up [viewId]="view" #UserDefinedFieldsPopUp></app-user-defined-fields-pop-up>

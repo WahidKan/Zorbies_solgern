@@ -1,0 +1,137 @@
+  <!-- Modal -->
+  <div class="modal fade" bsModal #modal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Text Field, Dropdown, date Region Start -->
+  <div *ngIf="control && (control.get('type').value == 'fieldInput' || control.get('type').value == 'dropdown' || control.get('type').value == 'date')" [formGroup]="control" class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Properties</h5>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6 form-group">
+            <label class="label-style">Place Holder</label>
+            <input type="text" formControlName="placeHolder" class="form-control"/>
+          </div>
+          <div *ngIf="control.get('type').value == 'fieldInput'" class="col-6 form-group">
+            <label class="label-style">Validation</label>
+            <ng-select
+              [items]="textFieldValidationList"
+              bindValue="key"
+              bindLabel="value"
+              [closeOnSelect]="true"
+              formControlName="selectedValidation"
+              [clearable]="false"
+              [appendTo]="'body'"
+              (change)="updatePlaceHolder()"
+            >
+            </ng-select>
+          </div>
+          <div *ngIf="control.get('type').value == 'dropdown'" class="col-5 form-group">
+            <label class="label-style">Dropdown Items</label>
+            <input class="form-control" type="text" formControlName="dropdownItem" (keyup.enter)="addItem()"/>
+            <i *ngIf="!control.get('dropdownItem').value" class="feather-plus" title="disabled" style="float:right;margin-right: -25px;margin-top: -25px; color:#b7d3c1;cursor: not-allowed;" ></i>
+            <i *ngIf="control.get('dropdownItem').value" class="feather-plus" title="enabled" style="float:right;margin-right: -25px;margin-top: -25px; color:#47B972;cursor: pointer;" (click)="addItem()" ></i>
+          </div>
+          <div *ngIf="control.get('type').value == 'date'" class="col-6 form-group">
+            <label class="label-style">Date Format</label>
+            <ng-select
+              [items]="dateFormatsList"
+              bindValue="key"
+              bindLabel="value"
+              [closeOnSelect]="true"
+              formControlName="selectedDateFormat"
+              [clearable]="false"
+              [appendTo]="'body'"
+              (change)="updateDateFormat()"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div *ngIf="control.get('type').value == 'dropdown'" class="row">
+          <table class="table col-12">
+            <thead>
+              <tr>
+                <td>Value</td>
+                <td>Action</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr dnd-sortable-container [sortableData]="dropdownList.controls" dnd-sortable [sortableIndex]="i" *ngFor="let item of dropdownList.controls; let i = index">
+                <td>
+                  <span>{{item.value.text}}</span>
+                </td>
+                <td>
+                  <i class="fa fa-minus" style="color:#e44e48;cursor: pointer;" (click)="removeItem(i)"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="control.get('type').value == 'date'" class="row">
+          <div class="col-12 form-group">
+            <label class="label-style">Available Dates</label>
+            <ng-select
+              [items]="dateLimitList"
+              bindValue="key"
+              bindLabel="value"
+              [closeOnSelect]="true"
+              formControlName="dateLimit"
+              [clearable]="false"
+              [appendTo]="'body'"
+              (change)="updateDateLimit()"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div *ngIf="control.get('type').value == 'fieldInput' && (control.get('selectedValidation').value === 'phone number'
+        || control.get('selectedValidation').value === 'zip code')"  class="row">
+          <div class="col-12 form-group">
+          <label *ngIf="control.get('selectedValidation').value === 'phone number'" class="label-style">Phone Number</label>
+          <label *ngIf="control.get('selectedValidation').value === 'zip code'" class="label-style">Zip Code</label>
+            <ng-select
+              [items]="childValidationList"
+              bindValue="key"
+              bindLabel="value"
+              [closeOnSelect]="true"
+              formControlName="childValidation"
+              [clearable]="false"
+              [appendTo]="'body'"
+              (change)="updateValidation()"
+            >
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger form-btns" (click)="close()" aria-label="Close">
+          <i class="fa fa-times text-white"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Text Field Region End -->
+    <div *ngIf="control && (control.get('type').value == 'blockInput' || control.get('type').value == 'img' || control.get('type').value == 'video' || control.get('type').value == 'table') && cssModel" [formGroup]="cssModel" class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Properties</h5>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label for="favcolor">Background Color: </label>
+          <input formControlName="background-color" type="color" />
+          <app-box-model [cssModel]="cssModel"></app-box-model>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger form-btns" (click)="close()" aria-label="Close">
+            <i class="fa fa-times text-white"></i> Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+

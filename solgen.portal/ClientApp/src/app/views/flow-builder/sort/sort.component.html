@@ -1,0 +1,130 @@
+<div bsModal #sortModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" *ngIf="sortForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Collection Sort</h5>
+                <button type="button" (click)="closesortModal()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div *ngIf="sortForm && nodeId" [formGroup]="sortForm">
+                    <div>
+                        <p>Start a loop path for iterating over items in a collection variable. For each iteration, the flow temporarily stores the item in the loop variable.</p>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label class="form-label"> Label (Max Char Limit 50)<span class="text-danger">*</span> </label>
+                                <input formControlName="name" maxlength="50" type="text" class="form-control" [ngClass]="{'is-invalid': (sortName.invalid && (sortName.dirty || sortName.touched) && (sortName.errors?.required || sortName.errors?.maxlength)) }">
+                                <small *ngIf="(sortName.invalid && (sortName.dirty || sortName.touched)) && sortName.errors?.required" class="text-danger">label is required</small>
+                                <small *ngIf="(sortName.invalid && (sortName.dirty || sortName.touched)) && sortName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Description (Max Char Limit 200)</label>
+                                <textarea formControlName="description" maxlength="200" class="form-control" rows="2" [ngClass]="{'is-invalid': (sortDescription.invalid && (sortDescription.dirty || sortDescription.touched) && sortDescription.errors?.maxlength)}"></textarea>
+                                <small
+                                *ngIf="sortDescription.invalid && (sortDescription.dirty || sortDescription.touched) && sortDescription.errors?.maxlength"
+                                class="text-danger">Description should be less then 200</small>
+                            </div>
+                        </div>
+
+                        <hr class="mt-2 mb-2">
+                        <div>
+                            Sort Options
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="Search" class="form-label"> Collection Variable  <span class="text-danger">*</span></label>
+                                <!-- <ng-select formControlName="collectionVariable" placeholder="Enter min. 3 characters to search..." [closeOnSelect]="true" [virtualScroll]="true" bindLabel="name" bindValue="value" bindLabel="value" bindValue="id">
+                                </ng-select> -->
+                                <ng-select formControlName="collectionVariable" (change)="ChangeColletion($event)"  [items]="collectionVariables" placeholder="Enter min. 3 characters to search..." [closeOnSelect]="true" [virtualScroll]="true" bindLabel="name" bindValue="value">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        
+                        <div class="col-12"  *ngIf="sortForm && sortForm.get('collectionVariable').value">
+                            <div formArrayName="sortConditions">
+                                <h6>Set Field Values for the Action Link Template Records</h6>
+                                <div *ngFor="let vm of sortForm.get('sortConditions').controls;let i = index" [formGroupName]="i" class="row mt-2" >
+                                    <div class="col-6">
+                                        <label class="form-label">Sort By</label>
+                                        <ng-select [items]="customFieldList" appendTo="body" placeholder="Select"  formControlName="sortBy" 
+                                        required="required" appendTo="body" [closeOnSelect]="true"  bindLabel="customfieldName" bindValue="primaryTableColumn">
+                                    </ng-select>
+                                        
+                                    </div>
+                                   
+                                    <div class="col-5">
+                                        <div>
+                                            <label class="form-label">Sort Order</label>
+                                            <ng-select [items]="sortList" appendTo="body" bindLabel="name" bindValue="value" formControlName="sortOrder" placeholder="Enter value or search resources..." [closeOnSelect]="true" [virtualScroll]="true">
+                                            </ng-select>
+                                        </div>
+                                        
+                                        <div >
+                                            <label>Put empty string and null values first :</label>
+                                            <div class="form-group">
+                                              <label class="switch">
+                                                <input type="checkbox" id="customCheck1" formControlName="putNullOrEmptyString">
+                                                <span class="slider round"><span>Yes</span></span>
+                                              </label>
+                                            </div>
+                                          </div>
+                                    </div>
+                                    <div class="col-1 ">
+                                        <button [disabled]="sortConditions.length < 2" (click)="deleteField()" class="btn btn-danger form-btns mb-2" tooltip="Delete">
+                                <span><i class="feather-trash-2"></i></span>
+                             </button>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-3">
+                                        <button (click)="addField()" class="btn btn-success"><i class="feather-plus"></i>Add Condition</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <hr class="mt-2 mb-2">
+
+                        <div class="col-12">
+                            <p>
+                                Control the Collection Size
+                            </p>
+                            <strong> 
+                        How Many Items to Keep After Sorting<span class="text-danger">*</span>
+                          </strong>
+                            <div class="custom-control custom-radio">
+                                <input  id="Keepallitems" name="howManyToKeep" formControlName="howManyToKeep" value="Keep_all_items" type="radio" class="custom-control-input">
+                                <label class="custom-control-label" for="Keepallitems">Keep all items</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input  id="Setthemaximumnumber" name="howManyToKeep" formControlName="howManyToKeep" value="Set_the_maximum_number_of_items" type="radio" class="custom-control-input">
+                                <label for="Setthemaximumnumber" class="custom-control-label">Set the maximum number of items</label>
+                            </div>
+
+                        </div>
+
+                        <div class="row" *ngIf="sortForm && sortForm.get('howManyToKeep') && sortForm.get('howManyToKeep').value === 'Set_the_maximum_number_of_items'">
+                            <div>
+                                <p class="col-12">After sorting, the collection keeps the first items, up to the specified maximum, and removes the rest.</p>
+                            </div>
+                            <div class="col-6">
+                                <input formControlName="keepCount" (keypress)="numberOnlyWithoutDecimal($event)" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success form-btns" (click)="saveSortForm()"><i class="feather-save text-white pr-2"></i>Submit</button>
+                <button type="submit" class="btn btn-danger form-btns" (click)="closesortModal()" data-dismiss="modal" aria-label="Close">
+        <i class="fa fa-times text-white"></i> Cancel
+      </button>
+            </div>
+        </div>
+    </div>
+</div>

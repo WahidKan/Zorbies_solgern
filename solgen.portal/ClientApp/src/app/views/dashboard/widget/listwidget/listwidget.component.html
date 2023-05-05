@@ -1,0 +1,81 @@
+
+<div class="panel-content px-3 pagination2 table-responsive no-padding">
+  <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                 [rows]="columndata"
+                 [columnMode]="'force'"
+                 [headerHeight]="48"
+                 [footerHeight]="0"
+                 [scrollbarH]="true"
+                 [rowHeight]="'48'"
+                 [count]="totalRecords"
+                 [offset]="currentPage"
+                 [limit]="pageSizeValue"
+                 (page)='setPage($event)'
+                 (sort)="onSort($event)">
+
+    <ngx-datatable-column *ngFor="let col of columnheading" [name]="col.DISPLAY_NAME | uppercase" [prop]="col.COLUMN_NAME" [sortable]="col.SORTABLE" [maxWidth]="2000">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <!--<div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE == 'bit'">
+    <span class="status-box bg-success" *ngIf="row[col.COLUMN_NAME] == true">Enabled</span>
+    <span class="status-box bg-danger" *ngIf="row[col.COLUMN_NAME] == false">Disabled</span>
+  </div>-->
+        <!--<div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE=='date'">
+    {{ (row[col.COLUMN_NAME] !== null) ? (row[col.COLUMN_NAME] | DateTimeToLocal) : "" }}
+  </div>-->
+        <!--<div>
+    //asdfdsgfd
+  </div>-->
+        <!--<div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE!='date' && col.DATA_TYPE!='bit'">
+          {{row[col.COLUMN_NAME] | truncate}}
+        </div>-->
+
+
+        <div class="doc-count">
+          <div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE!='date' && col.isColor !=true">
+            {{row[col.COLUMN_NAME]}}
+          </div>
+
+          <div *ngIf="col.FieldFrom==null && col.isColor ==true">
+            <div *ngFor="let itemColorCode of getListingColorCode(row[col.COLUMN_NAME]);">
+              <div *ngIf="itemColorCode.colorkey==undefined">
+                {{itemColorCode.color}}
+              </div>
+              <div *ngIf="itemColorCode.colorkey!=undefined" style="max-width:150px !important;" class="status-box" [title]="itemColorCode.color" [ngStyle]="{background: itemColorCode.colorkey}">
+                {{itemColorCode.color}}
+              </div>
+            </div>
+          </div>
+          <div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE=='date'">
+            {{ (row[col.COLUMN_NAME] !== null) ? (row[col.COLUMN_NAME]  | date: 'MM-dd-yyyy' ) : "" }}
+          </div>
+        </div>
+
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-footer>
+      <ng-template ngx-datatable-footer-template
+                   let-rowCount="rowCount"
+                   let-pageSize="pageSize"
+                   let-selectedCount="selectedCount"
+                   let-currentPage="curPage"
+                   let-offset="offset"
+                   let-isVisible="isVisible"
+                   class="d-none"
+                   >
+
+        <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                         [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                         [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                         [pagerNextIcon]="'fa fa-angle-double-right'"
+                         [page]="curPage"
+                         [size]="pageSizeValue"
+                         [count]="totalRecords"
+                         [hidden]="!((rowCount / pageSize) > 1)"
+                         (change)="setPage($event)">
+        </datatable-pager>
+      </ng-template>
+    </ngx-datatable-footer>
+
+  </ngx-datatable>
+</div>

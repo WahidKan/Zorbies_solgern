@@ -1,0 +1,198 @@
+<!--<div *ngIf="target.get('isConditionAdded').value ">
+  <h3 class="form-heading">Results</h3>
+  <table class="table table-hover table-dynamic rule-tab">
+
+    <tbody>
+      <tr *ngFor="let result of target.get('results').value;let i = index">
+        <td class="text-left">
+          <a data-toggle="modal" (click)="editResult(i)" class="text-white font-16 mt-2">
+            <i class="fa fa-pencil"></i> {{result.name}}
+          </a>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+  <div class="col-sm-12 p-2">
+    <a class="btn btn-white mr-1" (click)="showResultModal()"><span style="margin-top: 0px;"><i class="feather-plus"></i> Add New </span></a>
+  </div>
+</div>-->
+<div class="condition-result" [formGroup]="target" *ngIf="target.get('isResultDecisionAdded').value && target.get('isDecisionAdded').value">
+  <strong>Results:</strong>
+  <span *ngFor="let result of target.get('results').value;let i = index" class=" d-block result-list">
+    {{result.name}}  <a href="javascript:;" (click)="editResult(i)" class="ml-2"><i class="fa fa-pencil"></i></a>
+  </span>
+  <a href="javascript:;" class="delete-btn" (click)="showResultModal()"><i class="feather-plus"></i></a>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" bsModal #addResult="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content" style="min-height:500px !important">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Result</h5>
+        <button type="button" class="close" (click)="hideResultModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="resultForm">
+          <div class="row">
+            <div class="col-4">
+              <label>Name</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="name">
+              </div>
+            </div>
+            <div class="col-4">
+              <label>Action</label>
+              <div class="form-group">
+                <ng-select [items]="resultActionList" formControlName="action" (change)="onActionChange($event)"
+                           placeholder="Select Action" bindLabel="name"
+                           [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-4" *ngIf="resultForm.get('subModuleId').enabled">
+              <label>Section</label>
+              <div class="form-group">
+                <ng-select [items]="tableList" formControlName="subModuleId" (change)="getSubModuleFields($event)"
+                           placeholder="Select Module" bindValue="sub_module_id" bindLabel="sub_module_name"
+                           [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="border" *ngIf="resultForm.get('action').value">
+
+                <ng-container *ngIf="resultForm.get('action').value.code=='update' || resultForm.get('action').value.code=='create'">
+                  <app-work-flow-result-table-field [resultForm]="resultForm" [moduleId]="moduleId"></app-work-flow-result-table-field>
+                </ng-container>
+                <ng-container *ngIf="resultForm.get('action').value.code !='update' && resultForm.get('action').value.code !='create'">
+                  <input formControlName="resultCondition" class="form-control" placeholder="Please enter the validation message." type="text" />
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="row w-100">         
+          <div class="col-md-6 text-left pl-0">
+            <button type="button" class="btn btn-danger" *ngIf="resultForm.get('isEdit').value" data-dismiss="modal" (click)="deleteResultForm()"><i class="feather-trash-2"></i> Delete</button>
+          </div>
+          <div class="col-md-6 text-right">           
+            <button type="button" class="btn btn-primary mr-1" (click)="openconditionpopup()"><i class="fa fa-code"></i> condition</button>
+            <button type="button" class="btn btn-success mr-1" (click)="saveResult()" [disabled]="!resultForm.valid"><i class="feather-save"></i> Save</button>
+            <button type="button" class="btn btn-danger" (click)="hideResultModal()"><i class="feather-x"></i> Cancel</button>
+          </div>
+        </div>
+          
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade " bsModal #addConditionModal="bs-modal" style="z-index:10000" [config]="{backdrop: 'static'}"   tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Flow Condition</h5>
+        <button type="button" class="close" (click)="hideConditionModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12 p-0" [formGroup]="resultForm">
+          
+            <div class="border w-100">
+              <div class="list-group" style="min-height: 210px;" formArrayName="whereClauseFields">
+                <ul class="form-header">
+                  <li> </li>
+                  <!--<li class="pl-2"> Section</li>-->
+                  <li class="pl-2"> Field</li>
+                  <li class="pl-2"> Conditional Operator</li>
+                  <li class="pl-2"> Value</li>
+                  <li> </li>
+                  <li> </li>
+                </ul>
+                <div *ngFor="let condition of resultForm.get('whereClauseFields').controls;let i=index" [formGroupName]="i">
+                 
+                  <ul class="from-rules text-center" *ngIf="condition.get('relationWithParent').value">
+                    <li class="text-center"><span class="or-and rounded-circle"><b>{{condition.get('relationWithParent').value}}</b></span></li>
+                  </ul>
+
+                  <ul class="from-rules">
+                    <li class="form-group align-middle px-2">
+                      <input formControlName="openingBrackets" style="width: auto;min-width: 20px;max-width: 20px;" class="form-control txtOpeningBrackets px-1">
+                    </li>
+                    <!--<li class="form-group align-middle px-2">
+      <ng-select [items]="subModuleList" formControlName="subModuleId"
+                 placeholder="Select Module" bindLabel="sub_module_name" (change)="onSubModuleChange($event,condition)"
+                 [closeOnSelect]="true">
+      </ng-select>
+    </li>-->
+                    <li class="form-group align-middle px-2">
+                      <ng-select [items]="condition.get('fields').value" formControlName="fieldId"
+                                 placeholder="Select Field" bindLabel="name" (change)="onFieldChange($event,condition,i)"
+                                 [closeOnSelect]="true">
+
+                      </ng-select>
+                    </li>
+                    <li class="form-group align-middle px-2">
+                      <ng-select [items]="condition.get('operators').value" formControlName="operatorId"
+                                 placeholder="Select Operator" bindLabel="operator_display_name"
+                                 [closeOnSelect]="true">
+                      </ng-select>
+                    </li>
+
+                    <li class="form-group align-middle px-2">
+                      <app-flow-input [formGroup]="condition" [operator]="condition.get('operatorId').value" [from]="condition" [controlName]="'fieldValue'" [id]="i"></app-flow-input>
+                      <app-flow-input [formGroup]="condition" [operator]="condition.get('operatorId').value" *ngIf="condition.get('operatorId').value && condition.get('operatorId').value.operator_expression =='between'" [from]="condition" [controlName]="'fieldSecondValue'" [id]="i"></app-flow-input>
+                    </li>
+                    <li class="form-group align-middle px-2">
+                      <input type="text" class="form-control" formControlName="closingBrackets" style="width:30px;">
+                    </li>
+                    <li class="text-center">
+                      <a *ngIf="i>0" href="javascript:void(0);" (click)="removeCondition(i)" class="text-red font-16">
+                        <i class="feather-trash-2"></i>
+                      </a>
+                    </li>
+
+                  </ul>
+
+                </div>
+              </div>
+              <div class="p-3 text-center">
+                <div class="cstm-drop-btn text-center">
+                  <select #addNewCondition class="btn ddlupdatestatus btn-success"  (change)="addCondition($event)">
+                    <option selected="selected"> Add</option>
+                    <option>Or</option>
+                    <option>And</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!--<div class="step-default p-3 border mt-2 rounded"><b>Condition:</b>{{targetForm.value.targetCondition.displayCondition}}  </div>-->
+
+
+      
+        
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+       
+        <button type="button" class="btn btn-success mr-1" data-dismiss="modal" (click)="saveCondition()" [disabled]="!conditions.valid"><i class="feather-save"></i> Save</button>
+        <button type="button" class="btn btn-danger" (click)="hideConditionModal()"><i class="feather-x"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->

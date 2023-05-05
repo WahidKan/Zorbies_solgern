@@ -1,0 +1,27 @@
+<!-- (click)="onJoinRoom(room.defaultRoom)" -->
+<div class="row mb-3" *ngIf="isOwner">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-8"><h4 class="font-weight-bold">Link to join</h4></div>
+            <div class="col-md-4 text-right" [style.display]="'none'">
+                <a class="text-right" href="javascript:void(0);" *ngFor="let room of filterRooms()"
+                 [ngClass]="{ 'active': activeRoomName === room?.defaultRoom }">
+                {{ room?.defaultRoom }}
+                <span class="badge bg-success text-white p-2">
+                    Participants {{ room?.participantCount }}
+                </span>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="search" #roomlink value="{{baseUri+'/videoChat?joinId=' + filterRoomJoiningLink()}}" readonly>
+                    <div class="input-group-btn">
+                      <button class="btn bg-dark border-0 text-white" type="button" (click)="CopyLink(roomlink)" style="padding: 5px 10px; border-radius: 0px 5px 5px 0px !important;"><i class=" feather-copy" style="font-size: x-large;"title="Copy Link" tooltip="Copy link"></i></button>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>

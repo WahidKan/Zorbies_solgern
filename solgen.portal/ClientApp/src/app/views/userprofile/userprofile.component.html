@@ -1,0 +1,263 @@
+<style>
+    .pwdtoggle>div {
+        width: 46px !important;
+        height: 46px !important;
+    }
+</style>
+
+
+    <div class="header w-90 mb-2 d-flex" [ngClass]="customerProfile == true ? ' ml-4 mr-4 mt-4 header-padding' : ''">
+        <div class="col-md-6 pl-0">
+            <h2 class="pr-2 w-100"><strong>My Profile</strong></h2>
+            <div class="breadcrumb-wrapper w-100">
+                <ol class="breadcrumb">
+                    <li><a routerLink="/dashboard">Dashboard</a></li>
+                    <li class="active smview">{{pageTitle}}</li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-md-6 text-right right pr-0">
+            <a *ngIf="isSuperAdmin==true" href="javascript:;" class="btn btn-primary"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+        </div>
+    </div>
+    
+    <div class="clearfix"></div>
+    <div class="panel" [ngClass]="customerProfile == true ? 'ml-4 mr-4  mb-4 bg-white' : ''">
+        <section class="panel-content p-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <form [formGroup]="userProfileForm" autocomplete="off">
+                        <div class="row">
+                            <div class="col-12 col-md-12 col-lg-4">
+                                <label>First Name:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" formControlName="firstName"  maxlength="50" [ngClass]="{'is-invalid': (firstName.invalid && (firstName.dirty || firstName.touched) && (firstName.errors?.required || firstName.errors?.maxlength)) }">
+                                    <small *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors?.required" class="text-danger">First Name is required</small>
+                                    <input type="hidden" formControlName="Id" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 col-lg-4">
+                                <label>Last Name:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" formControlName="lastName" maxlength="50" [ngClass]="{'is-invalid': (lastName.invalid && (lastName.dirty || lastName.touched) && (lastName.errors?.required || lastName.errors?.maxlength)) }">
+                                    <small *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors?.required" class="text-danger">Last Name is required</small>
+                                </div>
+                            </div>
+    
+                            <div class="col-12 col-md-12 col-lg-4">
+                                <label>Email:</label><span class="text-danger">*</span>
+                                {{userTypeLogin}}
+                                <div class="form-group">
+                                    <input type="text" class="form-control" [readonly]="userTypeLogin == 'usertypecompanyadmin'" formControlName="email" maxlength="50" [ngClass]="{'is-invalid': (email.invalid && (email.dirty || email.touched) && (email.errors?.required || email.errors?.email)) }">
+                                    <small *ngIf="email.invalid && (email.dirty || email.touched) && email.errors?.required" class="text-danger">Email is required</small>
+                                    <small *ngIf="email.invalid && (email.dirty || email.touched) && email.errors?.email" class="text-danger">Please enter valid email address</small>
+                                    <input type="hidden" formControlName="hdnEmail" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 col-lg-4">
+                                <label>Phone:</label>
+                                <div class="form-group">
+                                    <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="phone" placeholder="(___) ___-____"></p-inputMask>
+                                    <!--<input type="text" class="form-control" formControlName="phone" maxlength="50" />-->
+                                    <!--<small *ngIf="phone.touched && phone.errors?.pattern"
+    class="text-danger">Please enter valid Phone</small>-->
+                                </div>
+                            </div>
+    
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+                                <label>Select Profile Image:</label>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-10 col-lg-10 mb-0">
+                                            <div class="custom-file w-100">
+                                                <input [disabled]='customerProfile' class="custom-file-input" #file type="file" name='file' #fileInput [accept]="fileExtension" (change)="setFile($event)" lang="es">
+                                                <label class="custom-file-label">{{fileName}}</label>
+                                            </div>
+                                            <small *ngIf="isSuperAdmin==false"><i class="text-primary">Valid file format are   {{fileExtension}}</i> </small>
+                                            <small *ngIf="isSuperAdmin==true"><i class="text-primary">Valid file formats are: .png, .jpg, .jpeg, and .gif upto maximum file size 10MB. </i> </small>
+                                        </div>
+    
+                                        <div class="col-md-2 col-lg-2 mb-0" *ngIf="imageLink!=''">
+                                            <span class="user-pimg">
+                                                <img src={{fileUrl}} alt="img" style="height:40px; width:40px; cursor:pointer" data-toggle="modal" data-target="#exampleModal"><a href="javascript:void(0);" (click)="delImage(userID,fileUrl)" *ngIf="imageLink.indexOf('NoImage')<0"><i title="Delete" class="fas fa-trash-alt"></i></a>
+                                            </span>
+    
+    
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Profile Image</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                                                        </div>
+                                                        <div class="modal-body text-center ">
+                                                            <img src={{fileUrl}} alt="img" style="height:320px!important;width:320px!important; " class="img-responsive">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times m-1"></i>Close</button>
+                                                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div id="myModal" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" style="max-height:320px!important; max-width:320px!important; ">
+                            <div class="">
+                              <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-content">
+                              <div class="text-center">
+                                <img src={{fileUrl}} alt="img" style="height:320px!important;width:320px!important; " class="img-responsive">
+                              </div>
+                            </div>
+                          </div>
+                        </div> -->
+                                        </div>
+    
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-12 col-md-12 col-lg-4">
+                                <label>Address:</label>
+                                <div class="form-group">
+                                    <textarea class="form-control" formControlName="address" maxlength="500"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 col-lg-4">
+                                <label>City:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" formControlName="city" maxlength="50" [ngClass]="{'is-invalid': (city.invalid && (city.dirty || city.touched) && (city.errors?.required || city.errors?.maxlength)) }">
+                                    <small *ngIf="city.invalid && (city.dirty || city.touched) && city.errors?.required" class="text-danger">City is required</small>
+                                    <input type="hidden" formControlName="Id" />
+                                </div>
+                            </div>
+    
+                            <div class="col-md-12 col-lg-4">
+                                <label>Country:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <ng-select [items]="countryLists" placeholder="Select country" formControlName="county" bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (county.invalid && (county.dirty || county.touched) && county.errors?.required) }"></ng-select>
+                                    <small *ngIf="county.invalid && (county.dirty || county.touched) && county.errors?.required" class="text-danger">Please select country</small>
+                                </div>
+                            </div>
+    
+                            <div class="col-12 col-md-12 col-lg-4">
+                                <label>State:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <ng-select [items]="statesList" placeholder="Select State" formControlName="state" bindLabel="text" bindValue="stateGuidValues" [ngClass]="{'is-invalid': (state.invalid && (state.dirty || state.touched) && state.errors?.required) }"></ng-select>
+                                    <small *ngIf="state.invalid && (state.dirty || state.touched) && state.errors?.required" class="text-danger">Please select State</small>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-12 col-lg-4">
+                                <label>Zip Code:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Enter Zip Code" formControlName="zipCode" [ngClass]="{'is-invalid': (zipCode.invalid && (zipCode.dirty || zipCode.touched) && (zipCode.errors?.required || zipCode.errors?.maxlength)) }">
+                                    <small *ngIf="zipCode.invalid && (zipCode.dirty || zipCode.touched) && zipCode.errors?.required" class="text-danger">Zip Code is required</small>
+                                    <small *ngIf="zipCode.invalid && (zipCode.dirty || zipCode.touched) && zipCode.errors?.maxlength" class="text-danger">Zip Code can not be greater than 5 characters.</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-4">
+                                <label>Time Format:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <ng-select [items]="lstTimeFormat" placeholder="Select Time Format" formControlName="timeFormat" bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (timeFormat.invalid && (timeFormat.dirty || timeFormat.touched) && timeFormat.errors?.required) }"></ng-select>
+                                    <small *ngIf="timeFormat.invalid && (timeFormat.dirty || timeFormat.touched) && timeFormat.errors?.required" class="text-danger">Please select Time Zone</small>
+    
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-4">
+                                <label>Time Zone:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <ng-select [items]="lstTimeZone" placeholder="Select Time Zone" formControlName="timeZoneId" bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (timeZoneId.invalid && (timeZoneId.dirty || timeZoneId.touched) && timeZoneId.errors?.required) }"></ng-select>
+                                    <small *ngIf="timeZoneId.invalid && (timeZoneId.dirty || timeZoneId.touched) && timeZoneId.errors?.required" class="text-danger">Please select Time Zone</small>
+    
+                                </div>
+                            </div>
+    
+                            <!-- <div class="col-md-12 col-lg-4 " >
+                                <label>Email Notification:</label>
+                                <div class="form-group">
+                                    <div class="custom-checkbox">
+                                        <label class="switch m-0">
+                        <input class="form-control" type="checkbox" formControlName="emailNotification" [checked]="emailNotification">
+                        <span class="slider round"><span>Yes</span></span>
+                      </label>
+                                    </div>
+                                </div>
+                            </div> -->
+    
+    
+                            <div class="col-md-12 col-lg-4" *ngIf="IsDealer">
+                                <label>Company URL:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <a target="_blank" href='http://{{dealerCompanyUrl}}'>{{dealerCompanyUrl}}</a>
+                                </div>
+                            </div>
+    
+    
+                        </div>
+                        <div *ngIf="!customerProfile" class="col-12 p-0">
+                            <a href="javascript:void(0);" class="btn btn-success" (click)="updateUserProfile()"><i class="feather-save"></i> Submit</a>
+                            <!--<a href="javascript:void(0)" class="btn blue-btn form-btns" data-toggle="modal" data-target="#headerpassword"><i class="fa fa-key"></i> Change Password</a>-->
+                        </div>
+                    </form>
+                </div>
+            </div>
+    
+            <div #changePassModal class="modal fade" id="headerpassword" tabindex="-1" role="dialog" aria-labelledby="headerexampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="headerexampleModalLabel">Change Password</h4>
+                            <button #closeButton type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                        </div>
+                        <div class="modal-body">
+                            <form [formGroup]="changePasswordForm">
+                                <div class="row mt-3">
+                                    <div class="col-sm-6">
+                                        <label>Current Password:</label><span class="text-danger">*</span>
+                                        <div class="form-group pwdtoggle">
+                                            <input class="form-control" type="password" passwordToggle formControlName="currentPassword" [ngClass]="{'is-invalid': (currentPassword.invalid && (currentPassword.dirty || currentPassword.touched) && (currentPassword.errors?.required || currentPassword.errors?.maxlength)) }">
+                                            <small *ngIf="currentPassword.invalid && (currentPassword.dirty || currentPassword.touched) && currentPassword.errors?.required" class="text-danger">Current Password is required</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label>New Password:</label><span class="text-danger">*</span>
+                                        <div class="form-group pwdtoggle">
+                                            <input class="form-control" type="password" formControlName="newPassword" passwordToggle [ngClass]="{'is-invalid': (newPassword.invalid && (newPassword.dirty || newPassword.touched) && (newPassword.errors?.required || newPassword.errors?.maxlength)) }">
+                                            <small *ngIf="newPassword.invalid && (newPassword.dirty || newPassword.touched) && newPassword.errors?.required" class="text-danger">New Password is required</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label>Confirm Password:</label><span class="text-danger">*</span>
+                                        <div class="form-group pwdtoggle">
+                                            <input class="form-control" type="password" formControlName="confirmPassword" passwordToggle [ngClass]="{'is-invalid': (confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) && (confirmPassword.errors?.required || confirmPassword.errors?.maxlength)) }">
+                                            <small *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) && confirmPassword.errors?.required" class="text-danger">Confirm Password is required</small>
+                                            <small *ngIf="!confirmPassword.valid  && confirmPassword.hasError('notmatch')" class="text-danger">Confirm password does not match</small>
+    
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <p class="alert-warning p-2">Note: Password should be combination of lower case, upper case, numeric and special character.</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success form-btns smview" (click)="changePassword();"><i class="feather-save"></i> Save changes</button>
+                            <button type="submit" class="btn btn-danger form-btns smview" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+        </section>
+    
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+    
+    </div>
+

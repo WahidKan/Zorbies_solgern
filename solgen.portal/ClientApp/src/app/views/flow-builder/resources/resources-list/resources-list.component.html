@@ -1,0 +1,39 @@
+<div bsModal #resourceListModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Resource List</h5>
+                <button type="button" (click)="closeResourceListModal()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div class="d-flex justify-content-end">
+                    <a href="javascript:void(0);" class="btn btn-secondary" (click)="showResourceAddEditModal()"><i class="feather-plus"></i>Add Resource</a>
+                </div>
+                <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="resources.value" [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40">
+                    <!--<ngx-datatable-column name="Name" prop="name" [sortable]="true"></ngx-datatable-column>-->
+                    <ngx-datatable-column name="Name" prop="name" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column [width]="80" name="Action" [sortable]="false" [maxWidth]="200" headerClass="text-center">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="text-center">
+                                <a (click)="editResource(row)" class="btn-edit smview" href="javascript:void(0);">
+                                    <i title="Add/Edit Form Fields" class="feather-edit-2 text-success pr-2"></i>
+                                </a>
+                                <a (click)="deleteResource(row)" class="btn-edit" href="javascript:void(0);">
+                                    <i class="feather-trash-2 text-danger pr-2" title="Delete Form"></i>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="saveResourceListForm()"><i class="feather-save"></i> Submit</a>
+                <a href="javascript:void(0);" class="btn btn-danger" (click)="closeResourceListModal()"><i class="feather-x"></i> Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-add-edit-resource [form]="form" #addEditResourceModal></app-add-edit-resource>

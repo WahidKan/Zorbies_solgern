@@ -1,0 +1,102 @@
+<form [formGroup]="addCreditScoreForm" autocomplete="off">
+  <div bsModal #leaseCreditScoreModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}" style="max-width:900px;">
+      <div class="modal-content" style="z-index:1">
+        <div class="modal-header">
+          <h4 class="modal-title">Check Credit Score</h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="overflow:auto; margin-bottom:10px;">
+          <div class="row">
+            <div class="col-12 col-md-12 col-lg-6">
+              <label>Date Pulled:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <p-calendar inputStyleClass="form-control start-date" placeholder="Date Pulled" dateFormat="mm/dd/yy"
+                            formControlName="DatePulled" [maxDate]="dateTime" [showTime]="false"
+                            [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030" [ngClass]="{'is-invalid': (DatePulled.invalid && (DatePulled.dirty || DatePulled.touched) && (DatePulled.errors?.required || DatePulled.errors?.maxlength)) }"></p-calendar>
+                <small *ngIf="DatePulled.invalid && (DatePulled.dirty || DatePulled.touched) && DatePulled.errors?.required"
+                       style="color:red;">Date Pulled is required</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-6"></div>
+            <div class="col-12 col-md-6 col-lg-4">
+              <label>Score Title #1:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter Score Title #1"
+                       formControlName="scoreOneTitle">
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+              <label>Score Title #2:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter Score Title #2"
+                       formControlName="scoreTwoTitle" />
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+              <label>Score Title #3:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="scoreThreeTitle" placeholder="Enter Score Title #3" />
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+              <label>Select Document #1:</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input class="custom-file-input" type="file" name='file1' (change)="setFileOne($event)" #fileInput1 formControlName="fileNameOne">
+                    <label class="custom-file-label">{{fileNameFirst}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4">
+              <label>Select Document #2:</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input class="custom-file-input" type="file" name='file2' (change)="setFileTwo($event)" #fileInput2 formControlName="fileNameTwo">
+                    <label class="custom-file-label">{{fileNameSecond}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4">
+              <label>Select Document #3:</label>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input class="custom-file-input" type="file" name='file3' (change)="setFileThree($event)" #fileInput3
+                           formControlName="fileNameThree">
+                    <label class="custom-file-label">{{fileNameThird}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 ">
+              <small><i class="text-primary">Valid documents format is .pdf,.docx,.doc,.xls,xlsx, image/x-png, image/gif, image/jpeg Valid image format is image/x-png, image/gif, image/jpeg and limit upto 30MB.</i></small>
+            </div>
+            <div class="col-lg-12 bg-infoli lead">
+              <small>Please select at least one title and document.</small><br />
+              <small>Information will not be saved if you skip the step.</small>
+            </div>
+          </div>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary form-btns" (click)="sendCreditScore()"><i class="feather-save text-white"></i> Submit</button>
+          <button type="submit" class="btn  btn-secondary form-btns" (click)="sendSkipTheStep()">
+            <i class="feather-save text-white"></i> Skip the Step
+          </button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times text-white"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

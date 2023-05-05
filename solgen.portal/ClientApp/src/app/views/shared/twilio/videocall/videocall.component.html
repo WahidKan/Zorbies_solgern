@@ -1,0 +1,132 @@
+<div bsModal [config]="{ backdrop: 'static' }" #videoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-info " [ngClass]="{'disabled':loadSave}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title col-6">
+            <img src="https://images.freeimages.com/images/large-previews/b5a/dragon-fly-1391358.jpg" width=20></h4>
+          <h4 class="modal-title col-4">Video Chat</h4>
+          <!-- <h4 class="modal-title">{{modeltitle}}</h4> -->
+          <div class="col-2">
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        </div>
+        <div class="modal-body" style=" margin-bottom:10px; max-height:600px; min-height:350px;" >
+          <div class="row">
+            <div class="col-md-12 mb-3" *ngIf="rooms && isOwner">
+              <div class="row">
+                <div class="col-md-8"><h4 class="font-weight-bold">Link to join</h4></div>
+                <div class="col-md-4">
+                    <!-- (click)="onJoinRoom(room.defaultRoom)" -->
+                    <a class="text-right" href="javascript:void(0);" *ngFor="let room of rooms"
+                     [ngClass]="{ 'active': activeRoom.name === room.defaultRoom }"
+                    class="">
+                    {{ room.defaultRoom }}
+                    <span class="badge bg-primary text-dark">
+                        Participants {{ room.participantCount }}
+                    </span>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="search" #roomlink value="{{baseUri+'/videoChat?joinId=' + rooms[0]?.id}}">
+                        <div class="input-group-btn">
+                          <button class="btn btn-default" type="button" (click)="CopyLink(roomlink)"><i class=" feather-copy" style="font-size: x-large;"></i></button>
+                        </div>
+                      </div>
+                </div>
+            </div>
+                <!-- <div class="row m-3" *ngIf="rooms && isOwner">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-8"><h4 class="font-weight-bold">Link to join</h4></div>
+                            <div class="col-md-4">
+                                <a class="text-right" href="javascript:void(0);" *ngFor="let room of rooms"
+                                 [ngClass]="{ 'active': activeRoom.name === room.defaultRoom }"
+                                class="">
+                                {{ room.defaultRoom }}
+                                <span class="badge bg-primary text-dark">
+                                    Participants {{ room.participantCount }}
+                                </span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a class="ml-2" style="color: black !important" href="{{ baseUri+'/videoChat?joinId=' + rooms[0]?.id}}" target="blank" #roomlink>{{baseUri+'/videoChat?joinId=' + rooms[0]?.id}}</a><span class=" feather-copy" style="font-size: 20px;" (click)="CopyLink(roomlink)"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+              <!-- <app-rooms #rooms [isOwner]="true" (roomChanged)="onRoomChanged($event)" [defaultRoom]="!!activeRoom ? activeRoom.name : roomName"
+              [activeRoomName]="!!activeRoom ? activeRoom.name : null"></app-rooms> -->
+            </div>
+        </div>
+         <!-- <app-camera #camera ></app-camera> -->
+         <div id="preview" #preview [ngClass]="{ 'table': isCameraFound, 'd-none': !isCameraFound }">
+          <div class="spinner" *ngIf="isInitializing">
+              <span>Loading</span>
+              <br />
+              <br />
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+          </div>
+          <!-- <app-activity-indicator *ngIf="isInitializing"
+                                  [message]='"Loading preview... Please wait."'></app-activity-indicator> -->
+      </div>
+        <div class="row">
+            <div class="col-md-12 camera-container">
+             
+            <div class="other-partcipants" #list>
+
+
+            </div>
+            <div id="participant-list">
+              <div id="alone" [ngClass]="{ table: isAlone, 'd-none': !isAlone }">
+                <p class="text-center text-monospace h3 font-weight-bold" style="display: table-cell; color: whitesmoke">
+                  No User Connected <i class="far fa-frown"></i>
+                </p>
+              </div>
+              <div [ngClass]="{ 'd-none': isAlone }">
+                  <p class="col-12  d-block usrname-rmve p-2"><span >Hello World!</span> <button *ngIf="!isOwner" type="button" class="btn btn-lg leave-room" title="Click to leave this room." (click)="remove($event)">Leave call?</button>
+                    <!-- <button *ngIf="isOwner" type="button" class="btn btn-lg leave-room" title="Click to leave this room." (click)="onLeaveRoom($event)"> Remove?</button> -->
+                  </p>
+                
+              </div>
+            </div>
+            <div id="nocamera" #nocamera [ngClass]="{ 'table': !isCameraFound, 'd-none': isCameraFound }">
+                <p class="text-center text-monospace h3 font-weight-bold" style="display: table-cell; color:whitesmoke">
+                   No camera detected. <i class="far fa-frown"></i>
+                    <br/>
+                    Please connect a camera to make video call.
+                </p>
+            </div>
+            
+            </div>
+            <div class="col-md-6">
+              <!-- <app-participants #participants
+              [userName]="userName"
+              [isOwner]="true"
+              (leaveRoom)="onLeaveRoom($event)"
+              (participantsChanged)="onParticipantsChanged($event)"
+              [style.display]="!!activeRoom ? 'block' : 'none'"
+              [activeRoomName]="!!activeRoom ? activeRoom.name : null"></app-participants> -->
+            </div>
+        </div>
+        <div class="grid-right">
+            <!-- <app-settings #settings (settingsChanged)="onSettingsChanged($event)"></app-settings> -->
+        </div>
+        <div class="row">
+          <div class="col-md-12 camera-container">
+            <button type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> End Call</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div #videoChat></div>

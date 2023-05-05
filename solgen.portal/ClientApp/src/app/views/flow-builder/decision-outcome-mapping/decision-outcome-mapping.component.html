@@ -1,0 +1,29 @@
+<div bsModal #outcomeMapping="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" *ngIf="decisionOutcomeMappingForm && targetId && sourceId">
+            <div class="modal-header">
+                <h5 class="modal-title">Select outcome for decision connector</h5>
+                <!-- <button type="button" (click)="close()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button> -->
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div class="row" *ngIf="decisionOutcomeMappingForm && targetId && sourceId" [formGroup]="decisionOutcomeMappingForm">
+                    <div class="col-12">
+                        <p>To go to the “Get Order Item Summary” element, which outcome’s conditions must be met?</p>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="Action" class="form-label">Outcome<span class="text-danger">*</span></label>
+                                <ng-select formControlName="outcomeKey" [items]="outcomes" placeholder="Select Outcome" bindLabel="text" bindValue="value" [appendTo]="'body'"></ng-select>
+                                <small *ngIf="(decisionOutcomeMappingForm.get('outcomeKey').invalid && (decisionOutcomeMappingForm.get('outcomeKey').dirty || decisionOutcomeMappingForm.get('outcomeKey').touched)) && decisionOutcomeMappingForm.get('outcomeKey').errors?.required" class="text-danger">Outcome is
+                                  required</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" [disabled]="decisionOutcomeMappingForm.get('outcomeKey').invalid" class="btn btn-success form-btns" (click)="save()"><i class="feather-save text-white pr-2"></i>Submit</button>
+                <!-- <button type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button> -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<!-- Breadcrumb-->
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2">
+    <strong>Manage Campaign</strong>
+    <p class="d-inline-block pl-1 pl-md-3 mb-1"><i class="fa fa-list-alt p-0 pr-1"></i>{{ViewModel}}</p>
+  </h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li>
+        <a class="smview" routerLink="/dashboard">Dashboard</a>
+      </li>
+      <li class="active">Manage Campaign</li>
+    </ol>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <lib-dynamic-list *ngIf="load" [jsoninput]="jsonDatapack" [currentPage]="currentPage" [pageSizeValue]="pageSizeValue" [lstPageSize]="lstPageSize"
+                    (MainMethod)="MainMethod($event)" (curPageemit)="curPageemit($event)" [sortDir]="sortDir" [sortColumn]="sortColumn"
+                    primaryid="Id" (selectdata)="selectdata($event)" [companytype]="companyType" (goToPage)="goToPage($event)" [jsoncondition]="jsoncondition"
+                    [actionarray]="actionarray" [listFilter]="listFilter" [myCheckboxemit]="myCheckbox" [vewId]="vewId"
+                    [manageviewList]="pagedData.data" (updateFilter)="updateFilter($event)" (displayDetailDetail)="displayDetailDetail($event)"
+                    (search)="search()" (reset)="reset()" (add)="add()" (deleteAll)="deleteAll()" (switchClicked)="switchClicked($event)"
+                    (filterpopup)="filterpopup()" (SetManageViewValue)="SetManageViewValue($event)" [isAdd]="isAdd" [isUpdate]="isUpdate" [isDelete]="isDelete"
+                    Showheader="true" isSearchPannel="true" isManageView="true" [placeholder]="placeholder" [userinfodata]="userinfodata">
+      </lib-dynamic-list>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+    </div>
+  </div>
+</div>
+<app-searchfilteradd (searchFilterCondition)="ApplyAdvanceFilter($event)" #templateFilterView moduleName="crm" subModuleName="campaign"></app-searchfilteradd>
+<app-manageview (customViewid)="GetcustomViewid($event)" #templateManageView moduleName="crm" subModuleName="campaign"></app-manageview>

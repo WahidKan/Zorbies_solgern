@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-sm-12 ">
+        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+            <div class="header-chart mb-1">
+                <span>Plan & Addon Details</span>
+            </div>
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="planAndAddonDetails" [scrollbarH]="false" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [externalSorting]="true" [loadingIndicator]="loadSave" (sort)="onSort($event)">
+                <ngx-datatable-column [width]="22" name="#" prop="id" [sortable]="true">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Plan & Addon" prop="planAndAddon" [sortable]="true">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="QTY" sortable="true" prop="qty">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="RATE" sortable="true" prop="rate">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="TAX" sortable="true" prop="tax">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="AMOUNT" sortable="true" prop="amount">
+                </ngx-datatable-column>
+            </ngx-datatable>
+            <ngx-datatable-footer *ngIf="true">
+                <div class="row" style="background-color: #f0f0f5;">
+                    <div class="col-9 font-weight-bold" style="padding-left: 771px;">Total</div>
+                    <div class="col-3 font-weight-bold" style="padding-left: 111px;">$500.00</div>
+                </div>
+            </ngx-datatable-footer>
+        </div>
+    </div>
+</div>

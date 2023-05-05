@@ -1,0 +1,50 @@
+<form [formGroup]="documentForm">
+  <div class="row" [ngClass]="{'disabled':loading}">
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Document Type<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <ng-select [items]="lstdocumentType"
+                   placeholder="Select Document Type" bindValue="value" bindLabel="text" formControlName="documentName"
+                   [ngClass]="{'is-invalid': (documentName.invalid && (documentName.dirty || documentName.touched) && (documentName.errors?.required || documentName.errors?.maxlength)) }"></ng-select>
+        <small *ngIf="documentName.invalid && (documentName.dirty || documentName.touched) && documentName.errors?.required"
+               style="color:red;">Document Type is required</small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Document Title</label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="documentTitle" placeholder="Enter Document Title" maxlength="100">
+
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Select Document:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <div class="input-group">
+          <div class="custom-file">
+            <input class="custom-file-input" type="file" name='file' (change)="setFile($event)" #fileInput formControlName="documentFileName">
+            <label class="custom-file-label">{{fileName}}</label>
+
+          </div>
+
+        </div>
+        <small *ngIf="!isValid"
+               style="color:red;">File is required</small>
+      </div>
+      <small><i class="text-primary">Valid documents format is .pdf,.docx,.doc,.xls,xlsx, image/x-png, image/gif, image/jpeg Valid image format is image/x-png, image/gif, image/jpeg and limit upto 30MB.</i> </small>
+    </div>
+    <div class="col-12 col-md-12 col-lg-12">
+      <label>Comments:</label>
+      <div class="form-group">
+        <textarea type="text" class="form-control" formControlName="documentComment"></textarea>
+      </div>
+    </div>
+    <div class="col-12">
+      <button type="submit" (click)="save()" class="btn btn-primary form-btns mb-3" [disabled]="loadSave"><i class="feather-save"></i> Submit</button>
+        <button type="submit" *ngIf="isContactPage" (click)="checkCreditScore()" class="btn btn-orange form-btns mb-3" [disabled]="loadSave"><i class="fas fa-tachometer-alt"></i> Check Credit Score</button>
+    </div>
+  </div>
+</form>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-notes"></app-loader>
+
+<app-creditcheckscore #leaseContactCreditScoreModal></app-creditcheckscore>

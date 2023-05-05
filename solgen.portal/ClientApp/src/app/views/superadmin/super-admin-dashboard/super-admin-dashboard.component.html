@@ -1,0 +1,307 @@
+<style>
+    .circle-color {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        margin: 0 15px;
+        border-radius: 100%;
+        vertical-align: middle;
+    }
+    
+    .multi-color:nth-child(5n+1) .circle-color {
+        background: #d88c49;
+    }
+    
+    .multi-color:nth-child(5n+2) .circle-color {
+        background: #52a4c9;
+    }
+    
+    .multi-color:nth-child(5n+3) .circle-color {
+        background: #d84a49;
+    }
+    
+    .multi-color:nth-child(5n+4) .circle-color {
+        background: #b8a41d;
+    }
+    
+    .multi-color:nth-child(5n+5) .circle-color {
+        background: #6f9f4d;
+    }
+</style>
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<div (click)="hideCalendar($event)" *ngIf="!loadSave">
+    <div [ngClass]="isFullScreenSection ? 'fixeddheaderss' : 'fixeddheader'">
+        <div class="header header d-flex flex-wrap justify-content-between pt-2">
+            <h2 class="float-left pr-2"><strong>Dashboard</strong>
+            </h2>
+
+            <div class="right pt-2">
+                <a href="javascript:;" class="btn btn-info" (click)="addedit()"><i class="feather-edit-2 mr-1"></i> Edit Dashboard</a>
+
+            </div>
+
+
+            <!-- <div class="input-group" style="width: auto !important;" *ngIf="usertype !='usertypecompanyadmin' && isHOD != true">
+                <input type="text" class="form-control" placeholder="All" (click)="ShowCustomDateFilter()" [(ngModel)]="selectedFilter" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <span class="input-group-text closeCustomFilter" id="basic-addon2" (click)="ShowCustomDateFilter()"><i class="feather-calendar m-0"></i></span>
+                </div>
+                <div class="dasboard-calc" *ngIf="showDateFilter">
+                    <span><a href="javascript:void(0);" (click)="today()" [ngClass]="{'cal-active' : selectedFilter==='Today'}">Today</a> </span>
+                    <span> <a href="javascript:void(0);" (click)="yesterday()" [ngClass]="{'cal-active' : selectedFilter==='Yesterday'}">Yesterday</a></span>
+                    <span> <a href="javascript:void(0);" (click)="ThisWeek()" [ngClass]="{'cal-active' : selectedFilter==='This Week'}">This Week</a></span>
+                    <span> <a href="javascript:void(0);" (click)="LastWeek()" [ngClass]="{'cal-active' : selectedFilter==='Last Week'}">Last Week</a></span>
+                    <span> <a href="javascript:void(0);" (click)="thisMopnth()" [ngClass]="{'cal-active' : selectedFilter==='This Month'}">This Month</a></span>
+                    <span> <a href="javascript:void(0);" (click)="lastMonth()" [ngClass]="{'cal-active' : selectedFilter==='Last Month'}">Last Month</a>   </span>
+                    <span>  <a href="javascript:void(0);" (click)="thisYear()" [ngClass]="{'cal-active' : selectedFilter==='This Year'}">This Year </a> </span>
+                    <span>   <a href="javascript:void(0);" (click)="lastYear()" [ngClass]="{'cal-active' : selectedFilter==='Last Year'}">Last Year </a> </span>
+                    <span class="w-100 border-0 text-center"><a href="javascript:void(0);">Custom Range</a></span>
+
+                    <div class="date-box p-2">
+                        <p-calendar #myStartCalendar placeholder="From Date - To Date" [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true" inputId="range" (onSelect)="OnChangedDateRange($event)" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"
+                            (click)="customRange()" [ngClass]="{'cal-active' : selectedFilter==='Custom Range'}"></p-calendar>
+                        <span id="basic-addon2"><i class="feather-calendar"></i></span>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+        <app-annoucementwidget *ngIf="!isFullScreen"></app-annoucementwidget>
+
+        <div class="clearfix"></div>
+        <!-- <div class="row  float-right" *ngIf="usertype =='usertypesuperadmin' || isHOD == true">
+            <div class="col-lg-12">
+                <div class="d-md-flex justify-content-between flex-wrap">
+                    <div class="input-group justify-content-end mt-2 pr-3 d-none">
+                        View Data
+                        <label class="switch dashsl ml-2">
+              <input type="checkbox" class="form-check-input custom-control-input dynamic" [checked]="DashboardViewData" (click)="ShowDashboardViewData()">
+              <span class="slider round">
+                <span class="slider-yes">Me</span>
+                <span class="slider-no">Team</span>
+              </span>
+            </label>
+                    </div>
+                    <div class=" dash-filter mr-2" style="display:none;" role="group" aria-label="Button group with nested dropdown">
+                        <button type="button" class="btn btnfc mr-2" (click)="SetDashboardViewType('me')" [ngClass]="{'btn-secondary' : DashboardViewType !='me','btn-primary' : DashboardViewType == 'me'}">Me</button>
+                        <button type="button" class="btn mr-2" (click)="SetDashboardViewType('team')" [ngClass]="{'btn-secondary' : DashboardViewType !='team','btn-primary' : DashboardViewType =='team'}">My Team</button>
+                        <button type="button" class="btn btnlc mr-2" (click)="SetDashboardViewType('company')" [ngClass]="{'btn-secondary' : DashboardViewType !='company','btn-primary' : DashboardViewType =='company'}" *ngIf="usertype =='usertypecompanyadmin'">Company</button>
+                        <div class="btn-group mx-2" role="group" *ngIf="DashboardViewType =='company' || DashboardViewType =='team'">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-success dropdown-toggle" (click)="ShowTeamDataS()">
+                {{TeamDataText}}
+              </button>
+                            <div class="dropdown-menu" [ngClass]="{'show' : ShowTeamData==true}" aria-labelledby="btnGroupDrop1" style="max-height:400px;overflow-y:auto;">
+                                <a class="dropdown-item" href="javascript:void(0);" *ngFor="let item of UserTeam;let i=index" (click)="SetDashboardFilterTeam(item)">{{item.name}}</a>
+                            </div>
+                        </div>
+
+                        <div class="btn-group mx-2" role="group" *ngIf="usertype =='usertypecompanyadmin'">
+                            <button id="btnGroupServiceTerr" type="button" class="btn btn-success dropdown-toggle" (click)="ShowServiceTerr()">
+                {{ServiceTerritoryName}}
+              </button>
+                            <div class="dropdown-menu" [ngClass]="{'show' : ShowServiceTerrData==true}" aria-labelledby="btnGroupServiceTerr" style="max-height:400px;overflow-y:auto;">
+                                <a class="dropdown-item" href="javascript:void(0);" *ngFor="let item of ShowServiceTerrList;let i=index" (click)="SetDashboardFilterServiceTerritory(item)">{{item.text}}</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="input-group right caln-wid mt-0 mt-sm-2" *ngIf="!isFullScreen">
+                        <input type="text" class="form-control" placeholder="All" (click)="ShowCustomDateFilter()" [(ngModel)]="selectedFilter" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <span class="input-group-text closeCustomFilter" id="basic-addon2" (click)="ShowCustomDateFilter()"><i class="feather-calendar m-0"></i></span>
+                        </div>
+                        <div class="dasboard-calc" *ngIf="showDateFilter">
+                            <span><a href="javascript:void(0);" (click)="today()" [ngClass]="{'cal-active' : selectedFilter==='Today'}">Today</a> </span>
+                            <span> <a href="javascript:void(0);" (click)="yesterday()" [ngClass]="{'cal-active' : selectedFilter==='Yesterday'}">Yesterday</a></span>
+                            <span> <a href="javascript:void(0);" (click)="ThisWeek()" [ngClass]="{'cal-active' : selectedFilter==='This Week'}">This Week</a></span>
+                            <span> <a href="javascript:void(0);" (click)="LastWeek()" [ngClass]="{'cal-active' : selectedFilter==='Last Week'}">Last Week</a></span>
+                            <span> <a href="javascript:void(0);" (click)="thisMopnth()" [ngClass]="{'cal-active' : selectedFilter==='This Month'}">This Month</a></span>
+                            <span> <a href="javascript:void(0);" (click)="lastMonth()" [ngClass]="{'cal-active' : selectedFilter==='Last Month'}">Last Month</a>   </span>
+                            <span>  <a href="javascript:void(0);" (click)="thisYear()" [ngClass]="{'cal-active' : selectedFilter==='This Year'}">This Year </a> </span>
+                            <span>   <a href="javascript:void(0);" (click)="lastYear()" [ngClass]="{'cal-active' : selectedFilter==='Last Year'}">Last Year </a> </span>
+                            <span class="w-100 border-0 text-center"><a href="javascript:void(0);">Custom Range</a></span>
+
+                            <div class="dashboard-top-date date-box p-2">
+                                <p-calendar #myStartCalendar placeholder="From Date - To Date" [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true" inputId="range" (onSelect)="OnChangedDateRange($event)" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"
+                                    (click)="customRange()" [ngClass]="{'cal-active' : selectedFilter==='Custom Range'}"></p-calendar>
+                                <span id="basic-addon2"><i class="feather-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="row paddingtopdc">
+         <!--Tile Widgets Div-->
+        <div class="col-md-12">
+            <ul class="count-widget">
+                    <li class="widget-item mb-4" *ngIf="leadsCountWidget != -1" style="cursor: hand;">
+                        <a href="javascript:void(0);" [routerLink]="['/contactusleads']"  *ngFor="let c of tilewidget" class="d-flex dashboard-widget">
+                            <div class="left-content">
+                                <h4>Total Leads</h4>
+                                <span class="numbers"> {{c.CountWidget }}</span>
+                            </div>
+                            <div>
+                                <span>
+                                    <i>
+                                        <img src="../../../assets/default-theme/imagesNew/contact-us-leads-logo.png" style="width: 80px;"/>
+                                    </i>
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+                  <li class="widget-item mb-4" *ngIf="subscriptionCountWidget != -1" style="cursor: hand;">
+                    <a href="javascript:void(0);" routerLink="/superAdminSubscription" *ngFor="let c of tilewidget" class="d-flex dashboard-widget">
+                      <div class="left-content">
+                          <h4>Total Subscribers</h4>
+                          <span class="numbers"> {{c.Subscription_CountWidget }}</span>
+                      </div>
+                      <div class="right-content  mt-2">
+                          <span class="icon-bg"><i class="fa fa-umbrella"></i></span>
+                      </div>
+                    </a>
+                  </li>
+            </ul>
+        </div>
+
+            <!--Listings Widgets Div-->
+            <div class="col-lg-6 mb-12"  *ngIf="leadsListWidget != '-1' && leadsListWidget != '0'">
+                <div class="panel-content px-3 pagination2 table-responsive no-padding" >
+                <div class="header-chart mb-1">New Leads
+                    <a href="javascript:void(0);" style=" float: right;" routerLink="/contactusleads"> View All </a>
+                </div>
+               
+                    <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData_Leads.data"
+                    [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40"
+                    [footerHeight]="0" [externalSorting]="true" [loadingIndicator]="loadSave"
+                    [count]="pagedData_Leads.pager.totalItems" [offset]="pagedData_Leads.pager.currentPage"
+                    [limit]="pagedData_Leads.pager.pageSize_Leads" (page)='setPageNo_Leads($event)' 
+                    >
+                    <!-- <ngx-datatable-column [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                        [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="true">
+                    </ngx-datatable-column>
+                    -->
+                    
+
+                    <ngx-datatable-column name="Name" prop="FullName" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Lead Type" prop="LeadType" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Email" prop="Email" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Phone No" prop="PhoneNumber" ></ngx-datatable-column>
+                    <ngx-datatable-column name="Subject" prop="ContactUsSubject" >
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Description" prop="ContactUsMessage" ></ngx-datatable-column>
+                    
+                    <!-- <ngx-datatable-column [sortable]="false" [width]="45" [maxWidth]="100" headerClass="text-center">
+                    </ngx-datatable-column> -->
+                    <ngx-datatable-footer>
+                        <ng-template ngx-datatable-footer-template
+                                let-rowCount="rowCount"
+                                let-pageSize="pageSize_Leads"
+                                let-selectedCount="selectedCount"
+                                let-currentPage="currentPage"
+                                let-offset="offset"
+                                let-isVisible="isVisible">
+                    <!-- <div>
+                        <div style="color: black; margin-right: 10px" class="page-size-record">
+                        <span style="text-align: right; width: 80px; vertical-align: middle">
+                            <ng-select [searchable]="false"
+                                    [items]="lstPageSize_Leads"
+                                    appendTo="body"
+                                    [(ngModel)]="pageSize_Leads"
+                                    dropzone="fixed"
+                                    [clearable]="false"
+                                    (change)="onChange_Leads($event)"
+                                    draggable="false"
+                                    [closeOnSelect]="true"
+                                    bindLabel="text"
+                                    bindValue="text"></ng-select>
+                        </span>
+                        </div>
+                    </div>
+                    
+                    <div class="page-count" *ngIf="rowCount > 0">
+                        {{ commonService.PageString(pagedData_Leads.pager.currentPage + 1, pageSize_Leads, rowCount) }}
+                        </div>         -->
+
+                    <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                    [pagerRightArrowIcon]="'fa feather-chevron-right'"
+                                    [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                    [pagerNextIcon]="'fa fa-angle-double-right'"
+                                    [page]="currentPage+1"
+                                    [size]="pageSize_Leads"
+                                    [count]="pagedData_Leads.pager.totalItems"
+                                    [hidden]="!(rowCount / pageSize_Leads > 1)"
+                                    (change)="setPage_Leads($event)">
+                    </datatable-pager>
+                    </ng-template>
+                    </ngx-datatable-footer>
+                    </ngx-datatable>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-12" *ngIf="subscriptionListWidget != '-1' && subscriptionListWidget != '0'">
+                <div class="panel-content px-3 pagination2 table-responsive no-padding" >
+                <div class="header-chart mb-1">New Subscribers
+                    <a href="javascript:void(0);" style=" float: right;" routerLink="/superAdminSubscription"> View All </a>
+                </div>
+                
+                <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data"
+                  [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="0"
+                  [externalPaging]="true" [loadingIndicator]="loadSave"
+                  [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage"
+                  [limit]="pagedData.pager.pageSize" (page)='setPageNo($event)' 
+                  [selected]="selected" (select)="onSelect($event)"
+                 >
+        
+                 
+                  <ngx-datatable-column name="Subscription #" prop="subscription_number" >
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Customer Name" prop="FirstName" >
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <div title="{{row.FirstName +' '+ row.LastName }}">
+                        {{row.FirstName +' '+ row.LastName }}
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Customer Email" prop="Email" >
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Company Name" prop="CompanyName" >
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Plan Name" prop="Ref_Package_Name" >
+                  </ngx-datatable-column>
+                  
+                  <ngx-datatable-footer>
+                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                      let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset"
+                      let-isVisible="isVisible">
+                      <!-- <div>
+                        <div style="color: black; margin-right: 10px" class="page-size-record">
+                          <span style="text-align: right; width: 80px; vertical-align: middle">
+                            <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]="pageSize"
+                              dropzone="fixed" [clearable]="false" (change)="onChange_Subscription($event)" draggable="false"
+                              [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="rowCount > 0">
+                        {{ commonService.PageString(pagedData.pager.currentPage, pageSize, rowCount) }}
+                      </div> -->
+                      <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                        [pagerRightArrowIcon]="'fa feather-chevron-right'" [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                        [pagerNextIcon]="'fa feather-chevrons-right'" [page]="pagedData.pager.currentPage" [size]="pageSize"
+                        [count]="totalItems" [hidden]="!((rowCount / pageSize) > 1)"  (change)="setPage($event)">
+                      </datatable-pager>
+                    </ng-template>
+                  </ngx-datatable-footer>
+                </ngx-datatable>
+                </div>
+            </div>
+              
+</div>

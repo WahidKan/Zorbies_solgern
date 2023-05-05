@@ -1,0 +1,56 @@
+<div bsModal #loopModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" *ngIf="loopForm && nodeId" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Loop</h5>
+                <button type="button" (click)="closeLoopModal()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div *ngIf="loopForm && nodeId" [formGroup]="loopForm">
+                    <p>Start a loop path for iterating over items in a collection variable. For each iteration, the flow temporarily stores the item in the loop variable. </p>
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <label for="label" class="form-label">Label (Max Char Limit 50)<span class="text-danger">*</span> </label>
+                            <input formControlName="name" type="text" class="form-control" id="label" maxlength="50"  [ngClass]="{'is-invalid': (loopName.invalid && (loopName.dirty || loopName.touched) && (loopName.errors?.required || loopName.errors?.maxlength)) }" />
+                            <small *ngIf="(loopName.invalid && (loopName.dirty || loopName.touched)) && loopName.errors?.required" class="text-danger">label is required</small>
+                            <small *ngIf="(loopName.invalid && (loopName.dirty || loopName.touched)) && loopName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+                        </div>
+                        <div class="col-12">
+                            <label for="Description" class="form-label"> Description (Max Char Limit 200)</label>
+                            <textarea formControlName="description" maxlength="200" class="form-control" id="Description" rows="2"  [ngClass]="{'is-invalid': (loopDescription.invalid && (loopDescription.dirty || loopDescription.touched) && loopDescription.errors?.maxlength) }"></textarea>
+                            <small
+                                *ngIf="loopDescription.invalid && (loopDescription.dirty || loopDescription.touched) && loopDescription.errors?.maxlength"
+                                class="text-danger">Description should be less then 200</small>
+                        </div>
+                    </div>
+                    <hr class="mt-2 mb-2" />
+                    <div>Select Collection Variable</div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="Action" class="form-label">Collection Variable<span class="text-danger">*</span></label>
+                            <ng-select formControlName="loopCollection" [items]="collectionVariables" placeholder="Enter min. 3 characters to search..." [closeOnSelect]="true" [virtualScroll]="true" bindLabel="name" bindValue="value">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <hr class="mt-2 mb-2" />
+                    <div class="col-12"><strong>Direction <span class="text-danger">*</span></strong>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="Firstitemtolastitem" value="First item to last item" formControlName="direction" class="custom-control-input" />
+                            <label class="custom-control-label" for="Firstitemtolastitem">First item to last item</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="Lastitemtofirstitem" value="Last item to first item" formControlName="direction" class="custom-control-input" />
+                            <label class="custom-control-label" for="Lastitemtofirstitem">Last item to first item</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success form-btns" (click)="saveLoopForm()"><i class="feather-save text-white pr-2"></i>Submit</button>
+                <button type="button" class="btn btn-danger form-btns" (click)="closeLoopModal()" data-dismiss="modal" aria-label="Close">
+          <i class="fa fa-times text-white"></i> Cancel
+        </button>
+            </div>
+        </div>
+    </div>
+</div>

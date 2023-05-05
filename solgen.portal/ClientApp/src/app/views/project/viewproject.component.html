@@ -1,0 +1,119 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<div class="header float-left w-100">
+  <app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+
+  <div class="clearfix"></div>
+  <div class="card border-0">
+
+ <div class="panel">
+    <div class="row">
+      <div class="col-lg-12  border-bottom">
+        <div class="panel-content w-100 bg-white p-2 px-3 border-0">
+          <app-view-filter-bar-manager  [submoduleName]="'projects'" [titleName]="ProjectName"  
+          [customCompnentValuesTop]="''" [logoClass]="'fa fa-bullseye'" 
+          [pageLink]="'/projects/editProject'"  >
+        </app-view-filter-bar-manager>
+        </div>
+      </div>      
+      <div class="col-lg-12 mt-3">
+        <div class="panel-content w-100 bg-white p-2 px-3 scroll-in-content border-0">
+          <div class="row">
+
+            <div class="col-sm-12 col-lg-8">
+              <h3 class="form-heading mt-0"><span>Details</span></h3>
+              <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                <form [formGroup]="form" *ngIf="form">
+                  <ng-container *ngFor="let item of formControlList">
+                    <div class="panel active">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                          <a href="#{{item.group_display_name}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                            <span> {{item.group_name}}</span>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="{{item.group_display_name}}" class="panel-collapse collapse active show" style="">
+                        <div class="panel-body row px-0 mt-0">
+                          <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let inner of item.InnerData;">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>{{ inner.display_name}}:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6">
+                                <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.field_route==null" class="py-2 d-block">{{ inner.value}}</span>
+                                <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.field_route!=null" class="py-2 d-block">
+                                  <a href="javascript:void(0);" [routerLink]="[inner.field_route,inner.ref_value]">{{ inner.value}}</a>
+                                </span>
+                                <!--============================== For CheckBox ===========================-->
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                                  <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox pl-0">
+                                      <label class="switch  mb-0">
+                                        <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                        <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!--============================== For CheckBox ===========================-->
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                                  <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox pl-0">
+                                      <label class="switch mb-0">
+                                        <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                        <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </form>
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4 relatedtab">
+              <h3 class="form-heading mt-0"><span>Related</span></h3>
+              <div id="accordion" *ngIf="relatedObjects">
+                <ng-container *ngFor="let item of relatedObjects;let i=index;">
+                  <ng-container *ngIf="item.IsVisible">
+                    <ng-container *ngIf="item.layout_type != 'notes' && item.layout_type != 'table' && item.layout_type != 'files' && item.layout_type != 'textarea'">
+                      <app-listview [data]="item" [index]="i"></app-listview>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'textarea' && item.default_value">
+                      <div class="w-100 p-3 mb-2 text-center information-section">
+                        <span class="text-capitalize font-weight-bold" style="font-size: 24px;">
+                          {{item.default_value}}
+                        </span>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'table'">
+                      <app-tableview [data]="item" [index]="i" [SubModuleName]="submoduleName" [RecordId]="Id" (refreshEmitter)="RefreshRelatedObjects($event)"></app-tableview>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'notes'">
+                      <app-newnoteslist #listnotesmodel [view]="false" [DisplayOnEmpty]="true" subModuleName="{{submoduleName}}" [AccountId]="accountId" [ObjectRefId]="Id"></app-newnoteslist>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'files'">
+                      <app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="{{Id}}"></app-files>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+
+
+
+
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

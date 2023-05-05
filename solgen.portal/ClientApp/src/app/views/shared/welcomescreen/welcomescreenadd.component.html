@@ -1,0 +1,62 @@
+<!--class="disabledddl"-->
+<div bsModal #makeForm="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add Screen</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body" style=" margin-bottom:10px; height:auto;overflow:inherit;">
+
+        <form [formGroup]="addForm" autocomplete="off">
+          <h3 class="form-heading ng-star-inserted"><span>Create New Screen:</span></h3>
+
+          <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Select Module:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="ddlModulelist"class="disabledddl"
+                           formControlName="ddlModule"
+                           placeholder="Select Module" bindValue="module_id"
+                           bindLabel="module_name" (change)="getSubmodulesByModuleId($event)">
+                </ng-select>
+                <small *ngIf="ddlModule.invalid && (ddlModule.dirty || ddlModule.touched) && ddlModule.errors?.required" class="text-danger">Module is required</small>
+
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Select SubModule:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="ddlSubModulelist"class="disabledddl"
+                           formControlName="ddlSubmodule"
+                           placeholder="Select SubModule" bindValue="sub_module_id"
+                           bindLabel="sub_module_name" (change)="getSubmodulesByModuleId($event)">
+                </ng-select>
+                <small *ngIf="ddlSubmodule.invalid && (ddlSubmodule.dirty || ddlSubmodule.touched) && ddlSubmodule.errors?.required" class="text-danger">Sub Module is required</small>
+
+              </div>
+            </div>
+
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Screen Name:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter Screen Name" maxlength="50" formControlName="moduleName" [ngClass]="{'is-invalid': (moduleName.invalid && (moduleName.dirty || moduleName.touched) && (moduleName.errors?.required || moduleName.errors?.maxlength)) }">
+                <small *ngIf="moduleName.invalid && (moduleName.dirty || moduleName.touched) && moduleName.errors?.required" class="text-danger">Screen Name is required</small>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="saveNewForm()"><i class="feather-save text-white pr-2"></i> Submit</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>
+
+<app-welcomescreen #welcomecomponent ></app-welcomescreen>

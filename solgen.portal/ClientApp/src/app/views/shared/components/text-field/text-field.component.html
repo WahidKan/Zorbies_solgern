@@ -1,0 +1,19 @@
+<div [formGroup]="textField">
+  <div class="row">
+    <div class="col-12">
+      <textarea
+      style="overflow: hidden;"
+      formControlName="displayName"
+      [placeholder]="textField.get('placeHolder').value"
+      class="form-control"
+      [ngStyle]="textField.get('style').value"
+      [appAutofocus]="focus"
+      [style.height.px]="textField.get('height').value"
+      [style.width.px]="textField.get('width').value - 10"
+      (input)="validation()"
+      [readOnly]="textField.get('isPreview').value"
+      ></textarea>
+    </div>
+  </div>
+</div>
+<span style="padding: 5px;" *ngIf="customTooltip">{{tooltipText}}</span>

@@ -1,0 +1,177 @@
+<!-- <div class="row" *ngFor="let outCome of controlsProp.controls;let i=index" [formGroupName]="i"> -->
+<div [formGroup]="formgroupParent">                            
+    <div class="col-md-12 col-lg-12">
+        <label> <span class="text-danger">*</span> label</label>
+        <input type="text"  class="form-control" formControlName="name">
+    </div>
+    <div class="col-md-12 col-lg-12 mt-2">
+        <label class="form-label">Description</label>
+        <textarea  class="form-control" formControlName="desciption"></textarea>
+    </div>
+    <div *ngIf="!(selectedControls.dt_code == 'select' || selectedControls.dt_code == 'radio')" class="col-md-12 col-lg-12 mt-2">
+        <label>Default Value</label>
+        <!-- <input type="text" name="value{{i}}" class="form-control" formControlName="value" placeholder="Enter Value"> -->
+        <ng-select [items]="valueList"  formControlName="defaultValue"  placeholder="Enter Value Or Search Resource"
+        bindLabel="text"
+        addTagText="add new value" 
+        [addTag]="CreateNew">
+       </ng-select>
+    </div>
+    
+      <div *ngIf="!(selectedControls.dt_code ==  'checkbox' || selectedControls.dt_code ==  'url')" class="col-md-12 col-lg-12 mt-2">
+        <div class="">
+            <input type="checkbox"  class="form-control" formControlName="isRequired">
+             <label>Require</label>
+           </div>
+    </div>
+    <div *ngIf="selectedControls.dt_code =='decimal'" class="col-md-12 col-lg-12">
+        <label> <span class="text-danger">*</span> Decimal Places</label>
+        <input type="number"  class="form-control" formControlName="decimalPlaces">
+    </div>
+      <div *ngIf="(selectedControls.dt_code =='radio' || selectedControls.dt_code == 'select')" class="col-md-12 col-lg-12 mt-2">
+        <label>Data Type</label>
+        <ng-select [items]="valueList"  formControlName="value"  placeholder="Search Data Type"
+        bindLabel="text"
+        >
+       </ng-select>
+    </div>
+    
+    <div *ngIf="selectedControls.dt_code =='url'" class="col-md-12 col-lg-12 mt-2">
+        <label>Disabled</label>
+        <ng-select [items]="valueList"  formControlName="isDisabled"  placeholder="Enter or Search"
+        bindLabel="text"
+        addTagText="add new value" 
+        [addTag]="CreateNew"
+        >
+       </ng-select>
+    </div>
+    <div *ngIf="selectedControls.dt_code =='url'" class="col-md-12 col-lg-12 mt-2">
+        <label>Pattern</label>
+        <ng-select [items]="valueList"  formControlName="pattern"  placeholder="Enter or Search"
+        bindLabel="text"
+        addTagText="add new value" 
+        [addTag]="CreateNew"
+        >
+       </ng-select>
+    </div>
+    <div *ngIf="selectedControls.dt_code =='url'" class="col-md-12 col-lg-12 mt-2">
+        <label>Read Only</label>
+        <ng-select [items]="valueList"  formControlName="isReadOnly"  placeholder="Enter or Search"
+        bindLabel="text"
+        addTagText="add new value" 
+        [addTag]="CreateNew"
+        >
+       </ng-select>
+    </div>
+    <div *ngIf="selectedControls.dt_code =='url'" class="col-md-12 col-lg-12 mt-2">
+        <label>Required</label>
+        <ng-select [items]="valueList"  formControlName="value"  placeholder="Enter or Search"
+        bindLabel="text"
+        addTagText="add new value" 
+        [addTag]="CreateNew"
+        >
+       </ng-select>
+    </div>
+    <div class="col-12 mt-2">
+        <div class="accordion" id="accordion">
+            <div>
+                <div class="panel active">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a style="padding: 8px 15px 8px 5px !important"
+                                class="accordion-toggle" href="#setComponentVisibility"
+                                data-toggle="collapse" data-parent="#accordion"
+                                aria-expanded="true">
+                                Set Component Visibility
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="setComponentVisibility"
+                        class="panel-collapse collapse active show">
+                        <div class="panel-body px-2 mt-0">
+                                <div class="col-md-12 col-lg-12 mt-2">
+                                    <label>When to Display Component</label>
+                                    <ng-select [items]="displayList" (change)="ShowConditionModal($event,selectedControls.form_field_id)"   placeholder=" Search"
+                                    bindLabel="text"
+                                    bindValue="value"
+                                    formControlName="customDisplayCondtion" 
+                                    >
+                                   </ng-select>
+                                </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+            <div  class="col-md-12 col-lg-12 mt-2">
+                <input type="button" value="save" (click)="savemain()">
+            </div>
+            <div bsModal #visiblityConditionModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Component Visibilty Condition</h4>
+                  <button type="button" class="close"  aria-label="Close"  (click)="hideConditionModal()">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div >
+                      
+                      <div formArrayName="displayConditions">
+                          <div class="row mb-2 align-items-end justify-content-between"  *ngFor="let outCome of conditions.controls;let i=index" [formGroupName]="i" >
+                          <div class="col-md-1 col-lg-1">
+                              <strong class="d-block pb-2" *ngIf="conditions.length > 1">And</strong>
+                          </div>
+                          <div class="col-md-3 col-lg-3">
+                              <label>Resource</label>
+                              <!-- <input type="text" name="value{{i}}" class="form-control" formControlName="value" placeholder="Enter Value"> -->
+                              <ng-select [items]="conditionValueList"  formControlName="field"  placeholder="Enter Or Search Resource"
+                              bindLabel="text"
+                              addTagText="add new Resource" 
+                              [addTag]="CreateNew">
+                             </ng-select>
+                          </div>
+                          <div class="col-md-3 col-lg-3">
+                              <label>Operator</label>
+                              <ng-select [items]="operatorList" placeholder="Select Operator" formControlName="operator" bindLabel="text" bindValue="value">
+                              </ng-select>
+                          </div>
+                          <div class="col-md-3 col-lg-3">
+                              <label>Value</label>
+                              <!-- <input type="text" name="value{{i}}" class="form-control" formControlName="value" placeholder="Enter Value"> -->
+                              <ng-select [items]="conditionValueList"  formControlName="value"  placeholder="Enter  Or Search Value"
+                              bindLabel="text"
+                              addTagText="add new value" 
+                              [addTag]="CreateNew">
+                             </ng-select>
+                          </div>
+                          <div class="col-md-1 col-lg-1">
+                              <button [disabled]="conditions.length < 2" (click)="deleteCondition(i)"
+                                  class="btn btn-danger form-btns" tooltip="Delete">
+                                  <span><i class="feather-trash-2"></i></span>
+                              </button>
+                          </div>
+          
+                      </div>
+                      </div>
+                      <div class="row mt-3">
+                          <div class="col-md-3 col-lg-3">
+                              <button class="btn btn-success  float-left" (click)="addNewCondition()"><i class="feather-plus"></i>Add Condition</button>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+          
+                <div class="modal-footer">
+                  <button  type="button" class="btn btn-success form-btns" (click)="Save()" ><i class="feather-save text-white"></i> Save</button>
+                  <button type="button" class="btn btn-danger form-btns"  data-dismiss="modal"
+                    aria-label="Close" (click)="hideConditionModal()"><i class="fa fa-times text-white"></i> Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>

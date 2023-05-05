@@ -1,0 +1,194 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<div class="header float-left w-100 mb-2 d-flex"> 
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100" *ngIf="id == null"><strong>Add Queue</strong></h2>
+    <h2 class="float-left pr-2 w-100" *ngIf="id != null"><strong>Edit Queue</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li><a routerLink="/queues">Manage Queue</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="feather-repeat mr-1"></i>Switch Company</a>
+  </div>
+</div>
+
+<div class="clearfix"></div>
+<div class="panel   clearfix">
+  <div class="panel-content clearfix mb-4 p-0">
+    <ul class="nav nav-tabs nav-cust" id="myTab" *ngIf="id != null && id > 0" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#Queue" role="tab"
+           aria-selected="true">QUEUE</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade active show" id="Queue" role="tabpanel">
+        <div class="row">
+          <div class="col-lg-12 portlets">
+            <form [formGroup]="queueForm">
+              <div class="row mb-2">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                      <label>Queue Name:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" maxlength="50" formControlName="name">
+                        <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="text-danger">
+                          <div *ngIf="name.errors.required">
+                            Queue Name is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Object:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <ng-select [items]="subModuleList" formControlName="subModuleId" placeholder="Select Object..."
+                                   bindLabel="sub_module_name" [clearable]="false"></ng-select>
+                        <div *ngIf="subModuleId?.invalid && (subModuleId?.dirty || subModuleId?.touched)"
+                             class="text-danger">
+                          <div *ngIf="subModuleId.errors.required">
+                            Object is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Description:<span class="text-danger"></span></label>
+                      <div class="form-group">
+                        <textarea class="form-control" maxlength="500" placeholder="Enter Queue Description"
+                                  formControlName="description"></textarea>
+                        <div *ngIf="description?.invalid && (description?.dirty || description?.touched)"
+                             class="text-danger">
+                          <div *ngIf="description.errors.required">
+                            Enter Queue Description
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Status:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <ng-select [items]="statusList" formControlName="statusId" bindLabel="text" bindValue="value"
+                                   placeholder="Select Status..." [closeOnSelect]="true">
+                        </ng-select>
+
+                        <div *ngIf="statusId?.invalid && (statusId?.dirty || statusId?.touched)"
+                             class="text-danger">
+                          <div *ngIf="statusId.errors.required">
+                            Status is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="events.length > 0">
+                <h3 class="form-heading mt-0"> <span>Apply On</span></h3>
+                <div class="div-scroll p-2">
+                  <div class="flowchart-fix">
+                    <ul class="fc_parentchild">
+
+                      <li [ngClass]="{'arrowdown':eventId.value==0?false:true}">
+                        <p class="shape_oval"><span>When</span></p>
+                        <ul class="fc_subchild fc_subchildWhen">
+                          <li class="arrowright top50">
+                            <div class="formsfieldmainunique">
+                              <div class="parenthead">
+                                <span class="text">When do you want to execute the rule ?</span>
+                                <a *ngIf="eventId.value !=0 && isEditEvent" (click)="editEvent()"
+                                   class="float-right text-white" href="javascript:void(0);">
+                                  <i class="feather-chevron-left"></i>
+                                </a>
+                              </div>
+                              <div class="childdivsunique_edit" *ngIf="!isEditEvent">
+                                <div class="childdivsuniqueheader">
+                                  <span>
+                                    {{subModule.sub_module_name}}:
+                                    {{eventName}}
+                                  </span>
+                                </div>
+                                <div class="childdivediticon_unique textalignright">
+                                  <a href="javascript:void(0);" title="" (click)="editEvent()">
+                                    <div class="iconedit_unique"></div>
+                                  </a>
+                                </div>
+                              </div>
+                              <div class="clearfix"></div>
+                              <div class="childdivsunique_base row mt-3" *ngIf="isEditEvent">
+                                <div class="col-sm-6" *ngFor="let event of events">
+                                  <div class="radio">
+                                    <input id="radio-{{event.SubModuleEventId}}" formControlName="eventId"
+                                           (change)="onEventChange(event)" [value]="event.SubModuleEventId" type="radio">
+                                    <label for="radio-{{event.SubModuleEventId}}" class="radio-label">
+                                      {{event.Name}}
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </li>
+
+                      <li *ngIf="eventId.value!=0">
+                        <ul formArrayName="targets">
+                          <li class="arrowdown" *ngFor="let target of targets.controls;let i = index"
+                              [formGroupName]="i">
+                            <div>
+                              <app-solgen-queue-target (deleteTargetEvent)="deleteTarget(i)"></app-solgen-queue-target>
+                              <ul class="fc_subchild">
+                                <app-solgen-queue-conditions [customFieldsList]="customFieldsList"
+                                                             [queueForm]="queueForm" [target]="target" [rowNo]="i" [subModuleId]="subModuleId">
+                                </app-solgen-queue-conditions>
+                                <app-solgen-queue-results [customFieldsList]="customFieldsList" [queueForm]="queueForm"
+                                                          [target]="target"></app-solgen-queue-results>
+                              </ul>
+                            </div>
+                          </li>
+                          <li class="arrowdown ui-sortable-handle" *ngIf="showAddTarget()">
+                            <p class="shape_roundbtn" (click)="addTarget()" title="Click here to add new Target">
+                              <span>+</span>
+                            </p>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-sm-12 col-md-12">
+                  <!---->
+                  <!-- || (isSubmitButtonDisabled==true&& Id>0) -->
+                  <button class="btn btn-success mr-2" href="javascript:void(0);"
+                          [disabled]="(!queueForm.valid) || (targets.length < 1) " (click)="save()">
+                    <span>
+                      <i class="feather-save"></i> Submit
+                    </span>
+                  </button>
+                  <a routerLink="/queues" class="btn btn-danger" href="javascript:void(0);">
+                    <span>
+                      <i class="feather-x"></i> Cancel
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>

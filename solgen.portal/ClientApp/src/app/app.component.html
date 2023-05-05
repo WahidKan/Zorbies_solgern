@@ -1,0 +1,147 @@
+<section *ngIf="!loadSave">
+    <!-- BEGIN SIDEBAR -->
+    <app-sidebar [userType]="userTypeName" *ngIf="showSidebar && islogin && userTypeName !='Customer'"></app-sidebar>
+    <!-- END SIDEBAR -->
+    <!-- [ngClass]="{ 'main-content' : userTypeName !='Customer'}"    class="main-content" -->
+    <!-- style="padding-left: 5% !important;padding-right: 5% !important;" -->
+    <div [ngClass]="[userTypeName =='Customer'? '':  'main-content' ]">
+
+    
+        <!-- BEGIN TOPBAR -->
+        <app-header *ngIf="showHeader && islogin && !loadSave"></app-header>
+
+       
+
+        <!-- END TOPBAR -->
+        <!-- BEGIN PAGE CONTENT -->
+        <div class="page-content page-thin">
+            <router-outlet></router-outlet>
+
+        </div>
+        <!-- END PAGE CONTENT -->
+
+        <div class="footer" style="height: 75px;" *ngIf="showHeader && islogin && !loadSave && userTypeName !='Customer' ">
+            <div class="copyright" style="margin-top: 12px;">
+                <p *ngIf="!loadSave" class="pull-left sm-pull-reset">
+                    <span>Copyright &copy; 2022 </span>
+                    <span><a href="https://zolar.zorbis.com/" target="_blank" class="m-l-10 m-r-10">- Zolar</a></span>.
+                    <span>All Rights Reserved. </span>
+                </p>
+            </div>
+        </div>
+
+          <footer *ngIf="userTypeName =='Customer'" class="footer mt-auto customer-footer " style="z-index: 1;">
+            <div class="copyright bg-white text-center">
+                <p>Copyright © 2022 - <a href="https://zolar.zorbis.com/" target="_blank">Zolar</a>. All Rights
+                    Reserved.
+                </p>
+            </div>
+        </footer>
+        <!--dialer-popup-->
+        <div id="mycallpopup" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-info" style="min-width:auto;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Dialer</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div id="numberDisplay">
+                                <ng-container *ngIf="!isRinging;else InCallSection">
+                                    <input #txtCustomerNumber type='tel' [(ngModel)]="PhoneNo" (keypress)="onKeyPress($event);" maxlength="18">
+                                    <a href="javascript:void(0);" #btnClear class="clear-cross" (click)="onClearClick()"><i class="fa fa-window-close"></i></a>
+                                    <!--<a href="javascript:void(0);" #btnClear class="clear-cross" (click)="onClearClick()"><i class="fa fa-chevron-left"></i></a>-->
+
+                                </ng-container>
+                                <ng-template #InCallSection>
+                                    <div class="row">
+                                        <div class="col-md-12 voice-call-screen">
+                                            <div class="voice-call-screen-main">
+                                                <span class="d-block c-text">Voice {{(onCall)?'Calling':'Dialing'}}...</span>
+                                                <span class="d-block c-number">{{PhoneNo}}</span>
+                                                <span class="d-block c-ic-connected"> {{(onCall)?'IN CALL - CONNECTED':'Ringing...'}}</span>
+                                                <!-- <span class="d-block c-timer" *ngIf="onCall">{{RecordingTime | VoiceCallTimer}}</span> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <div *ngIf="!isRinging" id="dialpad" class="button-3">
+                                <ul>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('1');">1</a></li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('2');">2</a></li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('3');">3</a> </li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('4');">4</a> </li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('5');">5</a> </li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('6');">6</a> </li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('7');">7</a> </li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('8');">8</a> </li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('9');">9</a> </li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('*');">*</a> </li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('0');" (dblclick)="onButtonDoubleClick('+');"><span>0<small>+</small></span></a></li>
+                                    <li><a href="javascript:void(0);" (click)="onButtonClick('#');">#</a></li>
+
+                                    <!--<li *ngFor="let btn of dialerButtons">
+                    <a href="javascript:void(0);" (click)="onButtonClick(btn);">
+                      <ng-container *ngIf="btn.includes(':');else elseBlock;">-->
+                                    <!--<ng-template *ngFor="let item in btn.split(':')">
+                      {{item}}
+                    </ng-template>-->
+                                    <!--</ng-container>
+                          <ng-template #elseBlock></ng-template>
+                       </a>
+                    </li>-->
+                                </ul>
+                            </div>
+                            <div id="actions" class="button-3 deactive">
+                                <ng-container *ngIf="!isRinging;else DuringCallSection">
+                                    <ul>
+                                        <li href="javascript:void(0);" #btnCall class="btn btn-success mt-3" (click)="onCallClick()"><i class="fa fa-phone mr-1"></i> Call</li>
+                                        <li href="javascript:void(0);" class="btn btn-success mt-3" (click)="onVideoClick()"><i class="fa fa-video-camera mr-1"></i> Video</li>
+                                    </ul>
+                                </ng-container>
+                                <ng-template #DuringCallSection>
+                                    <ul class="three-elements">
+                                        <li href="javascript:void(0);" disabled="!onCall" #btnMute class="btn btn-mute" (click)="OnMuteClick()"><i class="fa fa-microphone-slash mr-1"></i>
+                                            <!--<i class="fa fa-microphone mr-1"></i>-->{{(isOnMute)?'Unmute':'Mute'}}</li>
+                                        <!-- <li href="javascript:void(0);" disabled="!onCall" #btnHold class="btn btn-hold" (click)="OnHoldClick()"><i class="fa fa-pause mr-1"></i> {{(isOnHold)?'Unhold':'Hold'}}</li> -->
+                                        <li href="javascript:void(0);" #btnHangUp class="btn btn-danger" (click)="onHangUpClick()"><i class="fa fa-phone mr-1"></i> Hang Up</li>
+                                    </ul>
+                                </ng-template>
+                            </div>
+                            <ng-container *ngIf="isShowLogs">
+                                <div #log id="log" style="max-height:200px;overflow:auto;"></div>
+                                <a href="javascript:void(0);" class="btn btn-success float-right" (click)="clearLogs()">Clear Logs</a>
+                            </ng-container>
+
+
+                        </div>
+                        <div id="wrapper" class="visible" [ngClass]="{'d-none':Default}" (click)="OnWrapperClick()"></div>
+                        <div #videoChat></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--dialer-popup-->
+    </div>
+    <!-- END MAIN CONTENT   -->
+</section>
+<!-- <ng-container *ngIf="isVisibleDialer && islogin && !isVideoChat">
+  <div>
+    <app-voicecall #voiceCallPopup [CallOnLoad]="callOnLoad" [Default]="default" [Minimize]="minimize" [PhoneNo]="phoneNo" [PrimaryId]="primaryId" [RefId]="refId" ></app-voicecall>
+  </div>
+</ng-container>  -->
+<ng-container *ngIf="islogin && !isVideoChat">
+    <app-start-appointment></app-start-appointment>
+</ng-container>
+
+    <app-voicecall #voiceCallPopup [CallOnLoad]="callOnLoad" [Default]="default" [Minimize]="minimize" [PhoneNo]="phoneNo" [PrimaryId]="primaryId" [RefId]="refId" ></app-voicecall>
+   
+
+<!-- Switch company modal   -->
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-login"></app-loader>

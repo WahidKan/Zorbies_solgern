@@ -1,0 +1,267 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9 mt-3" *ngIf="!isCustomerUser">
+          <span class="dash">Manage Proposals</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li *ngIf="isContactPage" class="breadcrumb-item"><a routerLink="/contact">Manage Contacts</a></li>
+            <li class="breadcrumb-item active">Manage Proposals <span *ngIf="isContactPage">{{pageTitle}}</span></li>
+          </ul>
+        </div>
+        <div class="col-md-9 mt-3" *ngIf="isCustomerUser">
+          <span class="dash">Proposal</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active">Proposal</li>
+          </ul>
+        </div>
+        <div *ngIf="isContactPage" class="col-md-3 text-right mt-4">
+          <button class="w-auto sw-100 btn btn-dark" (click)="backbtn()"><i class="fa fa-arrow-left"></i>&nbsp;Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <div class="col-md-12 bg-light py-3">
+              <div class="row">
+                <div class="col-md-12 col-lg-12 col-xl-12">
+                  <div class="row">
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <input class="form-control" type="text" [(ngModel)]='searhName' placeholder="Search By Business Name/Proposal Number" (keyup)='updateFilter($event)'>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <ng-select #leseStatusSelect [items]="lstUserType"
+                                   placeholder="Select Proposal Status" bindValue="value" bindLabel="text"
+                                   [closeOnSelect]="true" [(ngModel)]="leaseStatus" [multiple]="true">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <p-calendar inputStyleClass="form-control start-date" placeholder="Expiration From" [(ngModel)]="expFrom" [maxDate]="expTo" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <p-calendar inputStyleClass="form-control start-date" placeholder="Expiration To" [(ngModel)]="expTo" [minDate]="expFrom" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <p-calendar inputStyleClass="form-control start-date" placeholder="Commencement From" [(ngModel)]="commFrom" [maxDate]="commTo" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <p-calendar inputStyleClass="form-control start-date" placeholder="Commencement To" [(ngModel)]="commTo" [minDate]="commFrom" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <input type="button" class="btn btn-primary src-icon" (click)="SearchLease()" value="Search">
+                        <input type="button" class="btn btn-danger reset-icon" value="Reset" (click)="ResetSearch()" />
+                        <a routerLink="/lease/addlease" class="btn btn-orange form-btns" *ngIf="isShowAddLease && !isBankUser && !isCustomerUser">
+                          <i class="feather-plus"></i> Add Proposal
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-12 col-xl-12 text-xl-right"></div>
+              </div>
+            </div>
+            <div class="col-md-12 mt-4">
+              <div class="table-responsive">
+                <div class="table table-striped table-min-width">
+                  <ngx-datatable  #table class="bootstrap table table-hover table-dynamic"
+                                 [rows]="pagedDataLease.data"
+                                 [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                                 [columnMode]="'force'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="40"
+                                 
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="pagedDataLease.pager.totalItems"
+                                 [offset]="pagedDataLease.pager.currentPage"
+                                 [limit]="pagedDataLease.pager.pageSize"
+                                 (page)='setPage($event)'
+                                 (sort)="onSort($event)">
+                    <ngx-datatable-column [width]="100" name="Proposal#" prop="LeaseNumber" [sortable]="true" *ngIf="isShowUpdateLease">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <a [routerLink]="['/lease/editlease',row.LeaseId]">{{row.LeaseNumber }}</a>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Proposal#" prop="LeaseNumber" [sortable]="true" *ngIf="!isShowUpdateLease"></ngx-datatable-column>
+                    <ngx-datatable-column name="Business Name" prop="BusinessName" [sortable]="true" *ngIf="!isCustomerUser">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.BusinessName}} <small *ngIf="!row.IsRead" class="badge badge-success rounded">New</small>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Collateral" prop="LeaseOtherDescription" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="VIN#" prop="LeaseSerialNumber" [sortable]="true" *ngIf="!isCustomerUser"></ngx-datatable-column>
+                    <ngx-datatable-column name="Status" prop="LeaseOprStatus" [sortable]="true" *ngIf="!isCustomerUser">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <!--<div *ngIf="row.LeaseOprStatus==='Approved for Purchase'">
+    <a href="javascript:void(0);" (click)="DisplayApprovalOfBank(row)">{{row.LeaseOprStatus}}</a>
+  </div>
+  <div *ngIf="row.LeaseOprStatus!=='Approved for Purchase'">
+    {{row.LeaseOprStatus}}
+  </div>-->
+                        <div *ngIf="row.LeaseOprStatus==='Approved'">
+                          <a href="javascript:void(0);" (click)="DisplayApprovalOfBank(row)">{{row.LeaseOprStatus}}</a>
+                        </div>
+                        <div *ngIf="row.LeaseOprStatus!=='Approved'">
+                          {{row.LeaseOprStatus}}
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Proposal Status" prop="LeaseOprStatus" [sortable]="true" *ngIf="isCustomerUser">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <!--<div *ngIf="row.LeaseOprStatus==='Approved for Purchase'">
+    <a href="javascript:void(0);" (click)="DisplayApprovalOfBank(row)">{{row.LeaseOprStatus}}</a>
+  </div>
+  <div *ngIf="row.LeaseOprStatus!=='Approved for Purchase'">
+    {{row.LeaseOprStatus}}
+  </div>-->
+                        <div *ngIf="row.LeaseOprStatus==='Approved'">
+                          <a href="javascript:void(0);" (click)="DisplayApprovalOfBank(row)">{{row.LeaseOprStatus}}</a>
+                        </div>
+                        <div *ngIf="row.LeaseOprStatus!=='Approved'">
+                          {{row.LeaseOprStatus}}
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="250" name="Status Detail" prop="WhatNextStatusDetail" [sortable]="false" *ngIf="!isCustomerUser">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span [innerHtml]="row.WhatNextStatusDetail"></span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+
+                    <ngx-datatable-column [width]="200" name="Commencement Date" [sortable]="true" *ngIf="!isCustomerUser">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.LeaseCommencementDate | date: 'MM-dd-yyyy'}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Expiration" [sortable]="true" *ngIf="!isCustomerUser">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.LeaseExpiryDate | date: 'MM-dd-yyyy'}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Created By" prop="LeasecreatedBy" [sortable]="true" *ngIf="!isCustomerUser"></ngx-datatable-column>
+                    <ngx-datatable-column name="Created On" prop="LeaseCreatedOn" [sortable]="true" *ngIf="!isCustomerUser">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.LeaseCreatedOn | date: 'MM-dd-yyyy'}}
+                      </ng-template>
+                    </ngx-datatable-column> <!--isCustomerUser || moduleWhatNextPermission.roleModuleReadFlag-->
+                    <!--<ngx-datatable-column name="What Next" [sortable]="false" headerClass="thead-dark" *ngIf="!isCustomerUser || moduleWhatNextPermission.roleModuleReadFlag">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+      <a [routerLink]="['/whatsnext/checkprogress',row.LeaseId]" title=" Click here to see the list of steps done for the Lease">Check Progress</a>
+    </ng-template>
+  </ngx-datatable-column>-->
+
+                    <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center" *ngIf="isBankUser">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center"><a *ngIf="row.LeaseStatus != 'Approved'" href="javascript:void(0);" (click)="ApproveLease(row)">Approve</a></div>
+                        <div class="icon-text-center"><a *ngIf="row.LeaseStatus == 'Approved'">Approved</a></div>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="80" name="Delete" [sortable]="false" headerClass="text-center" *ngIf="isAdminUserAndSuperAdmin && isShowDeleteLease">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center"><a href="javascript:void(0);" (click)="DeleteLease(row)" class="btn-delete"><i title="Click to delete." class="feather-trash-2"></i></a></div>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="Action" [sortable]="false" headerClass="text-left" *ngIf="isOperationUser && (isShowAddLease || isShowEditLease)">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="text-left">
+                          <a href="javascript:void(0);" (click)="displayContactdocs(row.LeaseId)"><i title="Click to Review Supporting Documents." class="far fa-file-alt mx-2"></i></a>
+                          <a href="javascript:void(0);" *ngIf="isCustomerUser" (click)="sendToDocusignToClient(row.LeaseId)"><i title="Click to Send to DocuSign For Client Sig." class="far fa-file-alt mx-2"></i></a>
+                          <a *ngIf="row.IsApprovedForPurchase == false" href="javascript:void(0);" (click)="sendForBankApproval(row.LeaseId,row.LeaseAssignedBankId,row.LeaseContactId,row.IsGenerateLeaseDoc)"><i title="Click to Send to Bank for approval." class="fas fa-file-import mx-2"></i></a>
+                          <a *ngIf="row.IsLeaseCompleted == true" href="javascript:void(0);" (click)="updateLeaseStatus(row.LeaseId)"><i title="Click to Update Lease Status." class="fas fa-edit mx-2"></i></a>
+                          <a *ngIf="row.IsApprovedForFund == true && row.IsLeaseCompleted == false" href="javascript:void(0);" (click)="updateLeaseCompleted(row.LeaseId)"><i title="Click to Mark Lease as Completed." class="far fa-list-alt mx-2"></i></a>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="80" name="Action" [sortable]="false" headerClass="text-center" *ngIf="isCustomerUser && (isShowAddLease || isShowEditLease)">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center">
+                          <a href="javascript:void(0);" *ngIf="isCustomerUser" (click)="sendToDocusignToClient(row.LeaseId)"><i title="View Proposal Document" class="far fa-file-alt"></i></a>
+                        </div>
+
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="80" name="Action" [sortable]="false" headerClass="text-center"
+                                          *ngIf="isSalesUser && (isShowAddLease || isShowEditLease)">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center">
+                          <a href="javascript:void(0);" *ngIf="isSalesUser" (click)="sendToDocusignToClient(row.LeaseId)"><i title="View Proposal Document" class="far fa-file-alt"></i></a>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="currentPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count" style="max-width:170px;">
+                          {{rowCount}} total
+                        </div>
+                        <div>
+                          <div style="color:black; margin-right:10px;" class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                         [pagerPreviousIcon]="'fa fa-angle-left'"
+                                         [pagerNextIcon]="'fa feather-chevron-left'"
+                                         [page]="pagedDataLease.pager.currentPage+1"
+                                         [size]="pageSizeValue"
+                                         [count]="pagedDataLease.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPage($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-leasecontactdocs #leasecontactDocModal></app-leasecontactdocs>
+  <app-bankapproval #leasebankApprovalModal></app-bankapproval>
+  <app-leasedocspdfview #leasedocspdfviewModal (leasedocspdf)="UpdateleasedocspdfStatus()"></app-leasedocspdfview>
+  <app-leaseapproveforpurchasedetail #leaseapproveforpurchasedetailModal></app-leaseapproveforpurchasedetail>
+  <app-update-lease-status #leaseStatusModal (leaseStatusEmit)="updateLeaseOprStatus()"></app-update-lease-status>
+
+</div>
+
+

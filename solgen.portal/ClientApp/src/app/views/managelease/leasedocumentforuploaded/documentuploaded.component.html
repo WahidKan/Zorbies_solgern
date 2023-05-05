@@ -1,0 +1,55 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9 mt-3">
+          <span class="dash">Manage Leases</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item" style="cursor:pointer;"><a (click)="cancelForm()">Manage Leases</a></li>
+            <li class="breadcrumb-item">Upload Signed Lease Document</li>
+          </ul>
+        </div>
+        <div class="col-md-3 mt-4 text-right">
+          <button class="w-auto sw-100 btn btn-dark" (click)="cancelForm()"><i class="fa fa-arrow-left"></i>&nbsp;Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <div class="col-md-12 mt-4">
+                <div class="emailTemplate-box" [ngClass]="{'disabled':loading}">
+                  <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6">
+                      <label>Upload Signed Lease Document:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="custom-file">
+                            <input class="custom-file-input" type="file" name='file' (change)="setFile($event)" #fileInput formControlName="documentFileName">
+                            <label class="custom-file-label">{{fileName}}</label>
+                          </div>
+                        </div>
+                        <small *ngIf="!isValid"
+                               style="color:red;">File is required</small>
+                        <small><i class="text-primary mb-2">Valid documents format is .pdf and limit upto 30MB.</i> </small>
+                      </div>
+                     
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 p-0">
+                  <button type="submit" (click)="save()" class="btn btn-primary form-btns mb-3"><i class="feather-save"></i> Submit</button>
+                  <button type="submit" class="btn btn-danger form-btns mb-3" data-dismiss="modal" aria-label="Close" (click)="cancelForm()"><i class="fa fa-times text-white"></i> Cancel</button>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

@@ -1,0 +1,1103 @@
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&callback=initMap&libraries=&v=weekly" defer>
+</script>
+
+<app-breadcrumb *ngIf="!loadSave" [data]="contentHeader"></app-breadcrumb>
+<!--<div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{leadName}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+        <li><a class="smview" routerLink="/lead">Manage Leads </a></li>
+        <li class="active">Lead Detail</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+
+<div class="clearfix"></div>
+
+
+<!--Lead Detail-->
+<div class="card mb-3 mt-1">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-7">
+        <div class="border h-100">
+          <div class="detail-heading cust_infobx px-3 py-2">
+            <ul class="d-flex list_spc">
+              <li><i class="feather-phone"></i> {{mobileno}} </li>
+
+              <li><i class="feather-mail"></i> {{emaildata}} </li>
+            </ul>
+          </div>
+
+
+          <div class="px-3 py-3">
+            <div class="row">
+
+              <div class="col-md-12">
+                <div class="row">
+
+                  <div class="col-12 col-lg-6 mb-3">
+                    <div class="row">
+                      <div class="col-12 col-md-4">
+                        <label class="mr-2">Lead status:</label>
+                      </div>
+                      <div class="col-12 col-md-8">
+                        <b>{{leadstatus}}</b> <a href="javascript:void(0);" (click)="updateStatusdllopn()" class="text-success ml-3"><i class="feather-edit-2"></i></a>
+                      </div>
+                      <div class="col-12 col-md-8" *ngIf="is_converted != true && statusdll != false ">
+                        <form [formGroup]="leadform" autocomplete="off">
+                          <div class="row">
+                            <div class="col-12 col-md-8">
+
+                              <ng-select [items]="lstleadstatus" placeholder="Select lead Status" formControlName="leadstatusddl"
+                                         bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (leadstatusddl.invalid && (leadstatusddl.dirty || leadstatusddl.touched) && leadstatusddl.errors?.required) }"></ng-select>
+                              <small *ngIf="leadstatusddl.invalid && (leadstatusddl.dirty || leadstatusddl.touched) && leadstatusddl.errors?.required"
+                                     style="color:red;">Please select lead status</small>
+                            </div>
+                            <div class="col-12 col-md-4">
+                              <a href="javascript:void(0);" *ngIf="is_converted != true" type="submit" (click)="updateLeadStatus()" class="btn btn-success  "><i class="feather-save"></i></a>
+                            </div>
+                          </div>
+                        </form>
+
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="col-12 col-lg-6 mb-3">
+
+                    <div class="row" *ngIf="!createdcode">
+                      <div class="col-12 col-md-4">
+                        <label class="mr-2">Created By:</label>
+                      </div>
+                      <div class="col-12 col-md-8">
+                        <b>{{createdby}}</b>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="createdcode">
+                      <div class="col-12 col-md-4">
+                        <label class="mr-2">Created By:</label>
+                      </div>
+                      <div class="col-12 col-md-8" *ngIf="is_converted != true">
+                        <b>{{createdby}}</b> <a href="javascript:void(0);" (click)="opencreatedby()" class="text-success ml-3"><i class="feather-edit-2"></i></a>
+                      </div>
+                      <div class="col-12 col-md-8" *ngIf="is_converted != true && createddll != false ">
+                        <form [formGroup]="leadform" autocomplete="off">
+                          <div class="row">
+                            <div class="col-12 col-md-8">
+
+                              <ng-select [items]="usersList" placeholder="Select lead Status" formControlName="createdbyddl"
+                                         bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (createdbyddl.invalid && (createdbyddl.dirty || createdbyddl.touched) && createdbyddl.errors?.required) }"></ng-select>
+                              <small *ngIf="createdbyddl.invalid && (createdbyddl.dirty || createdbyddl.touched) && createdbyddl.errors?.required"
+                                     style="color:red;">Please select name</small>
+                            </div>
+                            <div class="col-12 col-md-4">
+                              <a href="javascript:void(0);" *ngIf="is_converted != true" type="submit" (click)="updatecreatedBy()" class="btn btn-success  "><i class="feather-save"></i></a>
+                            </div>
+                          </div>
+                        </form>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 mb-3">
+                    <div class="row">
+                      <div class="col-12 col-md-4">
+                        <label class="mr-2">lead Source:</label>
+                      </div>
+                      <div class="col-12 col-md-8">
+                        <b>{{leadSource}}</b>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 mb-3">
+                    <div class="row">
+                      <div class="col-12 col-md-4">
+                        <label class="mr-2">Created On:</label>
+                      </div>
+                      <div class="col-12 col-md-8">
+                        <b>{{createdon}}</b>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-6 mb-3">
+                    <div class="row">
+                      <div class="col-12 col-md-4">
+                        <label class="mr-2">Location:</label>
+                      </div>
+                      <div class="col-12 col-md-8">
+                        <b>{{location}}</b>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-md-12 mt-2">
+                <!--<a href="#" class="btn btn-light-blue mr-2 px-4" style="padding-left: 5px;"><i class="fa fa-external-link"></i> View Portal</a>-->
+                <!--<a href="javascript:void(0);" class="btn btn-blue mr-2 px-4"><i class="fa fa-phone"></i> Call</a>-->
+                <a href="javascript:void(0);" *ngIf="is_converted != true" (click)="showemailpopup()" class="btn btn-orange text-white mr-2 px-4"><i class="feather-mail"></i> Email</a>
+                <!--<a href="javascript:void(0);" class="btn btn-thin-blue mr-2 px-4" (click)="showrequestdesignpopup()"><i class="fa fa-commenting"></i> Request Design</a>-->
+                <!--<a href="javascript:void(0);" class="btn btn-green px-4"><i class="fa fa-comments"></i> Chat</a>-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="mapbx">
+          <app-goolemap [location]="location" #gmap [style]="{'width':'100%','height':'250px', 'margin-bottom': '1em'}"></app-goolemap>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="card mb-3">
+  <div class="card-body">
+    <div id="accordion" class="panel-group">
+      <!--productList Pannel-->
+      <div class="panel ">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a href="#panelBody1" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"><span> Product</span></a>
+          </h4>
+        </div>
+        <div id="panelBody1" class="panel-collapse collapse " style="">
+          <a href="javascript:void(0);" class="btn-in-panel" *ngIf="is_converted != true" (click)="GetProductList()" data-dismiss="modal" data-toggle="modal"><i class="feather-plus mr-2"></i> Associate Product</a>
+
+          <div class="panel-body">
+            <div class="row">
+              <div class="table-responsive">
+                <div class="table table-striped">
+                  <ngx-datatable #table class="bootstrap"
+                                 [rows]="AssociatedproductpagedData.data"
+                                 [columnMode]="'force'"
+                                 [scrollbarH]="true"
+                                 [rowHeight]="'40'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="40"
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="AssociatedproductpagedData.pager.totalItems"
+                                 [offset]="AssociatedproductpagedData.pager.currentPage"
+                                 [limit]="AssociatedproductpagedData.pager.pageSize"
+                                 (page)='setPageAssociateProduct($event)'
+                                 (sort)="onSort($event)">
+
+
+
+                    <ngx-datatable-column name="Product Name" [sortable]="false" prop="ProductName" [minWidth]="150">
+
+
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column *ngIf="isloanapp != true" name="Product Family" sortable="false" prop="ProductFamily" [minWidth]="150"></ngx-datatable-column>
+                    <ngx-datatable-column *ngIf="isloanapp != true" name="Product Description" sortable="false" prop="ProductDescription"></ngx-datatable-column>
+                    <ngx-datatable-column *ngIf="isopportuinity != true" name="Bank Name" sortable="false" prop="BankName"></ngx-datatable-column>
+                    <ngx-datatable-column *ngIf="is_converted != true" [maxWidth]="200" headerClass="text-center" name="Action" [sortable]="false">
+
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="text-center">
+                          <!--<a (click)="edit(row.Id)" class="btn-edit"><i title="Click to edit." class="fa fa-pencil text-success pr-2"></i></a>-->
+                          <a (click)="deleteAssociateproduct(row.mid)" class="btn-delete"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                        </div>
+
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="currentPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count" style="max-width:170px;">
+                          Total Records: {{rowCount}}
+                        </div>
+                        <div>
+                          <div style="color:black; margin-right:10px;" class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSizeAssociateProduct" appendTo="body" [(ngModel)]='pageSizeValueAssociateProduct' dropzone="fixed" [clearable]="false" (change)="onChangeAssociateProduct($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'fas feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'fas fa-angle-double-right'"
+                                         [pagerPreviousIcon]="'fas fa-angle-left'"
+                                         [pagerNextIcon]="'fas feather-chevron-left'"
+                                         [page]="AssociatedproductpagedData.pager.currentPage+1"
+                                         [size]="pageSizeValueAssociateProduct"
+                                         [count]="AssociatedproductpagedData.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPageAssociateProduct($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Email Pannel-->
+      <div class="panel ">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a href="#panelBody6" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"><span> Email</span></a>
+          </h4>
+        </div>
+        <div id="panelBody6" class="panel-collapse collapse " style="">
+          <a href="javascript:void(0);" class="btn-in-panel" data-dismiss="modal" *ngIf="is_converted != true" (click)="showemailpopup()" data-toggle="modal"><i class="feather-plus mr-2"></i> Send Email</a>
+          <div class="panel-body">
+            <div class="row">
+              <div class="table-responsive">
+                <div class="table table-striped">
+                  <ngx-datatable #table class="bootstrap"
+                                 [rows]="emailpagedData.data"
+                                 [scrollbarH]="true"
+                                 [rowHeight]="'40'"
+                                 [columnMode]="'force'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="40"
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="emailpagedData.pager.totalItems"
+                                 [offset]="emailpagedData.pager.currentPage"
+                                 [limit]="emailpagedData.pager.pageSize"
+                                 (page)='setPageNotes($event)'
+                                 (sort)="onSort($event)">
+
+
+
+                    <ngx-datatable-column name="Sent To" [sortable]="false" prop="sent_to" [minWidth]="150">
+
+
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Subject" sortable="false" prop="subject" [minWidth]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="Sent Date" sortable="false" prop="createdon" [minWidth]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="Description" sortable="false" prop="description" [minWidth]="150" headerClass="text-center">
+
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+
+
+                        <div title="View" *ngIf='row.description!=null || row.description!==""' class="text-center">
+                          <a href="javascript:void(0);" (click)="displayemaildetail(row)"><i class="feather-eye pr-2"></i></a>
+                        </div>
+                        <div *ngIf='row.description==null || row.description==""' class="text-center">
+                          <span>N/A</span>
+                        </div>
+                      </ng-template>
+
+                    </ngx-datatable-column>
+
+
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="currentPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count" style="max-width:170px;">
+                          Total Records: {{rowCount}}
+                        </div>
+                        <div>
+                          <div style="color:black; margin-right:10px;" class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSizeemail" appendTo="body" [(ngModel)]='pageSizeValueemail' dropzone="fixed" [clearable]="false" (change)="onChangeEmail($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'fas feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'fas fa-angle-double-right'"
+                                         [pagerPreviousIcon]="'fas fa-angle-left'"
+                                         [pagerNextIcon]="'fas feather-chevron-left'"
+                                         [page]="emailpagedData.pager.currentPage+1"
+                                         [size]="pageSizeValueemail"
+                                         [count]="emailpagedData.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPageNotes($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--Notes Pannel-->
+
+      <div class="panel ">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a href="#panelBody2" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"><span> Notes</span></a>
+          </h4>
+        </div>
+        <div id="panelBody2" class="panel-collapse collapse " style="">
+          <a href="javascript:void(0);" class="btn-in-panel" data-dismiss="modal" *ngIf="is_converted != true" (click)="showNotesPopup()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add Note</a>
+          <div class="panel-body">
+            <div class="row">
+              <div class="table-responsive">
+                <div class="table table-striped">
+                  <ngx-datatable #table class="bootstrap"
+                                 [rows]="NotespagedData.data"
+                                 [scrollbarH]="true"
+                                 [rowHeight]="'40'"
+                                 [columnMode]="'force'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="40"
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="NotespagedData.pager.totalItems"
+                                 [offset]="NotespagedData.pager.currentPage"
+                                 [limit]="NotespagedData.pager.pageSize"
+                                 (page)='setPageNote($event)'
+                                 (sort)="onSort($event)">
+
+
+
+                    <!--<ngx-datatable-column name="Name" [sortable]="false" prop="note_name" [minWidth]="150">
+
+
+                    </ngx-datatable-column>-->
+
+                    <ngx-datatable-column name="Desription" sortable="false" prop="note_description" [minWidth]="150">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <!--<a class="word_break" (click)="displayemaildetail(row)" title="{{row.note_description}}">{{row.note_description}}</a>-->
+
+                        <div title="{{row.note_description}}" *ngIf='row.note_description!=null || row.note_description!==""'>
+                          <a href="javascript:void(0);" (click)="displaynotedetail(row)">{{row.note_description | truncate : 50}}</a>
+                        </div>
+                        <div *ngIf='row.note_description==null || row.note_description==""'>
+                          <span>N/A</span>
+                        </div>
+                      </ng-template>
+
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Created By" sortable="false" prop="createdby" [minWidth]="150"></ngx-datatable-column>
+                    <!--<ngx-datatable-column name="Created on" sortable="false" prop="created_on" [minWidth]="150"></ngx-datatable-column>-->
+                    <ngx-datatable-column name="Created on" prop="created_on" [minWidth]="130">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.created_on | DateTimeToLocal}}
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [maxWidth]="200" headerClass="text-center" name="Action" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="text-center">
+                          <!--<a (click)="edit(row.Id)" class="btn-edit"><i title="Click to edit." class="fa fa-pencil text-success pr-2"></i></a>-->
+                          <a *ngIf="is_converted != true" (click)="DeleteNote(row.note_id)" class="btn-delete"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                        </div>
+
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="curPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count" style="max-width:170px;">
+                          Total Records: {{rowCount}}
+                        </div>
+                        <div>
+                          <div style="color:black; margin-right:10px;" class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSizeNotes" appendTo="body" [(ngModel)]='pageSizeValuenotes' dropzone="fixed" [clearable]="false" (change)="onChangeNotes($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'feather-chevrons-right'"
+                                         [pagerPreviousIcon]="'feather-chevron-left'"
+                                         [pagerNextIcon]="'feather-chevron-right'"
+                                         [page]="curPage"
+                                         [size]="pageSizeValuenotes"
+                                         [count]="NotespagedData.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPageNote($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Contact Pannel-->
+      <div class="panel ">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a href="#panelBody3" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"><span> Contact</span></a>
+          </h4>
+        </div>
+        <div id="panelBody3" class="panel-collapse collapse " style="">
+          <a href="javascript:void(0);" class="btn-in-panel" data-dismiss="modal" *ngIf="is_converted != true" (click)="AddContact()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add Contact</a>
+          <div class="panel-body">
+            <div class="row">
+              <div class="table-responsive">
+                <div class="table table-striped">
+                  <ngx-datatable #table class="bootstrap"
+                                 [rows]="contactpagedData.data"
+                                 [scrollbarH]="true"
+                                 [rowHeight]="'40'"
+                                 [columnMode]="'force'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="40"
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="contactpagedData.pager.totalItems"
+                                 [offset]="contactpagedData.pager.currentPage"
+                                 [limit]="contactpagedData.pager.pageSize"
+                                 (page)='setPageContact($event)'
+                                 (sort)="onSort($event)">
+
+
+
+                    <ngx-datatable-column name="Name" [sortable]="false" prop="Name" [minWidth]="150">
+
+
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Email" sortable="false" prop="Email" [minWidth]="150"></ngx-datatable-column>
+
+                    <ngx-datatable-column name="Mobile" sortable="false" prop="MobilePhone" [minWidth]="150"></ngx-datatable-column>
+                    <!--<ngx-datatable-column name="Primary" sortable="true" prop="IsPrimary">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <label class="switch">
+                          <input type="checkbox" disabled  [checked]="row.IsPrimary">
+                          <span class="slider round"><span>Yes</span></span>
+                        </label>
+                      </ng-template>
+                    </ngx-datatable-column>-->
+
+                    <ngx-datatable-column *ngIf="is_converted != true " [maxWidth]="200" headerClass="text-center" name="Action" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="text-center">
+                          <a *ngIf="is_converted != true && row.IsPrimary != true  " (click)="DeleteContact(row.id)" class="btn-delete"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                        </div>
+
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="currentPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count" style="max-width:170px;">
+                          Total Records: {{rowCount}}
+                        </div>
+                        <div>
+                          <div style="color:black; margin-right:10px;" class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSizeContact" appendTo="body" [(ngModel)]='pageSizeValueContact' dropzone="fixed" [clearable]="false" (change)="onChangeContact($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'feather-chevrons-right'"
+                                         [pagerPreviousIcon]="'feather-chevron-left'"
+                                         [pagerNextIcon]="'feather-chevron-right'"
+                                         [page]="contactpagedData.pager.currentPage+1"
+                                         [size]="pageSizeValueContact"
+                                         [count]="contactpagedData.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPageContact($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--<div class="panel ">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a href="#panelBodynine" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"><span> File Upload</span></a>
+          </h4>
+        </div>
+        <div id="panelBodynine" class="panel-collapse collapse " style="">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-12">
+
+                <div class="action">
+                  <a href="#" class="btn btn-primary">Select Files</a><a href="#" class="btn btn-success">Upload Files</a>
+                </div>
+                <div class="table-responsive mt-3">
+                  <table class="table table-hover border mb-0">
+                    <thead>
+                      <tr>
+                        <th>File Name</th>
+                        <th>File type</th>
+
+                      </tr>
+
+                    </thead>
+                    <tbody>
+
+                      <tr>
+                        <td colspan="3" align="center">
+                          <span class="nofound">No Record Found.</span>
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>-->
+      <!--fileupload pannel-->
+      <div class="panel">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a href="#panelBodynine12" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"><span> File Upload</span></a>
+          </h4>
+        </div>
+        <div id="panelBodynine12" class="panel-collapse collapse " style="">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-12">
+                <form [formGroup]="UploadimageForm" [ngClass]="{'disabled':loadSave}">
+                  <div class="action row" *ngIf="is_converted != true">
+                    <div class="col-lg-6">
+                      <label>Choose File:</label>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <div class="input-group-prepend" *ngIf="imageLink!=''">
+                            <!--<img src={{imageLink}} alt="img" class="upload_image_thnumb" data-toggle="modal" data-target="#myModal">-->
+
+                            <div id="myModal" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-dialog" style="height:450px!important;width:450px!important; ">
+                                <div class="">
+                                  <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-content">
+                                  <div class="text-center">
+                                    <img src={{imageLink}} alt="img" style="height:450px!important;width:450px!important; " class="img-responsive">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="custom-file w-50 m-fileup">
+                            <input formControlName="profilePic" class="custom-file-input" #file type="file" name='file' #fileInput accept="image/x-png,image/gif,image/jpeg,application/pdf,application/zip" (change)="setFile($event)" lang="es">
+                            <label class="custom-file-label">{{fileName}}</label>
+                          </div>
+                          <small><i class="text-secondary">Valid image format is image/x-png, image/gif, image/jpeg and limit upto 5MB.</i> </small>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                      <label>File Type:</label>
+                      <div class="form-group">
+                        <ng-select #fileuploadddl [items]="lstfiletype" placeholder="Select File type" formControlName="filetype"
+                                   bindLabel="text" bindValue="value"></ng-select>
+                        <!--[ngClass]="{'is-invalid': (filetype.invalid && (filetype.dirty || filetype.touched) && filetype.errors?.required) }"-->
+                        <!--<small *ngIf="filetype.invalid && (filetype.dirty || filetype.touched) && filetype.errors?.required"
+                        style="color:red;">Please select File Type</small>-->
+                      </div>
+                    </div>
+                    <div class="col-12  col-md-6 col-lg-6">
+                      <a href="javascript:void(0);" (click)="SaveImage()" class="btn btn-success">Upload Files</a>
+                    </div>
+                  </div>
+                </form>
+                <div class="table-responsive mt-3">
+                  <table class="table table-hover border mb-0">
+                    <thead>
+                      <tr>
+                        <th>File Name</th>
+                        <th>File Type</th>
+                        <th class="text-center">Action</th>
+                      </tr>
+
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let c of fileuplist">
+                        <td class="text-left">
+                          <a class="text-dark" download="file" href="{{c.fileUrl}}">
+                            <img src="{{c.fileUrl}}" style="height:50px;width:50px" />
+
+                          </a>
+                        </td>
+                        <td class="text-left">{{c.masterValue}}</td>
+
+                        <td align="center">
+                          <a (click)="Deleteimage(c.id)" class="btn-delete"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+
+                        </td>
+                      </tr>
+                      <tr *ngIf="fileuplist == ''">
+                        <td colspan="3" align="center">
+                          <span class="nofound">No Record Found.</span>
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+<!--appointment-->
+<div class="card p-3 mt-3 mb-4">
+  <div class="card-body p-0">
+    <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active show" data-toggle="tab" href="#upcoming" role="tab" aria-controls="upcoming" aria-selected="true">Upcoming Appontments</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#past" role="tab" aria-controls="past" aria-selected="false">Past Appointments</a>
+      </li>
+    </ul>
+    <div class="tab-content bg-white p-0" id="myTabContent">
+      <div class="tab-pane fade active show" id="upcoming" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive border">
+              <table class="table table-cont mb-0">
+                <thead>
+                  <tr>
+                    <th>Appointments</th>
+                    <th>Customer</th>
+                    <th>Description</th>
+                    <th>Appointment Date</th>
+                    <th>Appointment Time</th>
+                    <th>Created on</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let c of appointlistbefore">
+                    <td>{{c.AppointmentName}}</td>
+                    <td>{{c.AppointmentWithWhom}}</td>
+                    <td>{{c.Description}}</td>
+                    <td><span class="date">{{c.FromTimeString | DateTimeToLocal:'Date'}}</span></td>
+                    <td>{{c.currenttime}}</td>
+                    <td>{{c.createdon}}</td>
+
+                  </tr>
+                  <tr *ngIf="appointlistbefore == ''">
+                    <td colspan="5" align="center">
+                      <span class="nofound">No Appointment Found.</span>
+                    </td>
+                  </tr>
+
+                </tbody>
+                <!--<tfoot class="border-top">
+                  <tr>
+                    <td></td>
+                    <td class="text-right"><a class="btn btn-success" data-dismiss="modal" href="#addnewwid" data-toggle="modal"><span><i class="feather-plus mr-1"></i> Add New</span></a></td>
+                  </tr>
+                </tfoot>-->
+
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="past" role="tabpanel" aria-labelledby="profile-tab">
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive border">
+              <table class="table table-cont mb-0">
+                <thead>
+                  <tr>
+                    <th>Appointments</th>
+                    <th>Customer</th>
+                    <th>Description</th>
+                    <th>Appointment Date</th>
+                    <th>Appointment Time</th>
+                    <th>Created on</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let c of appointlistafter">
+                    <td>{{c.AppointmentName}}</td>
+                    <td>{{c.AppointmentWithWhom}}</td>
+                    <td>{{c.Description}}</td>
+                    <td><span class="date">{{c.FromTimeString | DateTimeToLocal:'Date'}}</span></td>
+                    <td>{{c.currenttime}}</td>
+                    <td>{{c.createdon}}</td>
+                  </tr>
+                  <tr *ngIf="appointlistafter == ''">
+                    <td colspan="5" align="center">
+                      <span class="nofound">No Appointments Found.</span>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--product Popup-->
+<div class="modal fade in show" bsModal #product="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Associate Product</h4>
+        <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; height:350px;">
+
+        <div class="row" [ngClass]="{'disabled':loadSave}">
+          <div class="table-responsive">
+            <div class="table table-striped">
+              <ngx-datatable #table class="bootstrap"
+                             [rows]="pagedData.data"
+                             [scrollbarH]="true"
+                             [rowHeight]="'40'"
+                             [columnMode]="'force'"
+                             [headerHeight]="40"
+                             [footerHeight]="40"
+                             [externalPaging]="true"
+                             [externalSorting]="true"
+                             [loadingIndicator]="loadSave"
+                             [messages]="{emptyMessage:'No Record Found.'}"
+                             [count]="pagedData.pager.totalItems"
+                             [offset]="pagedData.pager.currentPage"
+                             [limit]="pagedData.pager.pageSize"
+                             (page)='setPage($event)'
+                             (sort)="onSort($event)"
+                             [selected]="selected"
+                             [selectionType]="SelectionType.checkbox"
+                             [selectAllRowsOnPage]="false"
+                             [displayCheck]="displayCheck"
+                             (activate)="onActivate($event)"
+                             (select)="onSelect($event)">
+
+                <ngx-datatable-column [width]="42"
+                                      [sortable]="false"
+                                      [canAutoResize]="false"
+                                      [draggable]="false"
+                                      [resizeable]="false"
+                                      [headerCheckboxable]="true"
+                                      [checkboxable]="true">
+                </ngx-datatable-column>
+
+
+
+                <ngx-datatable-column name="Product Name" [sortable]="true" prop="ProductName" [minWidth]="150">
+
+
+                </ngx-datatable-column>
+
+                <ngx-datatable-column *ngIf="isloanapp != true" name="Product Family" sortable="true" prop="ProductFamily" [minWidth]="150"></ngx-datatable-column>
+                <ngx-datatable-column *ngIf="isloanapp != true" name="Product Description" sortable="true" prop="ProductDescription"></ngx-datatable-column>
+                <ngx-datatable-column *ngIf="isopportuinity != true" name="Bank Name" sortable="true" prop="BankName"></ngx-datatable-column>
+
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template
+                               let-rowCount="rowCount"
+                               let-pageSize="pageSize"
+                               let-selectedCount="selectedCount"
+                               let-currentPage="currentPage"
+                               let-offset="offset"
+                               let-isVisible="isVisible">
+                    <div class="page-count" style="max-width:170px;">
+                      Total Records: {{rowCount}}
+                    </div>
+                    <div>
+                      <div style="color:black; margin-right:10px;" class="page-size-record">
+                        <span style="text-align:right; width:80px;vertical-align: middle;">
+                          <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                     bindLabel="text" bindValue="text"></ng-select>
+                        </span>
+                      </div>
+                    </div>
+                    <datatable-pager [pagerLeftArrowIcon]="'feather-chevrons-left'"
+                                     [pagerRightArrowIcon]="'feather-chevrons-right'"
+                                     [pagerPreviousIcon]="'feather-chevron-left'"
+                                     [pagerNextIcon]="'feather-chevron-right'"
+                                     [page]="pagedData.pager.currentPage+1"
+                                     [size]="pageSizeValue"
+                                     [count]="pagedData.pager.totalItems"
+                                     [hidden]="!((rowCount / pageSize) > 1)"
+                                     (change)="setPage($event)">
+                    </datatable-pager>
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="saveProduct()"><i class="feather-save text-white"></i> Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>
+
+<!--notes popup-->
+
+<div class="modal fade in show" bsModal #AddNotes="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add a new Notes</h4>
+        <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; height:290px;">
+        <form [formGroup]="addNoteForm" [ngClass]="{'disabled':loadSave}">
+          <div class="row">
+            <!--<div class="col-12 col-md-12 col-lg-12">
+              <label>Name</label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter Note" formControlName="note" [ngClass]="{'is-invalid': (note.invalid && (note.dirty || note.touched) && (note.errors?.required || note.errors?.maxlength)) }">
+                <small *ngIf="note.invalid && (note.dirty || note.touched) && note.errors?.required"
+                       class="text-danger">Note is required</small>
+              </div>
+            </div>-->
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Description</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" style="min-height:170px;" placeholder="Enter Note Description" formControlName="noteDescription" #machineDescription maxlength="1000" [ngClass]="{'is-invalid': (noteDescription.invalid && (noteDescription.dirty || noteDescription.touched) && (noteDescription.errors?.required || noteDescription.errors?.maxlength)) }"></textarea>
+                <small *ngIf="noteDescription.invalid && (noteDescription.dirty || noteDescription.touched) && noteDescription.errors?.required"
+                       class="text-danger">Description is required</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-2">
+              <div class="form-group mt-1">
+                <div class="form-check form-check-inline">
+                  <div class="custom-control custom-radio mx-2  p-0">
+                    <input id="isPrivate1" formControlName="isPrivate" value="1" type="radio">
+                    <label for="isPrivate1" class="radio-label">Private</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-2">
+              <div class="form-group mt-1">
+                <div class="form-check form-check-inline">
+                  <div class="custom-control custom-radio mx-2  p-0">
+                    <input id="isPrivate2" formControlName="isPrivate" value="0" type="radio">
+                    <label for="isPrivate2" class="radio-label">Public</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveNotes()"><i class="feather-save text-white"></i> Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>
+
+<!--Email popup-->
+<div class="modal fade in show" bsModal #email="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-xl modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Email</h4>
+        <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="  margin-bottom:10px; height:100%">
+        <form [formGroup]="EmailForm" autocomplete="off">
+          <div class="row" [ngClass]="{'disabled':loadSave}">
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Sent To</label>
+
+              <ng-select [items]="contactlist" placeholder="Select contact" formControlName="sentto"
+                         bindLabel="text" bindValue="value"
+                         [ngClass]="{'is-invalid': (sentto.invalid && (sentto.dirty || sentto.touched) && sentto.errors?.required) }"></ng-select>
+              <small *ngIf="sentto.invalid && (sentto.dirty || sentto.touched) && sentto.errors?.required"
+                     style="color:red;">Please select sent to</small>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Template</label>
+
+              <ng-select [items]="templatelist" placeholder="Select template" formControlName="templateid"
+                         bindLabel="text" bindValue="value" (change)="gettemplatelist($event)"></ng-select>
+
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Subject</label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter Subject" formControlName="subject" [ngClass]="{'is-invalid': (subject.invalid && (subject.dirty || subject.touched) && (subject.errors?.required || subject.errors?.maxlength)) }">
+                <small *ngIf="subject.invalid && (subject.dirty || subject.touched) && subject.errors?.required"
+                       class="text-danger">subject is required</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Template:<span style="color:red">*</span></label>
+              <div class="form-group">
+                <ckeditor #myckeditor name="myckeditor"
+                          formControlName="emailDescription"
+                          required
+                          [config]="ckeConfig"
+                          debounce="500"
+                          (paste)="onPaste($event)"
+                          (change)="onChangetemp($event)">
+                </ckeditor>
+                <small *ngIf="emailDescription.invalid && (emailDescription.dirty || emailDescription.touched) && emailDescription.errors?.required"
+                       style="color:red;">Template  is required</small>
+              </div>
+            </div>
+            <!--<div class="col-12 col-md-12 col-lg-12">
+              <label>Description</label>
+              <div class="form-group">
+                <textarea rows="3" class="form-control" placeholder="Enter Description" formControlName="emailDescription" #machineDescription maxlength="200"></textarea>
+              </div>
+            </div>-->
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveEmail()" data-dismiss="modal" aria-label="Close"><i class="feather-save text-white"></i> Send</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+      <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>-->
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>
+
+<!--emai;l description Popup-->
+<div class="modal my-popups-dboard fade show" bsModal #emaildetail="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Email Description</h4>
+        <button type="button" class="close" (click)="closeemaildesc()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow:auto; margin-bottom:10px; height:100%;">
+
+        <div class="col-md-12">
+          <div class="row">
+
+            <div class="table-responsive mt-2 cus-notification">
+              <p [innerHTML]="emaildesc"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeemaildesc()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--note description Popup-->
+<div class="modal my-popups-dboard fade show" bsModal #notedetail="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Note Description</h4>
+        <button type="button" class="close" (click)="closenotedesc()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow:auto; margin-bottom:10px; height:238px;">
+
+        <div class="col-md-12">
+          <div class="row">
+
+            <div class="table-responsive mt-2 cus-notification">
+              <p [innerHTML]="notedesc"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger form-btns" (click)="closenotedesc()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+      <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>-->
+    </div>
+  </div>
+</div>
+

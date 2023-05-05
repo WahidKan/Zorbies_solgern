@@ -1,0 +1,49 @@
+========================Done===========================
+
+1.	Registration Process:
+	a.Amount validation when click on pay. Get Mode from database and put validation accordingly.
+		i.	Test Mode: add 50 if amount is less than 50 - Done
+		ii.	Live mode: as it is amount will deduct - Done
+		iii.	Both Cases: discuss with me for $0 offer - Done
+
+	b.After selecting Offer, every screen should have back button. - Done
+	c.On offer listing, description showing with <p> tag. - Done
+	d.Offer Includes: Show products and  modules included in that offer. - Done
+	e.Additional Add-ons – missing in overview page - Done
+2.	User cannot purchase Products/Modules as Add-Ons which are already in Offer. - Done
+3.	During Registration: Overview is not correct.
+	d.	Offers Include: Listing is not correct in design
+	e.	Additional Add-ons Listing is pending - Done
+4.	If we click on Previous button, Page will go back to previous page, but information is again disappear which user has already entered. It should remain same there.
+        --Partialy done
+5.	Manage Customer:
+                a. Add Customer – Offer price not showing correct. For offer “offer 122” it is not showing price. - Done
+                b. Add Customer – I have added module “customer reports module”, but it is not showing in module list - Done
+                c. Add Customer – Module list not correct as listed in manage modules - Done
+                d. Add Customer – Showing alert with exception. Not able to add customer - Done
+
+6.	Customer edit
+	a.	Select is not prefilled - Done
+
+7.	In customer need to show list give column (Pending offer)  - Done
+
+8.      Invoice email should send when purchase any offer/product/module. - Done 
+        
+
+
+
+
+========================Pending=========================
+
+
+1.	
+
+
+========================Rahul Working===================
+1.	Customer overview inner link not working. (Take Amandeep help if need for redirection) – Assign this task to Rahul to create Subscription.
+
+
+========================Anish Working===================
+1.	Customer edit
+	a.	When logo upload it should appear near control 
+	b.	Download link of text except document 

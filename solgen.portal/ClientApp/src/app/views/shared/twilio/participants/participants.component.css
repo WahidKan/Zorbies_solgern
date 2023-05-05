@@ -1,0 +1,48 @@
+:host,
+#participant-list {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#participant-list {
+    border: solid 6px rgb(34, 34, 34);
+    background-color: rgb(38, 38, 38);
+}
+
+#alone {
+    height: 100%;
+    min-height: 400px;
+}
+
+#alone.table {
+    display: table;
+}
+
+div > p {
+    vertical-align: middle;
+    display: table-cell;
+    padding: 0 10%;
+}
+
+.leave-room {
+    background-color: #F22F46;
+}
+
+.navbar.shadow {
+    border-bottom: solid 3px rgb(34, 34, 34) !important;
+}
+
+
+.part-list .app-camera{ width: 100%; display: inline-block; max-width: 50% ; }
+.part-list .app-camera ~ video {    max-width: 50%;    margin: 5 !important;    display: inline-block;  border: 1px solid #fff  }
+.part-list #participant-list {    border: none;    background-color: #fff;}
+.part-list { display: flex; flex-wrap: wrap; justify-content: space-between; width: 100%; }
+.part-list .video-container {    display: flex;    width: 33.3%; max-height: 285px !important;   padding: 5px; position: relative;}
+
+ .video-component {    width: 100% !important; max-height:275px !important;   }
+h4.video-title {    position: absolute;    bottom: 0;    padding: 10px 15px;    background:#2f40509e;    width: calc(100% - 10px);    left: 5px;
+}
+@media only screen and (max-width: 768px) {
+    .part-list .video-container {      width: 50%;  }
+    h4.video-title {font-size: 14px;}
+}

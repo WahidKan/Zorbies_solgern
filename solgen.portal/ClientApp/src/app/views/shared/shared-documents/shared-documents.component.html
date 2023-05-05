@@ -1,0 +1,56 @@
+<div class="active" [ngClass]="{'panel':header}">
+  <div class="panel-heading" *ngIf="header">
+      <h4 class="panel-title">
+          <a href="#document" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+              <span>{{title}} ({{filesCount}})</span>
+          </a>
+      </h4>
+  </div>
+  <div id="document" class="panel-collapse collapse active show" style="">
+      <!-- <a *ngIf="header" href="javascript:void(0);" class="btn-in-panel" (click)="openUploadFilePopup()"><span data-toggle="modal"><i class="feather-plus mr-2"></i>Add</span></a> -->
+      <div class="panel-body row px-0 mt-0">
+          <!-- <div [ngClass]="{'col-3':header,'col-6':!header}">
+              <ng-select [items]="lstDocumentCategory" placeholder="Select Document Category" bindValue="value" bindLabel="text" [(ngModel)]="ddlDocumentCategory" (change)="GetDocumentType($event)" (clear)="resetDocumentDDL();"></ng-select>
+          </div> -->
+          <div class="clearfix"></div>
+          <div class="table-responsive col-12 mb-0">
+              <div class="table table-striped mb-0">
+                  <ngx-datatable class="bootstrap table table-hover table-dynamic" [rows]="docuemnetMappingList"
+                  [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="40" [headerHeight]="40"
+                  [loadingIndicator]="loadSave"  [selectAllRowsOnPage]="false"
+                  [selected]="selected" (select)="onSelect($event)">
+                  <ngx-datatable-column name="Name" prop="Name" [sortable]="false">
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Status" prop="Status" [sortable]="false">
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button *ngIf="row.Status=='SENT'" class="btn btn-primary text-white mr-2" (click)="downloadPDF()">Download
+                    </button> 
+                  </ng-template>
+                  </ngx-datatable-column>
+                      <!-- <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                              <div class="text-center">
+                                  <a href="javascript:void(0);" (click)="deleteFiles(row.Id)"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                              </div>
+
+                          </ng-template>
+                      </ngx-datatable-column> -->
+                     
+                  </ngx-datatable>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+<!-- <p>shared-documents works!</p>{{primaryKey}}
+{{submoduleName}} -->
+
+

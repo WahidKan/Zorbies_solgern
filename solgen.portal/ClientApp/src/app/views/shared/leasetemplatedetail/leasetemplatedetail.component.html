@@ -1,0 +1,40 @@
+<form [formGroup]="leaseTemplateForm" autocomplete="off">
+  <div bsModal #leasetemplatedetail="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+      <div class="modal-content" style="z-index:1">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Lease Template</h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="overflow:auto; margin-bottom:10px;">
+            <div class="col-12 col-md-12 col-lg-12">
+              <div class="form-group">
+                <ckeditor #myckeditor name="myckeditor"
+                          formControlName="templateName"
+                          required
+                          [(ngModel)]="leaseTemplateName"
+                          [config]="ckeConfig"
+                          debounce="1000" 
+                          (paste)="onPaste($event)"
+                          (change)="onChange($event)">
+
+                </ckeditor>
+
+                <small *ngIf="templateName.invalid && (templateName.dirty || templateName.touched) && templateName.errors?.required"
+                       style="color:red;">Lease Template is required</small>
+              </div>
+              <input type="hidden" formControlName="templateId" />
+            </div>          
+        
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary form-btns" (click)="sendLeaseTemplate()"><i class="feather-save text-white"></i> Submit</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

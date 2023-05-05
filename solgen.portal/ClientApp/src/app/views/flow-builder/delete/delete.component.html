@@ -1,0 +1,179 @@
+<div bsModal #deleteModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" *ngIf="deleteForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Delete Records</h5>
+                <button type="button" (click)="closeDeleteModal()" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div>
+                    <div *ngIf="deleteForm && nodeId" [formGroup]="deleteForm">
+                        <div class="row">
+
+                            <div class="col-6 col-md-6 col-lg-6">
+                                <label>Name (Max Char Limit 50)<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <input id="nameInput" maxlength="50" class="form-control" formControlName="name"[ngClass]="{'is-invalid': (deleteName.invalid && (deleteName.dirty || deleteName.touched) && (deleteName.errors?.required || deleteName.errors?.maxlength)) }">
+                                    <small *ngIf="(deleteName.invalid && (deleteName.dirty || deleteName.touched)) && deleteName.errors?.required" class="text-danger">label is required</small>
+                                    <small *ngIf="(deleteName.invalid && (deleteName.dirty || deleteName.touched)) && deleteName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+                                </div>
+                            </div>
+
+
+                            <div class="col-12 col-md-12 col-lg-12">
+                                <label>Description (Max Char Limit 200)</label>
+                                <div class="form-group">
+                                    <textarea maxlength="200" class="form-control" formControlName="description"
+                                    [ngClass]="{'is-invalid': (deleteDescription.invalid && (deleteDescription.dirty || deleteDescription.touched) && deleteDescription.errors?.maxlength)}"></textarea>
+                                    <small
+                            *ngIf="deleteDescription.invalid && (deleteDescription.dirty || deleteDescription.touched) && deleteDescription.errors?.maxlength"
+                            class="text-danger">Description should be less then 200</small>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 col-lg-12 ">
+                                <label><strong>How to Find Records to Delete</strong></label>
+                                <div class="form-check pointer-event-none">
+                                    <input (change)="showHideObjectAndSearchField()" class="form-check-input "
+                                        type="radio" formControlName="howToFind" name="howToFind" id="recordInputOne"
+                                        value="record_collection_variable">
+                                    <label class="form-check-label" for="recordInputOne">
+                                        Use the IDs stored in a record variable or record collection variable
+                                    </label>
+                                </div>
+                                <div class="form-check pointer-event-none">
+                                    <input (change)="showHideObjectAndSearchField()" class="form-check-input"
+                                        type="radio" formControlName="howToFind" name="howToFind" id="recordTwo"
+                                        value="Specify_conditions">
+                                    <label class="form-check-label" for="recordTwo">
+                                        Specify conditions
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                       
+                            <div *ngIf="isVisibleSearchRecordField" class="row">
+                                <h3 class="col-12">Select Record(s) to Delete</h3>
+
+                                <div class="col-6">
+                                    <label>Record or Record Collection<span class="text-danger">*</span></label>
+                                    <ng-select [items]="DUMMYDATA" [appendTo]="'body'" bindLabel="text"
+                                        bindValue="value" formControlName="recordId"
+                                        placeholder="Enter min. 3 characters to search..." [closeOnSelect]="true"
+                                        [virtualScroll]="true">
+                                    </ng-select>
+                                </div>
+                                <p class="col-12">Make sure that each record has an ID. Otherwise the flow can’t find
+                                    the records to delete, and it fails.
+                                </p>
+                            </div>
+                            <div *ngIf="isVisibleSearchObjectField" class="row">
+                                <h3 class="col-12">Delete Records of This Object Type</h3>
+                                <div class="col-6">
+                                    <label>Object<span class="text-danger">*</span></label>
+                                    <ng-select (change)="GetObjectId($event)" [appendTo]="'body'" [items]="objectList"
+                                        formControlName="subModuleId" placeholder="Select object" bindLabel="text"
+                                        bindValue="value">
+                                    </ng-select>
+                                </div>
+                            </div>                            
+                            <div *ngIf="deleteForm && deleteForm.get('subModuleId').value>0">
+                            <hr class="mt-2 mb-2">
+                            <div >
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h6>Filter Account Records</h6>
+                                        <label>Condition Requirements for Records to Delete</label>
+                                        <ng-select [items]="decisionList" [appendTo]="'body'" bindLabel="name"
+                                            bindValue="value" (change)="onFilterCondtionChange($event)"
+                                            formControlName="findCondition"
+                                            placeholder="Enter min. 3 characters to search..." [closeOnSelect]="true"
+                                            [virtualScroll]="true">
+                                        </ng-select>
+                                    </div>
+
+                                </div>
+                                <div class="row mb-2"
+                                    *ngIf="deleteForm && deleteForm.get('findCondition') && deleteForm.get('findCondition').value === 3">
+                                    <div class="col-md-12">
+                                        <label>Condition Logic:<span class="text-danger">*</span></label>
+                                        <div class="form-group">
+                                            <input type="text" formControlName="customFindCondition"
+                                                class="form-control" name="customCondition">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div formArrayName="filterConditions">
+                                    <div *ngFor="let condition of deleteForm.get('filterConditions').controls;let i = index"
+                                        [formGroupName]="i" class="row align-items-end justify-content-between mt-2">
+                                        <div class="col-1 text-center mt-4">
+                                            <strong
+                                                *ngIf="deleteForm.get('filterConditions') && deleteForm.get('findCondition').value === 3">{{i
+                                                + 1}}</strong>
+                                            <strong class="d-block pb-2"
+                                                *ngIf="filterConditions.length > 1 && i>0 &&  deleteForm.get('findCondition').value === 1 ">AND</strong>
+                                            <strong class="d-block pb-2"
+                                                *ngIf="filterConditions.length > 1 && i>0 &&  deleteForm.get('findCondition').value === 2 ">OR</strong>
+                                        </div>
+                                        <div class="col-3">
+                                            <label for="Field" class="form-label">Field</label>
+                                            <!-- <ng-select [items]="customFieldList" [appendTo]="'body'" placeholder="Select" (clear)="onClearCustomField(customFieldList)" formControlName="field" required="required" (keyup)="onKeyCustomField($event,customFieldList)" (scrollToEnd)="onScrollToEndCustomFields(customFieldList)"
+                                            required="required" [virtualScroll]="true" bindLabel="label" bindValue="form_field_id">
+                                        </ng-select> -->
+                                            <ng-select [items]="customFieldList" [appendTo]="'body'" (change)="onVariableChange($event,condition)"
+                                                placeholder="Select" formControlName="field" required="required"
+                                                required="required" [virtualScroll]="true" bindLabel="label"
+                                                bindValue="PrimaryTableColumn">
+                                            </ng-select>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label">Operator</label>
+                                            <ng-select [items]="Operators" [appendTo]="'body'" bindLabel="text"
+                                                bindValue="value" formControlName="operator"
+                                                placeholder="Select Operator" [closeOnSelect]="true"
+                                                [virtualScroll]="true">
+                                            </ng-select>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label">Value</label>
+                                            <ng-select [items]="valueList" [appendTo]="'body'" bindLabel="displayName"
+                                                bindValue="id" formControlName="value"
+                                                placeholder="Enter value or search resources..." [closeOnSelect]="true"
+                                                [virtualScroll]="true">
+                                            </ng-select>
+                                        </div>
+                                        <div class="col-1 ">
+                                            <button (click)="deleteFindCondition(i)"
+                                                [disabled]="filterConditions.length < 2"
+                                                class="btn btn-danger form-btns" tooltip="Delete">
+                                                <span><i class="feather-trash-2"></i></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-3">
+                                        <button (click)="addFindCondition()" class="btn btn-success"><i
+                                                class="feather-plus"></i>Add Condition</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success form-btns" (click)="saveDeleteForm()"><i
+                        class="feather-save text-white pr-2"></i>Submit</button>
+                <button type="submit" class="btn btn-danger form-btns" (click)="closeDeleteModal()" data-dismiss="modal"
+                    aria-label="Close">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

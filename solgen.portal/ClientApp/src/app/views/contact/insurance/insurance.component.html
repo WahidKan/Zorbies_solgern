@@ -1,0 +1,113 @@
+<div [formGroup]="insuranceForm" class="row">
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Insurance Company Name:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="name" maxlength="200" [ngClass]="{'is-invalid': (name.invalid && (name.dirty || name.touched) && (name.errors?.required || name.errors?.maxlength)) }">
+      <small *ngIf="insuranceForm.get('name').touched && insuranceForm.get('name').errors?.required" class="text-danger">
+        Insurance Company Name is required
+      </small>
+    </div>
+  </div>
+
+
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Insurance Phone:</label>
+    <div class="form-group">
+      <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="phone" placeholder="(___) ___-____">
+      </p-inputMask>
+    </div>
+  </div>
+
+  <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Insurance Phone:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="phone" maxlength="100" [ngClass]="{'is-invalid': (phone.invalid && (phone.dirty || phone.touched) && (phone.errors?.required || phone.errors?.maxlength)) }">
+      <small *ngIf="insuranceForm.get('phone').touched && insuranceForm.get('phone').errors?.required" class="text-danger">
+        Insurance Phone is required
+      </small>
+      <small *ngIf="insuranceForm.get('phone').touched && insuranceForm.get('phone').errors?.pattern"
+             class="text-danger">Please enter valid phone<br /></small>
+    </div>
+  </div>-->
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Insurance Agent Name:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="agentName" maxlength="200" [ngClass]="{'is-invalid': (agentName.invalid && (agentName.dirty || agentName.touched) && (agentName.errors?.required || agentName.errors?.maxlength)) }">
+      <small *ngIf="insuranceForm.get('agentName').touched && insuranceForm.get('agentName').errors?.required" class="text-danger">
+        Insurance Agent Name is required
+      </small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Insurance Agent Email:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="agentEmail" maxlength="200" [ngClass]="{'is-invalid': (agentEmail.invalid && (agentEmail.dirty || agentName.touched) && (agentEmail.errors?.required || agentEmail.errors?.maxlength)) }">
+      <small *ngIf="insuranceForm.get('agentEmail').touched && insuranceForm.get('agentEmail').errors?.required" class="text-danger">
+        Insurance Agent Email is required
+      </small>
+      <small *ngIf="insuranceForm.get('agentEmail').touched && insuranceForm.get('agentEmail').errors?.email" class="text-danger">Please enter valid Email</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-12 col-lg-12">
+    <label class="m-label-s">Insurance Address:</label>
+    <hr size="4" class="mt-0 border-secondary">
+  </div>
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Address</label>
+    <div class="form-group">
+      <textarea class="form-control" formControlName="address" [ngClass]="{'is-invalid': (address.invalid && (address.dirty || address.touched) && (address.errors?.required || address.errors?.maxlength)) }"></textarea>
+      <small *ngIf="insuranceForm.get('address').touched && insuranceForm.get('address').errors?.required" class="text-danger">
+        Insurance Address is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>City:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="city" maxlength="200" [ngClass]="{'is-invalid': (city.invalid && (city.dirty || city.touched) && (city.errors?.required || city.errors?.maxlength)) }">
+      <small *ngIf="insuranceForm.get('city').touched && insuranceForm.get('city').errors?.required" class="text-danger">
+        City is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Insurance Agent County:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="county" maxlength="100" [ngClass]="{'is-invalid': (county.invalid && (county.dirty || agentName.touched) && (county.errors?.required || county.errors?.maxlength)) }">
+      <small *ngIf="insuranceForm.get('county').touched && insuranceForm.get('county').errors?.required" class="text-danger">
+        Insurance Agent County is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>State:</label>
+    <div class="form-group">
+      <ng-select [items]="states"
+                 placeholder="Select State" bindValue="value" bindLabel="text" formControlName="state" [ngClass]="{'is-invalid': (state.invalid && (state.dirty || state.touched) && (state.errors?.required || state.errors?.maxlength)) }">
+      </ng-select>
+      <small *ngIf="insuranceForm.get('state').touched && insuranceForm.get('state').errors?.required" class="text-danger">
+        State is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Zip:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="zipCode" [ngClass]="{'is-invalid': (zipCode.invalid && (zipCode.dirty || zipCode.touched) && (zipCode.errors?.required || zipCode.errors?.maxlength)) }">
+      <small *ngIf="insuranceForm.get('zipCode').touched && insuranceForm.get('zipCode').errors?.required" class="text-danger">
+        Zip is required
+      </small>
+      <small *ngIf="zipCode.invalid && (zipCode.dirty || zipCode.touched) && zipCode.errors?.maxlength"
+             class="text-danger">Zip can not be greater than 5 characters.</small>
+    </div>
+  </div>
+  <div class="col-12 col-md-12 col-lg-12">
+    <div class="alert alert-info mt-2">Insurance Company Name and Insurance Agent Email are required to fill if you enter insurance address details</div>
+  </div>
+
+</div>

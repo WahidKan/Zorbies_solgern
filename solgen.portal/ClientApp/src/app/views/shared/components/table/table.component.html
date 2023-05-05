@@ -1,0 +1,33 @@
+<div>
+  <table
+    [formGroup]="table"
+    class="table table-bordered"
+    [style.height.px]="table.get('height').value"
+    [style.width.px]="table.get('width').value - 5"
+  >
+    <thead>
+      <tr formArrayName="tableColumns">
+        <th *ngFor="let c of columns; let i = index">
+          <app-custom-input
+            [formControlName]="i"
+            isHeading="true"
+            componentType="table"
+            [disabled]="table.get('isPreview').value"
+          ></app-custom-input>
+        </th>
+      </tr>
+    </thead>
+    <tbody formArrayName="tableRows">
+      <tr *ngFor="let r of rows; let i = index" [formGroupName]="i">
+        <td *ngFor="let col of columns; let ci = index" class="col-md-2">
+          <app-custom-input
+            [formControlName]="ci"
+            componentType="table"
+            [disabled]="table.get('isPreview').value"
+            >{{ r[ci] }}</app-custom-input
+          >
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

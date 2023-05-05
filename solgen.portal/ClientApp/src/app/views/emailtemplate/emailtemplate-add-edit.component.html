@@ -1,0 +1,212 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<!--<div class="breadcrumb-holder">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-9 mt-3">
+        <span class="dash">Email Template</span>
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+          <li class="breadcrumb-item"><a routerLink="/emailtemplates">Email Template</a></li>
+          <li class="breadcrumb-item active">{{pageTitle}}</li>
+        </ul>
+      </div>
+      <div class="col-md-3 mt-4 text-right">
+        <button class="w-auto sw-100 btn btn-dark" (click)="close()"><i class="fa fa-arrow-left"></i>&nbsp;Back</button>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Email Template</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li>
+          <a class="smview" routerLink="/emailtemplates">Email Template</a>
+        </li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+
+<div class="panel">
+  <div class="panel-content p-4">
+
+    <form [formGroup]="emailTemplateForm" autocomplete="off">
+      <div class="emailTemplate-box" [ngClass]="{'disabled':loadSave}">
+        <div class="row">
+          <div  [ngClass]="{'col-sm-12 col-md-12':true,'col-lg-8 col-xl-9': submoduleCode== 'undefined' || submoduleCode!=null || submoduleCode==''}">
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-4">
+                <label>Template Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Enter Template Name" [attr.disabled]="isDisabled"
+                         formControlName="emailTemplateName"
+                         [ngClass]="{'is-invalid': (emailTemplateName.invalid && (emailTemplateName.dirty || emailTemplateName.touched) && (emailTemplateName.errors?.required || emailTemplateName.errors?.maxlength)) }">
+                  <small *ngIf="emailTemplateName.invalid && (emailTemplateName.dirty || emailTemplateName.touched) && emailTemplateName.errors?.required"
+                         style="color:red;">Template Name is required</small>
+                  <small *ngIf="emailTemplateName.invalid && (emailTemplateName.dirty || emailTemplateName.touched) && emailTemplateName.errors?.maxlength"
+                         cstyle="color:red;">Template Name must be less than 50 characters.</small>
+                </div>
+              </div>
+
+
+              <div class="col-12 col-md-6 col-lg-4">
+                <label>Subject:</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Enter Subject"
+                         formControlName="emailTemplateSubject"
+                         [ngClass]="{'is-invalid': (emailTemplateSubject.invalid && (emailTemplateSubject.dirty || emailTemplateSubject.touched) && (emailTemplateSubject.errors?.required || emailTemplateSubject.errors?.maxlength)) }">
+                  <small *ngIf="emailTemplateSubject.invalid && (emailTemplateSubject.dirty || emailTemplateSubject.touched) && emailTemplateSubject.errors?.required"
+                         class="text-danger">Subject  is required</small>
+                  <small *ngIf="emailTemplateSubject.invalid && (emailTemplateSubject.dirty || emailTemplateSubject.touched) && emailTemplateSubject.errors?.maxlength"
+                         style="color:red;">Subject must be less than 50 characters.</small>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-4">
+                <label>Status:<span style="color:red">*</span></label>
+                <div class="form-group">
+
+                  <ng-select [items]="statuses" [loading]="loadSave" [closeOnSelect]="true" placeholder="Select status" formControlName="emailTemplateStatusId"
+                             bindLabel="text" bindValue="valueGuid"
+                             [ngClass]="{'is-invalid': (emailTemplateStatusId.invalid && (emailTemplateStatusId.dirty || emailTemplateStatusId.touched) && emailTemplateStatusId.errors?.required) }"></ng-select>
+                  <small *ngIf="emailTemplateStatusId.invalid && (emailTemplateStatusId.dirty || emailTemplateStatusId.touched) && emailTemplateStatusId.errors?.required"
+                         style="color:red;">Please select Status</small>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-4">
+                <label>Module:</label>
+                <div class="form-group">
+                  <ng-select #module [items]="modulelist"
+                             placeholder="Select Module" bindValue="value"
+                             formControlName="selectedValue"
+                             bindLabel="text" (change)="selectmodule($event)"
+                             [ngClass]="{'is-invalid': (selectedValue.invalid && (selectedValue.dirty || selectedValue.touched) && (selectedValue.errors?.required || selectedValue.errors?.maxlength)) }">
+                  </ng-select>
+                  <small *ngIf="selectedValue.invalid && (selectedValue.dirty || selectedValue.touched) && selectedValue.errors?.required"
+                         class="text-danger">Module is required</small>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-4">
+                <label>SubModule:</label>
+                <div>
+                  <ng-select #subModule [items]="submodulelist"
+                             placeholder="Select SubModule" bindValue="value"
+                             formControlName="selectedSubModuleValue"
+                             bindLabel="text" (change)="selectedModuleValue($event)"
+                             [ngClass]="{'is-invalid': (selectedSubModuleValue.invalid && (selectedSubModuleValue.dirty || selectedSubModuleValue.touched) && (selectedSubModuleValue.errors?.required || selectedSubModuleValue.errors?.maxlength)) }">
+                  </ng-select>
+                  <small *ngIf="selectedSubModuleValue.invalid && (selectedSubModuleValue.dirty || selectedSubModuleValue.touched) && selectedSubModuleValue.errors?.required"
+                         class="text-danger">SubModule is required</small>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-12 col-lg-12">
+                <label>Template:<span style="color:red">*</span></label>
+                <div class="form-group">
+                  <ckeditor #myckeditor name="myckeditor"
+                            formControlName="template"
+                            required
+                            [config]="ckeConfig"
+                            debounce="500"
+                            (paste)="onPaste($event)"
+                            (change)="onChange($event)">
+                  </ckeditor>
+                  <small *ngIf="template.invalid && (template.dirty || template.touched) && template.errors?.required"
+                         style="color:red;">Template  is required</small>
+                </div>
+              </div>
+
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-12 col-md-12">
+                <a href="javascript:void(0);" *ngIf="addOrUpdatePermission" class="btn btn-success mr-2" (click)="save()"><i class="feather-save"></i> Submit</a>
+                <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="feather-x"></i> Cancel</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-xl-3" *ngIf="submoduleCode!= 'loanapplication' && submoduleCode!=null">
+            <div class="row">
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                  <div class="card-header datafield-header">
+                    <p>The following fields can be included in your auto responder. They will be replaced with the data entered by the user in each of them.</p>
+                    <p>Double-Click the fields to automatically paste them into the editor.</p>
+                  </div>
+                  <div class="card-body datafields">
+                    <div class="row p-2 m-0 datafield-db" *ngFor="let option of customCompnentValues;" (click)="FillEditorData(option.display_name,option.name)">
+                      <div class="col-10 col-sm-10 col-md- 10 col-lg-10 col-xl-10 pl-0 float-left">
+                        <label class="m-0" style="cursor: pointer;">{{option.display_name}}</label>
+                      </div>
+                      <div class="col-2 col-sm-2 col-md- 2 col-lg-2 col-xl-2 float-left text-right m-0 pr-0">
+                        <a href="javascript:void(0);"><i class="feather-corner-up-left text-primary"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-xl-3" *ngIf="submoduleCode=='loanapplication'">
+            <div class="row">
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="card-header datafield-header">
+                  <p>The following fields can be included in your auto responder. They will be replaced with the data entered by the user in each of them.</p>
+                  <p>Double-Click the fields to automatically paste them into the editor.</p>
+                </div>
+
+                <div id="accordion">
+                  <div class="card" *ngFor="let option of groupNamedata; let c=index;">
+                    <div class="card-header" id="headingOne">
+                      <h5 class="mb-0">
+                        <a class="btn btn-link cursor-pointer" data-toggle="collapse" attr.data-target="#{{option.groupNameKey}}" aria-expanded="true" aria-controls="collapseOne_c">
+                          {{option.groupName}}
+                        </a>
+                      </h5>
+                    </div>
+                    <div id="{{option.groupNameKey}}" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
+                      <div class="card-body">
+                        <div class="row p-2 m-0 datafield-db" *ngFor="let item1 of option.tableFields" (click)="FillEditorDataForLoanApplication(item1.displayName,item1.tableName)">
+                          <div class="col-10 col-sm-10 col-md- 10 col-lg-10 col-xl-10 pl-0 float-left">
+                            <label class="m-0" style="cursor: pointer;">{{item1.formFieldName}}</label>
+                          </div>
+                          <div class="col-2 col-sm-2 col-md- 2 col-lg-2 col-xl-2 float-left text-right m-0 pr-0">
+                            <a href="javascript:void(0);"><i class="feather-corner-up-left text-primary"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>-->
+          </div>
+        
+      </div>
+        </div>
+    </form>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>
+
+
+
+
+
+
+
+

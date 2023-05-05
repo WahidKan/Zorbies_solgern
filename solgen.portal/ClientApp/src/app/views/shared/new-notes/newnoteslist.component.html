@@ -1,0 +1,817 @@
+<!--*ngIf="NotesCount > 0 || DisplayOnEmpty"-->
+<div class="panel active {{(view && NotespagedData.data.length === 0 )?'d-none':''}}">
+  <div class="panel-heading" *ngIf="DisplayOnEmpty">
+    <h4 class="panel-title">
+
+      <a href="#notes{{ticksForId}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+        <span>Notes ({{NotesCount}})</span>
+      </a>
+    </h4>
+  </div>
+  <!-- <div id="notesNew" class="panel-collapse active show p-0 border-0" data-parent="#accordion"> -->
+
+  <div id="notes{{ticksForId}}" class="panel-collapse collapse active show">
+    <a href="javascript:void(0);" class="btn-in-panel" (click)="AddNotes()" data-toggle="modal"><i
+        class="feather-plus mr-2"></i> New</a>
+      <div class="panel-body row px-3" *ngIf="submoduleName!='workorder'" style="display:none">
+        <div class="table-responsive">
+          <div class="table table-striped">
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="NotespagedData.data"
+              [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40"
+              [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+              [count]="NotespagedData.pager.totalItems" [offset]="NotespagedData.pager.currentPage"
+              [limit]="NotespagedData.pager.pageSize" (page)='setNotesPageNo($event)' (sort)="onSortNotes($event)">
+              <ngx-datatable-column name="Title" prop="note_name" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.note_name|truncate}}
+                </ng-template>
+
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Description" prop="note_description" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.note_description|truncate}}
+                </ng-template>
+              </ngx-datatable-column>
+              <!--<ngx-datatable-column name="Download" [sortable]="false" headerClass="text-center">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="icon-text-center"><a href="{{row.fileUrl}}" download class="text-success mx-1"><i class="fa fa-download" title="download"></i></a></div>
+                </ng-template>
+              </ngx-datatable-column>-->
+              <ngx-datatable-column name="Assign To" prop="AssignTo" [sortable]="true"></ngx-datatable-column>
+              <ngx-datatable-column name="Notify User(s)" prop="notifyUserNames" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.notifyUserNames|truncate}}
+                </ng-template>
+
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Status" prop="Status" [sortable]="true"></ngx-datatable-column>
+              <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="text-center">
+                    <a href="javascript:;" (click)="ViewNotes(row)" title="View Notes"><i
+                        class="feather-eye pr-2"></i></a>
+                    <a href="javascript:;" (click)="EditNotes(row)" title="Edit Note"><i
+                        class="fa fa-pencil text-success pr-2"></i></a>
+                    <a href="javascript:;" (click)="deleteNotes(row.note_id)"><i title="Click to delete."
+                        class="feather-trash-2 text-danger"></i></a>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                  let-selectedCount="selectedCount" let-currentPage="NotespagedData.pager.currentPage"
+                  let-offset="offset" let-isVisible="isVisible">
+                  <div class="page-count" *ngIf='(rowCount  > 0)'>
+                    {{commonService.PageString(NotespagedData.pager.currentPage,NotespagedData.pager.pageSize,rowCount)}}
+
+                  </div>
+
+
+                  <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'" [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                    [pagerPreviousIcon]="'fa feather-chevrons-left'" [pagerNextIcon]="'fa fa-angle-double-right'"
+                    [page]="NotespagedData.pager.currentPage" [size]="pageSizeValuenotes"
+                    [count]="NotespagedData.pager.totalItems" [hidden]="!((rowCount / pageSize) > 1)"
+                    (change)="setNotesPageNo($event)">
+                  </datatable-pager>
+
+                </ng-template>
+              </ngx-datatable-footer>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="view && NotespagedData.data">
+
+        <div *ngFor="let item of NotespagedData.data;let i=index">
+          <ng-container *ngIf="loginuserid === item.Assign_to">
+            <div class="col-md-12 col-sm-12 list-card-view">
+              <div class="card card-block noti">
+                <div class="card-main alert-warning border-0">
+                  <h5 class="card-title mt-3 mb-3">
+                    {{item.note_name | titlecase}}
+                    <span class="badge badge-warning ng-star-inserted ml-2" style="color:#000;padding:5px">Unread</span>
+                    <a href="javascript:void(0);" (click)="ViewAllNotesOnPopup(item)"
+                      class="float-right bg-primary px-2" style="border-radius: 4px;"><i class="feather-eye text-white"
+                        title="View"></i></a> &nbsp;
+                  </h5>
+                  <p><strong>Description:</strong> {{item.note_description | truncate:250 }}</p>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <div class="col-md-12 col-sm-12 list-card-view"
+            *ngIf="((item.Assign_to==null || item.Assign_to=='' ) && loginuserid!=item.Assign_to && submoduleName=='workorder') ">
+            <div class="card card-block noti">
+              <div class="card-main alert-warning border-0">
+                <h5 class="card-title mt-3 mb-3">
+                  {{item.note_name | titlecase}}
+                  <span class="badge badge-warning ng-star-inserted ml-2" style="color:#000;padding:5px">Unread</span>
+                  <a href="javascript:void(0);" (click)="ViewAllNotesOnPopup(item)" class="float-right bg-primary px-2"
+                    style="border-radius: 4px;"><i class="feather-eye text-white" title="View"></i></a> &nbsp;
+                </h5>
+                <p><strong>Description:</strong> {{item.note_description | truncate:250 }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 col-sm-12 list-card-view" *ngIf="!view">
+        <div class="card card-block" *ngIf="NotespagedDataCardView.data.length!=0">
+          <div class="card-main">
+            <h5 class="card-title mt-3 mb-3">
+              {{cardTitle | titlecase}}
+              <a href="javascript:void(0);" *ngIf="cardNoteId!='N/A'"
+                (click)="displayDetailNotification('itenone',cardNoteId)" class="float-right"><i
+                  class="feather-eye text-info" title="View"></i></a>
+            </h5>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <p><strong>Status:</strong> {{cardStatus}}</p>
+              </div>
+              <div class="col-md-12 col-lg-6" *ngIf="cardResource!=null && cardResource!=''">
+                <p><strong>Work Type:</strong> {{cardResource}}</p>
+              </div>
+              <div class="col-md-12 col-lg-6" *ngIf="cardAssignedTo!=null && cardAssignedTo!=''">
+                <p><strong>Resource:</strong> {{cardAssignedTo}}</p>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <p><strong>Notify User(s):</strong> {{cardNotify}}</p>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <span class="comments-count border-0"
+                  *ngIf="JsonStringDataForReply!=null && JsonStringDataForReply!='' && JsonStringDataForReply[0]!=null && JsonStringDataForReply[0]!=''">
+                  <i class="fa fa-comment pr-2">
+                  </i>{{JsonStringDataForReply[0].length | json}} comments
+                </span>
+                <span class="comments-count border-0"
+                  *ngIf="JsonStringDataForReply==null || JsonStringDataForReply==''">
+                  <i class="fa fa-comment pr-2">
+                  </i>0 comments
+                </span>
+              </div>
+
+              <div class="col-md-12 col-lg-12">
+                <p><strong>Description:</strong> {{cardDesc | truncate:130 }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-main" *ngIf="cardTitleOne!=null && cardTitleOne!=''">
+            <h5 class="card-title mt-3 mb-3">
+              {{cardTitleOne | titlecase}}
+              <a href="javascript:void(0);" *ngIf="cardNoteIdOne!='N/A'"
+                (click)="displayDetailNotification('itentwo',cardNoteIdOne)" class="float-right"><i
+                  class="feather-eye text-info" title="View"></i></a>
+            </h5>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <p><strong>Status:</strong> {{cardStatusOne}}</p>
+              </div>
+              <div class="col-md-12 col-lg-6" *ngIf="cardResourceOne!=null && cardResourceOne!=''">
+                <p><strong>Work Type:</strong> {{cardResourceOne}}</p>
+              </div>
+              <div class="col-md-12 col-lg-6" *ngIf="cardAssignedToOne!=null && cardAssignedToOne!=''">
+                <p><strong>Resource:</strong> {{cardAssignedToOne}}</p>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <p><strong>Notify User(s):</strong> {{cardNotifyOne}}</p>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <span class="comments-count border-0"
+                  *ngIf="JsonStringDataForReplyOne!=null && JsonStringDataForReplyOne!='' && JsonStringDataForReplyOne[0]!=null && JsonStringDataForReplyOne[0]!=''"><i
+                    class="fa fa-comment pr-2"></i>{{JsonStringDataForReplyOne[0].length | json}} comments</span>
+                <span class="comments-count border-0"
+                  *ngIf="JsonStringDataForReplyOne==null || JsonStringDataForReplyOne==''">
+                  <i class="fa fa-comment pr-2">
+                  </i>0 comments
+                </span>
+              </div>
+              <div class="col-md-12 col-lg-12">
+                <p><strong>Description:</strong>{{ cardDescOne | truncate:130 }} </p>
+              </div>
+            </div>
+          </div>
+          <a href="javascript:void(0);" (click)="displayViewAllNotes()" class="btn btn-primary mb-2"><i
+              calss="feather-eye mr-1"></i>View All</a>
+        </div>
+        <div class="card card-block" *ngIf="NotespagedDataCardView.data.length==0">
+          <div class="card-main border-0">
+            <p class="text-center text-danger">No data to display</p>
+          </div>
+        </div>
+      </div>
+
+  </div>
+  <!-- </div> -->
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+</div>
+
+<div bsModal #notesmodel="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header" *ngIf="!isViewNote">
+        <h4 class="modal-title">{{modeltitle}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-header" *ngIf="isViewNote">
+        <h4 class="modal-title">View NOTES</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;">
+        <form [formGroup]="addNotesForm" [ngClass]="{'disabled':loadSave}">
+          <div class="form-group row" *ngIf="!isViewNote">
+            <div class="col-md-12 col-lg-6">
+              <label>Title:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="title" maxlength="50"
+                  placeholder="Enter Title "
+                  [ngClass]="{'is-invalid': (title.invalid && (title.dirty || title.touched) && (title.errors?.required || title.errors?.maxlength)) }">
+                <small *ngIf="title.invalid && (title.dirty || title.touched) && title.errors?.required"
+                  class="text-danger">Note Title is required</small>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Status:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="statusList" placeholder="Select Status" formControlName="status" bindLabel="text"
+                  bindValue="value"
+                  [ngClass]="{'is-invalid': (status.invalid && (status.dirty || status.touched) && (status.errors?.required || status.errors?.maxlength)) }">
+
+                </ng-select>
+                <small *ngIf="status.invalid && (status.dirty || status.touched) && status.errors?.required"
+                  class="text-danger">Status is required</small>
+
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Assign To:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <div class="form-check-inline">
+                  <div class="custom-control custom-radio pl-0">
+                    <input type="radio" class="custom-control-input" id="assignto" name="resourseType" value="Assign To"
+                      [(ngModel)]="resourseTypeValue" formControlName="resourseType" />
+                    <label class="custom-control-label" for="assignto" (click)="SetDropdoenValues('AssignTo')">
+                      Resource
+                    </label>
+                  </div>
+                </div>                
+                <div class="form-check-inline" *ngIf="(submoduleName!='lead' && submoduleName!='contact'&& submoduleName!='facebookcampaign')">
+                  <div class="custom-control custom-radio pl-0">
+                    <input type="radio" class="custom-control-input" id="worktype" name="resourseType"
+                      [(ngModel)]="resourseTypeValue" value="Work Type" formControlName="resourseType" />
+                    <label class="custom-control-label" for="worktype" (click)="SetDropdoenValues('WorkType')">Work
+                      Type</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6" *ngIf="!isWorkType">
+              <label>Resource:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="assignToList" placeholder="Select Assign To" formControlName="assignTo"
+                  bindLabel="text" bindValue="value"
+                  [ngClass]="{'is-invalid': (assignTo.invalid && (assignTo.dirty || assignTo.touched) && assignTo.errors?.required) }">
+
+                </ng-select>
+                <small *ngIf="assignTo.invalid && (assignTo.dirty || assignTo.touched) && assignTo.errors?.required"
+                  style="color:red;">Please select Resource</small>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6" *ngIf="isWorkType && (submoduleName!='lead' && submoduleName!='contact')">
+              <label>Work Type:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="workTypeList" placeholder="Select Work Type" formControlName="workType"
+                  bindLabel="text" bindValue="value"
+                  [ngClass]="{'is-invalid': (workType.invalid && (workType.dirty || workType.touched) && workType.errors?.required) }">
+
+                </ng-select>
+                <small *ngIf="workType.invalid && (workType.dirty || workType.touched) && workType.errors?.required"
+                  style="color:red;">Please select work type</small>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Notify To:</label>
+              <div class="form-group">
+                <ng-select [items]="assignToList" placeholder="Select Notify To" [multiple]="true"
+                  *ngIf="isDropdownDisabled" formControlName="notifyTo" bindLabel="text" bindValue="value"></ng-select>
+
+                <ng-select [items]="assignToList" placeholder="Select Notify To" [multiple]="true"
+                  *ngIf="!isDropdownDisabled" formControlName="notifyToExtra" bindLabel="text" bindValue="value">
+                </ng-select>
+
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12">
+              <label>Description:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <textarea type="text" class="form-control" maxlength="500" formControlName="notesComments"
+                  [ngClass]="{'is-invalid': (notesComments.invalid && (notesComments.dirty || notesComments.touched) && (notesComments.errors?.required || notesComments.errors?.maxlength)) }"></textarea>
+                <small
+                  *ngIf="notesComments.invalid && (notesComments.dirty || notesComments.touched) && notesComments.errors?.required"
+                  style="color:red;">Description is required</small>
+                <small
+                  *ngIf="notesComments.invalid && (notesComments.dirty || notesComments.touched) && notesComments.errors?.maxlength"
+                  style="color:red;">Notes must be less than 5000 characters.</small>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-12">
+              <label>Select File:</label>
+              <div class="form-group">
+                <div class="custom-file w-100">
+                  <input class="custom-file-input" #file type="file" [multiple]="true" name='file' #fileInput
+                    [accept]="fileExtension" (change)="setFile($event)" lang="es">
+                  <label class="custom-file-label">{{fileName}}</label>
+                </div>
+                <small class="text-danger">Valid file format are {{fileExtension}}</small>
+              </div>
+              <div class="uploaded-image" *ngIf="objFileUploadData!='' && objFileUploadData!=null">
+                <div class="img-cntr" *ngFor="let inner of objFileUploadData;let j=index" title="{{inner.FileName}}">
+                  <a class="dlt-btn" href="javascript:void(0);" (click)="delImage(inner)"><i
+                      class="feather-trash-2 text-danger"></i></a>
+
+                  <a href="{{inner.fileUrl}}" download><img alt="" src="{{inner.fileUrl}}" />
+                    <!-- data-toggle="modal" data-target="#myModal" --></a>
+                  <span>{{inner.FileName}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="isViewNote">
+            <div class="row">
+              <div class="col-md-12 ">
+                <label><b>Note Title:</b></label>
+                <span>&nbsp;{{notesTitle}}</span>
+              </div>
+              <div class="col-md-12">
+                <label><b>Status:</b></label>
+                <span>&nbsp;{{notesStatus}}</span>
+              </div>
+              <div class="col-md-12 " *ngIf="noteAssignTo!=null && noteAssignTo!=''">
+                <label><b>Resource:</b></label>
+                <span>&nbsp;{{noteAssignTo}}</span>
+              </div>
+              <div class="col-md-12 " *ngIf="noteWorktypeTo!=null && noteWorktypeTo!=''">
+                <label><b>Work Type:</b></label>
+                <span>&nbsp;{{noteWorktypeTo}}</span>
+              </div>
+              <div class="col-md-12 ">
+                <label><b>Notify User(s):</b></label>
+                <span>&nbsp;{{noteNotifyUser}}</span>
+              </div>
+
+              <div class="col-md-12">
+                <label><b>Description:</b></label>
+                <span>&nbsp;{{notesDescription}}</span>
+              </div>
+              <div class="col-md-12" *ngIf="objFileUploadData!='' && objFileUploadData!=null">
+
+                <label><b>Uploaded Fiele(s):</b></label>
+                <div class="uploaded-image" *ngIf="objFileUploadData!='' && objFileUploadData!=null">
+                  <div class="img-cntr" *ngFor="let inner of objFileUploadData;let j=index" title="{{inner.FileName}}">
+                    <a href="{{inner.fileUrl}}" download><img alt="" src="{{inner.fileUrl}}" />
+                      <!-- data-toggle="modal" data-target="#myModal" --></a>
+                    <span>{{inner.FileName}}</span>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </form>
+        <div id="myModal" style=" background: none !important; z-index: 1000000 !important;" class="modal fade"
+          tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog" style=" height: 100%; width: 450px !important; position: absolute; margin: 0px; "
+            *ngFor="let inner of objFileUploadData;let j=index">
+            <div class="modal-content">
+              <div class="h-100 w-100 text-center">
+                <img src={{inner.fileUrl}} alt="img"
+                  style="max-height:100%; max-width:100% !important; padding: 70px 30px;" class="img-responsive">
+              </div>
+              <button type="button" class="close"
+                style="color: #000 !important; margin: 10px; position: absolute; right: 0px; background: #ccc; width: 40px; height: 40px; border-radius: 100%;"
+                data-dismiss="modal">&times;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button *ngIf="!isViewNote" type="submit" (click)="save()" class="btn btn-success mr-2" [disabled]="loadSave"><i
+            class="feather-save"></i> Submit</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal"
+          aria-label="Close"><i class="fa fa-times text-white mr-1"></i> Close</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>
+
+<div bsModal #notesCardViewDetailModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1"
+  role="dialog" aria-hidden="true">
+
+  <div class="modal-dialog modal-lg modal-info" *ngFor="let item of NotificationListData;let i=index">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{item.title}}</h4>
+        <button type="button" class="close" (click)="closeNoteCardView(item.noteId)">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:auto; margin-bottom:5px;">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-sm-12 p-0">
+              <div class="notes-sender">
+                <div class="nsender-detail">
+                  <div class="sender-imgi"><i class="fa fa-user"></i></div>
+                  <div class="sender-namedate">
+                    <h5>{{item.senderName}}</h5>
+                    <p>{{item.CreatedOn | utcdatetimetolocal}}</p>
+                    <div class="notes-descrip">
+                      <p [innerHTML]="item.description" class="descrip-det m-0"></p>
+
+                      <div class="notes-attachment" *ngIf="objFileUploadData!='' && objFileUploadData!=null">
+                        <div class="col-sm-12 mr-1">
+                          <div class="form-group row">
+                            <div class="uploaded-image" *ngIf="objFileUploadData!='' && objFileUploadData!=null">
+                              <div class="img-cntr" *ngFor="let inner of objFileUploadData;let j=index"
+                                title="{{inner.FileName}}">
+                                <!--<a href="{{inner.fileUrl}}" download><img alt="" src="{{inner.fileUrl}}" /></a>-->
+                                <a class="text-dark" *ngIf="(inner.fileExtension=='.image/jpeg' ||inner.fileExtension=='.jpeg' || inner.fileExtension=='.jpg'
+                                         || inner.fileExtension=='image/jpeg' ||inner.fileExtension=='jpeg' || inner.fileExtension=='jpg')
+                                         &&(inner.fileExtension !='pdf' || inner.fileExtension !='.pdf')">
+                                  <img loading="lazy" src="{{inner.fileUrl}}" class="img-fluid"
+                                    (click)="open(inner.fileUrl, attachmentIndex)" style=" height: 50px;
+                          width: 50px; border-radius: 2px; margin-right: 5px;
+              cursor: zoom-in">
+                                </a>
+
+
+                                <a *ngIf="inner.fileExtension=='.xlsx' ||inner.fileExtension=='.xls' || inner.fileExtension=='xlsx' ||inner.fileExtension=='xls'"
+                                  class="text-dark" href="{{inner.fileUrl}}">
+                                  <img src="../../../assets/default-theme/imagesNew/xlsxFile.png"
+                                    style="height:91px;width:85px" (click)="downloadFile($event,inner.fileUrl)" />
+                                </a>
+                                <a *ngIf="inner.fileExtension=='.txt' || inner.fileExtension=='txt'" class="text-dark"
+                                  href="{{inner.fileUrl}}">
+                                  <img src="../../../assets/default-theme/imagesNew/textFile.png"
+                                    style="height:91px;width:85px" (click)="downloadFile($event,inner.fileUrl)" />
+                                </a>
+                                <a *ngIf="inner.fileExtension=='.doc' || inner.fileExtension=='doc'" class="text-dark"
+                                  href="{{inner.fileUrl}}">
+                                  <img src="../../../assets/default-theme/imagesNew/docxFile.png"
+                                    style="height:91px;width:85px" />
+                                </a>
+                                <a *ngIf="inner.fileExtension=='.docx' || inner.fileExtension=='docx' "
+                                  class="text-dark" href="{{inner.fileUrl}}">
+                                  <img src="../../../assets/default-theme/imagesNew/docxFile.png"
+                                    style="height:91px;width:85px" />
+                                </a>
+                                <a *ngIf="inner.fileExtension=='.rar' || inner.fileExtension=='rar'" class="text-dark"
+                                  href="{{inner.fileUrl}}">
+                                  <img src="../../../assets/default-theme/imagesNew/RarFile.png"
+                                    style="height:91px;width:85px" />
+
+                                </a>
+
+                                <a *ngIf="inner.fileExtension=='.png' || inner.fileExtension=='png'" class="text-dark">
+                                  <img loading="lazy" src="{{inner.fileUrl}}" class="img-fluid"
+                                    (click)="open(inner.fileUrl, attachmentIndex)"
+                                    style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;cursor: zoom-in">
+                                </a>
+
+                                <a *ngIf="inner.fileExtension=='.gif' || inner.fileExtension=='gif'" class="text-dark">
+                                  <img loading="lazy" src="{{inner.fileUrl}}" class="img-fluid"
+                                    (click)="open(inner.fileUrl, attachmentIndex)"
+                                    style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;cursor: zoom-in">
+
+                                </a>
+
+                                <a *ngIf="inner.fileExtension=='.zip' || inner.fileExtension=='zip'" class="text-dark"
+                                  href="{{inner.fileUrl}}">
+                                  <img src="../../../assets/default-theme/imagesNew/ZipImage.jpg"
+                                    style="height:91px;width:85px" />
+
+                                </a>
+
+                                <a *ngIf="inner.fileExtension=='.pdf' || inner.fileExtension=='pdf' " class="text-dark"
+                                  href="{{inner.fileUrl}}">
+                                  <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png"
+                                    style="height:91px;width:85px" (click)="downloadFile($event,inner.fileUrl)" />
+
+                                </a>
+                                <span>{{inner.FileName}}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="notes-statusc" id="staticEmail" *ngIf="loginuserid!=item.createdBy">
+                    Status: <b>{{item.Status}}</b>
+                  </div>
+                  <div class="notes-statusc" id="staticEmail" *ngIf="loginuserid==item.createdBy">
+                    <div class="form-group">
+                      Status:
+                      <ng-select [items]="statusList" (change)="ChangeStatusForAddmin(item.noteId,$event)"
+                        placeholder="Select Status" [(ngModel)]="NotesStatusId" bindLabel="text" bindValue="value">
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="notes-descrip">
+                <span class="comments-count border-0"><i class="fa fa-comment pr-2"></i>{{ReplyMessageData.length}}
+                  comments</span>
+              </div>
+            </div>
+            <div class="col-sm-12 all-commentsnotes p-0 mb-3" id="allcommentsnotes">
+              <div class="comments-sections" *ngFor="let data of ReplyMessageData">
+                <div class="notes-sender" id="{{data.noteId}}">
+                  <div class="notes-detail">
+                    <div class="sender-imgi" *ngIf="data.alterNatePick!=null && data.alterNatePick!=''"><img
+                        src="{{data.userProfilePick}}" /></div>
+                    <div class="sender-imgi" *ngIf="data.alterNatePick==null || data.alterNatePick==''"><i
+                        class="fa fa-user"></i></div>
+                    <div class="sender-namedate">
+                      <h5>{{data.Sender}}</h5>
+                      <p>{{data.CreatedOn | utcdatetimetolocal}}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="notes-descrip">
+                  <p [innerHTML]="data.message " class="descrip-det m-0"></p>
+
+                  <div class="notes-attachment" *ngIf="data.ReplyFileData!='' && data.ReplyFileData!=null">
+                    <div class="col-sm-12 mr-1">
+                      <div class="form-group row">
+                        <div class="uploaded-image" *ngIf="data.ReplyFileData!='' && data.ReplyFileData!=null">
+                          <div class="img-cntr" *ngFor="let inners of data.ReplyFileData;let k=index"
+                            title="{{inners.FileName}}">
+                            <a href="{{inners.fileUrl}}" download><img alt="" src="{{inners.fileUrl}}" /></a>
+                            <span>{{inners.FileName}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 add-comment p-0" *ngIf="ReplyMessageData.length!=0 && !isEnableComments">
+              <div class="sender-imgi"><i class="fa fa-user"></i></div>
+              <div class="form-group m-0" *ngIf="ReplyMessageData[0].noteStatusCloseOrHold==0 ">
+                <textarea type="text" class="form-control" maxlength="500" [(ngModel)]="CommentsData"
+                  placeholder="Write a comment.."></textarea>
+                <small *ngIf="iscommentsModel" style="color:red;">Please enter comments</small>
+              </div>
+
+              <div class="form-group m-0" *ngIf="ReplyMessageData[0].noteStatusCloseOrHold==1 && !isEnableComments">
+                <textarea type="text" class="form-control" maxlength="500" disabled [(ngModel)]="CommentsData"
+                  placeholder="Write a comment.."></textarea>
+                <small *ngIf="iscommentsModel" style="color:red;">Please enter comments</small>
+              </div>
+            </div>
+            <div class="col-sm-12 add-comment p-0" *ngIf="isEnableComments">
+              <div class="sender-imgi"><i class="fa fa-user"></i></div>
+              <div class="form-group m-0">
+                <textarea type="text" class="form-control" maxlength="500" [(ngModel)]="CommentsData"
+                  placeholder="Write a comment.."></textarea>
+                <small *ngIf="iscommentsModel" style="color:red;">Please enter comments</small>
+              </div>
+            </div>
+            <div class="col-sm-12 add-comment p-0" *ngIf="ReplyMessageData.length==0 && !isEnableComments">
+              <div class="sender-imgi"><i class="fa fa-user"></i></div>
+              <div class="form-group m-0">
+                <textarea type="text" class="form-control" maxlength="500" [(ngModel)]="CommentsData"
+                  placeholder="Write a comment.."></textarea>
+                <small *ngIf="iscommentsModel" style="color:red;">Please enter comments</small>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--AddReply-->
+        <button type="submit" class="btn btn-primary form-btns" (click)="saveReply(item)">
+          <i class="fa fa-reply" aria-hidden="true"></i> Reply
+        </button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeNoteCardView(item.noteId)"
+          data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="audioModal" bsModal #previewModelPoup="bs-modal" [config]="{backdrop: 'static'}"
+  style=" background: none !important;" class="modal fade announcement-pop" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-height:520px!important; max-width:420px!important; ">
+    <div class="modal-content" style="z-index:1; height:auto;">
+      <div class="modal-content p-4">
+        <div class="text-center w-100">
+          <button type="submit" (click)="closePreview()" class="close" data-dismiss="modal" aria-label="Close"
+            style="position: absolute; right: 14px; top: 8px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <img src={{previewImage}} alt="img"
+            style=" height: 520px !important; max-width: 700px !important; width: 100%; " class="img-responsive" />
+          <div style="position: absolute; bottom: 38px; left: 50%; transform: translatex(-50%);">
+            <a href={{previewImage}} (click)="downloadFile($event,previewImage)" [download]="previewImage"
+              class="btn btn-info mr-2"
+              style="border-radius: 40px !important; border: 2px solid #fff; box-shadow: 0px 0px 10px 0px #000 !important; ">
+              <i title="Click to downloand." class="fa fa-download pr-2"></i>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #ViewAllnotesCardViewDetailModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade"
+  tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">All Notes</h4>
+        <button type="button" class="close" (click)="closeViewAllNoteCardView()">&times;</button>
+      </div>
+
+      <div class=" row col-md-12 searchfield pt-2">
+        <div class="col-md-4 float-left mb-lg-0 mb-2">
+          <input class="form-control input-sm" type="text" [(ngModel)]='listFilter' placeholder="Search By Title"
+            (keyup)='updateFilter($event)'>
+        </div>
+        <div class="col-md-8 float-left pl-3 pl-lg-0">
+          <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="search()"
+            tooltip="Search"><span><i class="feather-search"></i> </span></a>
+          <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="reset()" tooltip="Reset"><span><i
+                class="fa fa-refresh"></i> </span></a>
+        </div>
+      </div>
+      <div class="modal-body" style="overflow:auto; margin-bottom:10px;">
+
+
+
+        <div class="col-md-12">
+          <div class="table-responsive">
+            <div class="table table-striped">
+              <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="NotespagedData.data"
+                [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40"
+                [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                [count]="NotespagedData.pager.totalItems" [offset]="NotespagedData.pager.currentPage"
+                [limit]="NotespagedData.pager.pageSize" (page)='setPageNotes($event)' (sort)="onSortNotes($event)">
+                <ngx-datatable-column name="Title" prop="note_name" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.note_name|truncate | titlecase}}
+                  </ng-template>
+
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Description" prop="note_description" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.note_description|truncate}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <!--<ngx-datatable-column name="Download" [sortable]="false" headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div class="icon-text-center"><a href="{{row.fileUrl}}" download class="text-success mx-1"><i class="fa fa-download" title="download"></i></a></div>
+                  </ng-template>
+                </ngx-datatable-column>-->
+                <ngx-datatable-column name="Assign To" prop="AssignTo" [sortable]="true"></ngx-datatable-column>
+                <ngx-datatable-column name="Notify User(s)" prop="notifyUserNames" [sortable]="false">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.notifyUserNames|truncate}}
+                  </ng-template>
+
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Status" prop="Status" [sortable]="true"></ngx-datatable-column>
+                <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div class="text-center">
+                      <a href="javascript:;" (click)="ViewAllNotesOnPopup(row)" title="View Note"><i
+                          class="feather-eye pr-2"></i></a>
+                      <a *ngIf="!row.IsViewOnly" href="javascript:;" (click)="EditNotes(row)" title="Edit Note"><i
+                          class="fa fa-pencil text-success pr-2"></i></a>
+                      <a *ngIf="!row.IsViewOnly" href="javascript:;" (click)="deleteNotes(row.note_id)"><i title="Click to delete."
+                          class="feather-trash-2 text-danger pr-2"></i></a>
+                      <a *ngIf="!row.IsViewOnly" href="javascript:;" (click)="PinNotes(row.note_id)"><i title="Click to pin note."
+                          class="fa fa-thumb-tack text-info"></i></a>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                    let-selectedCount="selectedCount" let-currentPage="NotespagedData.pager.currentPage"
+                    let-offset="offset" let-isVisible="isVisible">
+
+                    <div class="page-count1" *ngIf='(rowCount  > 0)'>
+                      {{commonService.PageString(NotespagedData.pager.currentPage,NotespagedData.pager.pageSize,rowCount)}}
+                    </div>
+
+
+                    <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                      [pagerRightArrowIcon]="'fa feather-chevron-left'" [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                      [pagerNextIcon]="'fa fa-angle-double-right'" [page]="NotespagedData.pager.currentPage"
+                      [size]="pageSize" [count]="NotespagedData.pager.totalItems"
+                      [hidden]="!((rowCount / pageSize) > 1)" (change)="setNotesPageNo($event)">
+                    </datatable-pager>
+
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeViewAllNoteCardView()" data-dismiss="modal"
+          aria-label="Close"><i class="fa fa-times text-white"></i>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--===================================================== NotesPopupModel ========================================================-->
+<div class="modal fade in show" bsModal #NotesPopupModel="bs-modal" tabindex="-1" role="dialog"
+  style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header" *ngIf="!isViewNote">
+        <h4 class="modal-title">{{headTitle}}</h4>
+        <button type="button" class="close" (click)="closeNotesPopupModelPopup()" data-dismiss="modal"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-header" *ngIf="isViewNote">
+        <h4 class="modal-title">View NOTE</h4>
+        <button type="button" class="close" (click)="closeNotesPopupModelPopup()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; max-height:290px;">
+        <form [formGroup]="addNoteForm">
+          <div class="form-group" *ngIf="!isViewNote">
+            <div class="row mb-2">
+              <div class="col-md-12 col-lg-12">
+                <label>Note Title:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Enter Note Title" formControlName="noteTitle"
+                    maxlength="50"
+                    [ngClass]="{'is-invalid': (noteTitle.invalid && (noteTitle.dirty || noteTitle.touched) && (noteTitle.errors?.required || noteTitle.errors?.maxlength)) }">
+                  <small
+                    *ngIf="noteTitle.invalid && (noteTitle.dirty || noteTitle.touched) && noteTitle.errors?.required"
+                    class="text-danger">Note Title is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-md-12 col-lg-12">
+                <label>Description:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <textarea rows="5" class="form-control" style="min-height:120px;" placeholder="Enter Note Description"
+                    formControlName="noteDescription" #machineDescription maxlength="500"
+                    [ngClass]="{'is-invalid': (noteDescription.invalid && (noteDescription.dirty || noteDescription.touched) && (noteDescription.errors?.required || noteDescription.errors?.maxlength)) }"></textarea>
+                  <small
+                    *ngIf="noteDescription.invalid && (noteDescription.dirty || noteDescription.touched) && noteDescription.errors?.required"
+                    style="color:red;">Description is required</small>
+                  <small
+                    *ngIf="noteDescription.invalid && (noteDescription.dirty || noteDescription.touched) && noteDescription.errors?.maxlength"
+                    style="color:red;">Notes must be less than 500 characters.</small>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="isViewNote">
+            <div class="row">
+              <div class="col-md-4">
+                <label><b>Note Title:</b></label>
+                <span>&nbsp;{{notesTitle}}</span>
+              </div>
+              <div class="col-md-12">
+                <label class="m-0"><b>Description:</b></label>
+                <span>&nbsp;{{notesDescription}}</span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

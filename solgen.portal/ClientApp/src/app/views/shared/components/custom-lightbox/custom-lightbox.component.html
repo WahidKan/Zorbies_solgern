@@ -1,0 +1,32 @@
+<div bsModal #customLightbox="bs-modal" [config]="{backdrop:false}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style=" z-index: 100000;">
+  <div class="modal-dialog modal-xl modal-info " style="width: 100%;max-width: 50%; height: 75vh">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title | titlecase}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <div>
+            <div class="item" *ngFor="let item of ImageArray;let itemIndex=index;">
+              <lib-ngx-image-zoom *ngIf="currentIndex == itemIndex" [thumbImage]="item.thumb" [fullImage]="item.src" [​magnification]="1"
+                                  [zoomMode]="hover-freeze" [enableLens]="true" [lensWidth]="150" [lensHeight]="150" [enableScrollZoom]="true"></lib-ngx-image-zoom>
+              <!--<img loading="eager" *ngIf="currentIndex == itemIndex" width="500" height="420" src="{{item.src}}" alt="{{item.caption}}" />-->
+            </div>
+          </div>
+          <div class="text-center next-pre-btns">
+            <button [disabled]="currentIndex == 0" (click)="OnPrev()"><i class="fa fa-angle-left"> </i></button>
+            <button [disabled]="currentIndex == (ImageArray.length - 1)" (click)="OnRight()"><i class="fa feather-chevron-left"></i></button>
+          </div>
+        </div>
+      </div>
+      <!--<div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-dark text-white" (click)="close()"><i class="fa fa-arrow-left"></i> Back</a>
+      </div>-->
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>
+</div>
+<bs-modal-backdrop *ngIf="backdrop" class="modal-backdrop fade in show custom-backdrop" (click)="close()"></bs-modal-backdrop>

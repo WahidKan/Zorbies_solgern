@@ -1,0 +1,517 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100" *ngIf="id == null || id == 0"><strong>Add Flow</strong></h2>
+    <h2 class="float-left pr-2 w-100" *ngIf="id != null && id > 0"><strong>Edit Flow </strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li><a class="smview" routerLink="/flow">Manage Flow</a></li>
+
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="panel   clearfix ">
+    <div class="panel-content pt-3 clearfix mb-4">
+        <ul class="nav nav-tabs nav-cust px-3" id="myTab" *ngIf="id != null && id > 0" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#RuleDetail" role="tab" aria-selected="true">Flow Detail</a>
+            </li>
+            <!--<li class="nav-item">
+        <a class="nav-link" id="list-ApplicationList" data-toggle="tab" href="#ApplicationList" role="tab" aria-selected="false" (click)="refreshLA()">Rule based Application(s)</a>
+      </li>-->
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade active show" id="RuleDetail" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-12 portlets">
+                        <form [formGroup]="ruleEngineForm">
+                            <h3 class="form-heading mt-0"> <span>Flow Details <div style="display:inline-block" *ngIf="id != null && id > 0">(v{{ruleVersion.value}})</div></span></h3>
+                            <div class="row mb-2">
+
+                                <div [ngClass]="{'col-md-11':(ruleEngineVersionList.length!=0),'col-md-12':(ruleEngineVersionList.length==0)}">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-6">
+                                            <label>Name:<span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" formControlName="name">
+                                                <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="text-danger">
+                                                    <div *ngIf="name.errors.required">
+                                                        Name is required.
+                                                    </div>
+                                                    <!--<div *ngIf="name.errors.minlength">
+          Name must be at least 4 characters long.
+        </div>-->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 col-lg-6">
+                                            <label>Module:<span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <ng-select [items]="moduleList" formControlName="moduleId" placeholder="Select Module..." bindLabel="text" (change)="onModuleChangeevent()"></ng-select>
+                                                <div *ngIf="moduleId?.invalid && (moduleId?.dirty || moduleId?.touched)" class="text-danger">
+                                                    <div *ngIf="moduleId.errors.required">
+                                                        Module is required.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 col-lg-6">
+                                            <label>Sub Module:<span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <ng-select [items]="subModuleList" formControlName="subModuleId" placeholder="Select Sub Module..." bindLabel="sub_module_name" (change)="onSubModuleChangeevent()"></ng-select>
+                                                <div *ngIf="subModuleId?.invalid && (subModuleId?.dirty || subModuleId?.touched)" class="text-danger">
+                                                    <div *ngIf="subModuleId.errors.required">
+                                                        Sub Module is required.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="col-md-12 col-lg-6">
+    <label>Rule Type:<span class="text-danger">*</span></label>
+    <div class="form-group">
+
+      <ng-select [items]="ruleTypeList" formControlName="ruleTypeId" placeholder="Select Rule Type..."
+                 bindLabel="name"></ng-select>
+      <div *ngIf="ruleTypeId?.invalid && (ruleTypeId?.dirty || ruleTypeId?.touched)"
+           class="text-danger">
+        <div *ngIf="ruleTypeId.errors.required">
+          Rule Type is required.
+        </div>
+      </div>
+    </div>
+  </div>-->
+                                        <!--<div class="col-md-12 col-lg-6" *ngIf="ruleTypeId.value && ruleTypeId.value.code =='financial'">
+    <label>Banks:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <ng-select [items]="bankList" formControlName="banks" [multiple]="true" placeholder="Select Bank..."
+                 bindLabel="text"></ng-select>
+      <div *ngIf="banks?.invalid && (banks?.dirty || banks?.touched)"
+           class="text-danger">
+        <div *ngIf="banks.errors.required">
+          Bank is required.
+        </div>
+      </div>
+    </div>
+  </div>-->
+                                        <!--<div class="col-md-12 col-lg-6" *ngIf="ruleTypeId.value && ruleTypeId.value.code =='product'">
+    <label>Loan Product:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <ng-select [items]="loanProductList" formControlName="loanProducts" [multiple]="true" placeholder="Select Loan Product..."
+                 bindValue="Id" bindLabel="ProductName"></ng-select>
+      <div *ngIf="loanProducts?.invalid && (loanProducts?.dirty || loanProducts?.touched)"
+           class="text-danger">
+        <div *ngIf="loanProducts.errors.required">
+          Loan Product is required.
+        </div>
+      </div>
+    </div>
+  </div>-->
+                                        <!--<div class="col-md-12 col-lg-6">
+                      <label>Execution Order:</label>
+                      <div class="form-group">
+                        <input type="number" formControlName="displayOrder" class="form-control">  
+                      </div>
+                    </div>-->
+                                        <!--<div class="col-md-12 col-lg-6">
+                      <label>Effective From:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <p-calendar class="dt-auto" [minDate]="minimumDate" formControlName="effectiveFrom" placeholder="Select Effective From" [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true"
+                                      [yearNavigator]="true"
+                                      yearRange="1919:2030">
+
+                          </p-calendar>
+                        </div>
+                        <div *ngIf="effectiveFrom.invalid && (effectiveFrom.dirty || effectiveFrom.touched)"
+                             class="text-danger">
+                          <div *ngIf="effectiveFrom.errors.required">
+                            Effective From is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Effective To:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <p-calendar class="dt-auto" [minDate]="effectiveFrom?.value" formControlName="effectiveTo" placeholder="Select Effective To" [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true"
+                                      [yearNavigator]="true"
+                                      yearRange="1919:2030"></p-calendar>
+                        </div>
+                        <div *ngIf="effectiveTo.invalid && (effectiveTo.dirty || effectiveTo.touched)"
+                             class="text-danger">
+                          <div *ngIf="effectiveTo.errors.required">
+                            Effective To is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>-->
+                                        <div class="col-md-12 col-lg-6">
+                                            <label>Active:</label>
+                                            <div class="form-group">
+                                                <label class="switch">
+                          <input type="checkbox" formControlName="isActive" checked="">
+                          <span class="slider round"><span>Yes</span></span>
+                        </label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1" *ngIf="ruleEngineVersionList.length!=0">
+                                    <ul class="list-group">
+                                        <li class="list-group-item list-group-item-action list-group-item-info">Version</li>
+                                    </ul>
+                                    <ul class="list-group" style="height: 350px;overflow-y: auto;border-bottom: 1px solid rgba(0,0,0,.125)">
+                                        <li *ngFor="let item of ruleEngineVersionList" style="cursor:pointer" (click)="editRuleVersion(item.RuleId)" class="list-group-item" [ngClass]="{'active':(id==item.RuleId)}">
+                                            {{item.RuleVersion}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div *ngIf="submoduleidform != null">
+                                <h3 class="form-heading mt-0"> <span>Apply On</span></h3>
+
+
+
+
+                                <div class="row mx-auto mb-3">
+                                    <div class="screen-flow">
+                                        <div class="flow-container">
+
+                                            <div class="sh_oval">Start</div>
+                                        </div>
+                                        <div class="w-100" formArrayName="targets">
+                                            <div class="w-100" *ngFor="let target of targets.controls;let i = index" [formGroupName]="i">
+                                                <app-work-flow-target #targetcomponent [productId]="inputProductId" [ruleEngineForm]="ruleEngineForm" [isEdit]="isEdit" [target]="target" [rowNo]="i" [rValidation]="rValidation" (resultValidation)="resultValidation($event)"></app-work-flow-target>
+
+                                                <!--<app-work-flow-condition #conditioncomponent [productId]="inputProductId" [ruleEngineForm]="ruleEngineForm" [target]="target" [rowNo]="i"></app-work-flow-condition>
+
+
+  <app-work-flow-descision #decisioncomponent [productId]="inputProductId" [ruleEngineForm]="ruleEngineForm" [target]="target" [rowNo]="i"></app-work-flow-descision>
+  <app-screen #screencomponent [productId]="inputProductId" [ruleEngineForm]="ruleEngineForm" [target]="target" [rowNo]="i"></app-screen>
+
+  <app-work-flow-result [ruleEngineForm]="ruleEngineForm" [target]="target"></app-work-flow-result>-->
+
+                                            </div>
+
+                                        </div>
+
+                                        <!--<div class="flow-container last-child" *ngIf="!showAddTarget()">
+                      <div class="add-flow">
+                        <i class="feather-plus"></i>
+                        <div class="add-action">
+                          <a href="javascript:;" (click)="AddScreen()" class="border-right"><span class="text-info"><i class="fa fa-clone text-info"></i></span>Add Screen</a>
+                          <a href="javascript:;" (click)="AddDecision()" class="border-right"><span class="text-warning"><i class="fa fa-file-text-o text-warning"></i></span>Add Decision</a>
+                          <a href="javascript:;" (click)="AddCondition()"> <span class="text-success"><i class="fa fa-code text-success"></i></span>Add Condition</a>
+                        </div>
+                      </div>
+                    </div>-->
+                                        <div class="flow-container last-child" *ngIf="showAddTarget()">
+                                            <div class="add-flow" (click)="addTarget()">
+                                                <i class="feather-plus"></i>
+                                                <div class="add-action">
+                                                    <!--<a href="javascript:;" (click)="addTarget()" class="border-right"><span class="text-info"><i class="fa fa-clone text-info"></i></span>Add Target</a>-->
+                                                    <!--<a href="javascript:;" (click)="AddScreen()" class="border-right"><span class="text-info"><i class="fa fa-clone text-info"></i></span>Add Screen</a>
+  <a href="javascript:;" (click)="AddDecision()" class="border-right"><span class="text-warning"><i class="fa fa-file-text-o text-warning"></i></span>Add Decision</a>
+  <a href="javascript:;" (click)="AddCondition()"> <span class="text-success"><i class="fa fa-code text-success"></i></span>Add Condition</a>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<ul >
+                <li class="arrowdown" >
+                  <div>
+                    <app-work-flow-target (deleteTargetEvent)="deleteTarget(i)"></app-work-flow-target>
+                    <ul>
+                      <app-work-flow-condition [productId]="inputProductId" [ruleEngineForm]="ruleEngineForm" [target]="target" [rowNo]="i"></app-work-flow-condition>
+                      <app-work-flow-result [ruleEngineForm]="ruleEngineForm" [target]="target"></app-work-flow-result>
+
+                      <app-work-flow-result [ruleEngineForm]="ruleEngineForm" [target]="target"></app-work-flow-result>
+                    </ul>
+                    <ul >
+    <li>
+      <app-work-flow-result [ruleEngineForm]="ruleEngineForm" [target]="target"></app-work-flow-result>
+    </li>
+  </ul>
+                  </div>
+                </li>
+                <li class="arrowdown ui-sortable-handle" *ngIf="showAddTarget()">
+                  <p class="shape_roundbtn" (click)="addTarget()" title="Click here to add new Target"><span>+</span></p>
+                </li>
+              </ul>-->
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-12 col-md-12">
+                                    <!---->
+                                    <button class="btn btn-success mr-2" href="javascript:void(0);" [disabled]="(!ruleEngineForm.valid) || (isSubmitButtonDisabled == true && id > 0)" (click)="save()"><span>
+  <i class="feather-save"></i> Submit</span></button>
+                                    <a routerLink="/flow" class="btn btn-danger" href="javascript:void(0);"><span><i class="feather-x"></i> Cancel</span></a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="tab-pane p-0 fade" id="ApplicationList" role="tabpanel">
+        <div class="row">
+          <div class="col-12">
+            <div class="col-md-12 mt-3">
+              <div class="alert alert-warning" role="alert">
+                <strong>NOTE: </strong> You can change the rule version for the particular application(s), and next time whenever rules are executed on that application, it will execute your selected version of the rule.
+              </div>
+            </div>
+            <div class="border-bottom pb-3">
+              <div class=" row mt-2">
+                <div class="col-md-6 col-lg-5">
+                  <div class="row px-3">
+                    <div class="col-lg-5 float-left mb-lg-0 mb-2">
+                      <input class="form-control input-sm" type="text" [(ngModel)]='listFiltertext' placeholder="Search By No">
+                    </div>
+                    <div class="col-lg-7 float-left px-sm-0 px-3 ">
+                      <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="searchLA('VERSION')"><span><i class="feather-search"></i> Search</span></a>
+                      <a class="btn btn-danger form-btns" href="javascript:void(0);" (click)="refreshLA()"><span><i class="fa fa-refresh"></i> Reset</span></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-7">
+                  <div class="row px-3">
+                    <div class="col-lg-12 text-left text-md-right">
+                      <div class="form-group d-inline-block align-top mr-1 mb-0" style="max-width:220px" *ngIf="laPagedData != null && laPagedData.data != null && laPagedData.data.length > 0">
+                        <ng-select [(ngModel)]='selectedVersionForChange' [items]="ruleEngineVersionListForChange" placeholder="Select Version to update"
+                                   bindValue="RuleId" bindLabel="RuleVersion" class="form-control"></ng-select>
+                      </div>
+                      <div class="form-group d-inline-block mr-1 mb-0" *ngIf="laPagedData != null && laPagedData.data != null && laPagedData.data.length > 0">
+                        <button class="btn btn-primary float-left" type="button" (click)="ApplySelectedVersion()"><i class="fa fa-floppy-o"></i> Apply Version</button>
+                      </div>
+                      <div class="form-group d-inline-block align-top mb-0" *ngIf="isSubmitButtonDisabled == false && id > 0">
+                        <button type="button" class="btn btn-success" (click)="OpenLatestRuleOnOldApp()"><i class="feather-check-circle-o"></i> Apply on old Application</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mt-3">{{RuleNameToShow
+  }} (v{{ruleVersion.value}}) is already executed on following application(s)
+</div>
+              <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                             [rows]="laPagedData.data"
+                             [columnMode]="'force'"
+                             [scrollbarH]="true"
+                             [rowHeight]="'40'"
+                             [headerHeight]="40"
+                             [footerHeight]="40"
+                             [externalPaging]="true"
+                             [externalSorting]="true"
+                             [loadingIndicator]="loadSave"
+                             [count]="laPagedData.pager.totalItems"
+                             [offset]="laPagedData.pager.currentPage"
+                             [limit]="laPagedData.pager.pageSize"
+                             (page)="setPageLA($event, 'VERSION')"
+                             (sort)="onSort($event)"
+                             [selected]="selectedApplication"
+                             [selectionType]="SelectionType.checkbox"
+                             [selectAllRowsOnPage]="false"
+                             (activate)="onActivate($event)"
+                             (select)="onSelect($event)">
+                <ngx-datatable-column [width]="42"
+                                      [sortable]="false"
+                                      [canAutoResize]="false"
+                                      [draggable]="false"
+                                      [resizeable]="false"
+                                      [headerCheckboxable]="true"
+                                      [checkboxable]="true">
+                </ngx-datatable-column>
+
+                ol
+
+                <ngx-datatable-column name="Application Number" prop="ApplicationNumber" [sortable]="true">
+                  
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Email" prop="Email" [sortable]="true"></ngx-datatable-column>
+                <ngx-datatable-column name="Product Name" prop="ProductName" [sortable]="true"></ngx-datatable-column>
+                
+                <ngx-datatable-column name="Status" prop="ApplicationStatus" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.ApplicationStatus}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template
+                               let-rowCount="rowCount"
+                               let-pageSize="pageSize"
+                               let-selectedCount="selectedCount"
+                               let-currentPage="currentPage"
+                               let-offset="offset"
+                               let-isVisible="isVisible">
+
+                    <div>
+                      <div style="color:black; margin-right:10px;" class="page-size-record">
+                        <span style="text-align:right; width:80px;vertical-align: middle;">
+                          <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='laPageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChangeLA($event, 'VERSION')" draggable="false" [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="page-count" style="max-width:170px;">
+                      {{rowCount}} total
+                    </div>
+                    <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                     [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                     [pagerPreviousIcon]="'fa fa-angle-left'"
+                                     [pagerNextIcon]="'fa feather-chevron-left'"
+                                     [page]="laPagedData.pager.currentPage"
+                                     [size]="laPageSizeValue"
+                                     [count]="laPagedData.pager.totalItems"
+                                     [hidden]="!((rowCount / pageSize) > 1)"
+                                     (change)="setPageLA($event, 'VERSION')">
+                    </datatable-pager>
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+
+            </div>
+
+          </div>
+        </div>
+      </div>-->
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<!--<div class="modal fade " bsModal #ApplicationPopupForApplyLatestRule="bs-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Applications</h5>
+        <button type="button" class="close" (click)="applyLatestRuleOnOldApp.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 mt-3">
+            <div class="alert alert-warning" role="alert">
+              <strong>NOTE: </strong> You can apply {{RuleNameToShow}} (latest version) on selected application(s), and next time whenever rule engine is executed on that application, {{RuleNameToShow}} will be executed.
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-lg-5 float-left mb-lg-0 mb-2">
+                <input class="form-control input-sm" type="text" [(ngModel)]='loanApplicationlistFiltertext' placeholder="Search By Application No">
+              </div>
+              <div class="col-lg-7 float-left">
+                <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="searchLA('NEWRULEONOLDAPP')"><span><i class="feather-search"></i> Search</span></a>
+                <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="refreshLA('NEWRULEONOLDAPP')"><span><i class="fa fa-refresh"></i> Reset</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="mt-3">Following application(s) are those on which {{RuleNameToShow}} (any version) is still not applied</div>
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                           [rows]="loanApplicationPageData.data"
+                           [columnMode]="'force'"
+                           [scrollbarH]="true"
+                           [rowHeight]="'40'"
+                           [headerHeight]="40"
+                           [footerHeight]="40"
+                           [externalPaging]="true"
+                           [externalSorting]="true"
+                           [loadingIndicator]="loadSave"
+                           [count]="loanApplicationPageData.pager.totalItems"
+                           [offset]="loanApplicationPageData.pager.currentPage"
+                           [limit]="loanApplicationPageData.pager.pageSize"
+                           (page)="setPageLA($event, 'NEWRULEONOLDAPP')"
+                           (sort)="onSort($event)"
+                           [selected]="selectedOldApplication"
+                           [selectionType]="SelectionType.checkbox"
+                           [selectAllRowsOnPage]="false"
+                           (activate)="onActivate($event)"
+                           (select)="onSelectOldApplication($event)">
+              <ngx-datatable-column [width]="42"
+                                    [sortable]="false"
+                                    [canAutoResize]="false"
+                                    [draggable]="false"
+                                    [resizeable]="false"
+                                    [headerCheckboxable]="true"
+                                    [checkboxable]="true">
+              </ngx-datatable-column>
+
+              ab
+
+              <ngx-datatable-column name="Application Number" prop="ApplicationNumber" [sortable]="true">
+               
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Email" prop="Email" [sortable]="true"></ngx-datatable-column>
+              <ngx-datatable-column name="Product Name" prop="ProductName" [sortable]="true"></ngx-datatable-column>
+              
+              <ngx-datatable-column name="Status" prop="ApplicationStatus" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.ApplicationStatus}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template
+                             let-rowCount="rowCount"
+                             let-pageSize="pageSize"
+                             let-selectedCount="selectedCount"
+                             let-currentPage="currentPage"
+                             let-offset="offset"
+                             let-isVisible="isVisible">
+                  <div>
+                    <div style="color:black; margin-right:10px;" class="page-size-record">
+                      <span style="text-align:right; width:80px;vertical-align: middle;">
+                        <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='loanApplicationPageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChangeLA($event, 'NEWRULEONOLDAPP')" draggable="false" [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="page-count" style="max-width:170px;">
+                    {{rowCount}} total
+                  </div>
+                  <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                   [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                   [pagerPreviousIcon]="'fa fa-angle-left'"
+                                   [pagerNextIcon]="'fa feather-chevron-left'"
+                                   [page]="loanApplicationPageData.pager.currentPage"
+                                   [size]="laPageSizeValue"
+                                   [count]="loanApplicationPageData.pager.totalItems"
+                                   [hidden]="!((rowCount / pageSize) > 1)"
+                                   (change)="setPageLA($event, 'NEWRULEONOLDAPP')">
+                  </datatable-pager>
+                </ng-template>
+              </ngx-datatable-footer>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-md-12">
+            <button type="button" class="btn btn-success" (click)="ApplyRuleOnOldApplication()"><i class="fa fa-floppy-o"></i> Submit</button>
+            <button type="button" class="btn btn-danger ml-2" (click)="closeOldApplicationPopup()"><i class="fa fa-times"></i> cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>-->

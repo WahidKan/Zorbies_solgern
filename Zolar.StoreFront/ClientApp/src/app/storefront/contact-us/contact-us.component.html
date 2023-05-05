@@ -1,0 +1,162 @@
+ <!-- ======= Header ======= -->
+ <!-- <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex align-items-center justify-content-between h-100">
+	<div class="left-section d-flex">
+      <div class="logo">
+		<a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto " href="index.html">Home</a></li>
+          <li><a class="nav-link scrollto" href="about-us.html">Company</a></li>
+          <li class="dropdown"><a href="#"><span>Features</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li><a href="#">Drop Down 1</a></li>
+              <li><a href="#">Drop Down 2</a></li>
+            </ul>
+          </li>
+          <li><a class="nav-link scrollto" href="pricing.html">Pricing</a></li>
+          <li><a class="nav-link scrollto active" href="contact-us.html">Contact Us</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav>
+	  </div>
+	  <div class="right-section d-flex h-100">
+		<a href="#" class="mail-b"> <i class="fa fa-envelope pe-1"></i> info@zorbis.com</a>
+		<a href="#" class="login-b"> Log in</a>
+		<a href="pricing.html" class="buy-now btn"> Buy Now <span><i class="fa fa-arrow-right"></i></span></a>
+	  </div>
+    </div>
+  </header> -->
+  <!-- End Header -->
+
+  <app-header></app-header>
+  <main id="main" class="inner-page">
+   <!-- ======= Breadcrumbs Section ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center text-white">
+          <h2>Contact Us</h2>
+          <ol>
+            <li><a routerLink="/storefront/home" class="text-white">Home</a></li>
+            <li>Contact Us</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs Section -->
+
+	
+	<!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact inner-page">
+      <div class="container">
+
+ 
+        <div class="row">
+			<div class="section-title text-center mb-5" data-aos="fade-up">
+						  <h2 class="m-0"> Please fill the below form to get in touch with us. </h2>
+						</div>
+          <div class="col-lg-4" data-aos="fade-right" data-aos-delay="100">
+            <div class="info">
+              <div class="address">
+                <i class="bi bi-geo-alt"></i>
+                <h4>Location:</h4>
+                <p>717 Burgoyne Dr Fayetteville, North Carolina(NC)</p>
+              </div>
+
+              <div class="email">
+                <i class="bi bi-envelope"></i>
+                <h4>Email:</h4>
+                <p><a href="mailto:info@zorbis.com" class="text-dark">info@zorbis.com</a></p>
+              </div>
+
+              <div class="phone">
+                <i class="bi bi-phone"></i>
+                <h4>Call:</h4>
+                <p><a href="tel:+18005957672" class="text-dark"> 1800 595 7672</a></p>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-lg-8 mt-5 mt-lg-0" data-aos="fade-left" data-aos-delay="200">
+
+            <form  [formGroup]="contactUsForm" class="php-email-form">
+
+              <input formControlName="id" name="id" hidden required>
+
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <input type="text" name="name" formControlName="fullName" form class="form-control" id="name" placeholder="Your Name" required>
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                  <input type="email" class="form-control" formControlName="email" name="email" id="email" placeholder="Your Email" required>
+                </div>
+              </div>
+              <div class="form-group mt-3">
+                <input type="text" class="form-control" formControlName="subject" name="subject" id="subject" placeholder="Subject" required>
+              </div>
+              <div class="form-group mt-3">
+                <textarea class="form-control" name="message" formControlName="message" rows="5" placeholder="Message" required></textarea>
+              </div>
+              <div class="my-3">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your message has been sent. Thank you!</div>
+              </div>
+              <div class="text-center">
+                <button type="submit" (click) = "submit()" class="buy-now">Submit</button>
+              </div>
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Contact Section -->
+	
+	 <!-- ======= Features Section ======= -->
+    <section id="features" class="features">
+      <div class="container">
+
+        <div class="section-title text-center" data-aos="fade-up">
+          <h2>Trusted by 55,000+ Customers Worldwide</h2>
+        </div>
+
+   
+          <div class="row" >
+			<div class="swiper mySwiper1st">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-1.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-2.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-3.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-4.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-5.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-1.png" alt="" class="img-fluid">
+					 </div>
+				  </div>
+			  </div>
+		</div>
+
+      </div>
+    </section><!-- End Features Section -->
+	
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <app-footer></app-footer>

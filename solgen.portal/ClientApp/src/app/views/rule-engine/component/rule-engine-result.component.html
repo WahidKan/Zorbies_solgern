@@ -1,0 +1,93 @@
+
+<li class="arrowright" [formGroup]="target" *ngIf="target.get('isConditionAdded').value">
+  <div class="shape_oval">
+    <h3 class="form-heading">Results</h3>
+    <table class="table table-hover table-dynamic rule-tab">
+      <tbody>
+        <tr *ngFor="let result of target.get('results').value;let i = index">
+          <td class="text-left">
+            <a data-toggle="modal" (click)="editResult(i)" class="text-white font-16 mt-2">
+              <i class="fa fa-pencil"></i> {{result.name}} 
+            </a>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+    <div class="col-sm-12 p-2">
+      <a class="btn btn-white mr-1" (click)="showResultModal()"><span style="margin-top: 0px;"><i class="feather-plus"></i> Add New </span></a>
+    </div>
+  </div>
+</li>
+
+
+<!-- Modal -->
+<div class="modal fade" bsModal #addResult="bs-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content" style="min-height:500px !important">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Result</h5>
+        <button type="button" class="close" (click)="hideResultModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="resultForm">
+          <div class="row">
+            <div class="col-4">
+              <label>Name</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="name">
+              </div>
+            </div>
+            <div class="col-4">
+              <label>Action</label>
+              <div class="form-group">
+                <ng-select [items]="resultActionList" formControlName="action" (change)="onActionChange($event)"
+                           placeholder="Select Action" bindLabel="name"
+                           [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-4" *ngIf="resultForm.get('subModuleId').enabled">
+              <label>Section</label>
+              <div class="form-group">                
+                <ng-select [items]="tableList" formControlName="subModuleId" (change)="getSubModuleFields($event)"
+                           placeholder="Select Module" bindValue="sub_module_id" bindLabel="sub_module_name"
+                           [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">              
+              <div class="border" *ngIf="resultForm.get('action').value">
+
+                <ng-container *ngIf="resultForm.get('action').value.code=='update' || resultForm.get('action').value.code=='create'">
+                  <app-rule-engine-result-table-field [resultForm]="resultForm" [moduleId]="moduleId"></app-rule-engine-result-table-field>
+                </ng-container>
+                <ng-container *ngIf="resultForm.get('action').value.code !='update' && resultForm.get('action').value.code !='create'">
+                  <input formControlName="resultCondition" class="form-control" placeholder="Please enter the validation message." type="text" />
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="row w-100">
+          <div class="col-md-6 text-left pl-0">
+            <button type="button" class="btn btn-danger" *ngIf="resultForm.get('isEdit').value" data-dismiss="modal" (click)="deleteResultForm()"><i class="feather-trash-2"></i> Delete</button>
+          </div>
+          <div class="col-md-6 text-right">
+            
+            <button type="button" class="btn btn-success mr-1" (click)="saveResult()" [disabled]="!resultForm.valid"><i class="feather-save"></i> Save</button>
+            <button type="button" class="btn btn-danger" (click)="hideResultModal()"><i class="feather-x"></i> Cancel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->

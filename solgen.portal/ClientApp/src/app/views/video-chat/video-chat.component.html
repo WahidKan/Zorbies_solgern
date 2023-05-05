@@ -1,0 +1,74 @@
+<div bsModal [config]="{backdrop: 'static'}" #CallUserModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div style="max-width:40% !important;" class="modal-dialog modal-xl modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center">SOLGENONE MEETING</h4>
+      </div>
+      <div class="modal-body container" style=" margin-bottom:10px; max-height:600px">
+        <div class="row">
+          <div class="col-12 col-md-12 col-lg-12">
+            <label>Name:<span class="text-danger">*</span></label>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Enter Your Name" maxlength="50"
+                [(ngModel)]="username" #name="ngModel"
+                [ngClass]="{ 'is-invalid': name?.invalid && (name.dirty || name.touched) && (name.errors?.required || name.errors?.nameExist) }" />
+
+              <small *ngIf="name?.invalid && (name.dirty || name.touched) && name.errors?.required"
+                class="text-danger">Name is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="javascript:void(0);" class="btn btn-primary" (click)="save()">Submit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div bsModal [config]="{backdrop: 'static'}" #IsFullOrNonActive="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div style="max-width:40% !important;" class="modal-dialog modal-xl modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center">SOLGENONE MEETING</h4>
+      </div>
+      <div class="modal-body container" style=" margin-bottom:10px; max-height:600px">
+        <div class="row">
+          <div class="col-12 col-md-12 col-lg-12">
+            <h4 *ngIf="!isActiveRoom" class="text-center">Link has been expired</h4>
+            <h4 *ngIf="isFull" class="text-center">Room is already full</h4>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="javascript:void(0);" class="btn btn-primary" (click)="close()">Ok</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-videocallheader *ngIf="blnUserNameSelect" [joinerName] ='username'></app-videocallheader>
+<div *ngIf="blnUserNameSelect" class="row mt-4">
+  <div class="container m-auto">
+    <div class="grid-left">
+      <app-rooms #rooms (roomChanged)="onRoomChanged($event)" (participantCount)="getParticipantsCount($event)"
+        [isOwner]="false" [defaultRoom]="!!activeRoom ? activeRoom.name : null"
+        [activeRoomName]="!!activeRoom ? activeRoom.name : null">
+      </app-rooms>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <app-participants #participants [isOwner]="false" [isFull]="isFull" 
+          (participantsChanged)="onParticipantsChanged($event)"
+          [activeRoomName]="!!activeRoom ? activeRoom.name : null"
+          [activeRoom]="!!activeRoom ? activeRoom : null">
+        </app-participants>
+      </div>
+    </div>
+    <app-camera class="app-camera" [userName]="username"  #camera  (leaveRoom)="onLeaveRoom($event)" [isOwner]="false"></app-camera>
+    <div class="row">
+      <app-settings #settings (settingsChanged)="onSettingsChanged($event)">
+      </app-settings>
+    </div>
+  </div>
+</div>

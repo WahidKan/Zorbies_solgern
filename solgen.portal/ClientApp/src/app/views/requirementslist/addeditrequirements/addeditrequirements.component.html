@@ -1,0 +1,156 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<div bsModal #addEditRequirementPopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info req_pop" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="addForm" autocomplete="off">
+          <div class="row  mb-2">
+            <div class="col-12 col-md-12 col-lg-12"><h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>Information:</span></h3></div>
+
+            <div class="col-md-12 col-lg-4">
+              <label>Requirement Name:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter Requirement Name" formControlName="requirementName">
+                <small *ngIf="requirementName.invalid && (requirementName.dirty || requirementName.touched) && requirementName.errors?.required"
+                       style="color:red;">Please select Requirement Name</small>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-4">
+              <label>Pertains To:</label>
+              <div class="form-group">
+                <ng-select [items]="lstPertainsTo"
+                           placeholder="None" bindValue="value" bindLabel="text" formControlName="pertainsTo" [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Record Type:<span class="text-danger"></span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="recordType" disabled>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Required by:</label>
+              <div class="form-group">
+                <ng-select [items]="lstRequiredBy"
+                           placeholder="None" bindValue="value" bindLabel="text" formControlName="requiredby" [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Type:</label>
+              <div class="form-group">
+                <ng-select [items]="lstType"
+                           placeholder="None" bindValue="value" bindLabel="text" formControlName="type" [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Service Territory:</label>
+              <div class="form-group">
+                <ng-select [items]="lstServiceTerritory"
+                           placeholder="None" bindValue="value" bindLabel="text" formControlName="serviceTerritory" [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-4">
+              <label>Is Active:</label>
+              <div class="form-group">
+                <label class="switch">
+                  <input type="checkbox" id="customCheck1" formControlName="isActive">
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Description:</label>
+              <div class="form-group">
+                <textarea type="text" class="form-control" formControlName="description"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-12 col-md-12 col-lg-12"><h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>Requirement Process Information:</span></h3></div>
+
+            <div class="col-md-12 col-lg-4">
+              <label>Permitting Cost:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Please enter Permitting Cost" formControlName="permittingCost">
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-4">
+              <label>How to call for Inspection:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="callforInspection">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Approval Duration (days):</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="approvalDuration">
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-4">
+              <label>How to submit for PTO:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="submitforPTO">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Duration to get Meter installed:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="meterInstalled">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>How Approval will be Received:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="approvalReceived">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Notes:</label>
+              <div class="form-group">
+                <textarea type="text" class="form-control" formControlName="Notes"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-12 col-md-12 col-lg-12"><h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>System Information:</span></h3></div>
+
+            <div class="col-md-12 col-lg-6">
+              <label>External ID:</label>
+              <div class="form-group">
+                <textarea type="text" class="form-control" formControlName="externalID"></textarea>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Owner:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Owner" disabled>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="Save()"><i class="feather-save text-white"></i> Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,305 @@
+
+
+<div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Add Custom Field</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li><a routerLink="/dashboard">Dashboard</a></li>
+      <li><a routerLink="/user">Manage Custom Field</a></li>
+      <li class="active">{{pageTitle}}</li>
+    </ol>
+  </div>
+
+</div>
+<div class="clearfix"></div>
+
+<div class="row">
+  <div class="col-lg-12 portlets ">
+    <div class="panel">
+      <div class="panel-content pb-5">
+        <form [formGroup]="manageLayout" autocomplete="off">
+          <div class="row">
+            <div class="col-md-3 col-lg-3 px-2" id="FixedDiv">
+              <h3 class="side_panel-heading"> Select New Field</h3>
+              <div class="bordered-content">
+                <ul class="types columnlist list-group custom-field-layout custom-field-layout-left-panel mb-3">
+
+                  <li class="list-group-item selected" id="1" code="string" maxlength="100" *ngFor="let color of colors"
+                      pDraggable="color"
+                      (onDragStart)="dragStart($event,color)" (onDragEnd)="dragEnd($event)">
+                    <a href="javscript:;">
+                      <i class="fa fa-ellipsis-h {{color.classname}}"></i>
+                      <span>
+                        {{color.name}}
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+
+
+                <!--<div *ngFor="let color of colors" class="border col-md-6 col-lg-6" pDraggable="color"
+                     (onDragStart)="dragStart($event,color)" (onDragEnd)="dragEnd($event)">
+                  <i class="{{color.classname}}"></i>&nbsp;{{color.name}}
+                </div>-->
+              </div>
+            </div>
+
+            <div class="col-md-9 col-lg-9 px-3">
+              <div class="drop" pDroppable="color" (onDrop)="drop($event)" style="display:none">
+                <div class="col-md-12 col-lg-12">
+                  <div class="form-group d-flex justify-content-between">
+                    <input type="text" class="form-control w-50" formControlName="fieldName" maxlength="50" placeholder="Enter group name">
+                    <div class="dropdown form-group">
+                      <a href="javascript:void(0);" class="column-setting py-2 d-block" (click)="toggleClass($event,'show')"><i class="fa fa-cog text-dark" style="font-size: 20px;"></i></a>
+                      <div class="dropdown-menu" [ngClass]="condition ? 'show' : 'hide'" id="column-setting">
+                        <!--<a class="dropdown-item" href="javascrip:;">double Columns</a>-->
+                        Select Layout
+                        <div class="custom-control custom-radio">
+                          <input type="radio" class="custom-control-input" id="customRadio1" name="contactPreferredDocumentSignedBy"
+                                 (click)="toggleClassRadioButton($event,'double')" value="double" checked>
+                          <label class="custom-control-label" for="customRadio1">double Columns</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <!--<a class="dropdown-item" href="javascrip:;">Triple Columns</a>-->
+                          <input type="radio" class="custom-control-input" id="tripleColumns" name="contactPreferredDocumentSignedBy"
+                                 (click)="toggleClassRadioButton($event,'triple')" value="triple">
+                          <label class="custom-control-label" for="tripleColumns">Triple Columns</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <!--<a class="dropdown-item" href="javascrip:;">Four Columns</a>-->
+                          <input type="radio" class="custom-control-input" id="fourColumns" (click)="toggleClassRadioButton($event,'four')"
+                                 name="contactPreferredDocumentSignedBy" value="four">
+                          <label class="custom-control-label" for="fourColumns">Four Columns</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p-orderList [value]="droped" styleClass="two-column" dragdrop="true">
+
+                  <ng-template let-c pTemplate="item">
+
+
+                    <div class="draged-item" *ngIf="c.display_name; else elseblock">
+                      <i class="{{c.class_name}}"></i>&nbsp;{{c.display_name}}<i class="fa fa-ellipsis-h text-secondary float-right"></i>
+                    </div>
+                    <ng-template #elseblock>
+                      <div [ngClass]="{'col-12': layoutPageType =='single', 'col-md-6': layoutPageType =='double', 'col-lg-4':layoutPageType =='triple', 'col-lg-3 col-xl-3': layoutPageType =='four' }" id="newSection">
+                        <div class="draged-item" pDraggable="c" style="background-color:antiquewhite"
+                             (onDragStart)="dragStartGroupToGroup($event,c)" (onDragEnd)="dragEndGroupToGroup($event)" *ngIf="c.name; else elseblock">
+                          <i class="{{c.class_name}}"></i>
+                          {{c.name}} <a href="javscript:;">
+                            <span>
+                              <span (click)="hideme[droped.indexOf(c)+uniqueid] =! hideme[droped.indexOf(c)+uniqueid]"><i class="fa fa-ellipsis-h text-secondary float-right"></i></span>
+                              <div class="dropdown-menu" [ngClass]="{'hide' : hideme[droped.indexOf(c)+uniqueid] == false,'show' : hideme[droped.indexOf(c)+uniqueid] == true}" id="column-setting+{{droped.indexOf(c)}}">
+                                <div class="custom-control custom-checkbox">
+                                  <input id="'chk_'+ {{c.dt_code}}+ '_' + {{c.id}}+ '_' + {{droped.indexOf(c)}}" class="dynamic custom-control-input" (click)="SystemDefinedPropertyRequired(c.id,c,droped.indexOf(c),$event)" type="checkbox">
+                                  <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="'chk_'+ {{c.dt_code}}+ '_' + {{c.id}}+ '_' + {{droped.indexOf(c)}}">Mark As Required</label>
+                                </div>
+
+                                <div>
+                                  <a href="javascript:void(0);" (click)="EditCustomFields(c.id,c,droped.indexOf(c))" class="dropdown-item px-2" draggable="false"><i class="fa fa-pencil text-success"></i> <span class="ml-1 text-secondary" style="font-size: 14px;">View Properties</span></a>
+                                </div>
+                                <div>
+                                  <a href="javascript:void(0);" (click)="RemoveCustomFieldSystemDefined(droped.indexOf(c),c)" class="dropdown-item px-2" draggable="false"><i class="feather-trash-2 text-danger"></i> <span class="ml-1 text-dark" style="font-size: 14px;">Remove Field</span></a>
+                                </div>
+
+                              </div>
+                            </span>
+                          </a>
+
+                        </div>
+                      </div>
+                    </ng-template>
+
+
+
+
+
+
+
+
+
+                  </ng-template>
+
+                </p-orderList>
+              </div>
+              <style>
+                .customdieldbg {
+                  background-color: antiquewhite;
+                }
+              </style>
+              <!--<div class="col-md-8 col-lg-8">
+
+                Drag Containers <input type="checkbox" (click)="dragfullgroup()" />
+              </div>-->
+              <div dnd-sortable-container [sortableData]="group" [dropZones]="['container-dropZone']">
+
+                <div id="container" class=" mb-3" *ngFor="let field of group; let a = index" dnd-sortable [sortableIndex]="a" [dragEnabled]="dragOperation">
+                  <div class="drop" pDroppable="color" (onDrop)="dropNewGrop($event,a)" dnd-sortable-container [sortableData]="field.controls" [dropZones]="['widget-dropZone']">
+                    <div class="drop_right_heading">
+                      <div class="col-md-12 col-lg-12">
+                        <div class="form-group d-flex justify-content-between" (mousedown)="fordragcontainer()">
+                          <input type="text" class="form-control w-50" [value]="field.group_display_name" (keydown)="changegroup($event,a)" maxlength="50" placeholder="Enter group name">
+                          <div class="dropdown form-group">
+                            <a href="javascript:void(0);" class="column-setting py-2 d-block"
+                               (click)="hidemeNewGrp[a] =! hidemeNewGrp[a]"><i class="fa fa-cog text-dark" style="font-size: 20px;"></i></a>
+                            <div class="dropdown-menu selctlay"
+                                 [ngClass]="{'hide' : hidemeNewGrp[a] == false,'show' : hidemeNewGrp[a] == true}"
+                                 id="column-setting">
+                              <span class="hedlay">   Select Layout</span>
+                              <div class="custom-control custom-radio">
+                                <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'double')">
+                                  <input type="radio" class="custom-control-input" id="customRadioNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}"
+                                         value="double" checked>
+                                  <label class="custom-control-label" for="customRadioNewGrp{{a}}">double Columns</label>
+                                </a>
+                              </div>
+                              <div class="custom-control custom-radio">
+                                <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'triple')">
+
+                                  <input type="radio" class="custom-control-input" id="tripleColumnsNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}"
+                                         value="triple">
+                                  <label class="custom-control-label" for="tripleColumnsNewGrp{{a}}">Triple Columns</label>
+
+                                </a>
+                              </div>
+                              <div class="custom-control custom-radio">
+                                <!--<a class="dropdown-item" href="javascrip:;">Four Columns</a>-->
+                                <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'four')">
+                                  <input type="radio" class="custom-control-input" id="fourColumnsNewGrp{{a}}"
+                                         name="contactPreferredDocumentSignedBy{{a}}" value="four">
+                                  <label class="custom-control-label" for="fourColumnsNewGrp{{a}}">Four Columns</label>
+                                </a>
+                              </div>
+                              <div>
+                                <a href="javascript:void(0);" (click)="Removelayout(a)" class="dropdown-item" draggable="false"><i class="feather-trash-2 text-danger" style="font-size: 20px;"></i> <span class="ml-1 text-dark" style="font-size: 14px;">Remove Layout</span></a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> <div class="row custom_feild_box">
+                      <ng-container *ngFor="let c of field.controls; let i=index">
+                        <!--<div >-->
+
+                        <div [ngClass]="{'col-lg-4':true,'col-12': dynamicLayoutNewSection[a] =='single', 'col-md-6': dynamicLayoutNewSection[a] =='double', 'col-lg-4':dynamicLayoutNewSection[a] =='triple', 'col-lg-3 col-xl-3': dynamicLayoutNewSection[a] =='four' }">
+                          <div class="draged-item" dnd-sortable [sortableIndex]="i" [dragEnabled]="!dragOperation" (mousedown)="fordragcontrol()"
+                               [dragData]="c" [ngClass]="{'customdieldbg': c.is_system_generated ==false}">
+                             =
+                              <!--<i class="{{c.class_name}}"></i>--><span class="form-control w-75 float-left">{{c.is_system_generated ==false ? c.name : c.display_name}}</span>
+                            <span class="w-25 float-right" style="padding-top:10px;">
+                              <a href="javscript:;">
+                                <span>
+
+                                  <span (click)="hideme[a+''+i] =! hideme[a+''+i]"><i class="fa fa-ellipsis-h text-secondary float-right anchodeshowdrop"></i></span>
+                                  <div class="dropdown-menu float-right hideshowdropdown quickkact" [ngClass]="{'hide' : hideme[a+''+i] == false,'show' : hideme[a+''+i] == true}" id="column-setting{{a}}{{i}}">
+                                    <!--<div class="custom-control custom-checkbox">
+                                      <input id="'chk_'+{{c.dt_code}}+'_'+ {{c.id}}+'_'+{{i}}" class="dynamic custom-control-input"
+                                             (click)="SystemDefinedPropertyRequired(c.id,c,i,$event,'NewGroupCreated')" type="checkbox">
+                                      <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                                             for="'chk_'+{{c.dt_code}}+'_'+{{c.id}}+'_'+{{i}}">Mark As Required</label>
+                                    </div>-->
+
+
+                                    <div class="custom-control custom-checkbox">
+                                      <input id="'chk_'+ {{c.dt_code}}+ '_' + {{c.id}}+ '_' + {{i}}" class="dynamic custom-control-input"
+                                             (click)="SystemDefinedPropertyRequired(a,c.id,c,i,$event,'NewGroupCreated')" type="checkbox">
+                                      <label class="custom-control-label universal-custom-control-label pr-1 dynamic" for="'chk_'+ {{c.dt_code}}+ '_' + {{c.id}}+ '_' + {{i}}">Mark As Required</label>
+                                    </div>
+
+
+                                    <div>
+                                      <a href="javascript:void(0);" (click)="EditCustomFields(a,c.id,c,i,'NewGroupCreated')" class="dropdown-item px-2" draggable="false"><i class="fa fa-pencil text-success"></i> <span class="ml-1 text-secondary" style="font-size: 14px;">View Properties</span></a>
+                                    </div>
+                                    <div *ngIf="!c.is_system_generated">
+
+                                      <a href="javascript:void(0);" (click)="RemoveCustomFields(a,i,a+''+i)" class="dropdown-item px-2" draggable="false"><i class="feather-trash-2 text-danger"></i> <span class="ml-1 text-dark" style="font-size: 14px;">Remove Field</span></a>
+                                    </div>
+
+                                  </div>
+                                </span>
+                              </a>
+                            </span>
+                            <div class="clearfix"></div>
+                          </div>
+                        </div>
+
+                        <!--</div>-->
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 p-0">
+                <a href="javascript:void(0);" class="btn btn-danger float-right" (click)="Cancel()"><i class="fa fa-times pr-1"></i> Cancel</a>
+                <a href="javascript:void(0);" class="btn btn-success mr-2 float-right" (click)="AddLayoutForCustomField()"><i class="feather-save pr-1"></i> Submit</a>
+                <a href="javascript:void(0);" title="" class="btn btn-success formbtn widthhalf  mr-2 float-right" (click)="NewGrop('NewGroup')"
+                   tooltip="Create New Group"><i class="fa fa-users pr-1"></i>New Group</a>
+
+
+
+
+              </div>
+            </div>
+
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!--<h4>Move items between multi list sortable containers</h4>
+  <div class="row" >
+    <div class="col-sm-12">
+
+      <div dnd-sortable-container [sortableData]="containers" [dropZones]="['container-dropZone']">
+        {{containers|json}}
+        <div class="col-sm-12"
+             *ngFor="let container of containers; let i = index"
+             dnd-sortable [sortableIndex]="i" [dragEnabled]="dragOperation">
+          <div class="panel panel-warning"
+               dnd-sortable-container [sortableData]="container.widgets" [dropZones]="['widget-dropZone']">
+            <div class="panel-heading">
+              {{container.id}} - {{container.name}}
+            </div>
+            <div class="panel-body">
+              <ul class="list-group">
+                {{container.widgets|json}}
+                <li *ngFor="let widget of container.widgets; let x = index" class="list-group-item"
+                    dnd-sortable [sortableIndex]="x" [dragEnabled]="!dragOperation"
+                    [dragData]="widget">{{widget.name}}--x{{x}}--i{{i}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{group|json}}
+      <div dnd-sortable-container [sortableData]="group" [dropZones]="['container-dropZone']">
+        <div class="col-sm-12"
+             *ngFor="let container of group; let i = index"
+             dnd-sortable [sortableIndex]="i" [dragEnabled]="dragOperation">
+
+          <div class="panel panel-warning"
+               dnd-sortable-container [sortableData]="container.controls" [dropZones]="['widget-dropZone']">
+
+            <div class="panel-heading">
+              {{container.id}}
+            </div>
+            <div class="panel-body">
+              {{container.controls|json}}
+              <ul class="list-group">
+                <li *ngFor="let widget of container.controls; let x = index" class="list-group-item"
+                    dnd-sortable [sortableIndex]="x" [dragEnabled]="!dragOperation"
+                    [dragData]="widget">{{widget.name}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>-->
+  <app-propertiespopup #properties (customFieldLayOut)="customFieldLayOut()"></app-propertiespopup>

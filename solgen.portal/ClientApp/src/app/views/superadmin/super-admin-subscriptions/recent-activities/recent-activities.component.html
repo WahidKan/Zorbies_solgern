@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-12">
+        <ul class="timeline" style="position: relative;">
+            <li *ngFor="let recentActivity of recentActivityList" class="timeline-inverted">
+                <div class="timeline-badge warning">
+                    <div class="date-time">
+                        <div>{{recentActivity.date}}</div>
+                        <div class="text-right">{{recentActivity.time}}</div>
+                    </div>
+                    <i style="    position: absolute; font-size: 24px; left: 4px; top: 3px;" class="fa fa-clock-o fa-5"></i>
+                </div>
+                <div class="timeline-panel row">
+                    <div class="col-2">
+                        <i style="font-size: 50px; padding-top: 5px" class="fa fa-user-circle-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-8">
+                        <div class="timeline-heading">
+                            <h5 class="timeline-title">{{recentActivity.title}}</h5>
+                        </div>
+                        <div class="timeline-body">
+                            <p>By {{recentActivity.details}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

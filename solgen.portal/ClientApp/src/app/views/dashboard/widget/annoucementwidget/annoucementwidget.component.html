@@ -1,0 +1,112 @@
+<div class="row" *ngIf="lstanoucements.length>0" [hidden]="isAnnouncementHidden" >
+  <div class="col-12 announcement" >
+    <div class="bg-white p-3 mb-3 border">
+      <div class="graph-widget-heading mb-2">Announcements ({{totalAnnoncements}})
+        <span class="float-right">
+          <a href="javascript:void(0);" (click)="setHidden()"  class="viewall mr-2">Hide</a>
+          <a href="javascript:void(0);" (click)="ViewAllAnnucements()" [hidden]="!isFirstTime" class="viewall">View All</a>
+          <a href="javascript:void(0);" (click)="CollapseAllAnnucements()" [hidden]="isFirstTime" class="viewall">Switch Default</a>
+        </span>
+      </div>
+      <div class="table-responsive" style="max-height:220px;">
+        <ngx-datatable #table class="bootstrap table table-hover mb-0 table-dynamic"
+                       [rows]="lstanoucements"
+                       [columnMode]="'force'"
+                       [headerHeight]="0"
+                       [footerHeight]="0"
+                       [rowHeight]="'auto'"
+                       [rowClass]="getRowClass"
+                       
+                       [loadingIndicator]="loadSave">
+          <ngx-datatable-column name="Name" prop="title">
+            <ng-template let-row="row" ngx-datatable-cell-template >
+              <div class="d-flex">
+                <div class="annu-img">
+                  <img [src]="row.profilePic" />
+                </div>
+
+                <div class="annu-cont">
+                  <h3>{{row.title}} ( <strong>{{row.startDate | date:'MM/dd/yyyy' }}</strong> )</h3>
+                  <p>
+                    <span *ngIf="isFirstTime" [title]="row.message">
+                      {{row.message | truncate:[150]}}
+                    </span>
+                    <span *ngIf="!isFirstTime">
+                      {{row.message}}
+                    </span>
+                    <br />
+                    <span *ngIf="row.filePath">
+                      <!--for audio-->
+                      <a *ngIf='row.filePath.split(".").pop().toLowerCase()=="mp3"' class="bg-primary btn-link" (click)="setAudioSrc(row.filePath)"><i class="fa fa-volume-up"></i> listen now</a>
+
+                      <!--for image-->
+                      <a data-toggle="modal" data-target="#myModal" *ngIf='row.filePath.split(".").pop().toLowerCase()=="jpg" || row.filePath.split(".").pop().toLowerCase()=="jpeg" || row.filePath.split(".").pop().toLowerCase()=="png" || row.filePath.split(".").pop().toLowerCase()=="gif" || row.filePath.split(".").pop().toLowerCase()=="bmp"' class="bg-success btn-link" (click)="ShowImageModal(row)"><i class="fa fa-file-image-o"></i> View</a>
+
+                      <!--for files-->
+                      <a [href]="row.filePath" target="_blank" *ngIf='row.filePath.split(".").pop().toLowerCase()=="pdf" || row.filePath.split(".").pop().toLowerCase()=="txt" || row.filePath.split(".").pop().toLowerCase()=="doc" || row.filePath.split(".").pop().toLowerCase()=="xls" || row.filePath.split(".").pop().toLowerCase()=="docx"' class="bg-dark btn-link"><i class="fa fa-file-text"></i> View</a>
+
+                      <!--for video-->
+                      <a data-toggle="modal" data-target="#videModal" *ngIf='row.filePath.split(".").pop().toLowerCase()=="mp4" || row.filePath.split(".").pop().toLowerCase()=="avi" || row.filePath.split(".").pop().toLowerCase()=="mov" || row.filePath.split(".").pop().toLowerCase()=="3gp" || row.filePath.split(".").pop().toLowerCase()=="mpeg" ' class="bg-danger btn-link" (click)="ShowVideo(row)"><i class="fa fa-video-camera"></i> View</a>
+                    </span>
+                  </p>
+
+                </div>
+              </div>
+              
+
+
+
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>      
+    </div>
+  </div>
+</div>
+
+
+
+<div id="myModal" style=" background: none !important;" class="modal fade announcement-pop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="height:450px!important;width:100%!important; ">
+    <div class="modal-content" style="z-index:1; height:auto;">
+      <div class="modal-header">
+        <h4 class="modal-title">{{modalTitle}}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 13px 17px;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow-y: visible; overflow-x: visible;">
+        <div class="text-center">
+          <img src={{imgSrc}} alt="No Image Available." style="max-height:450px; width:100%; " class="img-responsive">
+        </div>
+      </div>
+    </div>
+    
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>  
+</div>
+
+
+<div id="videModal" style=" background: none !important;" class="modal fade announcement-pop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="height:450px!important;width:100%!important; ">
+    <div class="modal-content" style="z-index:1; height:auto;">
+      <div class="modal-header">
+        <h4 class="modal-title">{{modalTitle}}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 13px 17px;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow-y: visible; overflow-x: visible;">
+        <div class="text-center">
+          <video controls [src]="videoSrc" #videoPlayer style="width:100%!important">
+            Browser not supported
+          </video>
+        </div>
+
+      </div>
+
+    </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>
+  
+</div>

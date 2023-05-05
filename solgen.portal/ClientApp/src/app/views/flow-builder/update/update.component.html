@@ -1,0 +1,192 @@
+<div bsModal #updateModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" *ngIf="updateRecordForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Update Records</h5>
+                <button type="button" (click)="closeUpdateModal()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+            </button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div *ngIf="updateRecordForm && nodeId" [formGroup]="updateRecordForm">
+                    <p>Update records using values from the flow.</p>
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <label> Label (Max Char Limit 50)<span class="text-danger">*</span></label>
+                            <input maxlength="50" formControlName="name" type="text" class="form-control" [ngClass]="{'is-invalid': (updateName.invalid && (updateName.dirty || updateName.touched) && (updateName.errors?.required || updateName.errors?.maxlength)) }">
+                            <small *ngIf="(updateName.invalid && (updateName.dirty || updateName.touched)) && updateName.errors?.required" class="text-danger">label is required</small>
+                            <small *ngIf="(updateName.invalid && (updateName.dirty || updateName.touched)) && updateName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+                        </div>
+                        <div class="col-12">
+                            <label> Description (Max Char Limit 200)</label>
+                            <textarea formControlName="description" maxlength="200" class="form-control" rows="2" [ngClass]="{'is-invalid': (updateDescription.invalid && (updateDescription.dirty || updateDescription.touched) && updateDescription.errors?.maxlength)}"></textarea>
+                            <small *ngIf="updateDescription.invalid && (updateDescription.dirty || updateDescription.touched) && updateDescription.errors?.maxlength" class="text-danger">Description should be less then 200</small>
+                        </div>
+
+                        <hr class="mt-2 mb-2">
+
+                    </div>
+                    <!-- <div class="row">
+                        <div class="col-12">
+                            <strong>How to Find Records to Update and Set Their Values</strong><span class="text-danger">*</span>
+                            <div class="custom-control custom-radio">
+                                <input [checked]="true" formControlName="findRecordCondition" value="Use_the_IDs" type="radio" id="UsetheIDs" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="UsetheIDs">Use the IDs and all field values from a record or record collection</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input formControlName="findRecordCondition" value="Specify_conditions" type="radio" id="Specifyconditions" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="Specifyconditions">Specify conditions to identify records, and set fields individually</label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mt-2 mb-2">
+                    <div class="col-6 ">
+                        <h6>Select Record(s) to Update</h6>
+                        <label> Record or Record Collection<span class="text-danger">*</span></label>
+                        <ng-select [items]="DUMMYDATA" bindLabel="text" bindValue="value" formControlName="collectionId" placeholder="Search records..." [closeOnSelect]="true" [virtualScroll]="true">
+                        </ng-select>
+                    </div>
+
+                   <label>Condition Requirements for Records to Delete</label>
+                            <ng-select [items]="DUMMYDATA" bindLabel="text" bindValue="value" formControlName="findCondition" placeholder="Enter min. 3 characters to search..." [closeOnSelect]="true" [virtualScroll]="true">
+                            </ng-select>-->
+                    <div class="col-6">
+                        <h6>Update Records of This Object Type</h6>
+                        <label>Object<span class="text-danger">*</span></label>
+                        <ng-select [appendTo]="'body'" (change)="GetObjectId($event)" [items]="objectList" formControlName="subModuleId" placeholder="Select object" bindLabel="text" bindValue="value">
+                        </ng-select>
+                        <p>Make sure that each record has an ID. Otherwise the flow can’t find the records to update, and it fails</p>
+                    </div>
+                    <hr class="mt-2 mb-2">
+
+                    <div *ngIf="updateRecordForm && updateRecordForm.get('subModuleId').value > 0">
+                        <div class="row">
+                            <div class="col-6">
+                                <h6>Filter Action Link Group Template Records</h6>
+
+                            </div>
+                        </div>
+                        <div class="row mt-2 mb-2">
+                            <div class="col-md-6 col-lg-6">
+                                <label> <span class="text-danger">*</span>Condition Requirements</label>
+                                <ng-select [closeOnSelect]="true" [appendTo]="'body'" [items]="decisionList" placeholder="Select" (change)="onFilterCondtionChange($event)" formControlName="filterOperator" bindLabel="name" bindValue="value">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="row mb-2" *ngIf="updateRecordForm && updateRecordForm.get('filterOperator') && updateRecordForm.get('filterOperator').value === 3">
+                            <div class="col-md-12">
+                                <label>Condition Logic:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <input type="text" formControlName="customFilterOperator" class="form-control" name="customCondition">
+                                </div>
+                            </div>
+                        </div>
+                        <div formArrayName="filterConditions">
+                            <div *ngFor="let condition of updateRecordForm.get('filterConditions').controls;let i = index" [formGroupName]="i" class="row align-items-end justify-content-between mt-2">
+                                <!-- <div class="col-1">
+                                    <strong class="d-block pb-2">And</strong>
+                                </div> -->
+                                <div class="col-1 text-center mt-4">
+                                    <strong *ngIf="updateRecordForm.get('filterConditions') && updateRecordForm.get('filterOperator').value === 3">{{i
+                                        + 1}}</strong>
+                                    <strong class="d-block pb-2" *ngIf="filterConditions.length > 1 && i>0 &&  updateRecordForm.get('filterOperator').value === 1 ">AND</strong>
+                                    <strong class="d-block pb-2" *ngIf="filterConditions.length > 1 && i>0 &&  updateRecordForm.get('filterOperator').value === 2 ">OR</strong>
+                                </div>
+
+                                <div class="col-3">
+                                    <label for="Field" class="form-label">Field</label>
+                                    <!-- <ng-select [items]="customFieldList" placeholder="Select" (clear)="onClearCustomField(customFieldList)" formControlName="field" required="required" (change)="onKeyCustomField($event,customFieldList)" (scrollToEnd)="onScrollToEndCustomFields(customFieldList)"
+                                        required="required" [virtualScroll]="true" bindLabel="label" bindValue="form_field_id">
+                                    </ng-select> -->
+
+
+                                    <ng-select [items]="customFieldList" placeholder="Select" (change)="onVariableChange($event,condition)" formControlName="field" appendTo="body" required="required" bindLabel="label" bindValue="PrimaryTableColumn" [closeOnSelect]="true" [virtualScroll]="true">
+                                    </ng-select>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">Operator</label>
+                                    <ng-select [items]="Operators" bindLabel="text" bindValue="value" formControlName="operator" placeholder="Search Operator" [closeOnSelect]="true" [virtualScroll]="true">
+                                    </ng-select>
+                                </div>
+                                <!-- <div *ngIf="isAutoLunched" class="col-3 pr-0">
+                                    <label  class="form-label">Resource</label>
+                                    <ng-select [items]="resourceList" placeholder="Select object" groupBy="groupName"
+                                        formControlName="resourceId" bindLabel="displayName" bindValue="id" (change)="onResourceChange($event,condition)" [appendTo]="'body'">
+                                    </ng-select>
+                                </div> -->
+                                <div class="col-3">
+                                    <label class="form-label">Value</label>
+                                    <ng-select *ngIf="!isAutoLunched" [items]="valueList" bindLabel="displayName" bindValue="id" formControlName="value"   placeholder="Enter value or search resources..." [closeOnSelect]="true" [virtualScroll]="true">
+                                    </ng-select>
+                                    <input *ngIf="isAutoLunched" type="text" formControlName="value" class="form-control">
+
+                                </div>
+                                <div class="col-1 ">
+                                    <button (click)="deleteFilterRecordCondition(i)" [disabled]="filterConditions.length < 2" class="btn btn-danger form-btns mb-2" tooltip="Delete">
+                                <span><i class="feather-trash-2"></i></span>
+                            </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-3">
+                                <button (click)="addFilterRecordCondition()" class="btn btn-success"><i class="feather-plus"></i>Add Condition</button>
+                            </div>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        <div formArrayName="fieldMapping">
+                            <h6>Set Field Values for the Action Link Template Records</h6>
+                            <div *ngFor="let condition of updateRecordForm.get('fieldMapping').controls;let i = index" [formGroupName]="i" class="row mt-2" class="row align-items-end justify-content-between mt-2">
+
+                                <div class="col-3">
+                                    <label class="form-label">Field</label>
+                                    <!-- <ng-select [items]="customFieldList" placeholder="Select" (clear)="onClearCustomField(customFieldList)" formControlName="customFieldId" required="required" (keyup)="onKeyCustomField($event,customFieldList)" (scrollToEnd)="onScrollToEndCustomFields(customFieldList)"
+                                    required="required" [virtualScroll]="true" bindLabel="label" bindValue="form_field_id">
+                                </ng-select> -->
+                                    <ng-select [items]="customFieldList" [appendTo]="'body'" placeholder="Select" formControlName="customFieldId" required="required" bindLabel="label" bindValue="form_field_id" [closeOnSelect]="true" [virtualScroll]="true">
+                                    </ng-select>
+                                </div>
+                                <div class="col-1 align-self-center">
+                                    <span><i class="fa fa-long-arrow-left"></i></span>
+                                </div>
+                                <div *ngIf="isAutoLunched" class="col-3 pr-0">
+                                    <label class="form-label">Resource</label>
+                                    <ng-select [items]="resourceList" placeholder="Select object" groupBy="groupName" formControlName="resourceId" bindLabel="displayName" bindValue="id" (change)="onResourceChange($event,condition)" [appendTo]="'body'">
+                                    </ng-select>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label">Value</label>
+                                    <ng-select *ngIf="isAutoLunched" [items]="valueList" bindLabel="displayName" bindValue="PrimaryTableColumn" formControlName="value" [appendTo]="'body'" [addTag]="CreateNew" addTagText="add new value" placeholder="Enter value or search resources...">
+                                    </ng-select>
+                                    <ng-select *ngIf="!isAutoLunched" [items]="valueList" bindLabel="displayName" bindValue="id" formControlName="value" [appendTo]="'body'" [addTag]="CreateNew" addTagText="add new value" placeholder="Enter value or search resources...">
+                                    </ng-select>
+                                </div>
+                                <div class="col-1 ">
+                                    <button (click)="deleteField()" [disabled]="fieldMapping.length < 2" class="btn btn-danger form-btns mb-2" tooltip="Delete">
+                                <span><i class="feather-trash-2"></i></span>
+                             </button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-3">
+
+
+
+
+                                    <button (click)="addField()" class="btn btn-success">
+                                    <i class="feather-plus"></i>Add Field</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                <button type="button" class="btn btn-success form-btns" (click)="saveUpdateForm()"><i class="feather-save text-white pr-2"></i>Submit</button>
+                <button type="button" class="btn btn-danger form-btns" (click)="closeUpdateModal()" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

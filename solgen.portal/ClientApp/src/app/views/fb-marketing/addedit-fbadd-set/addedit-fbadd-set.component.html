@@ -1,0 +1,668 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li><a routerLink="/marketing/adsSet-list">Manage Ad Sets</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<!-- <div class="row ">
+    <div class="col-sm-12 col-md-12 text-right">
+      <div class="card  mb-4 border ">
+      <span class="text-capitalize p-3 float-right font-weight-bold border-bottom heading-above-subhead">
+             
+        <a href="javascript:void(0);" class="btn btn-dark text-white smview" routerLink="/marketing/adsSet-list"><i
+            class="fa fa-arrow-left mr-1"></i> Back To List</a>
+      </span>
+    </div>
+  </div>
+  </div> -->
+
+<div class="panel ">
+     <div class="panel-content clearfix mb-4 p-4">
+        <form *ngIf="addFbAdSetForm" [formGroup]="addFbAdSetForm" autocomplete="off">
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>Ad Set Name:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="name"
+                            [ngClass]="{'is-invalid': (name.invalid && (name.dirty || name.touched) && name.errors?.required)}">
+                        <small *ngIf="name.invalid && (name.dirty || name.touched) && name.errors?.required"
+                            class="text-danger">Ad Set Name is required</small>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Ad Set Id:</label>
+                    <div class="form-group">
+                        <input type="text" disabled class="form-control" formControlName="adset_id">
+
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Amount Spent:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="spent_amount">
+                        <!-- <small *ngIf="bid_amount.invalid && (bid_amount.dirty || bid_amount.touched) && bid_amount.errors?.required"
+                                   class="text-danger">Bid Amount is required</small> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>Bid Strategy:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="bid_strategy">
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-4">
+                    <label>Lifetime Budget:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="lifetime_budget">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Campaign:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <ng-select [items]="campaignsList" formControlName="campaign_id" placeholder="Select Campaign"
+                            bindValue="id" bindLabel="name" (change)="handleCampaignChange($event)">
+                            ></ng-select>
+                        <small
+                            *ngIf="campaign_id.invalid && (campaign_id.dirty || campaign_id.touched) && campaign_id.errors?.required"
+                            class="text-danger">Please select Campaign</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>Cost per Result:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="cost_per_result">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Frequency:</label>
+                    <div class="form-group">
+                        <input type="text" (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="frequency">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Impressions:</label>
+                    <div class="form-group">
+                        <input type="text" (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="impressions">
+                    </div>
+                </div>
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>Reach:</label>
+                    <div class="form-group">
+                        <input type="text" (keypress)="numberOnly($event)" class="form-control" formControlName="reach">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Unique Link Clicks:</label>
+                    <div class="form-group">
+                        <input type="text" (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="unique_link_clicks">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>External Id:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="external_id">
+
+                    </div>
+                </div>
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>Ad Set Objective:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="adset_objective">
+
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Cost per Unique Clicks:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="costper_unique_clicks">
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4 col-lg-4">
+                    <div class="row">
+                        <div class="col-6 col-md-6 col-lg-6">
+                            <label>Last Significant Edit:</label>
+
+                            <div class="form-group datepickerinpop">
+                                <p-calendar class="calendarwidth" inputStyleClass="form-control start-date"
+                                    formControlName="updated_time"  placeholder="Select Date" [showIcon]="true" [showTime]="false" dateFormat="mm/dd/yy"
+                                    showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030">
+                                </p-calendar>
+                            </div>
+                           
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-6 mt-4">
+                            <div class="form-group mt-1">
+                                <p-calendar inputStyleClass="form-control start-date" formControlName="editTime"
+                                placeholder="Select Time" hourFormat="12" [timeOnly]="true" inputId="timeonly"
+                                [(ngModel)]="Edit_time"  (onSelect)="changeToValue($event)"></p-calendar>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+               
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>Cost Per Mile:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" (keypress)="numberOnly($event)"  class="form-control" formControlName="cost_per_mile">
+
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Cost Per Pixel:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number"  (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="cost_per_pixel">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Click Through Rate:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">%</span>
+                        </div>
+                        <input type="number"  (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="click_through_rate">
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="row  mb-2">
+               
+                <div class="col-md-12 col-lg-4">
+                    <label>Social spend:</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number"  class="form-control" formControlName="social_spend">
+
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+
+                    <label>Effective Status:</label>
+                    <div class="input-group mb-3">                        
+                        <input type="text"   class="form-control"
+                        formControlName="effective_status_num">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Video View:</label>
+                    <div class="input-group mb-3">
+                        
+                        <input type="number"  (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="video_view">
+                    </div>                   
+                </div>
+            </div>
+            <div class="row  mb-2">
+               
+                <div class="col-md-12 col-lg-4">
+                    <label>Optimization Goal:<span class="text-danger">*</span></label>
+
+                    <div class="form-group">
+                        <ng-select [items]="optimizationGoalListChild" (change)="loadBillingEvent($event)"
+                            [loading]="loadSave" placeholder="Select optimization goal"
+                            formControlName="optimization_goal" bindLabel="text" bindValue="value">
+                        </ng-select>
+                        <small
+                            *ngIf="optimization_goal.invalid && (optimization_goal.dirty || optimization_goal.touched) && optimization_goal.errors?.required"
+                            class="text-danger">Select Optimization Goal</small>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>Billing Event:<span class="text-danger">*</span></label>
+                    <!-- <div class="form-group">
+                        <input type="text" class="form-control" formControlName="billing_event" 
+                        [ngClass]="{'is-invalid': (billing_event.invalid && (billing_event.dirty || billing_event.touched) && billing_event.errors?.required)}">
+                        <small *ngIf="billing_event.invalid && (billing_event.dirty || billing_event.touched) && billing_event.errors?.required"
+                               class="text-danger">billing event is required</small>
+                    </div> -->
+                    <div class="form-group">
+                        <ng-select [items]="bilingListChild" [loading]="loadSave" placeholder="Select Billing Event"
+                            formControlName="billing_event" bindLabel="text" bindValue="value">
+                        </ng-select>
+                        <small
+                            *ngIf="billing_event.invalid && (billing_event.dirty || billing_event.touched) && billing_event.errors?.required"
+                            class="text-danger">Select Billing Event</small>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4 col-lg-4">
+                    <label>Status:<span class="text-danger">*</span></label>
+
+                    <div class="form-group">
+                        <ng-select [items]="statusList" [loading]="loadSave" placeholder="Select Status"
+                            formControlName="status" bindLabel="text" bindValue="value">
+                        </ng-select>
+                        <small *ngIf="status.invalid && (status.dirty || status.touched) && status.errors?.required"
+                            class="text-danger">Status is required</small>
+                    </div>
+                </div>
+               
+            </div>
+            <!-- <div class="col-12 col-md-4 col-lg-4">
+                    <label>targeting:</label>
+                        
+                          <div class="form-group">
+                          <ng-select   [items]="targetingList" [loading]="loadSave" placeholder="Select" formControlName="targeting"
+                                       bindLabel="text" bindValue="value"
+                                      >
+                            </ng-select>
+                            
+                                   </div>
+                </div> -->
+            <!-- <div class="col-md-12 col-lg-4">
+                    <label>start time</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="start_time"
+                            placeholder="Enter start time">
+                    </div>
+                </div> -->
+
+
+            <!-- <div class="col-md-12 col-lg-4">
+                    <label>optimization sub event:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="optimization_sub_event"
+                            placeholder="Enter optimization sub event">
+                    </div>
+                </div> -->
+
+            <div class="row  mb-2">
+               
+                <div class="col-md-12 col-lg-4">
+                    <label>Start Date:<span class="text-danger">*</span></label>
+                   
+                    <div class="form-group datepickerinpop">
+                        <p-calendar class="calendarwidth" inputStyleClass="form-control start-date"
+                            formControlName="start_time" placeholder="Select Date" [showIcon]="true" [showTime]="false"
+                            dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                            yearRange="1919:2030"
+                            [ngClass]="{'is-invalid': (start_time.invalid && (start_time.dirty || start_time.touched) && start_time.errors?.required) }">
+                        </p-calendar>
+                    </div>
+                    <small
+                        *ngIf="start_time.invalid && (start_time.dirty || start_time.touched) && start_time.errors?.required"
+                        style="color:red;">Please select Start date</small>
+                  
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>End Date:</label>
+                    <div class="form-group datepickerinpop">
+                        <p-calendar class="calendarwidth" inputStyleClass="form-control start-date"
+                            formControlName="end_time" placeholder="Select Date" [showIcon]="true" [showTime]="false"
+                            dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                            yearRange="1919:2030" (onSelect)="changeTotimeValue($event)">
+
+                        </p-calendar>
+                    </div>
+                    
+
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Bid Amount:<span class="text-danger">*</span></label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="text" (keypress)="numberOnlyWithoutDecimal($event)" class="form-control"
+                            formControlName="bid_amount"
+                            [ngClass]="{'is-invalid': (bid_amount.invalid && (bid_amount.dirty || bid_amount.touched) && (bid_amount.errors?.required || bid_amount.errors?.minlength))}">
+                        
+                    </div>
+                    <div>
+                        <small
+                            *ngIf="bid_amount.invalid && (bid_amount.dirty || bid_amount.touched) && bid_amount.errors?.required"
+                            class="text-danger">Bid Amount is required</small>
+                            <small *ngIf="bid_amount.invalid && (bid_amount.dirty || bid_amount.touched) && bid_amount.errors?.bidAmountInvalid"
+                            class="text-danger">Bid Amount must be less than 100</small>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-4">
+                    <label>Daily Budget:<span class="text-danger">*</span></label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" (keypress)="numberOnly($event)" class="form-control"
+                            formControlName="daily_budget"
+                            [ngClass]="{'is-invalid': (daily_budget.invalid && (daily_budget.dirty || daily_budget.touched) && (daily_budget.errors?.required || daily_budget.errors?.dailyBudgetInvalid))}">
+                    </div>
+                    <div>
+                        <small
+                        *ngIf="daily_budget.invalid && (daily_budget.dirty || daily_budget.touched) && daily_budget.errors?.required"
+                        class="text-danger">Daily Budget is required</small>
+                        <small *ngIf="daily_budget.invalid && (daily_budget.dirty || daily_budget.touched) && daily_budget.errors?.dailyBudgetInvalid"
+                        class="text-danger">Daily Budget must be greater than 1000</small>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-4">
+                    <label>Ad Objective:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="ad_objective">
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>Ad labels:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="adlabels" maxlength="50"
+                            placeholder="Enter adlabel">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Adset Schedule:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="adset_schedule" maxlength="50"
+                            placeholder="Enter Adset Schedule">
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>Attribution Spec:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="attribution_spec" maxlength="50"
+                            placeholder="Enter Email">
+                    </div>
+                </div>
+            </div>
+            <div class="row  mb-2">
+               
+
+               
+                <div class="col-md-12 col-lg-4">
+                    <label>Bid Strategy</label>
+                    <div class="form-group">
+                        <ng-select [items]="" placeholder="Select Bid Strategy" bindValue="value"
+                            bindLabel="text" formControlName="bid_strategy">
+                        </ng-select>
+                    </div>
+                </div>
+               
+
+                <div class="col-md-12 col-lg-4">
+                    <label>is dynamic creative:</label>
+                    <div class="form-group">
+                        <label class="switch">
+                            <input type="checkbox" id="customCheck1" formControlName="is_dynamic_creative">
+                            <span class="slider round"><span>Yes</span></span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>Configured Status:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="configured_status" 
+                            placeholder="Enter configured status">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Creative Sequence:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="creative_sequence" 
+                            placeholder="Enter creative sequence">
+                    </div>
+                </div>
+
+
+               
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>daily min spend target:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="daily_min_spend_target" 
+                            placeholder="Enter daily min spend target">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>daily spend cap:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="daily_spend_cap" 
+                            placeholder="Enter daily spend cap">
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>destination type:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="destination_type"
+                            placeholder="Enter destination type">
+                    </div>
+                </div>
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>effective status:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="effective_status" 
+                            placeholder="Enter effective status">
+                    </div>
+                </div>
+              
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>frequency control specs:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="frequency_control_specs"
+                            placeholder="Enter frequency control specs">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>issues info:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="issues_info" 
+                            placeholder="Enter issues info">
+                    </div>
+                </div>
+               
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>lifetime imps:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="lifetime_imps"
+                            placeholder="Enter lifetime imps">
+                    </div>
+                </div>
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>lifetime min spend target:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="lifetime_min_spend_target" 
+                            placeholder="Enter lifetime min spend target">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>lifetime spend cap:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="lifetime_spend_cap" 
+                            placeholder="Enter lifetime spend cap">
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>multi optimization goal weight:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="multi_optimization_goal_weight"
+                            placeholder="Enter multi optimization goal weight">
+                    </div>
+                </div>
+            </div>
+           
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>pacing type:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="pacing_type" 
+                            placeholder="Enter pacing type">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>recommendations:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="recommendations" 
+                            placeholder="Enter recommendations">
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>recurring budget semantics:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="recurring_budget_semantics"
+                            placeholder="Enter recurring budget semantics">
+                    </div>
+                </div>
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>review feedback:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="review_feedback" 
+                            placeholder="Enter review feedback">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>source adset id:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="source_adset_id" 
+                            placeholder="Enter source adset id">
+                    </div>
+                </div>
+
+
+              
+            </div>
+            <div class="row  mb-2">
+               
+                <div class="col-md-12 col-lg-4">
+                    <label>targeting optimization types:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="targeting_optimization_types" 
+                            placeholder="Enter targeting optimization types">
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>time based ad rotation</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="time_based_ad_rotation_id_blocks"
+                            placeholder="Enter time based ad rotation">
+                    </div>
+                </div>
+            </div>
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>updated time:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="updated_time" 
+                            placeholder="Select updated time">
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>created time:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="created_time" 
+                            placeholder="Select created_time">
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>use newapp click</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="time_based_ad_rotation_id_blocks"
+                            placeholder="Enter use newapp click">
+                    </div>
+                </div>
+            </div> -->
+
+
+
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-12">
+                    <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="addeditFbAdSet()"><i
+                            class="feather-save"></i> Submit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="Cancel()"><i class="feather-x"></i>
+                        Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

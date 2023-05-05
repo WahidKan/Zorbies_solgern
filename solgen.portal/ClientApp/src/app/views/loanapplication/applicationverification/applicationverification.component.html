@@ -1,0 +1,94 @@
+
+<div class="panel">
+  <div class="panel-content " [ngClass]="{'disabled':loadSave}">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="form-group m-0 selectallradio">
+          <label class="align-top">Select All<span class="text-danger"></span></label>
+          <div class="form-control  d-inline-block w-50 border-0 p-0 bg-transparent">
+            <div class="form-check form-check-inline">
+              <div class="custom-control custom-checkbox">
+                <label class="switch m-0">
+                  <input type="checkbox" [(ngModel)] ="selectAllValue" [checked]="selectAllValue" (change)="selectAllDocs($event)">
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12" *ngIf="isdone">
+        <div class="alert alert-info">
+          Please select the required fields * for completion of this stage
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="docinfo!=null">
+      <div class="row  mb-2" *ngIf="docinfo.length>0">
+        <div class="col-lg-12">
+          <h3 class="form-heading ng-star-inserted"><span>Document Info </span></h3>
+          <div class="clearfix"></div>
+          <div class="col-12 col-sm-6 col-md-4 float-left" *ngFor="let item of docinfo">
+            <div class="form-group">
+
+
+              <label>{{ item.MasterValue}}<span class="text-danger" [ngClass]="{'text-danger':item.IsRequired== true}" *ngIf="item.IsRequired==true">*</span></label>
+              <div class="form-control pl-0 border-0 bg-transparent">
+                <div class="form-check form-check-inline">
+                  <div class="custom-control custom-checkbox pl-0">
+
+                    <label class="switch" *ngIf="isflag">
+                      <input type="checkbox" [(ngModel)]="item.IsVerified" [checked]="item.IsVerified" (change)="setvalues($event,item.Id,item.Type)" id="{{item.Id}}_{{item.Type}}">
+                      <span class="slider round" id="{{item.Id}}_{{item.Type}}"><span>Yes</span></span>
+                    </label>
+                    <label class="switch" *ngIf="!isflag">
+                      <input type="checkbox" [(ngModel)]="item.IsVerified" [checked]="item.IsVerified" [ngClass]="{'disabledddl':(!isflag)}" disabled (change)="setvalues($event,item.Id,item.Type)" id="{{item.Id}}_{{item.Type}}">
+                      <span class="slider round" id="{{item.Id}}_{{item.Type}}" [ngClass]="{'disabledddl':(!isflag)}"><span>Yes</span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="stageinfo!=null">
+      <div class="row  mb-2" *ngIf="stageinfo.length>0">
+        <div class="col-lg-12">
+          <h3 class="form-heading ng-star-inserted"><span>Stage Info </span></h3>
+          <div class="clearfix"></div>
+          <div class="col-12 col-sm-6 col-md-4 float-left" *ngFor="let item of stageinfo">
+            <div class="form-group">
+
+
+              <label>{{ item.MasterValue}}<span class="text-danger" [ngClass]="{'text-danger':item.IsRequired== true}" *ngIf="item.IsRequired==true">*</span></label>
+              <div class="form-control pl-0 border-0 bg-transparent">
+                <div class="form-check form-check-inline">
+                  <div class="custom-control custom-checkbox pl-0">
+                    <label class="switch" *ngIf="isflag">
+                      <input type="checkbox" [checked]="item.IsVerified" [(ngModel)]="item.IsVerified" (change)="setvalues($event,item.Id,item.Type)" id="{{item.Id}}_{{item.Type}}">
+                      <span class="slider round" id="{{item.Id}}_{{item.Type}}"><span>Yes</span></span>
+                    </label>
+                    <label class="switch" *ngIf="!isflag">
+                      <input type="checkbox"  [(ngModel)]="item.IsVerified" [checked]="item.IsVerified" [ngClass]="{'disabledddl':(!isflag)}" disabled (change)="setvalues($event,item.Id,item.Type)" id="{{item.Id}}_{{item.Type}}">
+                      <span class="slider round" id="{{item.Id}}_{{item.Type}}" [ngClass]="{'disabledddl':(!isflag)}"><span>Yes</span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+      <div class="row  mb-3  text-right" *ngIf="isflag">
+        <div class="col-sm-12 col-md-12" *ngIf="!leadconvert">
+          <button [disabled]="isSubmitted" class="btn btn-success mr-2" (click)="onSubmitData()"><i class="feather-save"></i> Submit</button>
+          <a *ngIf="isModel" href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+        </div>
+
+      </div>
+
+  </div>
+</div>

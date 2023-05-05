@@ -1,0 +1,254 @@
+
+<div id="wrapper">
+  <!-- Sidebar -->
+  <nav class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
+    <ul class="nav sidebar-nav">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <div class="radius-circle"> 
+                    <img [src]="imageLink" (error)="onUserError($event)" class="user-image rounded-circle"
+                    alt="User" />
+                    <!-- <img src="assets\images/user.jpg" alt="user" /> -->
+                </div>
+                <h3>{{username}}</h3>
+
+            </div>
+        </div>
+
+
+        <li><a routerLink="/dashboard" [routerLinkActive]="'active'"><i class="fa fa-dashboard"></i>Dashboard</a>
+        </li>
+        <li><a routerLink="/dashboard/mobile/service-request" [routerLinkActive]="'active'"><i
+                    class="zmdi zmdi-headset"></i> Service Request</a></li>
+        <li><a routerLink="/dashboard/mobile/total-contracts" [routerLinkActive]="'active'"><i
+                    class="zmdi zmdi-format-align-justify"></i> Contracts</a></li>
+        <li><a routerLink="/dashboard/mobile/document-upload" [routerLinkActive]="'active'"><i
+                    class="zmdi zmdi-upload"></i> Document Upload</a></li>
+        <li><a routerLink="/dashboard/mobile/signed-loan-document" [routerLinkActive]="'active'"><i
+                    class="zmdi zmdi-border-color"></i> Signed Loan Document </a></li>
+        <li><a style="cursor: pointer;"><i class="zmdi zmdi-settings" ></i> Settings</a></li>
+        <li><a style="cursor: pointer;" (click)="logout()" ><i class="zmdi zmdi-power"></i> Logout</a></li>
+    </ul>
+</nav>
+<!-- /#sidebar-wrapper -->
+
+<div id="page-content-wrapper" class="main">
+
+
+   <div class="header">
+       <div class="container">
+           <div class="header-row">
+           <!-- <a  class="toggle hamburger animated fadeInLeft is-closed" data-toggle="offcanvas"><img src="assets/images/menu.png" alt="menu"/></a> -->
+           <h2 class="text-white">Dashboard</h2>
+           <a  class="notify-toggler custom-dropdown-toggler">
+               <!-- <i class="zmdi zmdi-notifications-none"></i>
+               <span class="badge badge-xs rounded-circle"></span> -->
+           </a>
+       </div>
+      
+        
+       </div>
+   </div>
+
+   <div class="card">
+    <h3 style="margin-left: 20px; margin-top: 20px;" >Upload Document</h3>
+     
+       <span class="btn-in-panel">
+ 
+         <a *ngIf="isCompanyAdmin || isBanker" (click)="transferSFTPdoc()" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" href="javascript:void(0);" title="Transfer documents to SFTP"><i class="fa fa-exchange text-white mr-1"></i> </a>
+ 
+         <a (click)="copyMessage(formdata1.Id,formdata1.AccountId)" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" title="Click to copy share document link" href="javascript:void(0);"><i class=" feather-copy" aria-hidden="true"></i></a>
+         <a *ngIf="isCompanyAdmin || isFinanceUser || isSales  || isDealerUser" (click)="sharelink(formdata1.Id,'EMAIL')" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" href="javascript:void(0);" title="Share Document Link"><i class="fa fa-share-alt" aria-hidden="true"></i> </a>
+ 
+         <a *ngIf="isCompanyAdmin || isFinanceUser || isSales  || isDealerUser" (click)="sharelink(formdata1.Id,'SMS')" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" href="javascript:void(0);" title="Share document link via text messsge"><i class="fa fa-mobile" aria-hidden="true"></i> </a>
+ 
+         <span class="pr-3">Required Document: {{requireDoc}} </span>
+         <span>
+           Uploaded Document: {{recieveDocument}}</span>
+           <span>Pending Document: {{pendingDoc}}</span>
+           </span>
+         
+       <!-- <h4 class="panel-title"> 
+           <span> Document Upload</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span>
+           <span class="btn-in-panel">
+ 
+             <a *ngIf="isCompanyAdmin || isBanker" (click)="transferSFTPdoc()" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" href="javascript:void(0);" title="Transfer documents to SFTP"><i class="fa fa-exchange text-white mr-1"></i> </a>
+     
+             <a (click)="copyMessage(formdata1.Id,formdata1.AccountId)" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" title="Click to copy share document link" href="javascript:void(0);"><i class=" feather-copy" aria-hidden="true"></i></a>
+             <a *ngIf="isCompanyAdmin || isFinanceUser || isSales  || isDealerUser" (click)="sharelink(formdata1.Id,'EMAIL')" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" href="javascript:void(0);" title="Share Document Link"><i class="fa fa-share-alt" aria-hidden="true"></i> </a>
+     
+             <a *ngIf="isCompanyAdmin || isFinanceUser || isSales  || isDealerUser" (click)="sharelink(formdata1.Id,'SMS')" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" href="javascript:void(0);" title="Share document link via text messsge"><i class="fa fa-mobile" aria-hidden="true"></i> </a>
+     
+             <span class="pr-3">Required Document: {{requireDoc}} </span>
+             <span>
+               Uploaded Document: {{recieveDocument}}
+               <span>Pending Document: {{pendingDoc}}</span>
+           </span>       
+       </h4> -->
+     
+    
+       <div class="card-body">
+         <div class="row">
+           <div class="col-md-12">
+             <form [formGroup]="UploadimageForm" [ngClass]="{'disabled':loadSave}">
+               <div class="action row" *ngIf="is_converted != true">
+                 <div class="col-lg-6">
+                   <label>Choose Document:<span class="text-danger">*</span></label>
+                   <div class="form-group">
+                     <div class="input-group">
+                       <div class="input-group-prepend" *ngIf="imageLink!=''">
+ 
+                         <!--<img src={{imageLink}} alt="img" class="upload_image_thnumb" data-toggle="modal" data-target="#myModal">-->
+ 
+                         <div id="myModal" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                           <div class="modal-dialog" style="height:450px!important;width:450px!important; ">
+                             <div class="">
+                               <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+                             </div>
+                             <div class="modal-content">
+                               <div class="text-center">
+                                 <img src={{imageLink}} alt="img" style="height:450px!important;width:450px!important; " class="img-responsive">
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       <div class="custom-file m-fileup">
+                         <input formControlName="profilePic" class="custom-file-input" #file type="file" name='file' #fileInput (change)="setFile($event)" lang="es">
+                         <label class="custom-file-label">{{fileName}}</label>
+ 
+                       </div>
+                       <small *ngIf="!isValid"
+                              style="color:red;" class="w-100 mt-1">Document is required</small>
+                       <small class="w-100 mt-1"><i class="text-secondary">Valid file format is pdf and limit upto 20MB.</i> </small>
+                     </div>
+                   </div>
+                 </div>
+ 
+                 <div class="col-lg-6">
+                   <label>Document Type:<span class="text-danger">*</span></label>
+                   <div class="form-group">
+                     <ng-select #fileuploadddl [items]="lstfiletype" placeholder="Select File type" formControlName="filetype"
+                                bindLabel="documentType" (change)="fileNameDDL($event)" bindValue="id" [ngClass]="{'is-invalid': (filetype.invalid && (filetype.dirty || filetype.touched) && (filetype.errors.required || filetype.errors.maxlength)) }"></ng-select>
+                     <!--<small *ngIf="(filetype.dirty || filetype.touched) && filetype.errors?.required"
+                     style="color:red;">Please select File Type</small>-->
+                     <small *ngIf="filetype.invalid && (filetype.dirty || filetype.touched) && filetype.errors.required"
+                            class="text-danger">Please select Document Type</small>
+                   </div>
+                 </div>
+                 <div class="col-lg-6">
+                   <label>Document Title:<span class="text-danger"></span></label>
+                   <div class="form-group">
+                     <input type="text" class="form-control" placeholder="Please enter File Title"
+                            formControlName="documentTitle"
+                            [ngClass]="{'is-invalid': (documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && (documentTitle.errors?.required || documentTitle.errors?.maxlength)) }">
+                     <small *ngIf="documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && documentTitle.errors?.required"
+                            class="text-danger">Document Title is required</small>
+                     <small *ngIf="documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && documentTitle.errors?.maxlength"
+                            class="text-danger">Document Title must be less than 50 characters.</small>
+                   </div>
+                 </div>
+                 <div class="col-lg-6">
+                   <label>Description:<span class="text-danger"></span></label>
+                   <div class="form-group">
+                     <textarea class="form-control" placeholder="Description" formControlName="description"
+                               [ngClass]="{'is-invalid': (description.invalid && (description.dirty || description.touched) && (description.errors?.required)) }"></textarea>
+                     <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.required"
+                            class="text-danger">Description is required</small>
+                   </div>
+                 </div>
+ 
+                 <div class="col-lg-12">
+                   <a href="javascript:;" (click)="SaveImage()" *ngIf="isflag" class="btn btn-success">Upload Document</a>
+                 </div>
+               </div>
+             </form>
+             <div class="table-responsive mt-3">
+               <table class="table table-hover border mb-0">
+                 <thead>
+                   <tr>
+                     <th>Download</th>
+                     <th>Document Type</th>
+                     <th>Document Title</th>
+                     <th>Document Uploaded Date</th>
+                     <!--<th>Description</th>-->
+                     <td>Action</td>
+                   </tr>
+ 
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let c of fileuplist">
+                     <td class="text-left">
+                       <a class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}}" href="{{c.urlLink}}" *ngIf="c.fileExtension=='.jpg' ||c.fileExtension=='jpeg' ">
+                         <!--<img src="{{c.fileUrl}}" style="height:50px;width:50px" />-->
+                         <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:50px;width:50px" />
+ 
+                       </a>
+ 
+                       <a *ngIf="c.fileExtension=='rar'" (click)="downloadFile($event,c.urlLink)" class="text-dark" download="{{c.fileName}}" href="{{c.urlLink}}">
+                         <img src="../../../assets/default-theme/imagesNew/RarFile.png" style="height:50px;width:50px" />
+ 
+                       </a>
+ 
+                       <a *ngIf="c.fileExtension=='png'" class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}} " href="{{c.urlLink}}">
+                         <!--<img src="{{c.fileUrl}}" style="height:50px;width:50px" />-->
+                         <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:50px;width:50px" />
+                       </a>
+ 
+                       <a *ngIf="c.fileExtension=='gif'" class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}}" href="{{c.urlLink}}">
+                         <img src="../../../assets/default-theme/imagesNew/RarFile.png" style="height:50px;width:50px" />
+ 
+                       </a>
+ 
+                       <a *ngIf="c.fileExtension=='zip'" class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}}" href="{{c.urlLink}}">
+                         <img src="../../../assets/default-theme/imagesNew/ZipImage.jpg" style="height:50px;width:50px" />
+ 
+                       </a>
+ 
+                       <a *ngIf="c.fileExtension=='pdf' || c.fileExtension=='.pdf' || c.fileExtension=='heic' || c.fileExtension=='heif'" class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}}" href="{{c.urlLink}}">
+                         <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:50px;width:50px" />
+ 
+                       </a>
+ 
+ 
+                     </td>
+ 
+                     <td class="text-left">{{c.masterValue}}</td>
+                     <td class="text-left">{{c.fileName}}</td>
+                     <td class="text-left">{{c.createOn | pstdatetimetolocal}}</td>
+                     <!--<td class="text-left">{{c.description}}</td>-->
+                     <td>
+ 
+                       <div class="text-left">
+                         <ng-container *ngIf="DocVerified==0">
+                           <a (click)="Deleteimage(c.id)" class="btn-delete" *ngIf="isflag"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                           &nbsp;&nbsp;
+                         </ng-container>
+                         <a download="{{c.fileName}}" [href]="c.urlLink" (click)="downloadFile($event,c.urlLink)" [target]="_blank"><i title="Click to downloand." class="fa fa-download text-primary"></i></a>
+ 
+ 
+                       </div>
+                     </td>
+                   </tr>
+                   <tr *ngIf="fileuplist == ''">
+                     <td colspan="3" align="center">
+                       <span class="nofound">No Record Found.</span>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+         </div>
+  
+       <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+     </div>
+   </div>
+    
+</div>
+</div>
+
+
+  
+
+  

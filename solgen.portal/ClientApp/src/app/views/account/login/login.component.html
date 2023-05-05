@@ -1,0 +1,92 @@
+<div class="login-container">
+  <a class="btn btn-success mr-1 smview" style="display:none" (click)="checkUserSession()" ><i class="feather-plus"></i></a>
+  <div class="login-main">
+    <!--<img src="assets/default-theme/imagesNew/login-logo-loanhomi.png" *ngIf="siteURL=='loanhomi'" />
+  <img src="assets/default-theme/imagesNew/login-logo-solgen.png" *ngIf="siteURL=='solgenone'" />
+  <img src="assets/default-theme/imagesNew/login-logo.png" *ngIf="siteURL==''" />-->
+    <!-- <div class="logo-i"><img src="{{siteimage}}" /></div> -->
+
+    <div class="logo-i"><img src="../../../assets/default-theme/imagesNew/zolar-logo.png" /></div>
+
+    <div class="login-box">
+      <h2 class="heading">Login</h2>
+      <form [formGroup]="loginForm" autocomplete="off">
+        <div class="login-box-fields" [ngClass]="{'disabled':loadSave}">
+          <div class="form-group fontuser">
+            <input type="text" class="form-control" placeholder="Email" formControlName="userName">
+            <i class="fa fa-envelope"></i>
+            <div *ngIf="loginForm.get('userName').touched && loginForm.get('userName').errors?.required" class="alert-danger p-1">Please enter username.</div>
+          </div>
+          <div class="form-group fontpassword">
+            <input id="inputPassword" [type]="isPasswordVisible ? 'text' : 'password'" class="form-control" passwordToggle placeholder="Password" formControlName="password">
+
+            <i (click)="showHidePassword()" [class]="!isPasswordVisible ? 'feather-eye' : 'feather-eye-off'" aria-hidden="true"></i>
+            <i class="fa fa-lock"></i>
+
+            <div *ngIf="loginForm.get('password').touched && loginForm.get('password').errors?.required" class="alert-danger p-1">Please enter password.</div>
+          </div>
+          <div class="row px-2">
+            <div class="col-6 pr-0">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="customCheck1" [(ngModel)]="isChecked" [checked]="isChecked" formControlName="rememberMe" (change)="rememberMeChanged($event)">
+                <label class="custom-control-label float-left" for="customCheck1">Remember Me</label>
+              </div>
+            </div>
+            <div class="col-6 text-right pr-2">
+              <a href="javascript:void(0);" class="forgot" (click)="forgotPassword()">Forgot Password?</a>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success" (click)="login()">Login</button>
+        </div>
+        <div class="bootom-faq">
+          <p>For support and a list of frequantly asked questions, <a href="#" class="pl-2"> Click here</a></p>
+        </div>
+      </form>
+    </div>
+    <!-- Company PopUp End -->
+    <!-- <div bsModal #companyModal="bs-modal" [config]="{ backdrop: 'static' }" class="modal fade" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-info">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Select Company</h4>
+        <button type="button" class="close" (click)="closeComp()"
+          data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="min-height: 200px;">
+        <div>
+          <div class="col-md-12 col-lg-4">
+            <label>Select Company:</label>
+            <div class="form-group">
+              <ng-select [items]="CompaniesName" [loading]="loadSave" placeholder="Select Roles" [(ngModel)]="CompanyIdval"
+               bindLabel="CompanyName" bindValue="CompanyId"></ng-select>
+                          <input type="text" placeholder="test">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" (click)="login()">LOGIN</button>
+        <button class="btn btn-danger form-btns" (click)="closeComp()">
+           CANCLE
+        </button>
+      </div>
+    </div>
+  </div>
+  </div> -->
+    <!--Company PopUp End -->
+
+  </div>
+</div>
+<!-- <app-loader [size]=100 [color]="'white'" *ngIf="loadSave" class="loader-login"></app-loader>
+<app-loader-black [size]="'100'" ></app-loader-black> -->
+<div *ngIf="loadSave" class="overlay loader-login">
+  <div class="dimmer active">
+    <div class="spinner"></div>
+  </div>
+</div>
+<!-- <app-loader-white [size]="'100'" *ngIf="loadSave" class="loader-login" ></app-loader-white> -->
+

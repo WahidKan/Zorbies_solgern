@@ -1,0 +1,87 @@
+<div bsModal #resourceSkill="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; max-height:1000px; overflow:visible;">
+        <form [formGroup]="addForm" autocomplete="off">
+          <div class="row">
+            <div class="col-md-12">
+              <!--<h4>if would like Enerflo to automatically find the best apt time based on availalility.</h4>-->
+              <div class="row col-12">
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Service Crew:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <ng-select #clearDrop [items]="lstResource"
+                               placeholder="Select Service Resource" bindValue="value" bindLabel="text" formControlName="serviceResource"
+                               [closeOnSelect]="true"
+                               [ngClass]="{'is-invalid': (serviceResource.invalid && (serviceResource.dirty || serviceResource.touched) && serviceResource.errors?.required) }">
+                    </ng-select>
+                    <small *ngIf="serviceResource.invalid && (serviceResource.dirty || serviceResource.touched) && serviceResource.errors?.required"
+                           style="color:red;">Please select Service Resource</small>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Skill:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <ng-select #clearAppointment [items]="lstResourceSkill"
+                               placeholder="Select skill" bindValue="value" bindLabel="text"
+                               formControlName="skill"
+                               [closeOnSelect]="true" [ngClass]="{'is-invalid': (skill.invalid && (skill.dirty || skill.touched) && skill.errors?.required) }">
+                    </ng-select>
+                    <small *ngIf="skill.invalid && (skill.dirty || skill.touched) && skill.errors?.required"
+                           style="color:red;">Please select skill</small>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Skill Level:<span class="text-danger"></span></label>
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Please enter Skill Level" formControlName="skillLevel">
+                    <small *ngIf="skillLevel.invalid && (skillLevel.dirty || skillLevel.touched) && skillLevel.errors?.pattern"
+                           class="text-danger">Please enter valid Skill Level.</small>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Start Date:<span class="text-danger">*</span></label>
+                  <div class="form-group datepickerinpop">
+                    <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true"
+                                inputStyleClass="form-control start-date " [maxDate]="endDate.value" formControlName="startDate" [hourFormat]="(timeFormat==24)?'24':'12'"
+                                [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                                [ngClass]="{'is-invalid': (startDate?.invalid && (startDate.dirty || startDate.touched) && startDate.errors?.required) }"></p-calendar>
+
+                  </div>
+                  <small *ngIf="startDate?.invalid && (startDate.dirty || startDate.touched) && startDate.errors?.required"
+                         style="color:red;">Please select Start Date</small>
+                </div>
+
+
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>End Date:<span class="text-danger"></span></label>
+                  <div class="form-group datepickerinpop">
+                    <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true" formControlName="endDate"
+                                inputStyleClass="form-control start-date" [minDate]="startDate.value" [hourFormat]="(timeFormat==24)?'24':'12'"
+                                [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="Save()"><i class="feather-save text-white"></i> Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

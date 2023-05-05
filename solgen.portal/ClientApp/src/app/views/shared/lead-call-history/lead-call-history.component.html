@@ -1,0 +1,50 @@
+<div class="panel active" >
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a href="#callHistory" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+          <span>Call History ({{historyCount}})</span>
+        </a>
+      </h4>
+    </div>
+    <div id="callHistory" class="panel-collapse active show p-0 border-0" data-parent="#accordion">
+      <div id="callHistory" class="panel-collapse collapse active show">
+
+        <div class="col-md-12 col-sm-12 list-card-view" >
+          <div class="card card-block border-0" *ngFor="let item of callHistoryList;let i=index">
+          <div class="">
+            <div class="card-main">
+              <h5 class="card-title border-bottom mt-3 mb-3">
+                  <div class="row">
+                      <div class="col-6">To: <a href="javascript:void(0);" (click)="openDailer(item.To_PhoneNumber)">{{item.To_PhoneNumber}}</a></div>
+                      <div class="col-6">From: <a href="javascript:void(0);" (click)="openDailer(item.From_PhoneNumber)">{{item.From_PhoneNumber}}</a></div>
+                  </div>
+              </h5>
+              <div class="row">
+                <div class="col-6"><p><strong>Vender:</strong> {{item.Vendor}}</p></div>
+                <div class="col-6"><p><strong>Date:</strong> {{item.ImportDate | date: 'MM-dd-yyyy'}}</p></div>
+              </div>
+              <div class="row">
+                <div class="col-6"><p><strong>Result:</strong> {{item.Result}}</p></div>
+                <div class="col-6"><p><strong>Start Time:</strong> {{item.StartTime | DateTimeToLocal | date :'mediumTime' }}</p></div>
+              </div>
+              <div class="row">
+                <div class="col-6"><p><strong>End Time:</strong> {{item.EndTime | DateTimeToLocal | date :'mediumTime' }}</p></div>
+                <div class="col-6"><p><strong>Duration(sec):</strong> {{item.Duration}}</p></div>
+              </div>
+              <div class="row">
+                <div class="col-6"><p><strong>Call Type:</strong> {{item.Type}}</p></div>
+                <div class="col-6"><p><strong>Direction:</strong> {{item.Direction}}</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-block" *ngIf="callHistoryList == null || callHistoryList.length==0">
+          <div class="card-main border-bottom  mt-3">
+            <p class="text-center text-danger">No data to display</p>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>

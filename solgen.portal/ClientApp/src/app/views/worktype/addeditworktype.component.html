@@ -1,0 +1,114 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+        <li><a class="smview" routerLink="/worktype">Manage Work Type</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+
+<div class="panel">
+  <div class="panel-content p-4">
+    <form [formGroup]="addWorkTypeForm" autocomplete="off">
+      <div class="row  mb-2">
+        <div class="col-12 col-md-12 col-lg-12"><h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>Work Type Details:</span></h3></div>
+        <div class="col-md-12 col-lg-4">
+          <label>Work Type Name:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="workTypeName" maxlength="50" placeholder="Enter Work Type Name"
+                   [ngClass]="{'is-invalid': (workTypeName.invalid && (workTypeName.dirty || workTypeName.touched) && (workTypeName.errors?.required || workTypeName.errors?.maxlength)) }">
+            <small *ngIf="workTypeName.invalid && (workTypeName.dirty || workTypeName.touched) && workTypeName.errors?.required"
+                   class="text-danger">Work Type Name is required</small>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+          <label>Duration(HH:MM)<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <p-calendar inputStyleClass="form-control start-date" 
+            formControlName="duration" placeholder="Select To Time"
+            hourFormat="24" [timeOnly]="true" inputId="timeonly1"
+            [ngClass]="{'is-invalid': (duration.invalid && (duration.dirty || duration.touched) && duration.errors?.required) }"
+            ></p-calendar>
+                   <small *ngIf="duration.invalid && (duration.dirty || duration.touched) && duration.errors?.required"
+                   class="text-danger">Duration is required</small>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>Description:</label>
+          <div class="form-group">
+            <textarea type="text" class="form-control" formControlName="description" placeholder="Enter Address"></textarea>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>Is Active:</label>
+          <div class="form-group">
+            <label class="switch">
+              <input type="checkbox"  formControlName="isActive">
+              
+              <span class="slider round"><span>Yes</span></span>
+            </label>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>Color:</label>
+          <div class="form-group">
+            <div class="dropdown bootstrap-select form-control my-select">
+              <p-colorPicker formControlName="chooseColor" (click)="SetColorFor(1,$event)">
+              </p-colorPicker>
+              <span>{{colorCode}}</span>
+              <!-- <span>{{chooseColor}}</span> -->
+            </div>
+          </div>
+        </div>
+      
+        
+      </div>
+  
+    
+      <div class="row mb-2" *ngIf="isEdit">
+        <div class="col-12 col-md-12 col-lg-12"><h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>System Information:</span></h3></div>
+        <div class="col-md-12 col-lg-4">
+          <label>Created By:</label>
+          <div class="form-group">
+            <input type="text" class="form-control" readonly formControlName="createdby" placeholder="created by" (keypress)="allowTwoDecimalOnly($event)">
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>Created On:</label>
+          <div class="form-group">
+            <input type="text" class="form-control" readonly formControlName="createdon" placeholder="created on" (keypress)="allowTwoDecimalOnly($event)">
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>Modified By:</label>
+          <div class="form-group">
+            <input type="text" class="form-control" readonly formControlName="modifiedby" placeholder="modified by" (keypress)="allowTwoDecimalOnly($event)">
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>Modified On:</label>
+          <div class="form-group">
+            <input type="text" class="form-control" readonly formControlName="modifiedon" placeholder="modified on" (keypress)="allowTwoDecimalOnly($event)">
+          </div>
+        </div>
+       
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-12 col-md-12">
+          <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="addeditWorkType()"><i class="feather-save"></i> Submit</a>  <!--*ngIf="addOrUpdatePermission"-->
+          <a href="javascript:void(0);" class="btn btn-danger" (click)="Cancel()"><i class="feather-x"></i> Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

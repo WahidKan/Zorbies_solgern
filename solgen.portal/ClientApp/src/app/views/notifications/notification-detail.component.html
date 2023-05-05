@@ -1,0 +1,73 @@
+<div bsModal #notificationDetailModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Message</h4>
+        <button type="button" class="close" (click)="close()">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:auto; margin-bottom:10px;">
+        <div class="col-md-12" *ngIf="dataNoti">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Sender:</label>
+                <div class="col-sm-9">
+                  <p class="form-control-plaintext text-left" id="staticEmail">{{dataNoti.senderName}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-5 col-form-label font-weight-bold">Received On:</label>
+                <div class="col-sm-7">
+                  <p class="form-control-plaintext text-left" id="staticEmail">{{dataNoti.CreatedOn | DateTimeToLocal}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Subject:</label>
+                <div class="col-sm-9">
+                  <p class="form-control-plaintext text-left" id="staticEmail">{{dataNoti.Subject}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-5 col-form-label font-weight-bold">Status:</label>
+                <div class="col-sm-7">
+                  <p class="form-control-plaintext text-left" id="staticEmail">
+                    <span *ngIf="!dataNoti.IsRead; else IsUnread" class="badge badge-warning">Unread</span>
+                    <ng-template #IsUnread>
+                      <span class="badge badge-success">Read</span>
+                    </ng-template>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-12 col-form-label font-weight-bold">Message:</label>
+                <div class="col-sm-12">
+                  <p class="form-control-plaintext text-left" [innerHTML]="dataNoti.Message"></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label font-weight-bold">Read On:</label>
+                <div class="col-sm-9">
+                  <p class="form-control-plaintext text-left">{{dataNoti.ReadOn | DateTimeToLocal}}</p>
+                </div>
+              </div>
+            </div>    
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary form-btns" (click)="redirectToSource(dataNoti)" data-dismiss="modal" aria-label="Go To Source"><i class="fa fa-external-link mr-1"></i> Go To Source</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white mr-1"></i> Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,183 @@
+<section class="page">
+  <!-- Breadcrumb-->
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Dashboard</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Header Section-->
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch" [ngClass]="{'disabled':loadtop}">
+        <div class="d-flex col-12 w-100">
+          <div class="dashboard-box" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+            <div class="stattics-data second-color w-100 mb-3" [routerLink]="['/lease']" [queryParams]="{ statusId: '118795e4-16cb-4e4c-b968-5a587cada635'  }">
+              <div class="stattics-data-left">
+                <span class="mt-2">Underwriting Proposals</span>
+              </div>
+              <div class="stattics-data-right">
+                <span class="float-left ml-auto icon-dash"><i class="fa fa-file-signature"></i></span>
+                <span>{{dashboardCounts.activeLease}}</span>
+                <app-loader [size]=60 [color]="'white'" *ngIf="loadtop" class="loader-popup"></app-loader>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="dashboard-box" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+            <div class="stattics-data fifth-color w-100 mb-3" [routerLink]="['/lease']" [queryParams]="{ statusId: 'a3fd9e84-ece4-44fd-a65b-f895256035d9'  }">
+              <div class="stattics-data-left">
+                <span class="display-5 mt-2">Pending Proposals</span>
+              </div>
+              <div class="stattics-data-right">
+                <span class="float-left ml-auto icon-dash"><i class="fa fa-layer-group"></i></span>
+                <span>{{dashboardCounts.sentLease}}</span>
+                <app-loader [size]=60 [color]="'white'" *ngIf="loadtop" class="loader-popup"></app-loader>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-box" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+            <div class="stattics-data third-color w-100 mb-3" [routerLink]="['/lease']" [queryParams]="{ statusId: 'f3eae496-a693-4534-ad32-14bd59333182'  }">
+              <div class="stattics-data-left">
+                <span class="display-5 mt-2">Actively Working Proposals</span>
+              </div>
+              <div class="stattics-data-right">
+                <span class="float-left ml-auto icon-dash"><i class="fa fa-thumbs-up"></i></span>
+                <span>{{dashboardCounts.approvedLease}}</span>
+                <app-loader [size]=60 [color]="'white'" *ngIf="loadtop" class="loader-popup"></app-loader>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-box" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+            <div class="stattics-data fourth-color w-100 mb-3" [routerLink]="['/lease']" [queryParams]="{ statusId: '0175188a-ba67-4364-9ae8-f5b46de6c9f2' }">
+              <div class="stattics-data-left">
+                <span class="display-5 mt-2">Funded Proposals</span>
+              </div>
+              <div class="stattics-data-right">
+                <span class="float-left ml-auto icon-dash"><i class="fa fa-hand-holding-usd"></i></span>
+                <span>{{dashboardCounts.fundedLease}}</span>
+                <app-loader [size]=60 [color]="'white'" *ngIf="loadtop" class="loader-popup"></app-loader>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-box" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+            <div class="stattics-data first-color w-100 mb-3" [routerLink]="['/lease']" [queryParams]="{ statusId: 'e09571ea-2f5c-4ccf-b693-d72776a56dd4' }">
+              <div class="stattics-data-left">
+                <span class="display-5 mt-2"> Total Proposals</span>
+              </div>
+              <div class="stattics-data-right">
+                <span class="float-left ml-auto icon-dash"><i class="fa fa-clipboard-list"></i></span>
+                <span>{{dashboardCounts.totalLease}}</span>
+                <app-loader [size]=60 [color]="'white'" *ngIf="loadtop" class="loader-popup"></app-loader>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-12 col-md-12 col-lg-12 col-xl-12 mb-4">
+          <div class="bg-white border dashboard-table">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-md-12 my-2">
+                  <h3 class="heading">
+                    Notifications
+                    <a style="float:right" [routerLink]="['/notifications']">View All</a>
+                  </h3>
+                  <div class="table-responsive">
+                    <ngx-datatable class="bootstrap"
+                                   [rows]="listNotification"
+                                   [columnMode]="'force'"
+                                   [externalPaging]="false"
+                                   [externalSorting]="false"
+                                   [count]="10"
+                                   (page)='10'
+                                      [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                                   [headerHeight]="40"
+                                   >
+                      <ngx-datatable-column name="Sender Name" prop="senderName" [sortable]="true" headerClass="thead-dark">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <!--<span *ngIf="row.IsRead">{{row.senderName}}</span>-->
+                          <span *ngIf="!row.IsReadOpr" class="font-weight-bold">{{row.senderName}}</span>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Subject" prop="Subject" [sortable]="true">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <!--<span *ngIf="row.IsRead" [innerHtml]="row.Subject"></span>-->
+                          <span *ngIf="!row.IsReadOpr" [innerHtml]="row.Subject" class="font-weight-bold"></span>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="View" [sortable]="false" headerClass="text-center">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <div class="icon-text-center" *ngIf="!row.IsReadOpr">
+                            <a href="javascript:void(0);" (click)="displayDetail(row)"><i class="feather-eye text-info" title="View"></i></a>
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Date" prop="CreatedOn" [sortable]="true">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <!--<span *ngIf="row.IsRead">{{row.CreatedOn | date: 'MM-dd-yyyy hh:mm:ss a'}}</span>-->
+                          <span *ngIf="!row.IsReadOpr" class="font-weight-bold">{{row.CreatedOn | date: 'MM-dd-yyyy hh:mm:ss a'}}</span>
+                        </ng-template>
+                      </ngx-datatable-column>
+                    </ngx-datatable>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--<div class="col-12 col-md-12 col-lg-12 col-xl-6 mb-4" *ngIf="moduleContactPermission.roleModuleReadFlag">
+          <div class="bg-white border rounded">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-md-12 mt-4">
+                  <h3 class="heading">New Contacts</h3>
+                  <div class="table-responsive">
+                    <ngx-datatable class="bootstrap"
+                                   [rows]="listContacts"
+                                   [columnMode]="'force'"
+                                   [externalPaging]="false"
+                                   [externalSorting]="false"
+                                   [count]="10"
+                                   (page)='10'
+                                   [headerHeight]="40"
+                                   [rowHeight]="'auto'"
+                                   >
+                      <ngx-datatable-column name="Name" prop="Name" [sortable]="true" *ngIf='modulePermission!==null && modulePermission.roleModuleUpdateFlag'>
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <a [routerLink]="['/contact/edit',row.ContactId]">{{row.Name}} </a>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Business Name" prop="ContactBussinessName" [sortable]="true" headerClass="thead-dark"></ngx-datatable-column>
+                      <ngx-datatable-column name="City" prop="ContactMailAddressCity" [sortable]="true"></ngx-datatable-column>
+                      <ngx-datatable-column name="Date" prop="ContactCreatedOn" [sortable]="true">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{row.ContactCreatedOn | date: 'MM-dd-yyyy hh:mm:ss a'}}
+                        </ng-template>
+                      </ngx-datatable-column>
+                    </ngx-datatable>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>-->
+      </div>
+        <!--white-main-div-->
+      </div>
+
+  </section>
+</section>
+
+<app-notificationdetail #dashboarNotificationDetailModal></app-notificationdetail>

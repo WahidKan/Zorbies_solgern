@@ -1,0 +1,157 @@
+<div bsModal #filterPopoup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Filter</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow:visible">
+
+        <div class="clearfix"></div>
+        <div class="panel-content px-3  no-padding">
+          <form [formGroup]="filterPopoupForm" [ngClass]="{'disabled':loadSave}">
+            <div class="row mb-2">
+              <div class="col-md-12 col-lg-12 p-0">
+                <h3 class="form-heading mt-0"><span>Filter in Resource & Unscheduled Appointments List</span></h3>
+                <div class="row">
+                  <div class="col-md-12 col-lg-6">
+                    <label>Warehouse:</label>
+                    <div class="form-group">
+                      <ng-select [items]="warehouseList"
+                                 placeholder="Select Warehouse" [loading]="loadSave" formControlName="warehouse" multiple="true"
+                                 [ngClass]="{'is-invalid': (warehouse.invalid && (warehouse.dirty || warehouse.touched) && warehouse.errors?.required)}"
+                                 bindLabel="text" bindValue="value"></ng-select>
+                      <small *ngIf="warehouse.invalid && (warehouse.dirty || warehouse.touched) && warehouse.errors?.required"
+                             class="text-danger">Warehouse is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label>Site Survey Zone:</label>
+                    <div class="form-group">
+                      <ng-select [items]="lstsitesurveyzone"
+                                 placeholder="Select Site Survey Zone" [loading]="loadSave" formControlName="sitesurveyZone"
+                                 [ngClass]="{'is-invalid': (sitesurveyZone.invalid && (sitesurveyZone.dirty || sitesurveyZone.touched) && sitesurveyZone.errors?.required)}"
+                                 bindLabel="text" bindValue="value"></ng-select>
+                      <small *ngIf="sitesurveyZone.invalid && (sitesurveyZone.dirty || sitesurveyZone.touched) && sitesurveyZone.errors?.required"
+                             class="text-danger">sitesurveyZone is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label>WorkType:</label>
+                    <div class="form-group">
+                      <ng-select [items]="lstWorkType" placeholder="Select worktype" [loading]="loadSave" formControlName="worktype"multiple="true"
+                                 [ngClass]="{'is-invalid': (worktype.invalid && (worktype.dirty || worktype.touched) && worktype.errors?.required)}"
+                                 bindLabel="text" bindValue="value"></ng-select>
+                      <small *ngIf="worktype.invalid && (worktype.dirty || worktype.touched) && worktype.errors?.required"
+                             class="text-danger">WorkType is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label>Service Teritory:</label>
+                    <div class="form-group">
+                      <ng-select [items]="lstTeritory" placeholder="Select Service Teritory" [loading]="loadSave" formControlName="serviceTeritory"
+                                 [ngClass]="{'is-invalid': (serviceTeritory.invalid && (serviceTeritory.dirty || serviceTeritory.touched) && serviceTeritory.errors?.required)}"
+                                 bindLabel="text" bindValue="value"></ng-select>
+                      <small *ngIf="serviceTeritory.invalid && (serviceTeritory.dirty || serviceTeritory.touched) && serviceTeritory.errors?.required"
+                             class="text-danger">Service is required</small>
+                    </div>
+                  </div>
+
+
+
+                </div>
+                <h3 class="form-heading"><span>Filter in Unscheduled Appointments List</span></h3>
+                <div class="row">
+                  <div class="col-md-12 col-lg-6">
+                    <label>Category:</label>
+                    <div class="form-group">
+                      <ng-select [items]="lstWorkOrderCategory" placeholder="Select Category" [loading]="loadSave" formControlName="category"
+                                 [ngClass]="{'is-invalid': (category.invalid && (category.dirty || category.touched) && category.errors?.required)}"
+                                 bindLabel="text" bindValue="value"></ng-select>
+                      <small *ngIf="category.invalid && (category.dirty || category.touched) && category.errors?.required"
+                             class="text-danger">Department is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label>Account:</label>
+                    <div class="form-group">
+                      <ng-select [items]="lstaccountlist" placeholder="Search for accounts"
+                                 (clear)="onClearLangAccountDll(lstaccountlist)"
+                                 (keyup)="onKeyAccountDll($event,lstaccountlist)"
+                                 (scrollToEnd)="onScrollToEndAccountDll(lstaccountlist)" [virtualScroll]="true"
+                                 (change)="changeaccountddl($event)"
+                                 formControlName="account"
+                                 bindLabel="text" bindValue="value"></ng-select>
+
+                      <small *ngIf="account.invalid && (account.dirty || account.touched) && account.errors?.required"
+                             class="text-danger">Department is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label>Test Account:</label>
+                    <div class="form-group">
+                      <label class="switch">
+                        <input type="checkbox" id="testAccount" formControlName="testAccount">
+                        <span class="slider round"><span>Yes</span></span>
+                      </label>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+
+                <h3 class="form-heading"><span>Filter in Service Resource</span></h3>
+                <div class="row">
+                  <div class="col-md-12 col-lg-6">
+                    <label>Department:</label>
+                    <div class="form-group">
+                      <ng-select [items]="departmentList" placeholder="Select Department" [loading]="loadSave" formControlName="department" (change)="changeDept(department)"
+                                 [ngClass]="{'is-invalid': (department.invalid && (department.dirty || department.touched) && department.errors?.required)}"
+                                 bindLabel="text" bindValue="value"></ng-select>
+                      <small *ngIf="department.invalid && (department.dirty || department.touched) && department.errors?.required"
+                             class="text-danger">Department is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label>Resource Name:</label>
+                    <div class="form-group">
+                      <ng-select #resourcedll [items]="resourceList" (clear)="onClearLangresource(resourceList)" (keyup)="onKeyresource($event,resourceList)"
+                                 (scrollToEnd)="onScrollToEndresource(resourceList)" [virtualScroll]="true"
+                                 placeholder="Select Service Resource" [loading]="loadSave" formControlName="serviceResource"
+                                 [ngClass]="{'is-invalid': (serviceResource.invalid && (serviceResource.dirty || serviceResource.touched) && serviceResource.errors?.required)}"
+                                 bindLabel="text" bindValue="value"></ng-select>
+                      <small *ngIf="serviceResource.invalid && (serviceResource.dirty || serviceResource.touched) && serviceResource.errors?.required"
+                             class="text-danger">Resource Name is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label>Crew Name:</label>
+                    <div class="form-group">
+                      <ng-select [items]="crewList" (clear)="onClearLang(crewList)" (keyup)="onKey($event,crewList)"
+                                 (scrollToEnd)="onScrollToEnd(crewList)" [virtualScroll]="true"
+                                 placeholder="Select Service Crew" [loading]="loadSave" formControlName="serviceCrew"
+                                 [ngClass]="{'is-invalid': (serviceCrew.invalid && (serviceCrew.dirty || serviceCrew.touched) && serviceCrew.errors?.required)}"
+                                 bindLabel="text" bindValue="value"></ng-select>
+                      <small *ngIf="serviceCrew.invalid && (serviceCrew.dirty || serviceCrew.touched) && serviceCrew.errors?.required"
+                             class="text-danger">Crew Name is required</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="submit()" data-dismiss="modal" aria-label="Close"><i class="feather-search text-white"></i> Save and Search</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="clearallForm()" data-dismiss="modal" aria-label="Close"><i class="fa fa-refresh text-white"></i> Reset</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,341 @@
+<div bsModal #addAssignedResourcesPopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content" style="z-index:1">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body mapping-select" style="max-height:600px; ">
+        <div class="clearfix"></div>
+        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+          <form [formGroup]="addAssignedResourcesForm" [ngClass]="{'disabled':loadSave}">
+            <div class="row mb-2">
+              <div class="col-md-12 col-lg-6">
+                <label>Service Appointment<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="serviceAppointment" maxlength="50" disabled
+                         [ngClass]="{'is-invalid': (serviceAppointment.invalid && (serviceAppointment.dirty || serviceAppointment.touched) && (serviceAppointment.errors?.required || serviceAppointment.errors?.maxlength)) }" />
+                  <small *ngIf="serviceAppointment.invalid && (serviceAppointment.dirty || serviceAppointment.touched) && serviceAppointment.errors?.required"
+                         class="text-danger">Service Appointment is required</small>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6">
+                <label>Account<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="lstAccount" placeholder="Select Account" formControlName="accountId"
+                             bindLabel="text" bindValue="value"
+                             [ngClass]="{'is-invalid': (accountId.invalid && (accountId.dirty || accountId.touched) && accountId.errors?.required)}"></ng-select>
+                  <small *ngIf="accountId.invalid && (accountId.dirty || accountId.touched) && accountId.errors?.required"
+                         class="text-danger">Please Account</small>
+                </div>
+              </div>
+
+
+              <div class="col-md-12 col-lg-6">
+                <label>Subject:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="subject" maxlength="50"
+                         [ngClass]="{'is-invalid': (subject.invalid && (subject.dirty || subject.touched) && subject.errors?.required)}" />
+                  <small *ngIf="subject.invalid && (subject.dirty || subject.touched) && subject.errors?.required"
+                         class="text-danger">Please Enter Subject</small>
+
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6">
+                <label>Status<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="lstStatus" placeholder="Please Select Status" formControlName="statusId"
+                             bindLabel="text" bindValue="value"
+                             [ngClass]="{'is-invalid': (statusId.invalid && (statusId.dirty || statusId.touched) && statusId.errors?.required)}"></ng-select>
+                  <small *ngIf="statusId.invalid && (statusId.dirty || statusId.touched) && statusId.errors?.required"
+                         class="text-danger">Please Select Status </small>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <label>Work Type<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="lstWorkType" placeholder="Please Select Work Type" formControlName="workType"
+                             bindLabel="text" bindValue="value"
+                             [ngClass]="{'is-invalid': (workType.invalid && (workType.dirty || workType.touched) && workType.errors?.required)}"></ng-select>
+                  <small *ngIf="workType.invalid && (workType.dirty || workType.touched) && workType.errors?.required"
+                         class="text-danger">Please Work Type</small>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <label>Work Order<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="lstWorkorder" placeholder="Please Select Work Order" [loading]="loadSave" formControlName="WorkOrder"
+                             bindLabel="text" bindValue="value"
+                             [ngClass]="{'is-invalid': (WorkOrder.invalid && (WorkOrder.dirty || WorkOrder.touched) && WorkOrder.errors?.required)}"></ng-select>
+                  <small *ngIf="WorkOrder.invalid && (WorkOrder.dirty || WorkOrder.touched) && WorkOrder.errors?.required"
+                         class="text-danger">Please Select Work Order</small>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <label>Description:<span class="text-danger"></span></label>
+                <div class="form-group">
+                  <textarea class="form-control" placeholder="Description" formControlName="description" maxlength="5000"></textarea>
+                </div>
+              </div>
+              <div class="col-12">
+                <h3 class="form-heading"> <span>Scheduled Times</span></h3>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Arrival Window Start Time:<span class="text-danger"></span></label>
+                <div class="form-group datepickerinpop">
+                  <p-calendar [showIcon]="true" class="calendarwidth" [hourFormat]="(timeFormat==24)?'24':'12'" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="arrivalWindowStartTime"
+                              [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                              (onSelect)="GetCompareDateTimeResult('arrivalWindowStartTime','arrivalWindowEndTime','Arrival Window Start Time','Arrival Window End Time')"></p-calendar>
+                </div>
+                <small *ngIf="arrivalWindowStartTime?.invalid && (arrivalWindowStartTime.dirty || arrivalWindowStartTime.touched)"
+                       style="color:red;">
+                  <ng-container *ngIf="arrivalWindowStartTime.required && arrivalWindowStartTime.errors == null">Please select Arrival Window End Time</ng-container>
+                  <ng-container *ngIf="arrivalWindowStartTime.errors != null">{{arrivalWindowStartTime.errors.message}}</ng-container>
+                </small>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Arrival Window End Time:<span class="text-danger"></span></label>
+                <div class="form-group datepickerinpop">
+                  <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="arrivalWindowEndTime"
+                              [showTime]="true" [hourFormat]="(timeFormat==24)?'24':'12'" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                              (onSelect)="GetCompareDateTimeResult('arrivalWindowStartTime','arrivalWindowEndTime','Arrival Window Start Time','Arrival Window End Time')"
+                              [ngClass]="{'is-invalid': (arrivalWindowEndTime?.invalid && (arrivalWindowEndTime.dirty || arrivalWindowEndTime.touched) && arrivalWindowEndTime.errors?.required) }"></p-calendar>
+                </div>
+                <small *ngIf="arrivalWindowEndTime?.invalid && (arrivalWindowEndTime.dirty || arrivalWindowEndTime.touched)"
+                       style="color:red;">
+                  <ng-container *ngIf="arrivalWindowEndTime.required && arrivalWindowEndTime.errors == null">Please select Arrival Window End Time</ng-container>
+                  <ng-container *ngIf="arrivalWindowEndTime.errors != null">{{arrivalWindowEndTime.errors.message}}</ng-container>
+                </small>
+              </div>
+
+
+
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Scheduled Start Time:<span class="text-danger">*</span></label>
+                <div class="form-group datepickerinpop">
+                  <p-calendar [showIcon]="true" class="calendarwidth" [hourFormat]="(timeFormat==24)?'24':'12'" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="scheduledStartTime"
+                              [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                              (onSelect)="GetCompareDateTimeResult('scheduledStartTime','scheduledEndTime','Scheduled Start Time','Scheduled End Time')"
+                              [ngClass]="{'is-invalid': (scheduledStartTime?.invalid && (scheduledStartTime.dirty || scheduledStartTime.touched) && scheduledStartTime.errors?.required) }"></p-calendar>
+                </div>
+                <small *ngIf="scheduledStartTime?.invalid && (scheduledStartTime.dirty || scheduledStartTime.touched)"
+                       style="color:red;">
+                  <ng-container *ngIf="scheduledStartTime.required && scheduledStartTime.errors == null">Please select Scheduled Start Time</ng-container>
+                  <ng-container *ngIf="scheduledStartTime.errors != null">{{scheduledStartTime.errors.message}}</ng-container>
+                </small>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Scheduled End Time:<span class="text-danger">*</span></label>
+                <div class="form-group datepickerinpop">
+                  <p-calendar [showIcon]="true" class="calendarwidth" [hourFormat]="(timeFormat==24)?'24':'12'" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="scheduledEndTime"
+                              [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                              (onSelect)="GetCompareDateTimeResult('scheduledStartTime','scheduledEndTime','Scheduled Start Time','Scheduled End Time')"
+                              [ngClass]="{'is-invalid': (scheduledEndTime?.invalid && (scheduledEndTime.dirty || scheduledEndTime.touched) && scheduledEndTime.errors?.required) }"></p-calendar>
+                </div>
+                <small *ngIf="scheduledEndTime?.invalid && (scheduledEndTime.dirty || scheduledEndTime.touched)"
+                       style="color:red;">
+                  <ng-container *ngIf="scheduledEndTime.required && scheduledEndTime.errors == null">Please select Scheduled End Time</ng-container>
+                  <ng-container *ngIf="scheduledEndTime.errors != null">{{scheduledEndTime.errors.message}}</ng-container>
+                </small>
+              </div>
+
+
+
+              <div class="col-12">
+                <h3 class="form-heading"> <span>Assigned Resource</span></h3>
+              </div>
+              <div class="col-12 mb-2 d-none">
+                <span><strong>Note: </strong>Please select at least one field "Service Resource" or "Service Crew"  </span>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <label>Service Resource<span *ngIf="validityServiceResource" class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="serviceResourceNames" placeholder="Select Service Resource"
+                             (clear)="onClearLangresource(serviceResourceNames)" (keyup)="onKeyresource($event,serviceResourceNames)" (change)="changeValidators('serviceResourceId')"
+                             (scrollToEnd)="onScrollToEndresource(serviceResourceNames)" [virtualScroll]="true"
+                             formControlName="serviceResourceId"
+                             [ngClass]="{'is-invalid': (serviceResourceId.invalid && (serviceResourceId.dirty || serviceResourceId.touched) && serviceResourceId.errors?.required)}"
+                             bindLabel="text" bindValue="value"></ng-select>
+
+                  <small *ngIf="serviceResourceId.invalid && (serviceResourceId.dirty || serviceResourceId.touched) && serviceResourceId.errors?.required"
+                         class="text-danger">Please select Service Resource / Service Crew</small>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6 bg-light border-bottom">
+                <label>Assigned Service Resources<span *ngIf="validityServiceResource" class="text-danger">*</span></label>
+                <div class="form-group">
+                  <div class="form-group">
+                    <ng-container *ngIf="lstSelectedResources.length>0">
+                      <ul class="list-unstyled">
+                        <li class="pr-2 d-inline" *ngFor="let item of lstSelectedResources;let i =index;">{{item}} <span *ngIf="(lstSelectedResources.length -1)!=i">,</span></li>
+                      </ul>
+                    </ng-container>
+                    <ng-container *ngIf="lstSelectedResources.length==0">
+                      <span class="pr-2 text-danger">No assigned resource found.</span>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <label>Service Crew:<span *ngIf="validityServiceCrew" class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="serviceCrewNames" (clear)="onClearLang(serviceCrewNames)" (keyup)="onKey($event,serviceCrewNames)"
+                             (scrollToEnd)="onScrollToEnd(serviceCrewNames)" [virtualScroll]="true" (change)="changeValidators('serviceCrewId')"
+                             placeholder="Select Service Crew" [loading]="loadSave" formControlName="serviceCrewId"
+                             [ngClass]="{'is-invalid': (serviceCrewId.invalid && (serviceCrewId.dirty || serviceCrewId.touched) && serviceCrewId.errors?.required)}"
+                             bindLabel="text" bindValue="value"></ng-select>
+
+                  <small *ngIf="serviceCrewId.invalid && (serviceCrewId.dirty || serviceCrewId.touched) && serviceCrewId.errors?.required"
+                         class="text-danger">Please select Service Resource / Service Crew</small>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6 bg-light">
+                <label>Selected Service Crews<span *ngIf="validityServiceResource" class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-container *ngIf="lstSelectedCrews.length>0">
+                    <ul class="list-unstyled">
+                      <li class="pr-2 d-inline" *ngFor="let item of lstSelectedCrews;let i =index;">{{item}} <span *ngIf="(lstSelectedCrews.length -1)!=i">,</span></li>
+                    </ul>
+                  </ng-container>
+                  <ng-container *ngIf="lstSelectedCrews.length==0">
+                    <span class="pr-2 text-danger">No service crew found.</span>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <label>Equipment Resource</label>
+                <div class="form-group">
+                  <ng-select [items]="EquipmentResourceList" placeholder="Select Service Resource" formControlName="equipmentResourceId"
+                             bindLabel="text" bindValue="value"></ng-select>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <label>Estimated Travel Time (Minutes)</label>
+                <div class="form-group">
+                  <input type="number" class="form-control" formControlName="estimatedTravelTime" maxlength="50" />
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6 d-none">
+                <label>Actual Travel Time (Minutes)</label>
+                <div class="form-group">
+                  <input type="number" class="form-control" formControlName="actualTravelTime" maxlength="50" />
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6 d-none">
+                <label>Estimated Travel Time From Source:</label>
+                <div class="form-group">
+                  <ng-select [items]="estimatedTravelTimeFromSourceNames" placeholder="Select Estimated Travel Time From Source" [loading]="loadSave" placeholder="-- None --" formControlName="estimatedTravelTimeFromSourceId"
+                             bindLabel="text" bindValue="value"></ng-select>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6 d-none">
+                <label>Approximate Travel Distance From:</label>
+                <div class="form-group">
+                  <input type="number" class="form-control" formControlName="approximateTravelDistanceForm" maxlength="50" />
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6 d-none">
+                <label>Estimated Travel Time To Source:</label>
+                <div class="form-group">
+                  <ng-select [items]="estimatedTravelTimeToSourceNames" placeholder="Select Estimated Travel Time To Source" [loading]="loadSave" placeholder="Select Estimated Travel Time To Source" formControlName="estimatedTravelTimeToSourceId"
+                             bindLabel="text" bindValue="value"></ng-select>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6 d-none">
+                <label>Approximate Travel Distance To:</label>
+                <div class="form-group">
+                  <input type="number" class="form-control" formControlName="approximateTravelDistanceTo" maxlength="50" />
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6 d-none">
+                <label>Last Updated Epoch:</label>
+                <div class="form-group">
+                  <input type="number" class="form-control" formControlName="lastUpdatedEpoch" maxlength="50" />
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6 d-none">
+                <label>Approximate Travel Time From (Minutes):</label>
+                <div class="form-group">
+                  <input type="number" class="form-control" formControlName="approximateTravelTimeForm" maxlength="50" />
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6 d-none">
+                <label>Updated By Optimization:</label>
+                <div class="form-group">
+                  <label class="switch">
+                    <input type="checkbox" id="customCheck1" formControlName="isUpdatedByOptimization">
+                    <span class="slider round"><span>Yes</span></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6 d-none">
+                <label>Calculated Duration (Minutes):</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="calculatedDurationMinutes" maxlength="50" />
+                </div>
+              </div>
+              <div class="col-12">
+                <h3 class="form-heading"> <span>Related SA List</span></h3>
+              </div>
+
+              <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                             [rows]="pagedData.data"
+                             [columnMode]="'force'"
+                             [scrollbarH]="true"
+                             [rowHeight]="'40'"
+                             [headerHeight]="40"
+                             [footerHeight]="40"
+                             [externalPaging]="true"
+                             [externalSorting]="true"
+                             [loadingIndicator]="loadSave"
+                             [count]="pagedData.pager.totalItems"
+                             [offset]="1"
+                             [limit]="50">
+
+                <ngx-datatable-column name="Appointment Number" prop="AppointmentNumber">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a *ngIf="row.Status == 'Completed'" [title]="row.AppointmentNumber">{{row.AppointmentNumber }}</a>
+                    <a *ngIf="row.Status != 'Completed'" (click)="show(row.id)" href="javascript:void(0);" [title]="row.AppointmentNumber">{{row.AppointmentNumber }}</a>
+                  </ng-template>
+                </ngx-datatable-column>
+                  <ngx-datatable-column name="Schedule SA">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <label class="switch">
+                      <input *ngIf="row.Status == 'None' || row.Status == 'Needs Reschedule'" type="checkbox" id="customCheck1" (change)="changeCheckBox($event,row.id,row.AppointmentNumber)">
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Status" prop="Status" [minWidth]="150"></ngx-datatable-column>
+                <ngx-datatable-column name="Worktype"  prop="worktype" [minWidth]="150"></ngx-datatable-column>
+
+              </ngx-datatable>
+
+
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveAssignedResources()" data-dismiss="modal" aria-label="Close"><i class="feather-save text-white"></i> Submit</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

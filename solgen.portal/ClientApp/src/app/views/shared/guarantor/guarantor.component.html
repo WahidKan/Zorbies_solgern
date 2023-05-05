@@ -1,0 +1,217 @@
+  <div [formGroup]="guarantorForm" class="row">
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Guarantor First Name:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorFirstName" maxlength="100" [attr.disabled]="isDisabled"
+             [ngClass]="{'is-invalid': (guarantorFirstName.invalid && (guarantorFirstName.dirty || guarantorFirstName.touched) && (guarantorFirstName.errors?.required || guarantorFirstName.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorFirstName').touched && guarantorForm.get('guarantorFirstName').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor First Name is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Guarantor Last Name:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorLastName" maxlength="100" [attr.disabled]="isDisabled"
+             [ngClass]="{'is-invalid': (guarantorLastName.invalid && (guarantorLastName.dirty || guarantorLastName.touched) && (guarantorLastName.errors?.required || guarantorLastName.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorLastName').touched && guarantorForm.get('guarantorLastName').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Last Name is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Guarantor Title:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorTitle" maxlength="500" [attr.disabled]="isDisabled" [ngClass]="{'is-invalid': (guarantorTitle.invalid && (guarantorTitle.dirty || guarantorTitle.touched) && (guarantorTitle.errors?.required || guarantorTitle.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorTitle').touched && guarantorForm.get('guarantorTitle').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Title is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+
+    <label>Ownership%:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorOwnership" maxlength="5" [attr.disabled]="isDisabled"
+             [ngClass]="{'is-invalid': (guarantorOwnership.invalid && (guarantorOwnership.dirty || guarantorOwnership.touched) && (guarantorOwnership.errors?.required || guarantorOwnership.errors?.maxlength) || guarantorForm.get('guarantorOwnership').errors?.notValid) }">
+      <small *ngIf="guarantorForm.get('guarantorOwnership').touched && guarantorForm.get('guarantorOwnership').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Ownership is required
+      </small>
+
+      <small *ngIf="guarantorForm.get('guarantorOwnership').errors?.notValid && isDisabled==null"
+             class="text-danger">Please enter valid ownership<br /></small>
+    </div>
+  </div>
+
+  <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Guarantor Phone:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorPhone" maxlength="100" [attr.disabled]="isDisabled"
+             [ngClass]="{'is-invalid': (guarantorPhone.invalid && (guarantorPhone.dirty || guarantorPhone.touched) && (guarantorPhone.errors?.required || guarantorPhone.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorPhone').touched && guarantorForm.get('guarantorPhone').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Home Phone is required
+      </small>
+      <small *ngIf="guarantorForm.get('guarantorPhone').touched && guarantorForm.get('guarantorPhone').errors?.pattern && isDisabled==null"
+             class="text-danger">Please enter valid phone<br /></small>
+    </div>
+  </div>-->
+
+
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Guarantor Phone:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="guarantorPhone" [attr.disabled]="isDisabled" placeholder="(___) ___-____" [ngClass]="{'is-invalid': (guarantorPhone.invalid && (guarantorPhone.dirty || guarantorPhone.touched) && (guarantorPhone.errors?.required || guarantorPhone.errors?.maxlength)) }">
+      </p-inputMask>
+      <small *ngIf="guarantorForm.get('guarantorPhone').touched && guarantorForm.get('guarantorPhone').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Home Phone is required
+      </small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Guarantor Email:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorEmail" maxlength="200" [attr.disabled]="isDisabled ? '' : null"
+             [ngClass]="{'is-invalid': (guarantorEmail.invalid && (guarantorEmail.dirty || guarantorEmail.touched) && (guarantorEmail.errors?.required || guarantorEmail.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorEmail').touched && guarantorForm.get('guarantorEmail').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Home Email is required
+      </small>
+      <small *ngIf="guarantorForm.get('guarantorEmail').touched && guarantorForm.get('guarantorEmail').errors?.email" class="text-danger">Please enter valid Email</small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Social Security#:</label>
+    <div class="form-group">
+      <p-inputMask styleClass="form-control" mask="999-99-9999" [attr.disabled]="isDisabled" formControlName="guarantorSocialNumber" placeholder="____-___-____"></p-inputMask>
+    </div>
+  </div>
+  <div class="col-12 col-md-12 col-lg-4">
+    <label>Date of Birth:</label>
+    <div class="form-group">
+      <p-calendar inputStyleClass="form-control start-date" [maxDate]="dateTime" formControlName="guarantorFormattedDateOfBirth" placeholder="Select Date of Birth" [showTime]="false" dateFormat="mm/dd/yy" [attr.disabled]="isDisabled" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+    </div>
+  </div>
+
+  <!--<div class="col-12 col-md-12 col-lg-12">
+    <label class="m-label-s">Guarantor Business Address:</label>
+    <hr size="4" class="mt-0 border-secondary">
+  </div>-->
+  <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Address:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <textarea class="form-control" formControlName="guarantorBussinessAddress" maxlength="1000" [attr.disabled]="isDisabled"
+                [ngClass]="{'is-invalid': (guarantorBussinessAddress.invalid && (guarantorBussinessAddress.dirty || guarantorBussinessAddress.touched) && (guarantorBussinessAddress.errors?.required || guarantorBussinessAddress.errors?.maxlength)) }"></textarea>
+      <small *ngIf="guarantorForm.get('guarantorBussinessAddress').touched && guarantorForm.get('guarantorBussinessAddress').errors?.required && isDisabled==null" class="text-danger">
+        Business Address is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>City:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorBussinessCity" maxlength="200" [attr.disabled]="isDisabled"
+             [ngClass]="{'is-invalid': (guarantorBussinessCity.invalid && (guarantorBussinessCity.dirty || guarantorBussinessCity.touched) && (guarantorBussinessCity.errors?.required || guarantorBussinessCity.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorBussinessCity').touched && guarantorForm.get('guarantorBussinessCity').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Business City is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>County:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorBussinessCounty" maxlength="200" [attr.disabled]="isDisabled"
+             [ngClass]="{'is-invalid': (guarantorBussinessCounty.invalid && (guarantorBussinessCounty.dirty || guarantorBussinessCounty.touched) && (guarantorBussinessCounty.errors?.required || guarantorBussinessCounty.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorBussinessCounty').touched && guarantorForm.get('guarantorBussinessCounty').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Business County is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>State:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <ng-select [items]="states"
+                 placeholder="Select State" bindValue="value" bindLabel="text" formControlName="guarantorBussinessState"
+                 [ngClass]="{'is-invalid': (guarantorBussinessState.invalid && (guarantorBussinessState.dirty || guarantorBussinessState.touched) && (guarantorBussinessState.errors?.required || guarantorBussinessState.errors?.maxlength)) }">
+      </ng-select>
+      <small *ngIf="guarantorForm.get('guarantorBussinessState').touched && guarantorForm.get('guarantorBussinessState').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Business State is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Zip:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorBussinessZip" maxlength="50" [attr.disabled]="isDisabled" [ngClass]="{'is-invalid': (guarantorBussinessZip.invalid && (guarantorBussinessZip.dirty || guarantorBussinessZip.touched) && (guarantorBussinessZip.errors?.required || guarantorBussinessZip.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorBussinessZip').touched && guarantorForm.get('guarantorBussinessZip').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Business Zip is required
+      </small>
+      <small *ngIf="guarantorBussinessZip.invalid && (guarantorBussinessZip.dirty || guarantorBussinessZip.touched) && guarantorBussinessZip.errors?.maxlength"
+             class="text-danger">Zip can not be greater than 5 characters.</small>
+    </div>
+  </div>-->
+
+
+
+  <div class="col-12 col-md-12 col-lg-12">
+    <label class="m-label-s">Guarantor Home Address:</label>&nbsp;&nbsp;
+    <!--<span *ngIf="SameAs"><input type="checkbox" (change)="toggleEditable($event)"> (Same as Business Address)</span>-->
+    <hr size="4" class="mt-0 border-secondary">
+  </div>
+
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>City:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorHomeCity" maxlength="200" [attr.disabled]="isDisabled" [ngClass]="{'is-invalid': (guarantorHomeCity.invalid && (guarantorHomeCity.dirty || guarantorHomeCity.touched) && (guarantorHomeCity.errors?.required || guarantorHomeCity.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorHomeCity').touched && guarantorForm.get('guarantorHomeCity').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Home City is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>County:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorHomeCounty" maxlength="200" [attr.disabled]="isDisabled"
+             [ngClass]="{'is-invalid': (guarantorHomeCounty.invalid && (guarantorHomeCounty.dirty || guarantorHomeCounty.touched) && (guarantorHomeCounty.errors?.required || guarantorHomeCounty.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorHomeCounty').touched && guarantorForm.get('guarantorHomeCounty').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Home County is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>State:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <ng-select [items]="states"
+                 placeholder="Select State" bindValue="value" bindLabel="text" formControlName="guarantorHomeState"
+                 [ngClass]="{'is-invalid': (guarantorHomeState.invalid && (guarantorHomeState.dirty || guarantorHomeState.touched) && (guarantorHomeState.errors?.required || guarantorHomeState.errors?.maxlength)) }">
+      </ng-select>
+      <small *ngIf="guarantorForm.get('guarantorHomeState').touched && guarantorForm.get('guarantorHomeState').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Home State is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Zip:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="guarantorHomeZip" maxlength="50" [attr.disabled]="isDisabled"
+             [ngClass]="{'is-invalid': (guarantorHomeZip.invalid && (guarantorHomeZip.dirty || guarantorHomeZip.touched) && (guarantorHomeZip.errors?.required || guarantorHomeZip.errors?.maxlength)) }">
+      <small *ngIf="guarantorForm.get('guarantorHomeZip').touched && guarantorForm.get('guarantorHomeZip').errors?.required && isDisabled==null" class="text-danger">
+        Guarantor Home Zip is required
+      </small>
+      <small *ngIf="guarantorHomeZip.invalid && (guarantorHomeZip.dirty || guarantorHomeZip.touched) && guarantorHomeZip.errors?.maxlength"
+             class="text-danger">Zip can not be greater than 5 characters.</small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Address:<span class="text-danger" *ngIf="isDisabled==null">*</span></label>
+    <div class="form-group">
+      <textarea class="form-control" formControlName="guarantorHomeAddress" maxlength="1000" [attr.disabled]="isDisabled" [ngClass]="{'is-invalid': (guarantorHomeAddress.invalid && (guarantorHomeAddress.dirty || guarantorHomeAddress.touched) && (guarantorHomeAddress.errors?.required || guarantorHomeAddress.errors?.maxlength)) }"></textarea>
+      <small *ngIf="guarantorForm.get('guarantorHomeAddress').touched && guarantorForm.get('guarantorHomeAddress').errors?.required && isDisabled==null" class="text-danger">
+        Home Address is required
+      </small>
+    </div>
+  </div>
+
+</div>
+

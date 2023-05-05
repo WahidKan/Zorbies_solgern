@@ -1,0 +1,630 @@
+      <!-- Side Navbar -->
+<div class="page">
+  <!-- Breadcrumb-->
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Manage Customer</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a routerLink="/contact">Manage Customer</a></li>
+            <li class="breadcrumb-item active">{{pageTitle}}</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-12 mt-3">
+          <button class="w-auto sw-100 btn btn-dark" (click)="cancelForm()"><i class="fa fa-arrow-left"></i>&nbsp;Back</button>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <!-- Header Section-->
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <div class="col-md-12 mt-4">
+              <form [formGroup]="contactForm" autocomplete="off">
+                <div class="contact-box" [ngClass]="{'disabled':loadSave}">
+                  <div class="panel-group accordian" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default mb-2">
+                      <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title mb-0">
+                          <a role="button" class="collapsed" id="firstAccordianAnch" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            BUSINESS INFORMATION <small class="ml-2" *ngIf="contactForm.get('contactId').value">{{buissnessName}}</small>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body bg-light p-3">
+                          <div class="row">
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Business Name:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactBussinessName" maxlength="500"
+                                       [ngClass]="{'is-invalid': (contactBussinessName.invalid && (contactBussinessName.dirty || contactBussinessName.touched) && (contactBussinessName.errors?.required || contactBussinessName.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactBussinessName').touched && contactForm.get('contactBussinessName').errors?.required" class="text-danger">
+                                  Business Name is required
+                                </small>
+                              </div>
+                            </div>
+
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Business Tin:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <p-inputMask styleClass="form-control" mask="99-9999999" formControlName="contactBussinessTIN" placeholder="__-_______" [ngClass]="{'is-invalid': (contactBussinessTIN.invalid && (contactBussinessTIN.dirty || contactBussinessTIN.touched) && (contactBussinessTIN.errors?.required || contactBussinessTIN.errors?.maxlength)) }">
+                                </p-inputMask>
+                                <small *ngIf="contactForm.get('contactBussinessTIN').touched && contactForm.get('contactBussinessTIN').errors?.required" class="text-danger">
+                                  Customer Business TIN is required
+                                </small>
+                              </div>
+                            </div>
+
+
+                            <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Business Tin:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="contactBussinessTIN" maxlength="9"
+             [ngClass]="{'is-invalid': (contactBussinessTIN.invalid && (contactBussinessTIN.dirty || contactBussinessTIN.touched) && (contactBussinessTIN.errors?.required || contactBussinessTIN.errors?.maxlength)) }">
+      <small *ngIf="contactForm.get('contactBussinessTIN').touched && contactForm.get('contactBussinessTIN').errors?.required" class="text-danger">
+        Contact Business TIN is required
+      </small>
+      <small *ngIf="contactForm.get('contactBussinessTIN').touched && contactForm.get('contactBussinessTIN').errors?.pattern"
+             class="text-danger">Please enter valid TIN</small>
+    </div>
+  </div>-->
+
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Type of Company:<span class="text-danger">*</span></label>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <ng-select [items]="lstcompanyType"
+                                               placeholder="Select Company Type" bindValue="value" bindLabel="text" formControlName="contactTypeOfCompany" [loading]="isLoading"
+                                               [ngClass]="{'is-invalid': (contactTypeOfCompany.invalid && (contactTypeOfCompany.dirty || contactTypeOfCompany.touched) && (contactTypeOfCompany.errors?.required || contactTypeOfCompany.errors?.maxlength)) }">
+                                    </ng-select>
+                                    <small *ngIf="contactForm.get('contactTypeOfCompany').touched && contactForm.get('contactTypeOfCompany').errors?.required" class="text-danger">
+                                      Customer Type Of Company is required
+                                    </small>
+                                  </div>
+                                </div>
+                                <div *ngIf="!isLeaseCreated" class="col-md-2 pl-0 text-right">
+
+                                  <a href="javascript:void(0);" (click)="addTypeOfComp(typeOfCompany)" class="btn btn-orange" data-toggle="modal" data-target="#typeOfCompany"><i class="feather-plus"></i></a>
+
+                                </div>
+                              </div>
+                            </div>
+
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Business Phone:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="bussinessPhone" placeholder="(___) ___-____" [ngClass]="{'is-invalid': (bussinessPhone.invalid && (bussinessPhone.dirty || bussinessPhone.touched) && (bussinessPhone.errors?.required || bussinessPhone.errors?.maxlength)) }">
+                                </p-inputMask>
+                                <small *ngIf="contactForm.get('bussinessPhone').touched && contactForm.get('bussinessPhone').errors?.required" class="text-danger">
+                                  Business Phone is required
+                                </small>
+                              </div>
+                            </div>
+
+                            <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Business Phone:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="bussinessPhone" maxlength="100"
+             [ngClass]="{'is-invalid': (bussinessPhone.invalid && (bussinessPhone.dirty || bussinessPhone.touched) && (bussinessPhone.errors?.required || bussinessPhone.errors?.maxlength)) }">
+      <small *ngIf="contactForm.get('bussinessPhone').touched && contactForm.get('bussinessPhone').errors?.required" class="text-danger">
+        Business Phone is required
+      </small>
+      <small *ngIf="contactForm.get('bussinessPhone').touched && contactForm.get('bussinessPhone').errors?.pattern"
+             class="text-danger">Please enter valid Phone</small>
+    </div>
+  </div>-->
+
+
+                            <div class="col-12 col-md-12 col-lg-12">
+                              <label class="m-label-s">CUSTOMER DETAIL:</label>
+                              <hr size="4" class="mt-0 border-secondary">
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Customer Phone:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="contactBussinessPhone" placeholder="(___) ___-____" [ngClass]="{'is-invalid': (contactBussinessPhone.invalid && (contactBussinessPhone.dirty || contactBussinessPhone.touched) && (contactBussinessPhone.errors?.required || contactBussinessPhone.errors?.maxlength)) }">
+                                </p-inputMask>
+                                <small *ngIf="contactForm.get('contactBussinessPhone').touched && contactForm.get('contactBussinessPhone').errors?.required" class="text-danger">
+                                  Customer Phone is required
+                                </small>
+                              </div>
+                            </div>
+
+                            <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Contact Phone:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="contactBussinessPhone" maxlength="100"
+             [ngClass]="{'is-invalid': (contactBussinessPhone.invalid && (contactBussinessPhone.dirty || contactBussinessPhone.touched) && (contactBussinessPhone.errors?.required || contactBussinessPhone.errors?.maxlength)) }">
+      <small *ngIf="contactForm.get('contactBussinessPhone').touched && contactForm.get('contactBussinessPhone').errors?.required" class="text-danger">
+        Contact Phone is required
+      </small>
+      <small *ngIf="contactForm.get('contactBussinessPhone').touched && contactForm.get('contactBussinessPhone').errors?.pattern"
+             class="text-danger">Please enter valid Phone</small>
+    </div>
+  </div>-->
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Customer First Name:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactFirstName" maxlength="100"
+                                       [ngClass]="{'is-invalid': (contactFirstName.invalid && (contactFirstName.dirty || contactFirstName.touched) && (contactFirstName.errors?.required || contactFirstName.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactFirstName').touched && contactForm.get('contactFirstName').errors?.required" class="text-danger">
+                                  Customer First Name is required
+                                </small>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Customer Last Name:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactLastName" maxlength="100"
+                                       [ngClass]="{'is-invalid': (contactLastName.invalid && (contactLastName.dirty || contactLastName.touched) && (contactLastName.errors?.required || contactLastName.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactLastName').touched && contactForm.get('contactLastName').errors?.required" class="text-danger">
+                                  Customer Last Name is required
+                                </small>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Customer Position:</label>
+                              <div class="row">
+                                <div class="col-md-10 pr-0">
+                                  <div class="form-group">
+                                    <ng-select [items]="lstcontactPosition"
+                                               placeholder="Select Customer Position" bindValue="value" bindLabel="text" formControlName="contactPosition" [loading]="isLoading">
+                                    </ng-select>
+                                  </div>
+                                </div>
+                                <div class="col-md-2 pl-0 text-right"><a href="javascript:void(0);" (click)="addContactPosition(addContact)" class="btn btn-success" data-toggle="modal" data-target="#insurancerequest"><i class="feather-plus"></i></a></div>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Customer Email:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactEmail" maxlength="200"
+                                       [ngClass]="{'is-invalid': (contactEmail.invalid && (contactEmail.dirty || contactEmail.touched) && (contactEmail.errors?.required || contactEmail.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactEmail').touched && contactForm.get('contactEmail').errors?.required" class="text-danger">
+                                  Customer Email is required
+                                </small>
+                                <small *ngIf="contactForm.get('contactEmail').touched && contactForm.get('contactEmail').errors?.email" class="text-danger">Please enter valid Email</small>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Social Security#:</label>
+                              <div class="form-group">
+                                <p-inputMask styleClass="form-control" mask="999-99-9999" formControlName="contactSocialSecurityNumber" placeholder="___-__-____"></p-inputMask>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Customer Preferred Document Signed:</label>
+                              <div class="form-group">
+                                <div class="form-check-inline">
+                                  <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" id="customRadio" name="contactPreferredDocumentSignedBy" value="DocuSign" formControlName="contactPreferredDocumentSignedBy">
+                                    <label class="custom-control-label" for="customRadio">DocuSign</label>
+                                  </div>
+                                </div>
+                                <div class="form-check-inline">
+                                  <div class="custom-control custom-radio">
+                                    <input type="radio" class="custom-control-input" id="customRadio1" name="contactPreferredDocumentSignedBy" value="Wet Signature" formControlName="contactPreferredDocumentSignedBy" checked>
+                                    <label class="custom-control-label" for="customRadio1">Wet Signature</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-12 col-lg-12">
+                              <label class="m-label-s">Business Mailing Address:</label>
+                              <hr size="4" class="mt-0 border-secondary">
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>City:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactMailAddressCity" maxlength="200"
+                                       [ngClass]="{'is-invalid': (contactMailAddressCity.invalid && (contactMailAddressCity.dirty || contactMailAddressCity.touched) && (contactMailAddressCity.errors?.required || contactMailAddressCity.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactMailAddressCity').touched && contactForm.get('contactMailAddressCity').errors?.required" class="text-danger">
+                                  Customer Mail City is required
+                                </small>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>County:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactMailAddressCounty" maxlength="500"
+                                       [ngClass]="{'is-invalid': (contactMailAddressCounty.invalid && (contactMailAddressCounty.dirty || contactMailAddressCounty.touched) && (contactMailAddressCounty.errors?.required || contactMailAddressCounty.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactMailAddressCounty').touched && contactForm.get('contactMailAddressCounty').errors?.required" class="text-danger">
+                                  Customer Mail Address County is required
+                                </small>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>State:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <ng-select [items]="lstStates"
+                                           placeholder="Select State" bindValue="value" bindLabel="text" formControlName="contactMailAddressState"
+                                           [ngClass]="{'is-invalid': (contactMailAddressState.invalid && (contactMailAddressState.dirty || contactMailAddressState.touched) && (contactMailAddressState.errors?.required || contactMailAddressState.errors?.maxlength)) }">
+                                </ng-select>
+                                <small *ngIf="contactForm.get('contactMailAddressState').touched && contactForm.get('contactMailAddressState').errors?.required" class="text-danger">
+                                  Customer mail Address State is required
+                                </small>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Zip:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactMailAddressZip"
+                                       [ngClass]="{'is-invalid': (contactMailAddressZip.invalid && (contactMailAddressZip.dirty || contactMailAddressZip.touched) && (contactMailAddressZip.errors?.required || contactMailAddressZip.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactMailAddressZip').touched && contactForm.get('contactMailAddressZip').errors?.required" class="text-danger">
+                                  Customer mail Address Zip is required
+                                </small>
+                                <small *ngIf="contactMailAddressZip.invalid && (contactMailAddressZip.dirty || contactMailAddressZip.touched) && contactMailAddressZip.errors?.maxlength"
+                                       class="text-danger">Zip can not be greater than 5 characters.</small>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Mailing Address:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <textarea class="form-control" formControlName="contactBussinessMailAddress" maxlength="1000"
+                                          [ngClass]="{'is-invalid': (contactBussinessMailAddress.invalid && (contactBussinessMailAddress.dirty || contactBussinessMailAddress.touched) && (contactBussinessMailAddress.errors?.required || contactBussinessMailAddress.errors?.maxlength)) }"></textarea>
+                                <small *ngIf="contactForm.get('contactBussinessMailAddress').touched && contactForm.get('contactBussinessMailAddress').errors?.required" class="text-danger">
+                                  Customer Mailing Address is required
+                                </small>
+                              </div>
+                            </div>
+
+
+                            <div class="col-12 col-md-12 col-lg-12">
+                              <label class="m-label-s">Business Physical Address:</label>&nbsp;&nbsp; <input type="checkbox" (change)="toggleEditable($event)"> (Same as Mailing Address)
+                              <hr size="4" class="mt-0 border-secondary">
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>City:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactPhysicalAddressCity" maxlength="200"
+                                       [ngClass]="{'is-invalid': (contactPhysicalAddressCity.invalid && (contactPhysicalAddressCity.dirty || contactPhysicalAddressCity.touched) && (contactPhysicalAddressCity.errors?.required || contactPhysicalAddressCity.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactPhysicalAddressCity').touched && contactForm.get('contactPhysicalAddressCity').errors?.required" class="text-danger">
+                                  Customer Physical Address City is required
+                                </small>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>County:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input value="" class="form-control" type="text" placeholder="" formControlName="contactPhysicalAddressCounty"
+                                       [ngClass]="{'is-invalid': (contactPhysicalAddressCounty.invalid && (contactPhysicalAddressCounty.dirty || contactPhysicalAddressCounty.touched) && (contactPhysicalAddressCounty.errors?.required || contactPhysicalAddressCounty.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactPhysicalAddressCounty').touched && contactForm.get('contactPhysicalAddressCounty').errors?.required" class="text-danger">
+                                  Customer Physical Address County is required
+                                </small>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>State:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <ng-select [items]="lstStates"
+                                           placeholder="Select State" bindValue="value" bindLabel="text" formControlName="contactPhysicalAddressState"
+                                           [ngClass]="{'is-invalid': (contactPhysicalAddressState.invalid && (contactPhysicalAddressState.dirty || contactPhysicalAddressState.touched) && (contactPhysicalAddressState.errors?.required || contactPhysicalAddressState.errors?.maxlength)) }">
+                                </ng-select>
+                                <small *ngIf="contactForm.get('contactPhysicalAddressState').touched && contactForm.get('contactPhysicalAddressState').errors?.required" class="text-danger">
+                                  Customer Physical Address State is required
+                                </small>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Zip:<span class="text-danger">*</span></label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactPhysicalAddressZip" maxlength="50"
+                                       [ngClass]="{'is-invalid': (contactPhysicalAddressZip.invalid && (contactPhysicalAddressZip.dirty || contactPhysicalAddressZip.touched) && (contactPhysicalAddressZip.errors?.required || contactPhysicalAddressZip.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactPhysicalAddressZip').touched && contactForm.get('contactPhysicalAddressZip').errors?.required" class="text-danger">
+                                  Customer Physical Address Zip is required
+                                </small>
+                                <small *ngIf="contactPhysicalAddressZip.invalid && (contactPhysicalAddressZip.dirty || contactPhysicalAddressZip.touched) && contactPhysicalAddressZip.errors?.maxlength"
+                                       class="text-danger">Zip can not be greater than 5 characters.</small>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <div class="custom-checkbox">
+                                <label class="mr-3">Physical Address:<span class="text-danger">*</span></label>
+                              </div>
+                              <div class="form-group">
+                                <textarea class="form-control" formControlName="contactBussinessPhysicalAddress" maxlength="1000"
+                                          [ngClass]="{'is-invalid': (contactBussinessPhysicalAddress.invalid && (contactBussinessPhysicalAddress.dirty || contactBussinessPhysicalAddress.touched) && (contactBussinessPhysicalAddress.errors?.required || contactBussinessPhysicalAddress.errors?.maxlength)) }"></textarea>
+                                <small *ngIf="contactForm.get('contactBussinessPhysicalAddress').touched && contactForm.get('contactBussinessPhysicalAddress').errors?.required" class="text-danger">
+                                  Customer Business Physical Address is required
+                                </small>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="panel panel-default mb-2">
+                      <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title mb-0">
+                          <a class="collapsed" id="secondAccordianAnch" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            GUARANTOR INFORMATION
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <!-- list of guarantors -->
+                        <div formArrayName="guarantors" class="panel-body bg-light p-3 d-inline-block">
+                          <div *ngFor="let guarantor of guarantors.controls; let i=index">
+                            <div class="text-right">
+                              <a *ngIf="contactForm.controls.guarantors.controls.length > 1"
+                                 (click)="removeGuarantor(i,guarantor.get('guarantorID').value)"
+                                 class="bg-danger px-3 py-2 text-white cursor-pointer">
+                                <i class="feather-trash-2" title="Delete"></i>
+                              </a>
+                            </div>
+
+                            <div [formGroupName]="i" class="border p-3 mb-4 bg-white">
+                              <guarantor [group]="contactForm.controls.guarantors.controls[i]" [states]="lstStates" [isDisabled]="disabled"></guarantor>
+
+                            </div>
+                          </div>
+                          <small *ngIf="addOrUpdatePermission" class="float-right btn btn-success text-white mb-md-2" (click)="addGuarantor()"><i class="feather-plus mr-1"></i> Add More</small>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div class="panel panel-default mb-2">
+                      <div class="panel-heading" role="tab" id="headingThree">
+                        <h4 class="panel-title mb-0">
+                          <a class="collapsed" id="thirdAccordianAnch" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            INSURANCE INFORMATION
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <!--<div [formGroupName]="insurances" class="panel-body bg-light p-3">-->
+                          <!--<insurance [group]="contactForm.controls.insurances.controls[0]" [states]="lstStates"></insurance>-->
+                        <!--</div>-->
+                      </div>
+                    </div>
+
+
+
+                    <div class="panel panel-default mb-2">
+                      <div class="panel-heading" role="tab" id="headingSix">
+                        <h4 class="panel-title mb-0">
+                          <a role="button" class="collapsed" id="sixAccordianAnch" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                            BANK INFORMATION
+                          </a>
+                        </h4> 
+                      </div>
+                      <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+                        <div class="panel-body bg-light p-3">
+                          <div class="row">
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Bank Name:</label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactBankName" maxlength="100" placeholder="Enter Bank Name"
+                                       [ngClass]="{'is-invalid': (contactBankName.invalid && (contactBankName.dirty || contactBankName.touched) && (contactBankName.errors?.required || contactBankName.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactBankName').touched && contactForm.get('contactBankName').errors?.required" class="text-danger">
+                                  Bank Name is required
+                                </small>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>City:</label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter City" formControlName="contactBankCity"
+                                       [ngClass]="{'is-invalid': (contactBankCity.invalid && (contactBankCity.dirty || contactBankCity.touched) && (contactBankCity.errors?.required || contactBankCity.errors?.maxlength)) }">
+                                <small *ngIf="contactBankCity.invalid && (contactBankCity.dirty || contactBankCity.touched) && contactBankCity.errors?.required"
+                                       class="text-danger">City is required</small>
+                                <small *ngIf="contactBankCity.invalid && (contactBankCity.dirty || contactBankCity.touched) && contactBankCity.errors?.maxlength"
+                                       class="text-danger">City name must be less than 100 characters.</small>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>County:</label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter County"
+                                       formControlName="contactBankCounty"
+                                       [ngClass]="{'is-invalid': (contactBankCounty.invalid && (contactBankCounty.dirty || contactBankCounty.touched) && (contactBankCounty.errors?.required || contactBankCounty.errors?.maxlength)) }">
+                                <small *ngIf="contactBankCounty.invalid && (contactBankCounty.dirty || contactBankCounty.touched) && contactBankCounty.errors?.required"
+                                       class="text-danger">County is required</small>
+                                <small *ngIf="contactBankCounty.invalid && (contactBankCounty.dirty || contactBankCounty.touched) && contactBankCounty.errors?.maxlength"
+                                       class="text-danger">County must be less than 100 characters.</small>
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>State:</label>
+                              <div class="form-group">
+                                <!--<ng-select [items]="lstStates" [loading]="loadSave" placeholder="Select State" formControlName="contactBankState"
+                bindValue="value" bindLabel="text"
+                 [ngClass]="{'is-invalid': (contactBankState.invalid && (contactBankState.dirty || contactBankState.touched) && contactBankState.errors?.required) }"></ng-select>
+      <small *ngIf="contactBankState.invalid && (contactBankState.dirty || contactBankState.touched) && contactBankState.errors?.required" class="text-danger">Please select State</small>-->
+                                <ng-select [items]="lstStates"
+                                           placeholder="Select State" bindValue="value" bindLabel="text" formControlName="contactBankState"
+                                           [ngClass]="{'is-invalid': (contactBankState.invalid && (contactBankState.dirty || contactBankState.touched) && (contactBankState.errors?.required || contactBankState.errors?.maxlength)) }">
+                                </ng-select>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Zip Code:</label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter Zip Code" formControlName="contactBankZipcode"
+                                       [ngClass]="{'is-invalid': (contactBankZipcode.invalid && (contactBankZipcode.dirty || contactBankZipcode.touched) && (contactBankZipcode.errors?.required || contactBankZipcode.errors?.maxlength)) }">
+                                <small *ngIf="contactBankZipcode.invalid && (contactBankZipcode.dirty || contactBankZipcode.touched) && contactBankZipcode.errors?.required"
+                                       class="text-danger">Zip Code is required</small>
+                                <small *ngIf="contactBankZipcode.invalid && (contactBankZipcode.dirty || contactBankZipcode.touched) && contactBankZipcode.errors?.maxlength"
+                                       class="text-danger">Zip Code can not be greater than 5 characters.</small>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Bank Routing Number:</label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactBankRoutingNumber"
+                                       maxlength="100" placeholder="Enter Bank Routing Number"
+                                       [ngClass]="{'is-invalid': (contactBankRoutingNumber.invalid && (contactBankRoutingNumber.dirty || contactBankRoutingNumber.touched) && (contactBankRoutingNumber.errors?.required || contactBankRoutingNumber.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactBankRoutingNumber').touched && contactForm.get('contactBankRoutingNumber').errors?.required" class="text-danger">
+                                  Bank Routing Number is required
+                                </small>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Bank Account Number:</label>
+                              <div class="form-group">
+                                <input type="text" class="form-control" formControlName="contactBankAccountNum"
+                                       maxlength="100" placeholder="Enter Bank Account Number"
+                                       [ngClass]="{'is-invalid': (contactBankAccountNum.invalid && (contactBankAccountNum.dirty || contactBankAccountNum.touched) && (contactBankAccountNum.errors?.required || contactBankAccountNum.errors?.maxlength)) }">
+                                <small *ngIf="contactForm.get('contactBankAccountNum').touched && contactForm.get('contactBankAccountNum').errors?.required" class="text-danger">
+                                  Bank Account Number is required
+                                </small>
+                              </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4">
+                              <label>Bank Address:</label>
+                              <div class="form-group">
+                                <textarea type="text" class="form-control" formControlName="contactBankAddress"
+                                          maxlength="500" placeholder="Enter Bank Address"></textarea>
+                                <!--<input type="text" class="form-control" formControlName="contactBankAddress" maxlength="500"
+             [ngClass]="{'is-invalid': (contactBankAddress.invalid && (contactBankAddress.dirty || contactBankAddress.touched) && (contactBankAddress.errors?.required || contactBankAddress.errors?.maxlength)) }">
+      <small *ngIf="contactForm.get('contactBankAddress').touched && contactForm.get('contactBankAddress').errors?.required" class="text-danger">
+        Bank Address is required
+      </small>-->
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="panel panel-default mb-2" *ngIf="contactForm.get('contactId').value!=null">
+                      <div class="panel-heading" role="tab" id="headingFour">
+                        <h4 class="panel-title mb-0">
+                          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            NOTES
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                        <div class="panel-body bg-light p-3">
+                          <app-notes-partial-view [contactId]="contactForm.get('contactId').value" [addOrUpdatePermission]="addPermission"></app-notes-partial-view>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="panel panel-default mb-2" *ngIf="contactForm.get('contactId').value!=null">
+                      <div class="panel-heading" role="tab" id="headingFive">
+                        <h4 class="panel-title mb-0">
+                          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            UPLOAD CUSTOMER DOCUMENT 
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                        <div class="panel-body bg-light p-3">
+                          <app-upload [contactId]="contactForm.get('contactId').value"
+                                      [prefixNameOfDocument]="contactForm.get('contactFirstName').value+' '+contactForm.get('contactLastName').value" calledFrom="contact"></app-upload>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </form>
+              <div class="col-12 p-0">
+
+                <!--*ngIf="addOrUpdatePermission"  ---- Kiran - commented on 24 oct 2019-->
+                <a href="javascript:void(0);" *ngIf="addOrUpdatePermission" class="btn btn-success form-btns" (click)="saveContactForm()">
+                  <i class="feather-save"></i> Submit
+                </a>
+                <a href="javascript:void(0);" class="btn btn-danger form-btns" (click)="cancelForm()"><i class="fa fa-times"></i> Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>
+
+
+<div class="col-12">
+  <ng-template #addContact>
+    <div class="modal-header">
+      <h4 class="modal-title">Add Customer Position</h4>
+      <button type="button" class="close" (click)="modalRef.hide()" data-dismiss="modal">&times;</button>
+    </div>
+    <div class="modal-body" style="overflow:auto; margin-bottom:10px;">
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-6">
+          <label>Customer Position:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" [(ngModel)]='masterValue' (keypress)="onKeyPress($event)" />
+            <label *ngIf="validcontact" style="color:red;">
+              Customer Position is Required
+            </label>
+
+          </div>
+      </div>
+    </div>
+      </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success form-btns" data-dismiss="modal" (click)="saveContactInMaster()" aria-label="Close"><i class="feather-save"></i> Submit</button>
+      <button type="submit" class="btn btn-danger form-btns" data-dismiss="modal" (click)="modalRef.hide()" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    <!--</div>
+      </div>
+    </div>-->
+  </ng-template>
+</div>
+
+<div class="col-12">
+  <ng-template #typeOfCompany>
+    <div class="modal-header">
+      <h4 class="modal-title">Add Type Of Company</h4>
+      <button type="button" class="close" (click)="modalRef.hide()" data-dismiss="modal">&times;</button>
+    </div>
+    <div class="modal-body" style="overflow:auto; margin-bottom:10px;">
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-6">
+          <label>Type of Company:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" [(ngModel)]='addCompany' (keypress)="onKeyPress($event)" />
+            <label *ngIf="validcontact" style="color:red;">
+              Type of Company is Required
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success form-btns" data-dismiss="modal" (click)="saveCompanyInMaster()" aria-label="Close"><i class="feather-save"></i> Submit</button>
+      <button type="submit" class="btn btn-danger form-btns" data-dismiss="modal" (click)="modalRef.hide()" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </ng-template>
+</div>
+
+

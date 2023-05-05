@@ -1,0 +1,47 @@
+<div #advancedPropertiesModal></div>
+<!-- <div>
+  <button (click)="downloadPDF()">Export To PDF</button>
+</div> -->
+
+<div *ngIf="isPreview">
+  <button (click)="htmltoPDF()">Export To PDF</button>
+</div>
+
+<div
+  id="pdfContent"
+  #pdfContent
+  *ngIf="document"
+  [formGroup]="document"
+  #containerElm
+  style="height: 1056px; width: 816px; margin-left: 20%"
+>
+  <div
+    formArrayName="pages"
+    class="box-container drop h-100 bg-white"
+    pDroppable="controls"
+    (onDrop)="drop($event, i)"
+    *ngFor="let page of getPages.controls; let i = index"
+    style="
+      position: relative !important;
+      border: 1px solid #f0f0f0 !important;
+      margin-bottom: 15px;
+    "
+  >
+    <div [formGroup]="page">
+      <div formArrayName="components">
+        <app-resizable-draggable
+          [style.display]="component.get('type').value == 'br' && 'none'"
+          [isPreview]="isPreview"
+          class="component"
+          style="position: absolute; width: 100%; left: 0px"
+          [style.top.px]="component.get('marginTop').value"
+          [style.left.px]="component.get('marginLeft').value"
+          [style.width.px]="component.get('width').value"
+          *ngFor="let component of getComponent(page).controls"
+          [component]="component"
+        ></app-resizable-draggable>
+      </div>
+    </div>
+  </div>
+</div>
+<app-advanced-properties-modal #propertiesModal></app-advanced-properties-modal>

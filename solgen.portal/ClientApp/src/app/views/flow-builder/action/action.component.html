@@ -1,0 +1,70 @@
+<div bsModal #actionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Action</h5>
+                <button type="button" (click)="closeActionModal()" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+            </div>
+            <div class="modal-body"  style="max-height: 800px ; overflow-y: auto;">
+                <div class="row">
+                    <div class="col-4">
+                        <p class="sidebar-heading">Find By </p>
+                        <div class=" dropdown">
+                            <button class="btn btn-light dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           Category
+                        </button>
+                        </div>
+                        <div style="overflow-y: auto; max-height:  480px;" class="mt-2">
+
+                            <div class="bg-light border-right min-vh-100" id="sidebar-wrapper">
+
+
+                                <div class="list-group list-group-flush  vh-100 mt-2">
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">All</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Users</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Group</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Work Plans</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Work Steps</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Sales Leads</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Task</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Feed Item</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Chatbots</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Case</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Account</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Contact</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Even</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Lead</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Note</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Opportunity</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Messaging</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Notification</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Email</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Batch Job</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Approvels</a>
+                                    <a href="#" class="list-group-item list-group-item-action bg-light">Uncategorized</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="row justify-content-center">
+                            <div class="col-6">
+                                <label for="Action" class="form-label"> Action </label>
+                                <input type="text" class="form-control" id="Object" placeholder="Search all actions...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="javascript:void(0);" (click)="saveActionForm()" class="btn btn-success mr-2"><i class="feather-save"></i> Submit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="closeActionModal()"><i class="fa fa-times"></i> Cancel</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

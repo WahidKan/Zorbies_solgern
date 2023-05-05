@@ -1,0 +1,241 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9 mt-3">
+          <span class="dash">Generate Welcome Package</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a routerLink="/contact">Manage Contacts</a></li>
+            <li class="breadcrumb-item">Generate Welcome Package</li>
+          </ul>
+        </div>
+        <div class="col-md-3 mt-4 text-right">
+          <button class="w-auto sw-100 btn btn-dark" routerLink="/contact"><i class="fa fa-arrow-left"></i>&nbsp;Back</button>
+        </div>
+      </div>
+    </div>   
+  </div>
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <div class="col-md-12 mt-4">
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                  <label>Search Business Name:</label>
+                  <div class="form-group">
+                    <app-search-as-type (onIdPicked)="fillContactForm($event)"></app-search-as-type>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-12">
+              <form [formGroup]="contactForm" autocomplete="off">
+                <div class="row">
+
+
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Business Name:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactBussinessName" maxlength="500" disabled />
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Business Tin:</label>
+                    <div class="form-group">
+                      <p-inputMask styleClass="form-control" mask="99-9999999" formControlName="contactBussinessTIN" disabled="true">
+                      </p-inputMask>
+                    </div>
+                  </div>
+
+                  <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Business Tin:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="contactBussinessTIN" maxlength="9" disabled />
+    </div>
+  </div>-->
+
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Type of Company:</label>
+                    <div class="form-group cus-arrow">
+                      <ng-select [items]="lstcompanyType"
+                                 bindValue="value" bindLabel="text" formControlName="contactTypeOfCompany" disabled>
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Business Phone:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="contactBussinessPhone" maxlength="100" disabled />
+    </div>
+  </div>-->
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Business Phone:</label>
+                    <div class="form-group">
+                      <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="contactBussinessPhone" disabled="true"></p-inputMask>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-12 col-lg-12">
+                    <label class="m-label-s">CONTACT DETAIL:</label>
+                    <hr size="4" class="mt-0 border-secondary">
+                  </div>
+
+
+
+                  <!--<div class="col-12 col-md-6 col-lg-4">
+                    <label>Contact Phone:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactBussinessPhone" maxlength="100" disabled>
+                    </div>
+                  </div>-->
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Contact Phone:</label>
+                    <div class="form-group">
+                      <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="contactBussinessPhone" disabled="true"></p-inputMask>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Contact First Name:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactFirstName" maxlength="100" disabled>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Contact Last Name:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactLastName" maxlength="100" disabled>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Contact Position:</label>
+                    <div class="form-group">
+                      <input class="form-control" type="text" formControlName="contactPositionName" disabled>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Contact Email:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactEmail" maxlength="200" disabled>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-12 col-lg-12">
+                    <label class="m-label-s">Business Mailing Address:</label>
+                    <hr size="4" class="mt-0 border-secondary">
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Mailing Address:</label>
+                    <div class="form-group">
+                      <textarea class="form-control" formControlName="contactBussinessMailAddress" maxlength="1000" disabled></textarea>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>City:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactMailAddressCity" maxlength="200" disabled>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>County:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactMailAddressCounty" maxlength="500" disabled>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>State:</label>
+                    <div class="form-group cus-arrow">
+                      <ng-select [items]="lstStates"
+                                 bindValue="value" bindLabel="text" formControlName="contactMailAddressState" disabled>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Zip:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactMailAddressZip" maxlength="50" disabled>
+                    </div>
+                  </div>
+
+                  <!--<div class="col-12 col-md-12 col-lg-12">
+                    <label class="m-label-s">Business Physical Address:</label>
+                    <hr size="4" class="mt-0 border-secondary">
+                  </div>-->
+
+                  <!--<div class="col-12 col-md-6 col-lg-4">
+                    <div class="custom-checkbox">
+                      <label class="mr-3">Physical Address:</label>
+                    </div>
+                    <div class="form-group">
+                      <textarea class="form-control" formControlName="contactBussinessPhysicalAddress" maxlength="1000" disabled></textarea>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>City:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactPhysicalAddressCity" maxlength="200" disabled>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>County:</label>
+                    <div class="form-group">
+                      <input class="form-control" type="text" placeholder="" formControlName="contactPhysicalAddressCounty" disabled>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>State:</label>
+                    <div class="form-group cus-arrow">
+                      <ng-select [items]="lstStates"
+                                 bindValue="value" bindLabel="text" formControlName="contactPhysicalAddressState" disabled>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Zip:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="contactPhysicalAddressZip" maxlength="50" disabled>
+                    </div>
+                  </div>-->
+
+                  <div class="col-12 col-md-12 col-lg-12">
+                    <button (click)="generateWelcomePackage()" [disabled]="isEmailTemplateReady" class="btn btn-primary form-btns" data-toggle="modal" data-target="#headerpassword"><i class="fas fa-archive"></i> Generate Welcome Email</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<div #welcomePackageModal class="modal fade" id="headerpassword" tabindex="-1" role="dialog" aria-labelledby="headerexampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="welcome-box" [ngClass]="{'disabled':loadSave}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="headerexampleModalLabel">Email Preview</h4>
+          <button #closeButton type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p [innerHTML]="emailTemplate"></p>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary form-btns" (click)="sendWelcomePackage();"><i class="fas fa-paper-plane"></i> Send Email</button>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+      </div>
+      </div>
+    </div>
+  </div>

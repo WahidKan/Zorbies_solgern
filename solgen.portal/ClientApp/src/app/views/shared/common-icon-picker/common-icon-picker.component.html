@@ -1,0 +1,132 @@
+<style>
+    .circle-color {
+        
+      display: inline-block;
+      vertical-align: middle;
+    }
+  
+    .multi-color:nth-child(5n+1) .circle-color {
+      background: #d88c49;
+    }
+  
+    .multi-color:nth-child(5n+2) .circle-color {
+      background: #52a4c9;
+    }
+  
+    .multi-color:nth-child(5n+3) .circle-color {
+      background: #d84a49;
+    }
+  
+    .multi-color:nth-child(5n+4) .circle-color {
+      background: #b8a41d;
+    }
+  
+    .multi-color:nth-child(5n+5) .circle-color {
+      background: #6f9f4d;
+    }
+  </style>
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body m-1 "  >
+          <div class="p-4 row">
+              <a style="cursor:pointer;" (click)="setIconClass('feather-wifi')" class="circle-color icon-bg m-1 " ><span><i class="feather-wifi"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-battery')" class="circle-color icon-bg m-1 " ><span><i class="feather-battery"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-activity')" class="circle-color icon-bg m-1 " ><span><i class="feather-activity"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-airplay')" class="circle-color icon-bg m-1 " ><span><i class="feather-airplay"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-alert-circle')" class="circle-color icon-bg m-1 " ><span><i class="feather-alert-circle"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-bell')" class="circle-color icon-bg m-1 " ><span><i class="feather-bell"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-alert-triangle')" class="circle-color icon-bg m-1 " ><span><i class="feather-alert-triangle"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-bell-off')" class="circle-color icon-bg m-1 " ><span><i class="feather-bell-off"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-folder')" class="circle-color icon-bg m-1 " ><span><i class="feather-folder"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-menu')" class="circle-color icon-bg m-1 " ><span><i class="feather-menu"></i></span></a>
+          </div>
+          <div class="p-4 row">
+              <a style="cursor:pointer;" (click)="setIconClass('feather-align-center')" class="circle-color icon-bg m-1 " ><span><i class="feather-align-center"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-align-justify')" class="circle-color icon-bg m-1 " ><span><i class="feather-align-justify"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-align-left')" class="circle-color icon-bg m-1 " ><span><i class="feather-align-left"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-align-right')" class="circle-color icon-bg m-1 " ><span><i class="feather-align-right"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-anchor')" class="circle-color icon-bg m-1 " ><span><i class="feather-anchor"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-aperture')" class="circle-color icon-bg m-1 " ><span><i class="feather-aperture"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-bold')" class="circle-color icon-bg m-1 " ><span><i class="feather-bold"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-book')" class="circle-color icon-bg m-1 " ><span><i class="feather-book"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-book-open')" class="circle-color icon-bg m-1 " ><span><i class="feather-book-open"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-grid')" class="circle-color icon-bg m-1 " ><span><i class="feather-grid"></i></span></a>
+          </div>
+          <div class="p-4 row">
+              <a style="cursor:pointer;" (click)="setIconClass('feather-hard-drive')" class="circle-color icon-bg m-1 " ><span><i class="feather-hard-drive"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-hash')" class="circle-color icon-bg m-1 " ><span><i class="feather-hash"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-headphones')" class="circle-color icon-bg m-1 " ><span><i class="feather-headphones"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-heart')" class="circle-color icon-bg m-1 " ><span><i class="feather-heart"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-help-circle')" class="circle-color icon-bg m-1 "><span><i class="feather-help-circle"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-home')" class="circle-color icon-bg m-1 "><span><i class="feather-home"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-image')" class="circle-color icon-bg m-1 "><span><i class="feather-image"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-inbox')" class="circle-color icon-bg m-1 "><span><i class="feather-inbox"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-info')" class="circle-color icon-bg m-1 "><span><i class="feather-info"></i></span></a>
+              <a style="cursor:pointer;" (click)="setIconClass('feather-instagram')" class="circle-color icon-bg m-1 " ><span><i class="feather-instagram"></i></span></a>
+          </div>
+      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- <div bsModal #modalPopupObject="bs-modal" class="modal fade" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-lg modal-info " >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Icons</h4>
+                <a type="button" class="close" style="cursor:pointer;" (click)="close()" aria-label="Close"><span aria-hidden="true">&times;</span></a>
+            </div>
+            <div class="modal-body m-1 "  >
+                <div class="p-4 row">
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-wifi')" class="circle-color icon-bg m-1 " ><span><i class="feather-wifi"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-battery')" class="circle-color icon-bg m-1 " ><span><i class="feather-battery"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-activity')" class="circle-color icon-bg m-1 " ><span><i class="feather-activity"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-airplay')" class="circle-color icon-bg m-1 " ><span><i class="feather-airplay"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-alert-circle')" class="circle-color icon-bg m-1 " ><span><i class="feather-alert-circle"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-bell')" class="circle-color icon-bg m-1 " ><span><i class="feather-bell"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-alert-triangle')" class="circle-color icon-bg m-1 " ><span><i class="feather-alert-triangle"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-bell-off')" class="circle-color icon-bg m-1 " ><span><i class="feather-bell-off"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-folder')" class="circle-color icon-bg m-1 " ><span><i class="feather-folder"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-menu')" class="circle-color icon-bg m-1 " ><span><i class="feather-menu"></i></span></a>
+                </div>
+                <div class="p-4 row">
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-align-center')" class="circle-color icon-bg m-1 " ><span><i class="feather-align-center"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-align-justify')" class="circle-color icon-bg m-1 " ><span><i class="feather-align-justify"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-align-left')" class="circle-color icon-bg m-1 " ><span><i class="feather-align-left"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-align-right')" class="circle-color icon-bg m-1 " ><span><i class="feather-align-right"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-anchor')" class="circle-color icon-bg m-1 " ><span><i class="feather-anchor"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-aperture')" class="circle-color icon-bg m-1 " ><span><i class="feather-aperture"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-bold')" class="circle-color icon-bg m-1 " ><span><i class="feather-bold"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-book')" class="circle-color icon-bg m-1 " ><span><i class="feather-book"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-book-open')" class="circle-color icon-bg m-1 " ><span><i class="feather-book-open"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-grid')" class="circle-color icon-bg m-1 " ><span><i class="feather-grid"></i></span></a>
+                </div>
+                <div class="p-4 row">
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-hard-drive')" class="circle-color icon-bg m-1 " ><span><i class="feather-hard-drive"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-hash')" class="circle-color icon-bg m-1 " ><span><i class="feather-hash"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-headphones')" class="circle-color icon-bg m-1 " ><span><i class="feather-headphones"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-heart')" class="circle-color icon-bg m-1 " ><span><i class="feather-heart"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-help-circle')" class="circle-color icon-bg m-1 "><span><i class="feather-help-circle"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-home')" class="circle-color icon-bg m-1 "><span><i class="feather-home"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-image')" class="circle-color icon-bg m-1 "><span><i class="feather-image"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-inbox')" class="circle-color icon-bg m-1 "><span><i class="feather-inbox"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-info')" class="circle-color icon-bg m-1 "><span><i class="feather-info"></i></span></a>
+                    <a style="cursor:pointer;" (click)="setIconClass('feather-instagram')" class="circle-color icon-bg m-1 " ><span><i class="feather-instagram"></i></span></a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="text-white"></i>Select</button>
+            </div>
+        </div>
+    </div>
+</div> -->

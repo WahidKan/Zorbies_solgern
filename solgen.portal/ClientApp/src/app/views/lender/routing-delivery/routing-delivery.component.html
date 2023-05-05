@@ -1,0 +1,73 @@
+<div bsModal #delivery="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content" style="z-index:1">
+      <div class="modal-header">
+        <h4 class="modal-title">{{action}} Data Routing</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body mapping-select" style="max-height:600px; ">
+        <div>
+          <div class="row">
+            <div class="col-md-12 col-lg-12">
+              <label>Delivery Name:</label>
+              <div class="form-group">
+                <input type="text" [(ngModel)]="deliveryModel.settings.message" class="form-control" />
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-md-12 mrules mb-3">
+              <div class="border">
+                <div class="col-md-12">
+                  <div class="list-group" style="min-height: 210px;">
+                    <h3 class="form-heading">Signee:</h3>
+                    <ul class="form-header">
+                      <li class="pl-3">Name</li>                      
+                      <li class="pl-3">Email</li>
+                    </ul>
+                    <div *ngFor="let recipient of deliveryModel.settings.recipients; index as j;">                      
+                      <ul class="from-rules">
+                        <li class="form-group align-middle px-2">
+                          <ng-select [items]="webmergeDocumentFields" [(ngModel)]="recipient.name" [closeOnSelect]="true" [searchable]="true">
+                          </ng-select>
+                        </li>
+                        
+                        <li class="form-group align-middle px-2">
+                          <ng-select [items]="webmergeDocumentFields" [(ngModel)]="recipient.email" [closeOnSelect]="true" [searchable]="true">
+                          </ng-select>                          
+                        </li>
+
+                        <li class="text-center">
+                          <a href="javscript:;" (click)="deleteRecipient(recipient)" class="text-red font-16"><i class="feather-trash-2"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-3 text-center">
+                  <div class="cstm-drop-btn text-center">
+                    <select #currentCondition class="btn ddlupdatestatus btn-success" (change)="onChange(currentCondition, $event)">
+                      <option selected="selected"> Add</option>
+                      <option>Another Recipient</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+        </div>
+      </div>
+      <div class="modal-footer">        
+        <button type="button" class="btn btn-success mr-1 " (click)="submit()"><i class="feather-save"></i> Save</button>
+        <button type="button" class="btn btn-danger" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>
+

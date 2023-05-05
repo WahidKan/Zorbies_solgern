@@ -1,0 +1,195 @@
+<div class="panel ">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a href="#panelBody2" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"><span> Notes</span></a>
+    </h4>
+  </div>
+  <div id="panelBody2" class="panel-collapse collapse " style="">
+    <a href="javascript:void(0);" class="btn-in-panel" data-dismiss="modal" *ngIf="is_converted != true || isflag" (click)="showNotesPopup()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add Note</a>
+    <div class="panel-body">
+      <div class="row">
+        <div class="table-responsive">
+          <div class="table table-striped">
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                           [rows]="NotespagedData.data"
+                           [columnMode]="'force'"
+                              [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                           [headerHeight]="40"
+                           [footerHeight]="40"
+                           
+                           [externalPaging]="true"
+                           [externalSorting]="true"
+                           [loadingIndicator]="loadSave"
+                           [count]="NotespagedData.pager.totalItems"
+                           [offset]="NotespagedData.pager.currentPage"
+                           [limit]="NotespagedData.pager.pageSize"
+                           (page)='setPage($event)'
+                           (sort)="onSort($event)">
+
+              <ngx-datatable-column name="Description" sortable="false" prop="note_description" [minWidth]="150">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <!--<a class="word_break" (click)="displayemaildetail(row)" title="{{row.note_description}}">{{row.note_description}}</a>-->
+
+                  <div title="{{row.note_description}}" *ngIf='row.note_description!=null || row.note_description!==""'>
+                    
+                    <a href="javascript:void(0);" (click)="displaynotedetail(row)">{{row.note_description | truncate : 50}}</a>
+                  </div>
+                  <div *ngIf='row.note_description==null || row.note_description==""'>
+                    <span>N/A</span>
+                  </div>
+                </ng-template>
+
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Created By" sortable="false" prop="createdby" [minWidth]="150"></ngx-datatable-column>
+              <!--<ngx-datatable-column name="Created on" sortable="false" prop="created_on" [minWidth]="150"></ngx-datatable-column>-->
+              <ngx-datatable-column name="Created on" prop="created_on" [minWidth]="130">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.created_on | DateTimeToLocal}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [maxWidth]="200" headerClass="text-center" name="Action" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="text-center">
+                    <!--<a (click)="edit(row.Id)" class="btn-edit"><i title="Click to edit." class="fa fa-pencil text-success pr-2"></i></a>-->
+                    <a *ngIf="is_converted != true" (click)="DeleteNote(row.note_id)" class="btn-delete"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                  </div>
+
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template
+                             let-rowCount="rowCount"
+                             let-pageSize="pageSize"
+                             let-selectedCount="selectedCount"
+                             let-currentPage="curPage"
+                             let-offset="offset"
+                             let-isVisible="isVisible">
+                  <div class="page-count" style="max-width:170px;">
+                    Total Records: {{rowCount}}
+                  </div>
+                  <div>
+                    <div style="color:black; margin-right:10px;" class="page-size-record">
+                      <span style="text-align:right; width:80px;vertical-align: middle;">
+                        <ng-select [searchable]="false" [items]="lstPageSizeNotes" appendTo="body" [(ngModel)]='pageSizeValuenotes' dropzone="fixed" [clearable]="false" (change)="onChangeNotes($event)" draggable="false" [closeOnSelect]="true"
+                                   bindLabel="text" bindValue="text"></ng-select>
+                      </span>
+                    </div>
+                  </div>
+                  <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                   [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                   [pagerPreviousIcon]="'fa fa-angle-left'"
+                                   [pagerNextIcon]="'fa feather-chevron-left'"
+                                   [page]="curPage"
+                                   [size]="pageSizeValuenotes"
+                                   [count]="NotespagedData.pager.totalItems"
+                                   [hidden]="!((rowCount / pageSize) > 1)"
+                                   (change)="setPage($event)">
+                  </datatable-pager>
+                </ng-template>
+              </ngx-datatable-footer>
+            </ngx-datatable>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--notes popup-->
+
+<div class="modal fade show" bsModal #AddNotes="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add a new Notes</h4>
+        <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; height:238px;">
+        <form [formGroup]="addNoteForm" [ngClass]="{'disabled':loadSave}">
+          <div class="row">
+            <!--<div class="col-12 col-md-12 col-lg-12">
+    <label>Name</label>
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Enter Note" formControlName="note" [ngClass]="{'is-invalid': (note.invalid && (note.dirty || note.touched) && (note.errors?.required || note.errors?.maxlength)) }">
+      <small *ngIf="note.invalid && (note.dirty || note.touched) && note.errors?.required"
+             class="text-danger">Note is required</small>
+    </div>
+  </div>-->
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Description</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" style="min-height:120px;" placeholder="Enter Note Description" formControlName="noteDescription" #machineDescription maxlength="1000" [ngClass]="{'is-invalid': (noteDescription.invalid && (noteDescription.dirty || noteDescription.touched) && (noteDescription.errors?.required || noteDescription.errors?.maxlength)) }"></textarea>
+                <small *ngIf="noteDescription.invalid && (noteDescription.dirty || noteDescription.touched) && noteDescription.errors?.required"
+                       class="text-danger">Description is required</small>
+              </div>
+            </div>
+            <!--<div class="col-12 col-md-2">
+              <div class="form-group mt-1">
+                <div class="form-check form-check-inline">
+                  <div class="custom-control custom-radio mx-2  p-0">
+                    <input id="isPrivate4" formControlName="isPrivate" value="1" type="radio">
+                    <label for="isPrivate4" class="radio-label">Private</label>
+                  </div>
+                </div>
+              </div>
+            </div>-->
+            <div class="col-12 col-md-2">
+              <div class="form-group mt-1">
+                <div class="form-check form-check-inline">
+                  <div class="custom-control custom-radio mx-2  p-0">
+                    <input id="isPrivate3" formControlName="isPrivate" value="0" type="radio">
+                    <label for="isPrivate3" class="radio-label">Public</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveNotes()"><i class="feather-save text-white"></i> Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>
+
+
+<!--note description Popup-->
+<div class="modal my-popups-dboard fade show" bsModal #notedetail="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Note Description</h4>
+        <button type="button" class="close" (click)="closenotedesc()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow:auto; margin-bottom:10px; height:238px;">
+
+        <div class="col-md-12">
+          <div class="row">
+
+            <div class="table-responsive mt-2 cus-notification">
+              <p [innerHTML]="notedesc"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger form-btns" (click)="closenotedesc()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>-->
+    </div>
+  </div>
+</div>
+

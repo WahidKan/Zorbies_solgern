@@ -1,0 +1,40 @@
+<div class="panel active" >
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a href="#smsHistory" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+        <span>Sms History ({{historyCount}})</span>
+      </a>
+    </h4>
+  </div>
+  <div id="smsHistory" class="panel-collapse active show p-0 border-0" data-parent="#accordion">
+    <div id="smsHistory" class="panel-collapse collapse active show">
+
+      <div class="col-md-12 col-sm-12 list-card-view" >
+        <div class="card card-block border-0" *ngFor="let item of smsHistoryList;let i=index">
+        <div class="">
+          <div class="card-main">
+            <h5 class="card-title border-bottom mt-3 mb-3">
+                <div class="row">
+                    <div class="col-6"><p><strong>To: </strong>{{item.From}}</p></div>
+                    <div class="col-6"><p><strong>From: </strong>{{item.To}}</p></div>
+                </div>
+            </h5>
+            <div class="row">
+              <div class="col-12"><p><strong>Body:</strong> {{item.Body}}</p></div>
+            </div>
+            <div class="row">
+              <div class="col-6"><p><strong>Date:</strong> {{item.CreatedOn | DateTimeToLocal | date :'mediumTime'}}</p></div>
+              <div class="col-6"><p><strong>Sms Status:</strong> {{item.MessageStatus}}</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-block" *ngIf="smsHistoryList == null || smsHistoryList.length==0">
+        <div class="card-main border-bottom  mt-3">
+          <p class="text-center text-danger">No data to display</p>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

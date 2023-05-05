@@ -1,0 +1,73 @@
+<div style="width: 50%; margin-top: 10%; margin-left: 25%" bsModal #makeFormModel="bs-modal" [config]="{ backdrop: 'static' }" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-info" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4  class="modal-title">Request a demo</h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style=" margin-bottom:10px; height:auto;overflow:inherit">
+
+            <form [formGroup]="addRequestDemoForm" autocomplete="off">
+              <div class="row">
+                <div class="col-6 col-md-6 col-lg-6">
+                    <label>First Name:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input (keyup)="keyPress($event)" type="text" maxlength="100" class="form-control" placeholder="Enter your first name" formControlName="FirstName" >
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-6 col-lg-6">
+                    <label>Last Name:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                    <input type="text" (keyup)="keyPress($event)" maxlength="100" class="form-control" placeholder="Enter your last name" formControlName="LastName" >
+                    </div>
+                  </div>
+              </div>
+              <div class="row">
+                <div class="col-6 col-md-6 col-lg-6">
+                    <label>Email<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="email" maxlength="100" class="form-control" placeholder="Enter your email address" formControlName="Email" >
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-6 col-lg-6">
+                    <label>Phone No<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" maxlength="100" class="form-control" placeholder="Enter your phone number" formControlName="PhoneNumber" >
+                    </div>
+                  </div>
+              </div>
+    
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                  <label>Subject<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <input type="text" [(ngModel)] = "demoSubject" disabled maxlength="100" class="form-control" placeholder="Subject" formControlName="Subject" >
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                  <label>Message</label>
+                  <div class="form-group">
+                    <textarea class="form-control" maxlength="500" placeholder="Enter message" formControlName="Message"></textarea>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+  
+        <div class="modal-body" style="margin-bottom: 10px; height: auto; overflow: inherit">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success form-btns" (click)="saveDemoRequest()"><i class="feather-save text-white pr-2"></i>Submit</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close">
+            <i class="feather-x text-white"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

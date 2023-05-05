@@ -1,0 +1,57 @@
+<div bsModal #CopyLinkModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div style="max-width:40% !important;" class="modal-dialog modal-xl modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Share Link</h4>
+                <!-- <h4 class="modal-title">{{modeltitle}}</h4> -->
+                <button type="button" class="close" (click)="close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body container" style=" margin-bottom:10px; max-height:600px">
+      
+
+
+                <div>
+                    <!-- style="padding-left: 10%;" -->
+                    <label>Select:</label>
+                    <div class="mb-4">
+                        <!-- class="form-group" -->
+                        <!-- <div class="form-check-inline"> -->
+                            <!-- <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="customRadio" name="copy"
+                                    value="copylink" (click)="CopyLink()">
+                                <label class="custom-control-label" for="customRadio">Copy Link </label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="customRadio1" name="copy"
+                                    value="email" (click)="CopyLinkEmail()" [checked]="sendEmail">
+                                <label class="custom-control-label" for="customRadio1">Email </label>
+                            </div><br> -->
+                            <select class="form-control" (change)="CopyLink($event)">
+                             <option  value="copylink">Copy Link</option>
+                             <option selected value="email">Email</option>
+                            </select>                        
+                        <!-- </div> -->
+                    </div>
+                    <div class="form-group">
+                        <button *ngIf="CopytoClipboard" class="btn btn-success" type="button"
+                            (click)="copyInputMessage()" aria-label="Close">
+                            Copy to Clipboard
+                        </button>
+                        <button *ngIf="sendEmail" class="btn btn-success" type="button" (click)="SendEmail()"
+                            aria-label="Close">
+                            Send Email
+                        </button>
+                    </div>
+                    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+                    <div class="0"></div>
+
+                    <!-- <button  type="radio" class="btn btn-success form-btns" (click)="CopyLink()"> Copy Link </button>
+                        <button  type="radio" class="btn btn-success form-btns" (click)="SendEmail()">Email</button> -->
+                </div>
+              
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,222 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<app-breadcrumb *ngIf="!loadSave" [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a routerLink="/dashboard">Dashboard</a></li>
+        <li><a routerLink="/product">Manage Products</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="panel">
+    <div class="panel-content p-4" [ngClass]="{'disabled':loadSave}">
+        <form [formGroup]="form" *ngIf="form">
+            <ng-container *ngFor="let item of formControlList">
+                <h3 class="form-heading" *ngIf="item.group_name!='Additional Information'"> <span>{{
+            item.group_display_name}}</span></h3>
+                <div class="row  mb-2">
+
+                    <ng-container *ngFor="let inner of item.InnerData">
+                        <div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'col-12': inner.layout_type =='single', 'col-md-6': inner.layout_type =='double', 'col-lg-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                             inner.layout_type =='four' }" ngShow="inner.dependent_show_type == true">
+                            <!----------------------------------------->
+                            <input type="hidden" *ngIf="inner.form_field_visibility == 'NO' " />
+                            <!--v-model="item.value" v-bind:id="item.name"     -->
+                            <label *ngIf="inner.form_field_visibility == 'YES' || inner.edit_form_field_visibility == 'YES'">{{ inner.display_name}}:<span class="text-danger"
+                  [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+
+                            <div class="form-group" *ngIf="inner.form_field_visibility == 'YES' || inner.edit_form_field_visibility == 'YES'">
+
+
+                                <input type="text" class="form-control" [readonly]="inner.is_readOnly" [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    *ngIf="inner.picklist_options != 'Lookup' && inner.dt_code !='datetime'  && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='datetime' && inner.dt_code !='int' && inner.dt_code !='decimal' && inner.dt_code !='bigint' && inner.dt_code!='IconUpload'"
+                                />
+
+                                <input type="text" class="form-control" [readonly]="inner.is_readOnly" [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    *ngIf="inner.dt_code == 'int'" />
+
+
+
+                                <small *ngIf="inner.dt_code == 'int' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)" class="text-danger">Please enter valid
+                  value</small>
+
+                                <input type="text" class="form-control" [readonly]="inner.is_readOnly" [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    *ngIf="inner.dt_code == 'bigint'" />
+
+                                <small *ngIf="inner.dt_code == 'bigint' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)" class="text-danger">Please enter valid
+                  value</small>
+
+                                <input type="text" class="form-control" [readonly]="inner.is_readOnly" [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    *ngIf="(inner.dt_code == 'decimal' && inner.ColumnName !='ProductPrice')" />
+
+
+                                <!--Custom Price Start -->
+
+
+                                <div class="input-group" *ngIf="(inner.dt_code == 'decimal' && inner.ColumnName=='ProductPrice')">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input appTwoDigitDecimaNumberDirective type="text" class="form-control" [readonly]="inner.is_readOnly" [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    />
+                                </div>
+
+                                <!--Custom Price End -->
+
+
+                                <small *ngIf="inner.dt_code == 'decimal' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)" class="text-danger">Please enter valid
+                  value</small>
+
+                                <textarea class="form-control" *ngIf="inner.dt_code == 'textarea'" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName).errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                                    [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+
+                                <p-calendar [hourFormat]="(timeFormat==24)?24:12" [disabled]="inner.is_readOnly" [showTime]="true" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date" *ngIf="(inner.dt_code == 'datetime')" [formControlName]="inner.form_controlName" [showTime]="false"
+                                    dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030">
+                                </p-calendar>
+
+
+                                <!--======================================== For Icon ===================================-->
+                                <button (click)="showIconPopup()" *ngIf="inner.dt_code == 'IconUpload' && hideChooseIconbtn==false" class="btn btn-success text-white"> <i class="fa fa-flag pr-1" aria-hidden="true"></i> Choose
+                  Icon</button>
+                                <span *ngIf="isshowicon && inner.dt_code == 'IconUpload'" class="icon-ininput">
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                    [formControlName]="inner.form_controlName" [id]="inner.custom_field_id" (click)="showIconPopup()"
+                    [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                    *ngIf="inner.dt_code == 'IconUpload' && hideChooseIconbtn==true" />
+                  <a class="input-group-text bg-white border-0 p-0" (click)="clearSelectedIcon(fileInput)"
+                    style="position: absolute; z-index: 10; right :1px; padding: 8px 6px !important;    color: #d00b05 !important; top: 1px;    cursor: pointer;"><i
+                      class="feather-repeat"></i></a>
+
+                  <i *ngIf="isshowicon && inner.dt_code == 'IconUpload'" class="{{icontoShow}} selectedico"></i>
+
+                </span>
+                                <!--==============================================================================================-->
+                                <!--============================== For CheckBox ===========================-->
+
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                                    <div *ngFor="let options of inner.listoptions">
+                                        <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+
+                                            <!--<div class="form-check form-check-inline" *ngFor="let checkedvals of form.get(inner.form_controlName).value">-->
+
+                                            <div class="custom-control custom-checkbox">
+
+                                                <input id="chk_{{inner.custom_field_id}}_{{option}}_{{i}}" value="5555" [checked]="checkvalue(inner.value,option)" (change)="onCheckboxChange($event,item,inner)" class="dynamic custom-control-input" type="checkbox">
+                                                <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="chk_{{inner.custom_field_id}}_{{option}}_{{i}}">{{option}}</label>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio'">
+                                    <div *ngFor="let options of inner.listoptions">
+
+                                        <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+
+                                            <div class="custom-control custom-radio mx-2  p-0">
+
+
+
+                                                <!--<input id="rbl_{{inner.custom_field_id}}_{{option}}" class="dynamic custom-control-input"
+       [formControlName]="inner.form_controlName" type="radio">
+<label class="custom-control-label universalradio-custom-control-label pl-2 pr-1 dynamic" for="rbl_{{inner.custom_field_id}}_{{option}}">{{option}}</label>-->
+
+                                                <input id="radio-{{inner.custom_field_id}}_{{option}}" [formControlName]="inner.form_controlName" [value]="option" type="radio">
+
+                                                <label for="radio-{{inner.custom_field_id}}_{{option}}" class="radio-label">{{option}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!--============================================================================-->
+                                <!--============================== For Boolean ===========================-->
+
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean' && inner.name!='LoanProductAssociate'">
+                                    <div class="form-check form-check-inline">
+                                        <div class="custom-control custom-checkbox pl-0">
+                                            <label class="switch">
+                        <input type="checkbox" id="chk_{{inner.custom_field_id}}"
+                          [formControlName]="inner.form_controlName">
+                        <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                      </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean' && inner.name=='LoanProductAssociate'">
+                                    <div class="form-check form-check-inline">
+                                        <div class="custom-control custom-checkbox pl-0">
+                                            <label class="switch">
+                        <input type="checkbox" id="chk_{{inner.custom_field_id}}"
+                          [formControlName]="inner.form_controlName" (change)="onShowInSA($event)">
+                        <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                      </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--============================================================================-->
+                                <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select" *ngIf="inner.dt_code=='select' && inner.picklist_options==''" [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+
+                                </ng-select>
+
+                                <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select" *ngIf="inner.dt_code=='select' && inner.picklist_options=='true'" [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name"
+                                    bindValue="value">
+
+                                </ng-select>
+
+                                <small *ngIf="((form.get(inner.form_controlName)?.invalid) && (form.get(inner.form_controlName).dirty) || (form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required))" class="text-danger">{{inner.display_name}} is required</small>
+
+                            </div>
+                        </div>
+                    </ng-container>
+
+                </div>
+            </ng-container>
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-12">
+                    <a *ngIf='addOrUpdatePermission' href="javascript:void(0);" class="btn btn-success mr-2" (click)="onSubmit()"><i class="feather-save"></i> Submit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="feather-x"></i> Cancel</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+<div id="IconModel" bsModal #IconModel="bs-modal" [config]="{backdrop: 'static'}" style=" background: none !important;" class="modal fade announcement-pop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="height:450px!important;width:100%!important; ">
+        <div class="modal-content" style="z-index:1; height:auto;">
+            <div class="modal-header">
+                <h4 class="modal-title">Icons</h4>
+                <button type="button" (click)="closeIconPopup()" class="close" data-dismiss="modal" aria-label="Close" style="padding: 13px 17px;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div class="modal-body" style="overflow-y: visible; overflow-x: visible;">
+
+                <div *ngIf="lstSolgenIcons!=null">
+                    <span *ngFor="let icons of lstSolgenIcons" class="icon-pick">
+            <i (click)="setIcon(icons.value)" class="{{icons.text}}" aria-hidden="true"></i>
+          </span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

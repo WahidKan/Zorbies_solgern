@@ -1,0 +1,222 @@
+<div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Add Custom Field</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li><a routerLink="/dashboard">Dashboard</a></li>
+      <li><a routerLink="/user">Manage Custom Field</a></li>
+      <li class="active">{{pageTitle}}</li>
+    </ol>
+  </div>
+
+</div>
+<div class="clearfix"></div>
+
+<div class="panel">
+  <div class="panel-content">
+    <form [formGroup]="customFiledGroup" autocomplete="off">
+      <div class="pannelleftboxesicons col-sm-12 col-md-12 col-lg-4 col-xl-3 float-left">
+        <div class="collapse show p-3 add-custom">
+          <div class="tablehead black-header light-grey ">
+            Select data type
+          </div>
+          <div class="bordered-content">
+            <ul class="types columnlist list-group">
+
+              <li class="list-group-item selected" id="1" code="string" maxlength="100" (click)="dataType('text')">
+                <a href="javscript:;">
+                  <i class="fa fa-text-height"></i>
+                  <span>
+                    Text
+                  </span>
+                </a>
+              </li>
+              <li class="list-group-item" id="2" code="int" maxlength="10" (click)="dataType('Interger')">
+                <a href="javscript:;">
+                  <i class="fa fa-square-o"></i>
+                  <span>
+                    Integer
+                  </span>
+                </a>
+              </li>
+              <li class="list-group-item" id="3" code="bigint" maxlength="18" (click)="dataType('LongInterger')">
+                <a href="javscript:;">
+                  <i class="fa fa-square-o"></i>
+                  <span>
+                    Long Integer
+                  </span>
+                </a>
+              </li>
+              <li class="list-group-item" id="4" code="decimal" maxlength="18" (click)="dataType('Decimal')">
+                <a href="javscript:;">
+                  <i class="fa fa-dot-circle-o"></i>
+                  <span>
+                    Decimal
+                  </span>
+                </a>
+              </li>
+              <li class="list-group-item" id="5" code="date" maxlength="40" (click)="dataType('Date')">
+                <a href="javscript:;">
+                  <i class="fa fa-calendar"></i>
+                  <span>
+                    Date
+                  </span>
+                </a>
+              </li>
+              <li class="list-group-item" id="6" code="select" maxlength="200" (click)="dataType('SelectList')">
+                <a href="javscript:;">
+                  <i class="fa fa-list"></i>
+                  <span>
+                    Select List
+                  </span>
+                </a>
+              </li>
+              <li class="list-group-item" id="7" code="Url" maxlength="200" (click)="dataType('Url')">
+                <a href="javscript:;">
+                  <i class="fa fa-globe"></i>
+                  <span>
+                    URL
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12 col-md-12 col-lg-8 col-xl-9 float-left">
+
+        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left">
+          <label for="SubModuleId">Module Name:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <ng-select [items]="lstModuleList" [loading]="loadSave" [closeOnSelect]="true" placeholder="Select Module Name" formControlName="moduleName" (change)="onChangeModuleName($event)"
+                       bindLabel="text" bindValue="value"
+                       [ngClass]="{'is-invalid': (moduleName.invalid && (moduleName.dirty || moduleName.touched) && moduleName.errors?.required) }"></ng-select>
+            <small *ngIf="moduleName.invalid && (moduleName.dirty || moduleName.touched) && moduleName.errors?.required"
+                   style="color:red;">Please select Module Name</small>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left">
+
+          <label for="SubModuleId">Sub Module Name:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <div class="form-group">
+              <ng-select [items]="lstSubModuleList" [loading]="loadSave" [closeOnSelect]="true" placeholder="Select status" formControlName="subModuleName"
+                         bindLabel="text" bindValue="value"
+                         [ngClass]="{'is-invalid': (subModuleName.invalid && (subModuleName.dirty || subModuleName.touched) && subModuleName.errors?.required) }"></ng-select>
+              <small *ngIf="subModuleName.invalid && (subModuleName.dirty || subModuleName.touched) && subModuleName.errors?.required"
+                     style="color:red;">Please select Sub Module</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left">
+
+          <label for="Name">Field Name:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="fieldName" maxlength="50" placeholder="Enter Text"
+                   [ngClass]="{'is-invalid': (fieldName.invalid && (fieldName.dirty || fieldName.touched) && (fieldName.errors?.required || fieldName.errors?.maxlength)) }">
+            <small *ngIf="fieldName.invalid && (fieldName.dirty || fieldName.touched) && fieldName.errors?.required"
+                   class="text-danger">Field Name is required</small>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left">
+          <label for="IsRequired"></label>
+          <div class="form-group">
+            <div class="custom-control custom-checkbox">
+              <input class="custom-control-input" id="isRequired"  type="checkbox" formControlName="isRequired" />
+              <label class="custom-control-label" for="isRequired">
+                Is Required
+              </label>
+            </div>
+          </div>
+
+          <small class="form-text text-muted">If anonymous, then minimum three user are required.</small>
+        </div>
+
+        <div *ngIf="isShownText" class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left" id="divshow">
+          <label for="description">Length:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="custText" maxlength="50" placeholder="Enter Text"
+                   [ngClass]="{'is-invalid': (custText.invalid && (custText.dirty || custText.touched) && (custText.errors?.required || custText.errors?.maxlength)) }">
+            <small *ngIf="custText.invalid && (custText.dirty || custText.touched) && custText.errors?.required"
+                   class="text-danger">Length is required</small><br />
+            <label>Length range should be 1 to {{lengthofDisplay}}.</label>
+          </div>
+        </div>
+        <div *ngIf="isShownInterger" class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left" id="divshow">
+          <label for="description">Length:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="custInteger" maxlength="50" placeholder="Enter Integer"
+                   [ngClass]="{'is-invalid': (custInteger.invalid && (custInteger.dirty || custInteger.touched) && (custInteger.errors?.required || custInteger.errors?.maxlength)) }">
+            <small *ngIf="custInteger.invalid && (custInteger.dirty || custInteger.touched) && custInteger.errors?.required"
+                   class="text-danger">Length is required</small><br />
+            <label>Length range should be 1 to {{lengthofDisplay}}.</label>
+          </div>
+        </div>
+        <div *ngIf="isShownLongInteger" class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left" id="divshow">
+          <label for="description">Length:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="CustLogInterger" maxlength="50" placeholder="Enter long Integer"
+                   [ngClass]="{'is-invalid': (CustLogInterger.invalid && (CustLogInterger.dirty || CustLogInterger.touched) && (CustLogInterger.errors?.required || CustLogInterger.errors?.maxlength)) }">
+            <small *ngIf="CustLogInterger.invalid && (CustLogInterger.dirty || CustLogInterger.touched) && CustLogInterger.errors?.required"
+                   class="text-danger">Length is required</small><br />
+            <small>Length range should be 1 to {{lengthofDisplay}}.</small>
+          </div>
+        </div>
+        <div *ngIf="isShownUrl" class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left" id="divshow">
+          <label for="description">Length:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="custUrl" placeholder="Enter Url" maxlength="50"
+                   [ngClass]="{'is-invalid': (custUrl.invalid && (custUrl.dirty || custUrl.touched) && (custUrl.errors?.required || custUrl.errors?.maxlength)) }" />
+            <small *ngIf="custUrl.invalid && (custUrl.dirty || custUrl.touched) && custUrl.errors?.required"
+                   class="text-danger">Length is required</small><br />
+            <small>Length range should be 1 to {{lengthofDisplay}}.</small>
+          </div>
+        </div>
+        <div *ngIf="isShownSelectList" class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left" id="isShownSelectList">
+          <label for="description">Pick list Option:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <textarea class="form-control" cols="20" data-val="true" placeholder="Enter Drop down value" formControlName="custSelectList" rows="2" [ngClass]="{'is-invalid': (custSelectList.invalid && (custSelectList.dirty || custSelectList.touched) && (custSelectList.errors?.required || custSelectList.errors?.maxlength)) }"></textarea>
+            <small *ngIf="custSelectList.invalid && (custSelectList.dirty || custSelectList.touched) && custSelectList.errors?.required"
+                   class="text-danger">Pick list Option is required</small><br />
+            <small>Use ^ to separate values eg: Public^Private.</small>
+          </div>
+        </div>
+        <div *ngIf="divshowdecimal" class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left" id="divshowdecimal">
+          <label for="description">Decimal Places:<span class="text-danger"></span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="custDecimalPlace" maxlength="50" placeholder="Enter Decimal value">
+          </div>
+        </div>
+        <div *ngIf="divshowdecimalText" class="col-sm-12 col-md-12 col-lg-6 col-xl-6 float-left" id="divshow">
+          <label for="description">Length:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <textarea class="form-control" cols="20" data-val="true" placeholder="Enter Decimal Length" formControlName="custDecimalLength" rows="2"
+                      [ngClass]="{'is-invalid': (custDecimalLength.invalid && (custDecimalLength.dirty || custDecimalLength.touched) && (custDecimalLength.errors?.required || custDecimalLength.errors?.maxlength)) }"></textarea>
+            <small *ngIf="custDecimalLength.invalid && (custDecimalLength.dirty || custDecimalLength.touched) && custDecimalLength.errors?.required"
+                   class="text-danger">Length is required</small>
+            <small>Use ^ to separate values eg: Public^Private.</small>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-12  float-left">
+          <label for="description">Description:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <textarea class="form-control" cols="20" id="txtdesc" formControlName="description" rows="2"
+                      [ngClass]="{'is-invalid': (description.invalid && (description.dirty || description.touched) && (description.errors?.required || description.errors?.maxlength)) }"></textarea>
+            <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.required"
+                   class="text-danger">Description is required</small>
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12  float-left">
+          <a href="javascript:void(0);" class="btn btn-success form-btns" (click)="AddCustomField()"><i class="fas fa-save"></i> Submit</a>
+          <a href="javascript:void(0);" class="btn btn-danger form-btns" (click)="Cancel()"><i class="fa fa-times"></i> Cancel</a>
+        </div>
+        <div class="col-sm-12 col-md-12  float-left"><span class="text-danger">Fields marked with an asterisk (*) are mandatory.</span></div>
+      </div>
+    </form>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

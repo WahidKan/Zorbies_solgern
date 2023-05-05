@@ -1,0 +1,197 @@
+<div bsModal #makeappointment="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;">
+        <form [formGroup]="addForm" autocomplete="off">
+          <div class="row">
+            <div class="col-md-12">
+              <!--<h4>if would like Enerflo to automatically find the best apt time based on availalility.</h4>-->
+              <div class="row">
+
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Appointment Number:</label>
+                  <div class="form-group">
+                   <input type="text" readonly  class="form-control" placeholder="Appointment Number" formControlName="AppointmentNumber">
+                   
+                    <!-- <small
+                      *ngIf="AppointmentNumber.invalid && (AppointmentNumber.dirty || AppointmentNumber.touched) && AppointmentNumber.errors?.required"
+                      style="color:red;">Please select Appointment Number</small> -->
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Subject :<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                   <input [readonly]="isReschedule" type="text"  class="form-control" placeholder="Subject" formControlName="Subject"
+                   [ngClass]="{'is-invalid': (Subject.invalid && (Subject.dirty || Subject.touched) && Subject.errors?.required) }">
+                   
+                    <small
+                      *ngIf="Subject.invalid && (Subject.dirty || Subject.touched) && Subject.errors?.required"
+                      style="color:red;">Please select Subject</small>
+                  </div>
+                </div>
+                <!-- <div class="col-12 col-md-6 col-lg-6"
+                  *ngIf="comptype!='undefined' && comptype.companyType!='companytypeFinancialInstitute'">
+                  <label>Appointment Type:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <ng-select #clearDrop [items]="lstappointment" placeholder="Select Appointment Type"
+                      bindValue="value" bindLabel="text" formControlName="appointmenttypeId" [closeOnSelect]="true"
+                      [ngClass]="{'is-invalid': (appointmenttypeId.invalid && (appointmenttypeId.dirty || appointmenttypeId.touched) && appointmenttypeId.errors?.required) }">
+                    </ng-select>
+                    <small
+                      *ngIf="appointmenttypeId.invalid && (appointmenttypeId.dirty || appointmenttypeId.touched) && appointmenttypeId.errors?.required"
+                      style="color:red;">Please select Appointment Type</small>
+                  </div>
+                </div> -->
+
+                <!-- <div class="col-12 col-md-6 col-lg-6"
+                  *ngIf="comptype!='undefined' && comptype.companyType!='companytypeFinancialInstitute'">
+                  <label>Appointment Object:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <ng-select #clearAppointment [items]="appointments" [ngClass]="{'disabledddl':true}"
+                      placeholder="Select Appointment Type" bindValue="value" bindLabel="text"
+                      formControlName="appointmentWith" (change)="selectAppointmentWith($event)" [closeOnSelect]="true"
+                      [ngClass]="{'is-invalid': (appointmentWith.invalid && (appointmentWith.dirty || appointmentWith.touched) && appointmentWith.errors?.required) }">
+                    </ng-select>
+                    <small
+                      *ngIf="appointmentWith.invalid && (appointmentWith.dirty || appointmentWith.touched) && appointmentWith.errors?.required"
+                      style="color:red;">Please select Appointment Object</small>
+                  </div>
+                </div> -->
+
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Customer:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <ng-select  #clearDrop [items]="customers" 
+                      placeholder="Select Customer" bindValue="value" bindLabel="text" formControlName="customer"
+                      (change)="setcustomerid()" [closeOnSelect]="true" 
+                      [ngClass]="{'is-invalid': (customer.invalid && (customer.dirty || customer.touched) && customer.errors?.required) }"
+                      [ngStyle]="isReschedule ? {'pointer-events': 'none'} : {}"
+                      >
+                      <ng-template  ng-option-tmp let-item="item" let-index="index" let-search="searchTerm" class="p-1">
+
+                        <div style="margin: 1px 0;" class="card">
+                          <div class="card-body p-2" >
+                            <h5 class="card-title mb-1 custmr-name" [ngOptionHighlight]="search">{{item.text}}</h5>
+                            <p class="p-0 m-0"><i class="fa fa-envelope"></i> {{item.email}} <i
+                                class="fa fa-phone ml-3"></i> {{item.mobilePhone}}</p>
+
+                          </div>
+                        </div>
+                      </ng-template>
+
+
+                    </ng-select>
+                    <small *ngIf="customer.invalid && (customer.dirty || customer.touched) && customer.errors?.required"
+                      style="color:red;">Please select Customer</small>
+                  </div>
+                </div>
+ 
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Assigned User:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                   <input type="text" readonly class="form-control" placeholder="Assigned User" formControlName="CreatedByName"
+                   [ngClass]="{'is-invalid': (CreatedByName.invalid && (CreatedByName.dirty || CreatedByName.touched) && CreatedByName.errors?.required) }">
+                   <small *ngIf="CreatedByName.invalid && (CreatedByName.dirty || CreatedByName.touched) && CreatedByName.errors?.required"
+                   style="color:red;">Please select User</small>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-6" *ngIf="comptype.companyType!= 'companytypeFinancialInstitute'">
+                  <label>Appointment Status:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <ng-select #clearDrop [items]="lstappointmentstatus" formControlName="appointmentstatusId"
+                      placeholder="Select Appointment Status" bindValue="value" bindLabel="text" [closeOnSelect]="true"
+                   [ngClass]="{'is-invalid': (appointmentstatusId.invalid && (appointmentstatusId.dirty || appointmentstatusId.touched) && appointmentstatusId.errors?.required) }">
+                    </ng-select>
+                    <small *ngIf="appointmentstatusId.invalid && (appointmentstatusId.dirty || appointmentstatusId.touched) && appointmentstatusId.errors?.required"
+                   style="color:red;">Please select Status</small>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6" *ngIf="comptype.companyType == 'companytypeFinancialInstitute'">
+                  <label>Appointment Status1:</label>
+                  <div class="form-group">
+                    <ng-select #clearDrop [items]="lstappointmentstatusForFinancialInstitute"
+                      formControlName="appointmentstatusId" placeholder="Select Appointment Status" bindValue="value"
+                      bindLabel="text" [closeOnSelect]="true">
+                    </ng-select>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Date:<span class="text-danger">*</span></label>
+                  <div class="form-group datepickerinpop">
+                    <p-calendar (onTodayClick)="onTodayClick($event)" class="calendarwidth"
+                      inputStyleClass="form-control start-date" [minDate]="minimumDate"
+                      formControlName="appointmentDueDate" placeholder="Select Date" [showIcon]="true"
+                      [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true"
+                      [yearNavigator]="true" yearRange="1919:2030" [defaultDate]="defaultminDate"
+                      (onSelect)="OnChanged($event)"
+                      [ngClass]="{'is-invalid': (appointmentDueDate.invalid && (appointmentDueDate.dirty || appointmentDueDate.touched) && appointmentDueDate.errors?.required) }">
+                      <ng-template pTemplate="date" let-date>
+
+                        <span #dateSpan
+                          class="{{selectTodayCss(dateSpan,date,todayDate) }}">{{date.day}}</span>
+                      </ng-template>
+                    </p-calendar>
+                  </div>
+                  <small
+                    *ngIf="appointmentDueDate.invalid && (appointmentDueDate.dirty || appointmentDueDate.touched) && appointmentDueDate.errors?.required"
+                    style="color:red;">Please select Date</small>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3" *ngIf="showTime">
+                  <label>From:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <p-calendar inputStyleClass="form-control start-date" [defaultDate]="defaultminTime"
+                      formControlName="fromTime" placeholder="Select From Time" hourFormat="12" [timeOnly]="true"
+                      (onFocus)="InitialFromTime($event)" inputId="timeonly" [(ngModel)]="FromTimemodel"
+                      [ngClass]="{'is-invalid': (fromTime.invalid && (fromTime.dirty || fromTime.touched) && fromTime.errors?.required) }"
+                      (onSelect)="changeToValue($event)"></p-calendar>
+                    <small *ngIf="fromTime.invalid && (fromTime.dirty || fromTime.touched) && fromTime.errors?.required"
+                      style="color:red;">Please select From Time</small>
+
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3" *ngIf="showTime">
+                  <label>To:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <p-calendar inputStyleClass="form-control start-date" [defaultDate]="defaultminTime"
+                      (onFocus)="InitialToTime($event)" formControlName="toTime" placeholder="Select To Time"
+                      hourFormat="12" [timeOnly]="true" inputId="timeonly1" [(ngModel)]="todate"
+                      [ngClass]="{'is-invalid': (toTime.invalid && (toTime.dirty || toTime.touched) && toTime.errors?.required) }"
+                      (onBlur)="changeTotimeValue($event)"></p-calendar>
+                    <!-- [minDate]="minToTime" [maxDate]="maxToTime" -->
+                    <small *ngIf="toTime.invalid && (toTime.dirty || toTime.touched) && toTime.errors?.required"
+                      style="color:red;">Please select To Time</small>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-12">
+                  <label>Description:</label>
+                  <div class="form-group">
+                    <textarea class="form-control" formControlName="description" maxlength="100"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button *ngIf='addOrUpdatePermission' type="button" class="btn btn-success form-btns"
+          [disabled]="!addForm.valid" (click)="Save()"><i class="feather-save text-white"></i> Save</button>
+        <button type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal"
+          aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

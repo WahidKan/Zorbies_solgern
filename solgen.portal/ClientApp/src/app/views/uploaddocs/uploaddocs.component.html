@@ -1,0 +1,94 @@
+<div class="login-container">
+  <div class="login-main">
+    <app-loader [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+    <!--<img src="assets/default-theme/imagesNew/login-logo.png" />-->
+    <img src="{{siteimage}}" />
+    <div class="login-box text-left">
+      <form [formGroup]="UploadimageForm" [ngClass]="{'disabled':loadSave}">
+        <div class="login-box-fields action row">
+          <div class="col-lg-12">
+            <div class="alert alert-info" role="alert">
+              <span class="d-block"><i class="feather-check mr-2"></i><strong>Required Document:</strong> {{requireDoc}} </span>
+              <span class="d-block"><i class="feather-check mr-2"></i><strong>Uploaded Document:</strong> {{recieveDocument}}</span>
+              <span class="d-block"><i class="feather-check mr-2"></i><strong>Pending Document:</strong> {{pendingDoc}}</span>
+            </div>
+            <hr class="mb-3" />
+          </div>
+          <div class="col-lg-12">
+            <div class="alert alert-info" role="alert">
+             <b>Required Documents:</b>
+              <span class="d-block" *ngFor="let item of lstfiletype;let i=index">
+                <span *ngIf="checkMandatory(item.documentType)"> {{item.documentType}} </span>
+              </span>
+            </div>
+            <hr class="mb-3" />
+          </div>
+          <div class="col-lg-12">
+            <label>Choose Document:<span class="text-danger">*</span></label>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend" *ngIf="imageLink!=''">
+
+
+                  <div id="myModal" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" style="height:450px!important;width:450px!important; ">
+                      <div class="">
+                        <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+                      </div>
+                      <div class="modal-content">
+                        <div class="text-center">
+                          <img src={{imageLink}} alt="img" style="height:450px!important;width:450px!important; " class="img-responsive">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-file w-50 m-fileup">
+                  <input formControlName="profilePic" class="custom-file-input" #file type="file" name='file' #fileInput (change)="setFile($event)" lang="es">
+                  <label class="custom-file-label">{{fileName}}</label>
+
+                </div>
+                <small *ngIf="!isValid"
+                       style="color:red;" class="w-100 mt-1">Document is required</small>
+                <small><i class="text-secondary">Valid file format is PDF, PNG and JPEG and limit upto 20MB.</i> </small>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <label>Document Type:<span class="text-danger">*</span></label>
+            <div class="form-group">
+              <ng-select #fileuploadddl [items]="lstfiletype" placeholder="Select File type" formControlName="filetype" (change)="fileNameDDL($event)"
+                         bindLabel="documentType" bindValue="id" [ngClass]="{'is-invalid': ((filetype.dirty || filetype.touched) && filetype.errors?.required) }"></ng-select>
+              <small *ngIf="(filetype.dirty || filetype.touched) && filetype.errors?.required"
+                     style="color:red;">Please select File Type</small>
+            </div>
+          </div>
+          <div class="col-lg-12" style="display:none">
+            <label>File Title:<span class="text-danger">*</span></label>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Please enter File Title"
+                     formControlName="documentTitle"
+                     [ngClass]="{'is-invalid': (documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && (documentTitle.errors?.required || documentTitle.errors?.maxlength)) }">
+              <small *ngIf="documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && documentTitle.errors?.required"
+                     class="text-danger">Document Title is required</small>
+              <small *ngIf="documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && documentTitle.errors?.maxlength"
+                     class="text-danger">Document Title must be less than 50 characters.</small>
+            </div>
+          </div>
+          <div class="col-lg-12" style="display:none">
+            <label>Description:<span class="text-danger">*</span></label>
+            <div class="form-group">
+              <textarea class="form-control" placeholder="Description" formControlName="description"
+                        [ngClass]="{'is-invalid': (description.invalid && (description.dirty || description.touched) && (description.errors?.required)) }"></textarea>
+              <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.required"
+                     class="text-danger">Description is required</small>
+            </div>
+          </div>
+          <div class="col-lg-12 text-center">
+            <a href="javascript:void(0);" (click)="SaveImage()" class="btn btn-success">Upload Files</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

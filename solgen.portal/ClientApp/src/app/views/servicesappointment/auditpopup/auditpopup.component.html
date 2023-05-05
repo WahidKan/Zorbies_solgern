@@ -1,0 +1,86 @@
+<div bsModal #audit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Audit Review</h4>
+        <button type="button" class="close" (click)="closeAudit()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px;">
+        <div class="table-responsive no-padding mb-0" style="max-height: 320px; overflow:auto !important;">
+          <table class="table table-hover table-dynamic mb-0" style="min-width:300px;">
+            <thead>
+              <tr>
+                <th width="100">Sr.No.</th>
+                <th>Name</th>
+                <th width="200">Final Score</th>
+                <th width="150">Is Excluded?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of auditData; let auditIndex=index;">
+                <td>{{item.RowNum}}</td>
+                <td>
+                  <a *ngIf="item.isExclude!=true" href="javascript:void(0);" (click)="auditChecklistDetail(item.id,item.ServiceAppointmentId,this.isDisabled)">{{item.Name}}</a>
+                  <a *ngIf="item.isExclude==true">{{item.Name}}</a>
+                </td>
+                <td>{{item.FinalScoreCount}}/{{item.QuestionCount}}</td>
+                <td>
+                  <div class="d-inline-block align-middle m-0 ml-2">
+                    <label class="switch m-0">
+                      <input type="checkbox" id={{item.id}} [checked]="item.isExclude" [attr.disabled]="isDisabled ? true : null" (click)="switchClicked($event,item.id,item.ServiceAppointmentId)">
+                      <span class="slider round">
+                        <span>Yes</span>
+                      </span>
+                    </label>
+                  </div>
+                </td>
+              </tr>
+        <tr *ngIf="auditData == null">
+          <td colspan="3" class="text-center"><span class="text-center text-danger">No data to display</span></td>
+        </tr>
+        </tbody>
+        </table>
+        <!--<div *ngFor="let item of auditData; let auditIndex=index;">
+    <div class="col-md-12 step-default border p-2 mb-2 rounded" *ngIf="auditIndex==0">
+      <h6 class="m-0">{{item.OverallScore}} <b>({{item.OverallScoreText}})</b></h6>
+    </div>
+  </div>-->
+      </div>
+        <div class="table-responsive no-padding mb-0">
+          <table class="table table-hover table-dynamic mb-0" style="min-width:300px;">
+            <tr>
+              <td width="100" class="border-0"></td>
+              <td class="border-0"></td>
+              <td width="200" class="border-0">
+                <span *ngFor="let items of auditData; let auditIndex=index;">
+                  <span *ngIf="auditIndex==0 && items.OverallScoreText=='Pending'" style="max-width:150px !important;" class="status-box bg-warning text-dark p-2">{{items.OverallScore}} <strong>({{items.OverallScoreText}})</strong></span>
+
+                  <span *ngIf="auditIndex==0 && items.OverallScoreText=='Fail'" style="max-width:150px !important;"
+                        class="status-box bg-danger p-2">
+                    {{items.OverallScore}} <strong>({{items.OverallScoreText}})</strong>
+                  </span>
+
+                  <span *ngIf="auditIndex==0 && items.OverallScoreText=='Pass'" style="max-width:150px !important;"
+                        class="status-box bg-success p-2">
+                    {{items.OverallScore}} <strong>({{items.OverallScoreText}})</strong>
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </table>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+
+          <button type="submit" class="btn btn-danger form-btns" (click)="closeAudit()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+      </div>
+  </div>
+</div>
+
+  <app-auditchecklistpopup #auditCheckList (buttonState)="show($event)"></app-auditchecklistpopup>

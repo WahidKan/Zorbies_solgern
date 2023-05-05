@@ -1,0 +1,211 @@
+<div bsModal #stageInfo="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}} </h4>
+       
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; max-height:600px;">
+        <div id="accordion1" class="panel-group accordion">
+          <ng-container *ngFor="let item of _formstagearray;let i=index">
+            <div class="panel active" *ngIf='item.formmasterid !=""'>
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a href="#panelBodyOne23{{item.formmasterid}}" class="accordion-toggle " data-toggle="collapse" data-target="#panelBodyOne23{{item.formmasterid}}"> <span>   {{item.stageName}} </span> <span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+                </h4>
+              </div>
+              <div id="panelBodyOne23{{item.formmasterid}}" class=" panel-collapse border border-bottom-0 collapse show" data-parent="#accordion1">
+
+                <app-forminfo (ntpemit)="changentpemit()" (hidePopup)="hidePopup()" submoduleName={{item.formmasterid}} [itemdata12]="item" [checkflag]="checkflag" [borrowerPhoneNumber]="borrowerPhoneNumber" [applicantemail]="applicantemail" moduleName="form" formtype="popup"></app-forminfo>
+              </div>
+            </div>
+          </ng-container>
+          <div class="panel active" *ngIf="loanapplicationflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyOne1" class="accordion-toggle " data-toggle="collapse" data-target="#panelBodyOne1"> <span>Application Information</span> <span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyOne1" class=" panel-collapse border border-bottom-0  collapse show" aria-labelledby="headingOne" data-parent="#accordion1">
+              <app-systeminfo [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="ntpemit()" [itemdata12]="itemdata" submoduleName="LoanApplicationInfo"></app-systeminfo>
+            </div>
+          </div>
+
+          <div class="panel active" *ngIf="loanapplicantflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyThree1" class="accordion-toggle" data-toggle="collapse" data-target="#panelBodyThree1"><span> Applicant Information</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyThree1" class="panel-collapse border border-bottom-0 collapse show" data-parent="#accordion1">
+              <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="ntpemit()" [itemdata12]="itemdata" submoduleName="LoanApplicationApplicant"></app-applicant>
+            </div>
+          </div>
+
+
+          <div class="panel active" *ngIf="loancoapplicantflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodySix1" class="accordion-toggle" data-toggle="collapse" data-target="#panelBodySix1"><span>Co-Applicant Information</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodySix1" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <!--<app-coapplicantdetail (ntpemit)="ntpemit()"  [itemdata12]="itemdata"></app-coapplicantdetail>-->
+              <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="ntpemit()" (CreditScoreMannualPullForCoApp)="CreditScoreMannualPullForCoApp()" [itemdata12]="itemdata" submoduleName="LoanApplicationCoapplicant"></app-applicant>
+            </div>
+          </div>
+
+
+          <div class="panel active" *ngIf="loanpaymentflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodySix14" class="accordion-toggle" data-toggle="collapse" data-target="#panelBodySix14"><span> Payment Information</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodySix14" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="ntpemit()" submoduleName="LoanApplicationPaymentInfo" [itemdata12]="itemdata"></app-applicant>
+            </div>
+          </div>
+
+          <div class="panel active" *ngIf="loanproductflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodySevevn14" class="accordion-toggle" data-toggle="collapse" data-target="#panelBodySevevn14"><span> Product Info</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodySevevn14" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="ntpemit()" submoduleName="LoanApplicationProductInfo" [itemdata12]="itemdata"></app-applicant>
+            </div>
+          </div>
+          <div class="panel active" *ngIf="installationpropertyflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyTwo1" class="accordion-toggle " data-toggle="collapse" data-target="#panelBodyTwo1"> <span>Installation Property</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyTwo1" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="ntpemit()" submoduleName="LoanApplicationInstallationProperty" [itemdata12]="itemdata"></app-applicant>
+            </div>
+          </div>
+          <div class="panel active" *ngIf="signeddocflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyTwo1" class="accordion-toggle " data-toggle="collapse" data-target="#panelBodyTwo1"> <span>Documents Signed</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyTwo1" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="ntpemit()" submoduleName="LoanApplicationSignedDoc" [itemdata12]="itemdata"></app-applicant>
+            </div>
+          </div>
+          <div class="panel active" *ngIf="loanexpansesflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodySevevn142" class="accordion-toggle" data-toggle="collapse" data-target="#panelBodySevevn142"><span> Expenses</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodySevevn142" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <app-expanses [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="ntpemit()"></app-expanses>
+            </div>
+          </div>
+          <div class="panel active" *ngIf="loanverificationflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody9133" class="accordion-toggle" data-toggle="collapse" data-target="#panelBody9133"><span>  Internal Verification</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody9133" class="panel-collapse border border-bottom-0 collapse show" data-parent="#accordion1">
+              <app-applicationverification [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" [itemdata12]="itemdata" (ntpemit)="ntpemit()" submoduleName="LoanApplicationAppVerification" [SourceType]="SourceType" [DealerName]="DealerName" [LoanApplicationNumber]="LoanApplicationNumber"></app-applicationverification>
+            </div>
+          </div>
+          <div class="panel active" *ngIf="loanbankverificationflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody733" class="accordion-toggle" data-toggle="collapse" data-target="#panelBody733"><span>  External Verification</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody733" class="panel-collapse border border-bottom-0 collapse show" data-parent="#accordion1">
+              <app-bankverification [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" [itemdata12]="itemdata" (ntpemit)="ntpemit()" submoduleName="LoanApplicationbankVerification" [SourceType]="SourceType" [DealerName]="DealerName"></app-bankverification>
+            </div>
+          </div>
+          <div class="panel active" *ngIf="loanntpflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody919" class="accordion-toggle" data-toggle="collapse" data-target="#panelBody919"><span> NTP</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody919" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <app-ntp [IsLACanceledFlag]="IsLACanceledFlag" [ntpStageApproved]="ntpApprovedFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="changentpemit()" [itemdata12]="itemdata" formtype="popup" submoduleName="LoanApplicationNTP" [LoanApplicationNumber]="LoanApplicationNumber" [SFOpportunityId]="SFOpportunityId" [SourceType]="SourceType" [DealerName]="DealerName"></app-ntp>
+              <!--<app-applicant (ntpemit)="ntpemit()" [itemdata12]="itemdata" submoduleName="LoanApplicationNTP"></app-applicant>-->
+            </div>
+          </div>
+
+          <div class="panel active" *ngIf="loanreleasefundflag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody819" class="accordion-toggle" data-toggle="collapse" data-target="#panelBody819"><span> Fund Release</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody819" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <app-releasefunds [IsLACanceledFlag]="IsLACanceledFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="ntpemit()" submoduleName="LoanApplicationReleaseFunds" [itemdata12]="itemdata"></app-releasefunds>
+            </div>
+          </div>
+
+          <div class="panel active" *ngIf="loanChangeOrder">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodySixty1" class="accordion-toggle" data-toggle="collapse" data-target="#panelBodySixty1"><span>Change Order</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodySixty1" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <!--<app-coapplicantdetail (ntpemit)="ntpemit()"  [itemdata12]="itemdata"></app-coapplicantdetail>-->
+              <app-changeorder [IsLACanceledFlag]="IsLACanceledFlag" (ntpemit)="changentpemit()" [itemdata12]="itemdata" submoduleName="LoanApplicationChangeOrder" [CallFrom] ="'STAGE'" [changeOrderDocWithR_F_S]="changeOrderDocWithR_F_S" [hideChangeOrderButton]="hideChangeOrderButton"></app-changeorder>
+            </div>
+          </div>
+          <div class="panel active" *ngIf="loanntpChangeOrderFlag">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody9112" class="accordion-toggle" data-toggle="collapse" data-target="#panelBody9112"><span> NTP (CO)</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody9112" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <app-ntpchangeorder [IsLACanceledFlag]="IsLACanceledFlag" [ntpStageApproved]="ntpCOApprovedFlag" (loanInfoEmit)="ruleProgressShow()" (ntpemit)="changentpemit()" [itemdata12]="itemdata" formtype="popup" submoduleName="NTPChangeOrder" [CallFrom]="'STAGE'"></app-ntpchangeorder>
+            </div>
+          </div>
+
+
+          <div class="panel active" *ngIf="loanFundReleaseCO">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodySixty66" class="accordion-toggle" data-toggle="collapse" data-target="#panelBodySixty1"><span>Fund Release(CO)</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodySixty1" class="panel-collapse border border-bottom-0  collapse show" data-parent="#accordion1">
+              <!--<app-coapplicantdetail (ntpemit)="ntpemit()"  [itemdata12]="itemdata"></app-coapplicantdetail>-->
+              <app-releasefunds [IsLACanceledFlag]="IsLACanceledFlag" (ntpemit)="changentpemit()" [itemdata12]="itemdata" submoduleName="FundReleaseCO"></app-releasefunds>
+            </div>
+          </div>
+
+
+        </div>
+            <!--<div>
+    <app-installerrep></app-installerrep>
+  </div>
+  <div>
+    <app-dealdata></app-dealdata>
+  </div>
+  <div>
+    <app-coapplicant></app-coapplicant>
+  </div>-->
+          </div>
+        <!--<button  type="submit" class="btn btn-success form-btns" (click)="Save()"><i class="feather-save text-white"></i> Save</button>-->
+        <!--<div class="modal-footer">
+
+    <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+  </div>-->
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+      </div>
+  </div>
+</div>

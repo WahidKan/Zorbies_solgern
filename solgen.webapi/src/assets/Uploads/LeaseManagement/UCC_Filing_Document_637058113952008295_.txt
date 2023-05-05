@@ -1,0 +1,26 @@
+1. https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-92 - Done
+2. https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-138 - Done
+3. https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-116 - Done
+4. https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-89 - Done
+5. https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-101 - Done
+6. https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-34 - Done
+7. https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-53 - Done
+8. https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-106 - Done
+9. https://conexlink.atlassian.net/secure/RapidBoard.jspa?rapidView=35&selectedIssue=MCIT3-194 - Done
+10.https://conexlink.atlassian.net/secure/RapidBoard.jspa?rapidView=35&selectedIssue=MCIT3-173 - Done (Not removing Tax Exempt Status from tax detail page)
+
+
+
+11.https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-26 - Discussion
+
+12.https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-128 - QA(Not able to reproduced)
+13.https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-137 - Not able to reproduced
+
+14.https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-107 - Lovepreet
+15.https://conexlink.atlassian.net/secure/RapidBoard.jspa?rapidView=35&modal=detail&selectedIssue=MCIT3-193 - Lovepreet
+
+
+
+
+
+

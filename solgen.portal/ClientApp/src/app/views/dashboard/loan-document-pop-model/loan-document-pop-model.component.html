@@ -1,0 +1,236 @@
+<div class="modal fade show" bsModal #docusignDocumentHistoryModal="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;" [config]="{backdrop: 'static', keyboard: false}">
+    <div *ngIf="showLoanHistoryDocument" class="modal-dialog modal-xl modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- <h4 class="modal-title">Document History</h4> -->
+          <button type="button" class="close" (click)="closedocuSignDocumentHistoryModal()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        
+          <!--<div class="panel" *ngIf="!isAudit">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a href="#LoanDocspanelBody" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"><span> Loan Docs</span></a>
+    </h4>
+  </div>
+  <div id="LoanDocspanelBody" class="panel-collapse collapse">
+    <div class="panel-body">-->
+    
+    
+      <div class="row">
+        <div class="table-responsive">
+          <div class="table table-striped trow-wbtn">
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic w-100"
+                           [rows]="pagedData.data"
+                           [columnMode]="'force'"
+                           [scrollbarH]="true"
+                           [rowHeight]="'40'"
+                           [headerHeight]="40"
+                           [footerHeight]="40"
+                           [externalPaging]="true"
+                           [externalSorting]="true"
+                           [loadingIndicator]="loadSave"
+                           [count]="pagedData.pager.totalItems"
+                           [offset]="pagedData.pager.currentPage"
+                           [limit]="pagedData.pager.pageSize"
+                           (page)='setPage($event)'
+                           (sort)="onSort($event)">
+              <ngx-datatable-column name="File Name" prop="FileName"></ngx-datatable-column>
+              <ngx-datatable-column name="Type" prop="DocumentType"></ngx-datatable-column>
+              <ngx-datatable-column name="Created On" prop="CreatedOn" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.CreatedOn | pstdatetimetolocaldate}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Signed On" prop="SignedDate" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.SignedDate | pstdatetimetolocaldate}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Status" prop="DocumentStatus"></ngx-datatable-column>
+              <ngx-datatable-column name="History">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a *ngIf="row.SourceType == 'SignNow'" href="javascript:void(0);" (click)="documentHistory(row)" class="btn btn-success mr-2"><i class="fa fa-history"></i> History</a>
+
+                  <a *ngIf="row.SourceType == 'DocuSign'" href="javascript:void(0);" (click)="docuSignDocumentHistory(row)" class="btn btn-success mr-2"><i class="fa fa-history"></i> History</a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Download" *ngIf="!isDealerUser">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a href="javascript:void(0);" (click)="downloadFile(row)" class="btn btn-success mr-2"><i class="fa fa-download"></i> Download</a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Resend Sign Link" [sortable]="false" headerClass="text-center">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a *ngIf="row.DocumentStatus == 'READY_FOR_SIGNATURE'" class="icon-text-center" href="javscript:;" (click)="resendSigningLink(row)">
+                    <i class="fa fa-envelope mr-2"></i>
+                  </a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Upload Signed Document" [sortable]="false" headerClass="text-center" *ngIf="isCompanyAdmin || isRelationshipManager">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a *ngIf="row.DocumentStatus == 'READY_FOR_SIGNATURE'" class="icon-text-center" href="javscript:;" (click)="openUpload(row)">
+                    <i class="fa fa-upload mr-2"></i>
+                  </a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Uploaded Through" prop="UploadedThrough"></ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+      </div>
+    <!--</div>
+    
+  </div>-->
+
+  <div class="modal fade show" bsModal #uploadForm="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-sm modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Upload Loan Doc</h4>
+          <button type="button" class="close" (click)="closeUpload()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" *ngIf="dragForm" style="overflow:auto; margin-bottom:10px; max-height:238px; line-height: 24px; font-size: 13px;">
+          <form [formGroup]="dragForm" autocomplete="off">
+            <div class="row">
+              <div class="col-md-12 col-lg-12">
+                <label>Loan Doc File:</label>
+                <div class="custom-file w-100">
+                  <input class="custom-file-input" #file type="file" name='file' #fileInput accept="application/pdf" (change)="setFile($event)" lang="es">
+                  <label class="custom-file-label">{{fileName}}</label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success form-btns" (click)="upload()"><i class="fa fa-upload text-white"></i> Upload</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="closeUpload()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+      </div>
+    </div>
+  </div>
+
+  <!--<div class="modal fade show" bsModal #documentHistoryModal="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-sm modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Document History</h4>
+          <button type="button" class="close" (click)="closedocumentHistoryModal()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="overflow:auto; margin-bottom:10px; max-height:238px; line-height: 24px; font-size: 13px;">
+          <div *ngFor="let history of signNowDocumentHistory; index as i;">
+            <strong>{{history.event}}</strong> on <strong>{{history.created * 1000 | date:'medium':'UTC-0700'}}</strong> by <strong>{{history.email}}(IP:{{history.ip_address}})</strong>
+            <hr />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger form-btns" (click)="closedocumentHistoryModal()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+      </div>
+    </div>
+  </div>-->
+
+
+
+  <div class="modal fade show" bsModal #documentHistoryModal="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-sm modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Document History</h4>
+          <button type="button" class="close" (click)="closedocumentHistoryModal()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="overflow:auto; margin-bottom:10px; max-height:300px; line-height: 24px; font-size: 13px;">
+          <div class="table-responsive no-padding">
+            <table class="table table-hover" style="min-width:auto;">
+              <thead>
+                <tr>
+                  <th>Event Name</th>
+                  <th>User</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let history of signNowDocumentHistory; index as i;">
+                  <td>{{history.event}}</td>
+                  <td>{{history.email}}</td>
+                  <td>{{history.created * 1000 | date:'medium':'UTC-0700'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="modal-footer">
+
+            <button type="submit" class="btn btn-danger form-btns" (click)="closedocumentHistoryModal()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+          </div>
+          <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade show" bsModal #docusignDocumentHistoryModal="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-xl modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Document History</h4>
+          <button type="button" class="close" (click)="closedocuSignDocumentHistoryModal()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="overflow:auto; margin-bottom:10px; max-height:350px; line-height: 24px; font-size: 13px;">
+          <div class="table-responsive no-padding">
+            <table class="table table-hover" style="min-width:auto;">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>User</th>
+                  <th>Action</th>
+                  <th>Activity</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let history of docuSignData">
+                  <td>{{history.date | date: 'dd/MM/yyyy hh:mm:ss a'}}</td>
+                  <td>{{history.user}}</td>
+                  <td>{{history.action}}</td>
+                  <td>{{history.message}}</td>
+                  <td>{{history.status}}</td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="modal-footer">
+
+            <button type="submit" class="btn btn-danger form-btns" (click)="closedocuSignDocumentHistoryModal()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+          </div>
+          <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!--</div>-->
+<!-- <app-sendmailpopup #SendMailModelPoppup (sendEmailEmit)="sendEmailEmit()"></app-sendmailpopup>
+
+        
+          <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader> -->
+        </div>
+      </div>
+    </div>
+  </div>

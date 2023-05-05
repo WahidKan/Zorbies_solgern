@@ -1,0 +1,163 @@
+<div bsModal #decisionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" *ngIf="decisionForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Decision</h5>
+                <button type="button" (click)="closeDecisionModal()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;" *ngIf="decisionForm && nodeId" [formGroup]="decisionForm">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label>Label (Max Char Limit 50):<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <input type="text" formControlName="name" maxlength="50" class="form-control" required="required" name="name" #name [ngClass]="{'is-invalid': (decisionName.invalid && (decisionName.dirty || decisionName.touched) && (decisionName.errors?.required || decisionName.errors?.maxlength)) }">
+                            <small *ngIf="(decisionName.invalid && (decisionName.dirty || decisionName.touched)) && decisionName.errors?.required" class="text-danger">label is required</small>
+                            <small *ngIf="(decisionName.invalid && (decisionName.dirty || decisionName.touched)) && decisionName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label>Description (Max Char Limit 200):</label>
+                        <div class="form-group">
+                            <textarea type="text" maxlength="200" formControlName="description" class="form-control" name="description" #description [ngClass]="{'is-invalid': (decisionDescription.invalid && (decisionDescription.dirty || decisionDescription.touched) && decisionDescription.errors?.maxlength)}"></textarea>
+                            <small *ngIf="decisionDescription.invalid && (decisionDescription.dirty || decisionDescription.touched) && decisionDescription.errors?.maxlength" class="text-danger">Description should be less then 200</small>
+                        </div>
+                    </div>
+                </div>
+                <p><span class="h5">Outcomes</span>&nbsp; For each path the flow can take, create an outcome. For each outcome, specify the conditions that must be met for the flow to take that path.</p>
+                <div class="row pl-3 pb-3">
+                    <div class="card col-2 overflow-auto">
+                        <div class="card-title d-flex justify-content-between border-bottom">
+                            <p style="font-size:90%" class="mt-3 ">OUTCOME ORDER</p>
+                            <div class="mt-1">
+                                <a (click)="addNewOutcome()" href="javascript:void(0);" class="btn btn-success form-btns mr-1 smview" tooltip="New outcome"><i
+                                        class="feather-plus"></i></a>
+                            </div>
+                        </div>
+                        <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+                            <li *ngFor="let outCome of outcomes.controls;let i=index" class="nav-item">
+                                <a class="nav-link" #tabLinks data-toggle="tab" [ngClass]="{'show active':activeTab==i}" href="#newoutcome{{i}}" role="tab" aria-selected="true">{{outCome.get('name').value}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" [class.show]="activeTab===-1" [class.active]="activeTab===-1" id="defaultoutcome" data-toggle="tab" href="#defaultOutCome" role="tab" aria-selected="true">Default outcome</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card col-10 border-0 pl-0">
+                        <div class="card-body p-0">
+                            <div class="tab-content" id="myTabContent" *ngIf="outcomes">
+                                <div formArrayName="outcomes" class="tab-pane fade" #tabContent *ngFor="let outCome of outcomes.controls;let i=index" [ngClass]="{'show active':activeTab==i}" id="newoutcome{{i}}">
+                                    <div [formGroup]="outCome">
+                                        <h6 *ngIf="outcomes.length > 1" class="card-title">
+                                            <div class="row justify-content-between pr-3">
+                                                <p class="h6 ml-2 font-weight-bold text-uppercase">OUTCOME DETAILS</p>
+                                                <button (click)="deleteOutcome($event,i)" class="btn btn-outline-secondary text-blue">Delete Outcome</button>
+                                            </div>
+                                        </h6>
+                                        <div class="row mb-2">
+                                            <div class="col-md-6">
+                                                <label> Label (Max Char Limit 50)<span class="text-danger">*</span></label>
+                                                <input maxlength="50" formControlName="name" type="text" class="form-control" [ngClass]="{'is-invalid': (outCome.get('name').invalid && (outCome.get('name').dirty || outCome.get('name').touched) && (outCome.get('name').errors?.required || outCome.get('name').errors?.maxlength)) }">
+                                                <small *ngIf="(outCome.get('name').invalid && (outCome.get('name').dirty || outCome.get('name').touched)) && outCome.get('name').errors?.required" class="text-danger">label is required</small>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Condition Requirements to Execute Outcome:<span
+                                                        class="text-danger">*</span></label>
+                                                <div class="form-group">
+                                                    <ng-select (change)="addValidationToCutomConditon(i)" [items]="decisionList" placeholder="Select condition" formControlName="condition" bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (outCome.get('condition').invalid && (outCome.get('condition').dirty || outCome.get('condition').touched) && (outCome.get('condition').errors?.required || outCome.get('condition').errors?.maxlength)) }">
+                                                    </ng-select>
+                                                    <small *ngIf="(outCome.get('condition').invalid && (outCome.get('condition').dirty || outCome.get('condition').touched)) && outCome.get('condition').errors?.required" class="text-danger">Outcome is
+                                                      required</small>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row mb-2" *ngIf="outCome && outCome.get('condition') && outCome.get('condition').value === 3">
+                                            <div class="col-md-12">
+                                                <label>Condition Logic:<span class="text-danger">*</span></label>
+                                                <div class="form-group">
+                                                    <input type="text" formControlName="customCondition" class="form-control" name="customCondition" [ngClass]="{'is-invalid': (outCome.get('customCondition').invalid && (outCome.get('customCondition').dirty || outCome.get('customCondition').touched) && (outCome.get('customCondition').errors?.required || outCome.get('customCondition').errors?.maxlength)) }">
+                                                    <small *ngIf="(outCome.get('customCondition').invalid && (outCome.get('customCondition').dirty || outCome.get('customCondition').touched)) && outCome.get('customCondition').errors?.required" class="text-danger">Custom condition is required</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div formArrayName="conditions" *ngIf="outCome">
+                                            <div *ngFor="let condition of outCome.get('conditions').controls as FormArray; let j=index">
+                                                <div [formGroup]="condition">
+                                                    <div class="row">
+                                                        <div class="offset-5 col-1 text-center mt-4">
+                                                            <strong *ngIf="outCome.get('condition') && outCome.get('condition').value === 3">{{j + 1}}</strong>
+                                                            <strong class="d-block pb-2" *ngIf="outCome.get('conditions').length > 1 && j > 0 &&  outCome.get('condition').value === 1 ">AND</strong>
+                                                            <strong class="d-block pb-2" *ngIf="outCome.get('conditions').length > 1 && j > 0 &&  outCome.get('condition').value === 2 ">OR</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-3 pr-0">
+                                                            <label class="form-label">Resource</label>
+                                                            <ng-select [items]="resourceList" placeholder="Select object" groupBy="groupName" formControlName="resourceId" bindLabel="displayName" bindValue="id" (change)="onResourceChange($event,condition)" [appendTo]="'body'">
+                                                            </ng-select>
+                                                        </div>
+                                                        <div class="col-3 pr-0" *ngIf="condition.get('isResource') && condition.get('isResource').value == true">
+                                                            <label class="form-label">Field</label>
+                                                            <ng-select [items]="condition.get('customfieldsList').value" placeholder="Select Field" formControlName="customFieldId" bindLabel="displayName" bindValue="PrimaryTableColumn" (change)="onFieldChange($event,condition)" [appendTo]="'body'">
+                                                            </ng-select>
+                                                        </div>
+                                                        <div class="pr-0" [ngClass]="(condition.get('isResource') && condition.get('isResource').value != true) ? 'col-4': 'col-3'">
+                                                            <label class="form-label">Operator</label>
+                                                            <ng-select [items]="condition.get('operatorList').value" placeholder="Select Operator" formControlName="operator" bindLabel="text" bindValue="value" (change)="onOperatorChange($event,condition)" [appendTo]="'body'">
+                                                            </ng-select>
+                                                        </div>
+                                                        <div class="pr-0" [ngClass]="(condition.get('isResource') && condition.get('isResource').value != true) ? 'col-4': 'col-2'">
+                                                            <label for="Value" class="form-label">Value</label>
+                                                            <input type="text" formControlName="value" class="form-control" name="value">
+                                                        </div>
+                                                        <div class="col-1 text-center mt-4">
+                                                            <button [disabled]="outCome.get('conditions').length < 2" (click)="deleteCondition($event,i,j)" class="btn btn-danger form-btns" tooltip="Delete">
+                                                                <span><i class="feather-trash-2"></i></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-3">
+                                                <button (click)="addCondition(i)" class="btn btn-outline-secondary"><i
+                                                        class="feather-plus"></i>Add Condition</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="defaultOutCome" [class.show]="activeTab===-1" [class.active]="activeTab===-1">
+                                    <h6 class="card-title">
+                                        <div class="row justify-content-between">
+                                            <p class="h6 ml-2 font-weight-bold text-uppercase">Outcome Details</p>
+                                        </div>
+                                    </h6>
+                                    <div class="row mb-2">
+                                        <div class="col-md-6">
+                                            <label>Label:<span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <input type="text" formControlName="defaultOutcome" value="Default Outcome" class="form-control" name="defaultOutcome">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <button href="javascript:void(0);" [disabled]="decisionForm.invalid" (click)="submit()" class="btn btn-success mr-2"><i class="feather-save mr-2"></i>Submit</button>
+                        <a href="javascript:void(0);" class="btn btn-danger" (click)="closeDecisionModal()"><i class="fa fa-times mr-2"></i>Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

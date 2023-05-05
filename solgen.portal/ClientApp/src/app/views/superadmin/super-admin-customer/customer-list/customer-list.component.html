@@ -1,0 +1,129 @@
+<div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>CUSTOMERS</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Customers</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-header pb-3 btn-iconres">
+        <div class="row my-2 align-items-end">
+
+          <div class="col-lg-2 col-xl-2 pr-0">
+            <div class="form-group mb-xl-0 ">
+              <label class="form-label">Name</label>
+              <input class="form-control" type="text" (keyup)="updateFilter($event)" placeholder="">
+            </div>
+          </div>
+          <div class="col-lg-2 col-xl-2">
+            <div class="form-group mb-xl-0 ">
+              <label class="form-label">Select Package Type</label>
+              <ng-select #clearDrp [items]="packageTypes" placeholder="Select" bindValue="value" bindLabel="text"
+                [closeOnSelect]="true" (change)="SetPackageTypesValue($event)" (clear)="restPackageTypesddl()">
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-lg-3 col-xl-3">
+            <div class="d-inline-block align-top">
+              <a class="btn btn-dark form-btns mr-2" href="javascript:void(0);" (click)="search()"
+                tooltip="Search"><span><i class="feather-search"></i> Search</span></a>
+              <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="reset()"
+                tooltip="Reset"><span><i class="fa fa-refresh"></i> Reset</span></a>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-xl-2">
+          </div>
+          <div class="col-lg-3 col-xl-3 text-right">
+            <div class="d-inline-block align-top">
+              <a *ngIf='isAdd' class="btn btn-success form-btns mr-2" href="javascript:void(0);" (click)="AddNew()"
+                tooltip="Add Ad"><span><i class="feather-plus"></i> Add</span></a>
+              <a *ngIf='isDelete' class="btn btn-danger form-btns" (click)="onDeleteMultipleCustomer()"
+                href="javascript:void(0);" tooltip="Delete">
+                <span><i class="feather-trash-2"></i></span> Delete</a>
+            </div>
+          </div>
+
+        </div>
+        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+          <div class="header-chart mb-1">Customers</div>
+          <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data"
+            [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40"
+            [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+            [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage"
+            [limit]="pagedData.pager.pageSize" (page)='setPage($event)' (sort)="onSort($event)"
+            [selectionType]="SelectionType.checkbox" [selectAllRowsOnPage]="false" [selected]="selected"
+            (select)="onSelect($event)">
+            <ngx-datatable-column [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+              [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="true">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Type" prop="type" [sortable]="true">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Name" prop="name" [sortable]="true"></ngx-datatable-column>
+            <ngx-datatable-column name="Company Name" sortable="true" prop="companyName"></ngx-datatable-column>
+            <ngx-datatable-column name="Email" sortable="true" prop="email">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <a href="javascript:void(0);" (click)="ShowUsersListPopup(row)">{{row.email}}</a>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="receivable" prop="receivable" [sortable]="true">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span *ngIf="row.receivable">$</span> {{ row.receivable }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div class="text-center">
+                  <a class="smview" [routerLink]="['/', row.id]" title="View"><i class="feather-eye pr-2"></i></a>        
+                  <a class="smview" [routerLink]="['/',row.id]" title="Edit"><i
+                      class="fa fa-pencil text-success pr-2"></i></a>
+                  <a href="javascript:void(0);" (click)="DeleteCustomer(row)" class="text-danger mx-1">
+                    <i title="Delete" class="feather-trash-2"></i>
+                  </a>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-footer>
+              <ng-template class="selected-count" ngx-datatable-footer-template let-rowCount="rowCount"
+                let-pageSize="pageSize" let-selectedCount="selectedCount" let-currentPage="currentPage"
+                let-offset="offset" let-isVisible="isVisible">
+                <div>
+                  <div style="color:black; margin-right:10px;" class="page-size-record" *ngIf='(rowCount  > 0)'>
+                    <span style="text-align:right; width:80px;vertical-align: middle;">
+                      <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue'
+                        dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false"
+                        [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                    </span>
+                  </div>
+                </div>
+                <div class="page-count" *ngIf='(rowCount  > 0)'>
+                  {{commonService.PageString(pagedData.pager.currentPage,pagedData.pager.pageSize,pagedData.pager.totalItems)}}
+                </div>
+                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'" [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                  [pagerPreviousIcon]="'fa feather-chevrons-left'" [pagerNextIcon]="'fa fa-angle-double-right'"
+                  [page]="pageNumber" [size]="pageSizeValue" [count]="pagedData.pager.totalItems"
+                  [hidden]="!((rowCount / pageSize) > 1)" (change)="setPage($event)">
+                </datatable-pager>
+
+              </ng-template>
+            </ngx-datatable-footer>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

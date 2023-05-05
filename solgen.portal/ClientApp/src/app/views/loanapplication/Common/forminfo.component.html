@@ -1,0 +1,417 @@
+<div class="panel">
+  <div class="panel-content " [ngClass]="{'disabled':loadSave}">
+    <div *ngIf="currentStageName=='Audit' && IsAuditOverride==0">
+      <div class="row" *ngIf="(IsSMSReplied == 0  && isSMSEmailReceive ==  true)">
+        <div class="col-12 mb-2">
+          <div class="alert alert-danger">
+            <b>The customer has not responded yet.</b>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form [formGroup]="formLoanApplication" *ngIf="formLoanApplication" autocomplete="off">
+
+      <ng-container *ngFor="let item of formControlList">
+        <!--<h3 class="form-heading"> <span>{{ item.group_display_name}}</span></h3>-->
+        <h3 class="form-heading">
+          <span>{{ item.group_display_name}} </span>
+        </h3>
+        <div class="row  mb-2">
+
+          <ng-container *ngFor="let inner of item.InnerData; let i=index">
+            <ng-container *ngIf="!(isDealerUser && (inner.name=='Net Funded Amount($)'))">
+
+              <div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : inner.form_field_visibility == 'NO', 'col-lg-12 col-xl-12': inner.layout_type =='single', 'col-lg-6 col-xl-6': inner.layout_type =='double', 'col-lg-4 col-xl-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                             inner.layout_type =='four' }" ngShow="inner.dependent_show_type == true">
+                <!---->
+                <input type="hidden" *ngIf="inner.form_field_visibility == 'NO'" />  <!--v-model="item.value" v-bind:id="item.name"     -->
+                <label *ngIf="inner.form_field_visibility == 'YES' && getVisibilityStatus(inner.display_name) ">{{ inner.display_name}} <span class="text-danger" [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+                <div class="form-group" *ngIf="inner.form_field_visibility == 'YES'">
+                  <!--------------------------------------------------------- File Uploader Section -------------------------------------------------------------->
+
+
+                  <div class="row" *ngIf="inner.dt_code == 'fileupload' && inner.name=='HouseInView' && currentStageName !=='Audit'">
+                    <div class="col-md-12 col-lg-12 mb-0">
+
+                      <div class="input-group">
+                        <div class="custom-file w-100">
+                          <!--multiple-->
+                          <input class="custom-file-input" #file type="file" [ngClass]="{'disabledddl':(inner.is_readOnly=='true' || fromStage)}" name='HouseInViewfile' #fileInput1 (change)="setFileHouseInView($event,inner.name)" lang="es" multiple>
+                          <label class="custom-file-label">{{fileNameHouseInView}}</label>
+                        </div>
+                        <!--<button class="input-group-text bg-white border-0 p-0" (click)="clearSelectedImg(fileInput1)" style="position: absolute; z-index: 10; right :73px; padding: 10px 6px !important;    color: #d00b05 !important; top: 1px;    cursor: pointer;">
+                      <i class="feather-repeat"></i></button>-->
+
+                        <button class="input-group-text bg-white border-0 p-0" (click)="clearSelectedHouseInViewfile(fileInput1)" style="position: absolute; z-index: 10; right :73px; padding: 10px 6px !important;    color: #d00b05 !important; top: 1px;    cursor: pointer;"><i class="feather-repeat"></i></button>
+
+                        <small><i class="text-secondary">Valid image format is image/x-png, image/gif, image/jpeg and limit upto 10MB.</i> </small>
+                      </div>
+
+                      <div class="col-md-12 col-lg-12 mb-0">
+                        <div class="uploaded-image">
+                          <div class="img-cntr square" *ngIf="fileHouseInViewImageLink != ''">
+                            <a href="javascript:;" (click)="RemoveHouseInView()" class="dlt-btn"><i class="feather-trash-2 text-danger"></i></a>
+                            <!--<img src="{{fileHouseInViewImageLink}}" alt="" />-->
+
+
+                            <span class="uploadedimg">
+                              <img src={{fileHouseInViewImageLink}} alt="img" (click)="open(fileHouseInViewImageLink)" style="cursor: pointer;">
+                            </span>
+
+
+                          </div>
+                          <div class="img-cntr square" *ngIf="fileHouseInViewImageLink1 != ''">
+                            <a href="javascript:;" (click)="RemoveHouseInView1()" class="dlt-btn"><i class="feather-trash-2 text-danger"></i></a>
+                            <img src="{{fileHouseInViewImageLink1}}" alt=""  (click)="open(fileHouseInViewImageLink1)" style="cursor: pointer;"/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row" *ngIf="inner.dt_code == 'fileupload' && inner.name=='ElectricHookup'  && currentStageName !=='Audit' ">
+                    <div class="col-md-12 col-lg-12 mb-0">
+                      <div class="input-group">
+                        <div class="custom-file w-100">
+                          <input class="custom-file-input" #file type="file" [ngClass]="{'disabledddl':(inner.is_readOnly=='true' || fromStage)}" name='ElectricHookupfile' #fileInput2 (change)="ElectricHookupsetFile($event)" lang="es" multiple>
+                          <label class="custom-file-label">{{fileNameElectricHookup}}</label>
+                        </div>
+                        <button class="input-group-text bg-white border-0 p-0" (click)="clearSelectedElectricHookupfile(fileInput2)" style="position: absolute; z-index: 10; right :73px; padding: 10px 6px !important;    color: #d00b05 !important; top: 1px;    cursor: pointer;"><i class="feather-repeat"></i></button>
+                        <small><i class="text-secondary">Valid image format is image/x-png, image/gif, image/jpeg and limit upto 10MB.</i> </small>
+                      </div>
+                      <div class="col-md-12 col-lg-12 mb-0">
+                        <div class="uploaded-image">
+                          <div class="img-cntr square" *ngIf="fileElectricHookupImageLink != ''">
+                            <a href="javascript:;" (click)="RemoveElecticHookup()" class="dlt-btn"><i class="feather-trash-2 text-danger"></i></a>
+                            <img src="{{fileElectricHookupImageLink}}" alt=""  (click)="open(fileElectricHookupImageLink)" style="cursor: pointer;" />
+                          </div>
+                          <div class="img-cntr square" *ngIf="fileElectricHookupImageLink1 != ''">
+                            <a href="javascript:;" (click)="RemoveElecticHookup1()" class="dlt-btn"><i class="feather-trash-2 text-danger"></i></a>
+                            <img src="{{fileElectricHookupImageLink1}}" alt=""  (click)="open(fileElectricHookupImageLink1)"
+                                 style="cursor: pointer;"/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" *ngIf="inner.dt_code == 'fileupload' && inner.name=='ResidenceWithAddressInView'  && currentStageName !=='Audit'">
+                    <div class="col-md-12 col-lg-12 mb-0">
+                      <div class="input-group">
+                        <div class="custom-file w-100">
+                          <input class="custom-file-input" #file type="file" [ngClass]="{'disabledddl':(inner.is_readOnly=='true' || fromStage)}" name='ResidenceWithAddressInViewfile' #fileInput3 (change)="ResidenceWithAddressSetFile($event)" lang="es" multiple>
+                          <label class="custom-file-label">{{fileNameResidenceWithAddress}}</label>
+                        </div>
+                        <button class="input-group-text bg-white border-0 p-0" (click)="clearSelectedResidenceWithAddressInViewfile(fileInput3)" style="position: absolute; z-index: 10; right :73px; padding: 10px 6px !important;    color: #d00b05 !important; top: 1px;    cursor: pointer;"><i class="feather-repeat"></i></button>
+                        <small><i class="text-secondary">Valid image format is image/x-png, image/gif, image/jpeg and limit upto 10MB.</i> </small>
+                      </div>
+                      <div class="col-md-12 col-lg-12 mb-0">
+                        <div class="uploaded-image">
+                          <div class="img-cntr square" *ngIf="fileResidenceWithAddressInViewLink != ''">
+                            <a href="javascript:;" (click)="RemoveResidence()" class="dlt-btn"><i class="feather-trash-2 text-danger"></i></a>
+                            <img *ngIf="fileResidenceWithAddressInViewLink != ''" src="{{fileResidenceWithAddressInViewLink}}" alt="" (click)="open(fileResidenceWithAddressInViewLink)" style="cursor: pointer;"/>
+                          </div>
+                          <div class="img-cntr square" *ngIf="fileResidenceWithAddressInViewLink1 != ''">
+                            <a href="javascript:;" (click)="RemoveResidence1()" class="dlt-btn"><i class="feather-trash-2 text-danger"></i></a>
+                            <img *ngIf="fileResidenceWithAddressInViewLink1 != ''" src="{{fileResidenceWithAddressInViewLink1}}" alt="" (click)="open(fileResidenceWithAddressInViewLink1)" style="cursor: pointer;"/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" *ngIf="inner.dt_code == 'fileupload' && inner.name=='BatteryStorage'  && currentStageName !=='Audit'">
+                    <div class="col-md-12 col-lg-12 mb-0">
+                      <div class="input-group">
+                        <div class="custom-file w-100">
+                          <input class="custom-file-input" #file type="file" [ngClass]="{'disabledddl':(inner.is_readOnly=='true' || fromStage)}" name='BatteryStoragefile' #fileInput4 (change)="BatteryStorageSetFile($event)" lang="es" multiple>
+                          <label class="custom-file-label">{{fileNameBatteryStorage}}</label>
+                        </div>
+                        <button class="input-group-text bg-white border-0 p-0" (click)="clearBatteryStoragefile(fileInput4)" style="position: absolute; z-index: 10; right :73px; padding: 10px 6px !important;    color: #d00b05 !important; top: 1px;    cursor: pointer;"><i class="feather-repeat"></i></button>
+                        <small><i class="text-secondary">Valid image format is image/x-png, image/gif, image/jpeg and limit upto 10MB.</i> </small>
+                      </div>
+                      <div class="col-md-12 col-lg-12 mb-0">
+                        <div class="uploaded-image">
+                          <div class="img-cntr square" *ngIf="fileBatteryStorageLink != ''">
+                            <a href="javascript:;" (click)="RemoveBatteryStorage()" class="dlt-btn"><i class="feather-trash-2 text-danger"></i></a>
+                            <img src="{{fileBatteryStorageLink}}" alt="" (click)="open(fileBatteryStorageLink)" style="cursor: pointer;"/>
+                          </div>
+                          <div class="img-cntr square" *ngIf="fileBatteryStorageLink1 != ''">
+                            <a href="javascript:;" (click)="RemoveBatteryStorage1()" class="dlt-btn"><i class="feather-trash-2 text-danger"></i></a>
+                            <img src="{{fileBatteryStorageLink1}}" alt="" (click)="open(fileBatteryStorageLink1)" style="cursor: pointer;"/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row" *ngIf="inner.dt_code == 'fileupload' && inner.name=='HouseInView' && (fileHouseInViewImageLink != '' || fileHouseInViewImageLink1 != '') && currentStageName=='Audit'">
+                    <div class="col-md-12 col-lg-12 mb-0">
+                      <div class="uploaded-image">
+                        <div class="img-cntr uploadedimg" *ngIf="fileHouseInViewImageLink != ''">
+                          <img src="{{fileHouseInViewImageLink}}" alt="" (click)="open(fileHouseInViewImageLink)" style="cursor: pointer;"/>
+                          <a class="dlt-btn" (click)="downloadFile($event,fileHouseInViewImageLink)">
+                            <i title="Click to downloand." class="fa fa-download text-primary"></i>
+                          </a>
+                        </div>
+                        <div class="img-cntr uploadedimg" *ngIf="fileHouseInViewImageLink1 != ''">
+                          <img src="{{fileHouseInViewImageLink1}}" alt="" (click)="open(fileHouseInViewImageLink1)" style="cursor: pointer;"/>
+                          <a class="dlt-btn" (click)="downloadFile($event,fileHouseInViewImageLink1)">
+                            <i title="Click to downloand." class="fa fa-download text-primary"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="inner.dt_code == 'fileupload' && inner.name=='ElectricHookup' && (fileElectricHookupImageLink != '' || fileElectricHookupImageLink1 != '') && currentStageName=='Audit'">
+                    <div class="col-md-12 col-lg-12 mb-0">
+                      <div class="uploaded-image">
+                        <div class="img-cntr uploadedimg" *ngIf="fileElectricHookupImageLink != ''">
+                          <img src="{{fileElectricHookupImageLink}}" alt="" (click)="open(fileElectricHookupImageLink)" style="cursor: pointer;"/>
+                          <a class="dlt-btn" (click)="downloadFile($event,fileElectricHookupImageLink)">
+                            <i title="Click to downloand." class="fa fa-download text-primary"></i>
+                          </a>
+                        </div>
+                        <div class="img-cntr uploadedimg" *ngIf="fileElectricHookupImageLink1 != ''">
+                          <img src="{{fileElectricHookupImageLink1}}" alt="" (click)="open(fileElectricHookupImageLink1)" style="cursor: pointer;"/>
+                          <a class="dlt-btn" (click)="downloadFile($event,fileElectricHookupImageLink1)">
+                            <i title="Click to downloand." class="fa fa-download text-primary"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="inner.dt_code == 'fileupload' && inner.name=='ResidenceWithAddressInView' && (fileResidenceWithAddressInViewLink != '' || fileResidenceWithAddressInViewLink1 != '') && currentStageName=='Audit'">
+                    <div class="col-md-12 col-lg-12 mb-0">
+                      <div class="uploaded-image">
+                        <div class="img-cntr uploadedimg" *ngIf="fileResidenceWithAddressInViewLink != ''">
+                          <img *ngIf="fileResidenceWithAddressInViewLink != ''" src="{{fileResidenceWithAddressInViewLink}}" alt="" (click)="open(fileResidenceWithAddressInViewLink)" style="cursor: pointer;"/>
+                          <a class="dlt-btn" (click)="downloadFile($event,fileResidenceWithAddressInViewLink)">
+                            <i title="Click to downloand." class="fa fa-download text-primary"></i>
+                          </a>
+                        </div>
+                        <div class="img-cntr uploadedimg" *ngIf="fileResidenceWithAddressInViewLink1 != ''">
+                          <img *ngIf="fileResidenceWithAddressInViewLink1 != ''" src="{{fileResidenceWithAddressInViewLink1}}" alt="" (click)="open(fileResidenceWithAddressInViewLink1)" style="cursor: pointer;"/>
+                          <a class="dlt-btn" (click)="downloadFile($event,fileResidenceWithAddressInViewLink1)">
+                            <i title="Click to downloand." class="fa fa-download text-primary"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="inner.dt_code == 'fileupload' && inner.name=='BatteryStorage' && (fileBatteryStorageLink != '' ||  fileBatteryStorageLink1 != '') && currentStageName=='Audit'">
+                    <div class="col-md-12 col-lg-12 mb-0">
+                      <div class="uploaded-image">
+                        <div class="img-cntr uploadedimg" *ngIf="fileBatteryStorageLink != ''">
+                          <img src="{{fileBatteryStorageLink}}" alt="" (click)="open(fileBatteryStorageLink)" style="cursor: pointer;"/>
+                          <a class="dlt-btn" (click)="downloadFile($event,fileBatteryStorageLink)">
+                            <i title="Click to downloand." class="fa fa-download text-primary"></i>
+                          </a>
+                        </div>
+                        <div class="img-cntr uploadedimg" *ngIf="fileBatteryStorageLink1 != ''">
+                          <img src="{{fileBatteryStorageLink1}}" alt="" (click)="open(fileBatteryStorageLink1)" style="cursor: pointer;"/>
+                          <a class="dlt-btn" (click)="downloadFile($event,fileBatteryStorageLink1)">
+                            <i title="Click to downloand." class="fa fa-download text-primary"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                <!------------------------------------------------------------------------------------------------------------------------------------------------->
+                  <!--text  [placeholder]="inner.display_name"-->
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (formLoanApplication.get(inner.form_controlName)?.invalid && (formLoanApplication.get(inner.form_controlName)?.dirty || formLoanApplication.get(inner.form_controlName)?.touched) && (formLoanApplication.get(inner.form_controlName)?.errors?.required || formLoanApplication.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.picklist_options != 'Lookup' && inner.dt_code !='date'  && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='date' && inner.dt_code !='int' && inner.dt_code !='decimal' && inner.dt_code !='bigint' && inner.dt_code != 'fileupload' && !(currentStageName=='Audit' && (inner.name=='User Approving Install' || inner.name=='UserApprovingInstall'))
+                       && inner.name!='Reason' " />
+
+                  <textarea class="form-control" [readonly]="inner.is_readOnly"
+                            [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                            [ngClass]="{'is-invalid': (formLoanApplication.get(inner.form_controlName)?.invalid && (formLoanApplication.get(inner.form_controlName)?.dirty || formLoanApplication.get(inner.form_controlName)?.touched) && (formLoanApplication.get(inner.form_controlName)?.errors?.required || formLoanApplication.get(inner.form_controlName)?.errors?.maxlength)) }"
+                            *ngIf="inner.picklist_options != 'Lookup' && inner.dt_code !='date'  && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='date' && inner.dt_code !='int' && inner.dt_code !='decimal' && inner.dt_code !='bigint' && inner.dt_code != 'fileupload' && !(currentStageName=='Audit' && (inner.name=='User Approving Install' || inner.name=='UserApprovingInstall'))
+                       && inner.name=='Reason' && hideReason"></textarea>
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (formLoanApplication.get(inner.form_controlName)?.invalid && (formLoanApplication.get(inner.form_controlName)?.dirty || formLoanApplication.get(inner.form_controlName)?.touched) && (formLoanApplication.get(inner.form_controlName)?.errors?.required || formLoanApplication.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'int'  && !(currentStageName=='Audit' && (inner.name=='BatteryCapacityInstalled' || inner.name=='NumberofInverters' || inner.name=='NumberOfModules' || inner.name=='Number of Modules' || inner.name=='Number of Inverters' || inner.name=='Battery Capacity Installed'))" />
+
+                  <small *ngIf="inner.dt_code == 'int' &&(formLoanApplication.get(inner.form_controlName).touched &&
+                       formLoanApplication.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (formLoanApplication.get(inner.form_controlName)?.invalid && (formLoanApplication.get(inner.form_controlName)?.dirty || formLoanApplication.get(inner.form_controlName)?.touched) && (formLoanApplication.get(inner.form_controlName)?.errors?.required || formLoanApplication.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'bigint'" />
+
+
+                  <small *ngIf="inner.dt_code == 'bigint' &&(formLoanApplication.get(inner.form_controlName).touched &&
+                       formLoanApplication.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (formLoanApplication.get(inner.form_controlName)?.invalid && (formLoanApplication.get(inner.form_controlName)?.dirty || formLoanApplication.get(inner.form_controlName)?.touched) && (formLoanApplication.get(inner.form_controlName)?.errors?.required || formLoanApplication.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'decimal' && !(currentStageName=='Audit' && (inner.name=='KW System Installed' || inner.name=='KWSystemInstalled' )) " />
+
+                  <small *ngIf="inner.dt_code == 'decimal' &&(formLoanApplication.get(inner.form_controlName).touched &&
+                       formLoanApplication.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+
+                  <textarea class="form-control" *ngIf="inner.dt_code == 'textarea'" [ngClass]="{'is-invalid': (formLoanApplication.get(inner.form_controlName)?.invalid && (formLoanApplication.get(inner.form_controlName)?.dirty || formLoanApplication.get(inner.form_controlName)?.touched) && (formLoanApplication.get(inner.form_controlName).errors?.required || formLoanApplication.get(inner.form_controlName)?.errors?.maxlength)) }" [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+
+                  <p-calendar inputStyleClass="form-control start-date" class="calendarwidth" *ngIf="inner.dt_code == 'date' && !(currentStageName=='Audit' && (inner.name=='Install Date' || inner.name=='InstallDate')) " [formControlName]="inner.form_controlName" [showIcon]="true"
+                              [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                  <label *ngIf="inner.dt_code == 'date' && currentStageName=='Audit' && (inner.name=='Install Date' ||  inner.name=='InstallDate')" style="font-weight: 400; margin-bottom:0px;"> {{inner.value}}</label>
+                  <label *ngIf="inner.dt_code == 'decimal' && currentStageName=='Audit' && (inner.name=='KW System Installed' || inner.name=='KWSystemInstalled')" style="font-weight: 400; margin-bottom:0px;"> {{inner.value}}</label>
+
+                  <label *ngIf="inner.dt_code == 'select' && currentStageName=='Audit' && (inner.name=='User Approving Install' || inner.name=='UserApprovingInstall')" style="font-weight: 400; margin-bottom:0px;"> {{inner.dropdownvalue}}</label>
+
+                  <label *ngIf="inner.dt_code == 'select' && currentStageName=='Audit' && (inner.name=='Module Used'|| inner.name=='ModuleUsed')" style="font-weight: 400; margin-bottom:0px;"> {{inner.dropdownvalue}}</label>
+                  <label *ngIf="inner.dt_code == 'select' && currentStageName=='Audit' && (inner.name=='Battery Storage' || inner.name=='BatteryStorage')" style="font-weight: 400; margin-bottom:0px;"> {{inner.dropdownvalue}}</label>
+                  <label *ngIf="inner.dt_code == 'select' && currentStageName=='Audit' && (inner.name=='Inverter Used' || inner.name=='InverterUsed')" style="font-weight: 400; margin-bottom:0px;">{{inner.dropdownvalue}}</label>
+                  <label *ngIf="inner.dt_code == 'select' && currentStageName=='Audit' && (inner.name=='Battery Capacity Installed' || inner.name=='BatteryCapacityInstalled')" style="font-weight: 400; margin-bottom:0px;">{{inner.value}}</label>
+                  <label *ngIf="currentStageName=='Audit' && (inner.name=='Battery Capacity Installed' || inner.name=='BatteryCapacityInstalled')" style="font-weight: 400; margin-bottom:0px;">{{inner.value}}</label>
+
+
+                  <label *ngIf="currentStageName=='Audit' && (inner.name=='Number of Inverters' || inner.name=='NumberofInverters')" style="font-weight: 400; margin-bottom:0px;">{{inner.value}}</label>
+                  <label *ngIf="currentStageName=='Audit' && (inner.name=='Number of Modules' || inner.name=='NumberOfModules')" style="font-weight: 400; margin-bottom:0px;">{{inner.value}}</label>
+
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                    <div *ngFor="let options of inner.listoptions">
+                      <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                        <div class="custom-control custom-checkbox">
+                          <input id="chk_{{inner.form_field_id}}_{{option}}_{{i}}"
+                                 value="5555" [checked]="checkvalue(inner.value,option)" (change)="onCheckboxChange($event,item,inner)" class="dynamic custom-control-input" type="checkbox">
+                          <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="chk_{{inner.form_field_id}}_{{option}}_{{i}}">{{option}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                    <div class="form-check form-check-inline">
+                      <div class="custom-control custom-checkbox pl-0">
+                        <label class="switch">
+                          <input type="checkbox" (ngModelChange)="validator(inner.form_controlName,inner.is_required)" id="{{inner.form_controlName}}" [formControlName]="inner.form_controlName">
+                          <span class="slider round" id="{{inner.form_controlName}}"><span>Yes</span></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!--Radio button-->
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio'">
+                    <div *ngFor="let options of inner.listoptions">
+                      <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                        <div class="custom-control custom-radio mx-2  p-0">
+                          <input id="radio-{{isformtype}}-{{inner.form_field_id}}_{{option}}" [formControlName]="inner.form_controlName"
+                                 [value]="setradioValue(option,'val',inner.value)" type="radio" (change)="OnAuditRadioButtonChanged(option)">
+                          <label for="radio-{{isformtype}}-{{inner.form_field_id}}_{{option}}" class="radio-label">{{setradioValue(option,'')}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!--Radio button-->
+                  <!--<div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio'">
+                  <div *ngFor="let options of inner.listoptions">
+
+                    <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+
+                      <div class="custom-control custom-radio mx-2  p-0">
+                        <input id="radio-{{inner.form_field_id}}_{{option}}" [formControlName]="inner.form_controlName" [value]="option" type="radio" (click)="check($event,option,inner,inner.form_field_id)">
+                        <label for="radio-{{inner.form_field_id}}_{{option}}" class="radio-label">{{option}}</label>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>-->
+                  <!--Ng Dropdown-->
+
+                  <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select" (change)="dropdownChange($event,inner.name,formControlList,form_controlName)"
+                             *ngIf="inner.dt_code=='select' && inner.picklist_options=='' && !(currentStageName=='Audit' && (inner.name=='Module Used' ||inner.name=='Inverter Used' || inner.name=='Battery Storage' || inner.name=='ModuleUsed' ||inner.name=='InverterUsed' || inner.name=='BatteryStorage' ||inner.name=='User Approving Install' || inner.name=='UserApprovingInstall')) " [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+                  </ng-select>
+
+                  <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                             *ngIf="inner.dt_code=='select' && inner.picklist_options=='true'" [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name" bindValue="value">
+
+                  </ng-select>
+                  <small *ngIf="((formLoanApplication.get(inner.form_controlName)?.invalid) && (formLoanApplication.get(inner.form_controlName).dirty) || (formLoanApplication.get(inner.form_controlName)?.touched) && (formLoanApplication.get(inner.form_controlName)?.errors?.required))"
+                         class="text-danger">{{inner.display_name}} is required</small>
+                </div>
+
+              </div>
+            </ng-container>
+          </ng-container>
+          <div class="col-lg-3 col-xl-3" *ngIf="currentStageName=='Installer Funding'">
+            <label>NTP Installer funded Amount</label>
+            <input type="text" class="form-control" [readonly]="true"
+                   value="{{ntpFundingInstallerAmount}}" />
+          </div>
+        </div>
+      </ng-container>
+      <div class="row  mb-3">
+        <!--*ngIf="isflag"-->
+        <div class="col-sm-12 col-md-12" *ngIf="isflag">
+          <!--*ngIf="!leadconvert"-->
+          <a href="javascript:void(0);" class="btn btn-success mr-2" *ngIf="currentStageName=='Audit' && !hideAuditStepBtn && (((IsSMSReplied == 1 && isSMSEmailReceive) || isSMSEmailReceive==false) || IsAuditOverride==1)" (click)="onSubmitLoanApplication()"><i class="feather-save"></i> Submit</a>
+
+          <a *ngIf="currentStageName=='Audit' && (isCompanyAdmin || isAudit) && (IsSMSReplied == 0  && isSMSEmailReceive ==  true && IsAuditOverride==0)" (click)="overRide()" class="btn btn-primary form-btns mr-1" href="javascript:void(0)"><i class="fa fa-files-o" aria-hidden="true"></i> Override</a>
+
+          <a href="javascript:void(0);" class="btn btn-success mr-2" *ngIf="currentStageName !=='Install Step' && currentStageName !=='Audit'" (click)="onSubmitLoanApplication()"><i class="feather-save"></i> Submit</a>
+          <a href="javascript:void(0);" class="btn btn-success mr-2" *ngIf="currentStageName=='Install Step' && !hideInstallStepBtn" (click)="onSubmitLoanApplicationFile()"><i class="feather-save"></i> Submit</a> <!--ngIf="IsInstallStep"-->
+          <a *ngIf="isModel" href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+        </div>
+        <div class="col-sm-12 col-md-12 text-right" *ngIf="leadconvert">
+
+          <a *ngIf="(wizardIndex!=0)" href="javascript:void(0);" class="btn btn-danger mr-2" (click)="backStep()"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</a>
+
+          <a href="javascript:void(0);" *ngIf="totalWizardlength!=(wizardIndex+1)" class="btn btn-secondary mr-2" (click)="skipStep()">
+            Skip <i class="fa feather-chevron-left" aria-hidden="true"></i>
+          </a>
+          <a href="javascript:void(0);" *ngIf="totalWizardlength!=(wizardIndex+1)" class="btn btn-success mr-2 " (click)="onSubmitLoanApplication()"> Next <i class="fa feather-chevron-left" aria-hidden="true"></i></a>
+          <a href="javascript:void(0);" *ngIf="totalWizardlength==(wizardIndex+1)" class="btn btn-success" (click)="finish()"><i class="feather-save"></i> Finish</a>
+
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>
+
+
+
+
+<div id="audioModal" bsModal #previewModelPoup="bs-modal" [config]="{backdrop: 'static'}" style=" background: none !important;" class="modal fade announcement-pop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-height:520px!important; max-width:420px!important; ">
+    <div class="modal-content" style="z-index:1; height:auto;">
+      <div class="modal-content p-4" style="box-shadow: 0px 0px 25px 0px #DFDFDF;">
+        <div class="text-center w-100">
+          <button type="submit" (click)="closePreview()" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute; right: 14px; top: 8px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <img src={{previewImage}} alt="img" style=" height: 520px !important; max-width: 700px !important; width: 100%; " class="img-responsive" />
+          <div style="position: absolute; bottom: 38px; left: 50%; transform: translatex(-50%);">
+            <a href={{previewImage}} (click)="downloadFile($event,previewImage)" [download]="previewImage" class="btn btn-info mr-2" style="border-radius: 40px !important; border: 2px solid #fff; box-shadow: 0px 0px 10px 0px #000 !important; ">
+              <i title="Click to downloand."
+                 class="fa fa-download pr-2"></i>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

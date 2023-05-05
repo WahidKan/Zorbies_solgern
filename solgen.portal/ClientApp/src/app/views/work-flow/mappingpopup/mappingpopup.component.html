@@ -1,0 +1,39 @@
+<div bsModal #mapping="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+           Mapping
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="max-height:600px; overflow:inherit;">
+        <div class="col-md-12 p-0">
+          <form [formGroup]="customButtonForm" autocomplete="off">
+            <div class="row  mb-2">
+              <div class="col-sm-6 col-md-6">
+                <label>Custom Button:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="CustomButtonList" placeholder="Select"
+                             (clear)="onClearCustomButton(CustomButtonList)" formControlName="customButtonId"
+                             (keyup)="onKeyCustomButton($event,CustomButtonList)"
+                             (scrollToEnd)="onScrollToEndCustomButton(CustomButtonList)" [virtualScroll]="true"
+                             bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (customButtonId.invalid && (customButtonId.dirty || customButtonId.touched) && (customButtonId.errors?.required || customButtonId?.errors?.maxlength)) }"></ng-select>
+                  <small *ngIf="customButtonId.invalid && (customButtonId.dirty || customButtonId.touched) && (customButtonId.errors?.required || customButtonId?.errors?.maxlength)"
+                         class="text-danger">Custom Button is required.</small>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-12 mt-3 text-right">
+                <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="onSubmit()"><i class="feather-save"></i> Submit</a>
+                <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+              </div>
+            </div>
+          </form>
+        </div>
+       </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+      </div>
+  </div>
+</div>

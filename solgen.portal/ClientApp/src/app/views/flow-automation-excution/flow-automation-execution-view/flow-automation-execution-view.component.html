@@ -1,0 +1,57 @@
+<!-- <div class="header float-left w-100 mb-2">
+    <h2 class="float-left pr-2"><strong>{{components.name}}</strong></h2>
+</div>
+<div class="clearfix"></div> -->
+<div class="row">
+    <div [ngClass]="{'col-lg-12 col-xl-12': recordId == 0 ,'col-9': recordId == 0 }" >
+        <div class="panel">
+            <div class="panel-content">
+                <label *ngIf="autoLaunched">{{autoLaunchedMessage}}</label>
+                <ng-container *ngFor="let control of nodes;let j=index">
+                    <ng-container *ngIf="control.nodeId==Current">
+                        <ng-container *ngIf="control.nodeType=='Screen'">
+                            <app-screen-execution [node]="control" (screenChange)="nextScreen($event)" (screenChangePrev)="prevScreen($event)" [components]="control.component" [NewScreen]="NewScreen" [resourceObjectList]="resourceObjectList"></app-screen-execution>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <!-- <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader> -->
+        </div>
+    </div>
+    <div *ngIf="recordId == 0" class="col-3 d-flex justify-content-center">
+        <div class="panel">
+            <div class="card-header text-center">Debug Details</div>
+            <div class="panel-content">
+                <div *ngFor="let debugResultObject of debugResultObjectList" class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <p class="font-weight-bold" style="display: contents;">{{debugResultObject.nodeType}}</p><span> : {{debugResultObject.nodeName}}</span>
+                        <!-- <p>{{debugResultObject.result}}</p> -->
+                        <span [innerHtml]="debugResultObject.details"></span>
+                        <span [innerHtml]="debugResultObject.result"></span>
+                    </div>
+                </div>
+            </div>
+            <div style="height:  800px; overflow-y: scroll;" *ngIf="debugResultObjectList.length==0">
+                <div class="panel-content">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <p class="font-weight-bold">How the Interview Started</p>
+                            <p>zorbis new (0058c000008miNT) started the flow interview.</p>
+                            <p>API Version for Running the Flow: 53</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <p class="font-weight-bold">Transaction Committed</p>
+                            <p>Any records that the flow was ready to create, update, or delete were committed to the database.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

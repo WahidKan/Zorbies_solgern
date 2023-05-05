@@ -1,0 +1,98 @@
+<form [formGroup]="installerPropForm" autocomplete="off">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6 d-flex">
+       
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Street Number:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control" formControlName="streetNumber" /></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Street Name:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control" formControlName="streetName" /></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">St Type:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control" formControlName="stType" /></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">City:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control" formControlName="city" /></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">State:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+
+  <ng-select [items]="states"  placeholder="Select State" formControlName="stateId"
+             bindLabel="text" bindValue="value"></ng-select>
+
+</div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Zip:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control" formControlName="zip" /></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Number of Mortages On The Property:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <b><input type="text" class="form-control" formControlName="numberofMortage" /></b>
+          <small *ngIf="numberofMortage.invalid && (numberofMortage.dirty || numberofMortage.touched) && numberofMortage.errors?.pattern"
+                 style="color:red;">Please enter valid value.</small>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Value of Instalation Property:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <b><input type="text" class="form-control" formControlName="valueOfProperty" /></b>
+          <small *ngIf="valueOfProperty.invalid && (valueOfProperty.dirty || valueOfProperty.touched) && valueOfProperty.errors?.pattern"
+                 style="color:red;">Please enter valid value.</small>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Total of Mortages On The Property:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <b><input type="text" class="form-control" formControlName="totalOfMortages" /></b>
+          <small *ngIf="totalOfMortages.invalid && (totalOfMortages.dirty || totalOfMortages.touched) && totalOfMortages.errors?.pattern"
+                 style="color:red;">Please enter valid value.</small>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Estimated Installation Property LTV:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <b><input type="text" class="form-control" formControlName="estimationLTV" /></b>
+          <small *ngIf="estimationLTV.invalid && (estimationLTV.dirty || estimationLTV.touched) && estimationLTV.errors?.pattern"
+                 style="color:red;">Please enter valid value.</small>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Does the Borrower or Co- Borrower Own The Installation Property?</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><div class="form-group">
+  <label class="switch">
+    <input type="checkbox" checked="" formControlName="isBorrowerOwnProperty">
+    <span class="slider round"><span>Yes</span></span>
+  </label>
+</div>
+</div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Is the Installation Address different from the Borrower or Co- Borrower’s Address?</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+         
+
+          <div class="form-group">
+            <label class="switch">
+              <input type="checkbox" checked="" formControlName="isAddressDifferent">
+              <span class="slider round"><span>Yes</span></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-12 p-0"  *ngIf="isflag">
+      <button type="submit" [disabled]="isSubmitted" class="btn btn-success form-btns mr-2" (click)="addUpdateInstallerProperty()"><i class="feather-save text-white"></i> Save</button>
+      <button type="submit" class="btn btn-danger form-btns" (click)="close()"><i class="fa fa-times text-white"></i> Cancel</button>
+    </div>
+  </div>
+  </form>
+

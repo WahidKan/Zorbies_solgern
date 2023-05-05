@@ -1,0 +1,926 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+        <h2 class="float-left pr-2 w-100">
+            <h2 *ngIf="!banker" class="float-left pr-2"><strong>Account Detail</strong></h2>
+            <h2 *ngIf="banker" class="float-left pr-2"><strong>User Detail</strong></h2>
+        </h2>
+        <div class="breadcrumb-wrapper w-100">
+            <ol class="breadcrumb">
+                <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+                <li *ngIf="!banker"><a class="smview" routerLink="/accountslist">Manage Accounts</a></li>
+                <li *ngIf="!banker" class="active">Account Detail</li>
+                <li *ngIf="banker" class="active">User Detail</li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+        <a *ngIf="isSuperAdmin=='true'" href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="feather-repeat mr-1"></i>Switch Company</a>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+<app-newnoteslist #listnotesmodel1 subModuleName="account" [view]="true" [DisplayOnEmpty]="false" [AccountId]="accountId" [ObjectRefId]="accountId" (newItemEvent)="addItem($event)">
+</app-newnoteslist>
+<div class="clearfix"></div>
+
+
+
+
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+
+<div class="card border-0">
+    <div class="panel">
+        <div class="row">
+            <div class="col-lg-12 border-bottom">
+                <div class="panel-content w-100 bg-white p-2 px-3 border-0">
+                    <app-view-filter-bar-manager [acountBillingAddress]="BillingAddress" [submoduleName]="'account'" [titleName]="Name" [customCompnentValuesTop]="customCompnentValuesTop" [logoClass]="'feather-user'" [pageLink]="'/accountslist/editaccount/'"></app-view-filter-bar-manager>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="panel-content w-100 mt-2 p-2 px-3">
+                    <div class="row mt-2 scroll-in-content">
+                        <div class="col-sm-12 col-lg-8">
+                            <h3 class="form-heading mt-0"><span>Details</span></h3>
+                            <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                                <form [formGroup]="form" *ngIf="form">
+                                    <ng-container *ngFor="let item of formControlList">
+                                        <div class="panel active">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a href="#{{item.group_display_name}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                        <span> {{item.group_name}}</span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="{{item.group_display_name}}" class="panel-collapse collapse active show" style="">
+                                                <div class="panel-body row px-0 mt-0">
+                                                    <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let inner of item.InnerData;">
+                                                        <div class="input-group border-bottom">
+                                                            <div class="col-sm-12 col-md-6 px-0">
+                                                                <span class="py-2 d-block"><strong>{{ inner.display_name}}:</strong></span>
+                                                            </div>
+                                                            <div class="col-sm-12 col-md-6">
+                                                                <span *ngIf="inner.display_name != 'Annual Revenue' && inner.value!=null  && inner.dt_code!='boolean' && inner.field_route==null " class="py-2 d-block">
+                                      <ng-container *ngIf="inner.dt_code!='date' &&  inner.dt_code!='datetime'">{{ inner.value }} </ng-container>
+                                      <ng-container *ngIf="inner.dt_code=='date'"> {{ inner.value | date: 'MM-dd-yyyy'}}</ng-container>
+                                      <ng-container *ngIf="inner.dt_code=='datetime'"> {{ inner.value | DateTimeToLocal}}</ng-container>
+                                    </span>
+                                                                <span *ngIf="inner.value!=null  && inner.dt_code!='boolean' && inner.field_route!=null" class="py-2 d-block">
+                                      <a href="javascript:void(0);" [routerLink]="[inner.field_route,inner.ref_value]">{{ inner.value}}</a>
+                                    </span>
+                                                                <span *ngIf="inner.display_name == 'Annual Revenue'">
+                                      <a href="javascript:void(0);" >{{inner.value? '$'+inner.value : inner.value }}</a>
+                                  </span>
+                                                                <!--============================== For CheckBox ===========================-->
+                                                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                                                                    <div class="form-check form-check-inline">
+                                                                        <div class="custom-control custom-checkbox pl-0">
+                                                                            <label class="switch  mb-0">
+                                            <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                            <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                          </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!--============================== For CheckBox ===========================-->
+                                                                <!-- <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                                      <div class="form-check form-check-inline">
+                                        <div class="custom-control custom-checkbox pl-0">
+                                          <label class="switch mb-0">
+                                            <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                            <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngFor="let item of executionFlow">
+                                        <div *ngIf="executionFlow.length>0" class="panel active">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a href="#{{item.automationFlowName}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                        <span> {{item.automationFlowName}}</span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="{{item.automationFlowName}}" class="panel-collapse collapse active show" style="">
+                                                <div class="panel-body row px-0 mt-0">
+                                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                                        <div class="input-group border-bottom">
+                                                            <div class="float-left ">
+                                                                <div style="height: 40px !important;width:40px !important; cursor:pointer;">
+                                                                    <a href="javascript:void(0);" (click)="ExecuteAutomationFlow(item.automationFlowId)">
+                                                                        <svg focusable="false" data-key="flow" aria-hidden="true" viewBox="0 0 100 120" class="slds-icon slds-icon_small" fill="white">
+                                            <rect width="100" rx="15" height="90" fill="rgb(1, 118, 211)" />
+                                            <g>
+                                              <path
+                                                d="M79.9 30.7c-2.6-5.1-9.2-14.6-21.5-9-7.6 3.5-11.9 5.5-11.9 5.5l-11 4.8c-3.1 1.5-9.9-.6-13.7-2-1.1-.4-2.1.8-1.6 1.9 2.6 5.1 9.2 14.6 21.5 9 7.6-3.5 22.9-10.1 22.9-10.1 3.1-1.5 9.9.6 13.7 2 1.1.2 2.1-.9 1.6-2.1zM53.5 46.8c-1.4.8-6.9 3.3-6.9 3.3l-5.5 2.4C38.4 54 32.5 52 29 50.6c-1-.5-1.9.8-1.4 1.8 2.2 5 8.1 14 18.9 8.5 6.7-3.4 12.4-5.6 12.4-5.6 2.7-1.5 8.6.5 12.1 1.9 1 .4 1.9-.8 1.4-1.9-2.3-5-8.2-14-18.9-8.5zM49.5 68.9c-1.1.6-3 1.8-3 1.8-2.1 1.3-6.5-.4-9.1-1.7-.7-.4-1.4.8-1 1.8 1.6 4.5 6 12.6 14.1 7.6 3-1.9 3-1.8 3-1.8 2.2-1.1 6.5.4 9.1 1.6.7.4 1.4-.8 1-1.8-1.6-4.4-5.7-12.1-14.1-7.5z">
+                                              </path>
+                                            </g>
+                                          </svg>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="float-left ml-1" style="margin-top: -2px !important;">
+                                                                <a href="javascript:void(0);" (click)="ExecuteAutomationFlow(item.automationFlowId)">
+                                        {{item.automationFlowName}}
+                                      </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-4 relatedtab">
+                            <h3 class="form-heading mt-0"><span>Related</span></h3>
+                            <div id="accordion" *ngIf="relatedObjects">
+                                <ng-container *ngFor="let item of relatedObjects;let i=index;">
+                                    <ng-container *ngIf="item.IsVisible">
+
+                                        <ng-container *ngIf="item.layout_type != 'sms history' && item.layout_type != 'call history' && item.layout_type != 'appointments' && item.layout_type != 'notes' && item.layout_type != 'table' && item.layout_type != 'files' && item.layout_type != 'textarea'">
+                                            <app-listview [data]="item" [index]="i"></app-listview>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="item.layout_type == 'textarea' && item.default_value">
+                                            <div class="w-100 p-3 mb-2 text-center information-section">
+                                                <span class="text-capitalize font-weight-bold" style="font-size: 24px;">
+                              {{item.default_value}}
+                            </span>
+                                            </div>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="item.layout_type == 'table'">
+                                            <app-tableview [data]="item" [index]="i" [SubModuleName]="submoduleName" [RecordId]="accountId" [from]="from" (callGetRequirementListingData)="callRequirementListingData()" (refreshEmitter)="RefreshRelatedObjects($event)" (deleteProductRequirement)='deleteProductRequirement($event)'
+                                                (openEditProductRequirement)='AddProjectRequiredPopup($event)' (openAddRequirement)="AddRequiremnt()" (openAddContact)="AddContact($event)" (openAddJurisdiction)="AddJurisdiction()" (openEditAddJurisdiction)='AddJurisdictionPopup($event)'
+                                                (deleteJurisdiction)='deleteJurisdiction($event)'></app-tableview>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="item.layout_type == 'notes'">
+                                            <app-newnoteslist #listnotesmodel [view]="false" [DisplayOnEmpty]="true" subModuleName="{{submoduleName}}" [AccountId]="accountId" [ObjectRefId]="accountId"></app-newnoteslist>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="item.layout_type == 'files'">
+                                            <app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="{{accountId}}"></app-files>
+                                        </ng-container>
+                                        <ng-container *ngIf="item.layout_type == 'appointments'">
+                                            <app-appointments #appointmentlist title="Appointments" [solgenpower]="solgenpower" submoduleName="{{submoduleName}}" primaryKey="{{accountId}}" [header]="true"></app-appointments>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="item.layout_type == 'call history'">
+                                            <app-lead-call-history #listcalllog [subModuleName]="submoduleName" [leadId]="accountId"></app-lead-call-history>
+                                        </ng-container>
+                                        <ng-container *ngIf="item.layout_type == 'sms history'">
+                                            <app-lead-sms-history #smsHistory [subModuleName]="submoduleName" [leadId]="accountId"></app-lead-sms-history>
+                                        </ng-container>
+
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+
+                            <!--================================================Old Related tab Start============================================-->
+                            <!--<div id="accordion" [ngClass]="{'disabled':loadSave}">
+                  <div class="panel active">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a href="#oppourtunity" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                          <span>Opportunity ({{OppourtunityCount}})</span>
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="oppourtunity" class="panel-collapse collapse active show" style="">
+                      <div class="panel-body p-2 mt-0">
+                        <div class="table-responsive ngxtbl">
+                          <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                        [rows]="lstOppourtunity.data"
+                                        [scrollbarH]="true"
+                                        [rowHeight]="'40'"
+                                        [columnMode]="'force'"
+                                        [headerHeight]="40"
+                                        [footerHeight]="40"
+                                        [externalPaging]="true"
+                                        [externalSorting]="true"
+                                        [loadingIndicator]="loadSave"
+                                        [count]="lstOppourtunity.pager.totalItems"
+                                        [offset]="lstOppourtunity.pager.currentPage"
+                                        [limit]="lstOppourtunity.pager.pageSize"
+                                        (page)='setOppourtunityPageNo($event)'
+                                        (sort)="onOppourtunitySort($event)">
+
+                            <ngx-datatable-column name="Opportunity Name" prop="OpportunityName" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div title="{{row.OpportunityName}}">
+                                  <a [routerLink]="['/opportunity/viewOpportunity',row.Id]">{{row.OpportunityName| truncate}}</a>&nbsp;
+                                </div>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Owner Full Name" prop="OwnerFullName" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Stage Name" prop="StageName" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Amount" prop="Amount" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span [title]="row.Amount">{{row.Amount | currency}}</span>
+                              </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Close Date" prop="CloseDate" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span [title]="row.CloseDate">{{row.CloseDate | DateTimeToLocal}}</span>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-footer>
+                              <ng-template ngx-datatable-footer-template
+                                          let-rowCount="rowCount"
+                                          let-pageSize="lstOppourtunity.pager.pageSize"
+                                          let-selectedCount="selectedCount"
+                                          let-currentPage="lstOppourtunity.pager.currentPage"
+                                          let-offset="offset"
+                                          let-isVisible="isVisible">
+                                <div class="page-count" *ngIf='(rowCount  > 0)'>-->
+                            <!--Showing {{(lstOppourtunity.pager.currentPage - 1 )* lstOppourtunity.pager.pageSize + 1}}  to {{lstOppourtunity.pager.currentPage * lstOppourtunity.pager.pageSize}} out of {{rowCount}}  enteries-->
+                            <!--{{commonService.PageString(lstOppourtunity.pager.currentPage,lstOppourtunity.pager.pageSize,rowCount)}}
+                                </div>
+
+                                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                [page]="lstOppourtunity.pager.currentPage"
+                                                [size]="lstOppourtunity.pager.pageSize"
+                                                [count]="lstOppourtunity.pager.totalItems"
+                                                [hidden]="!((rowCount / lstOppourtunity.pager.pageSize) > 1)"
+                                                (change)="setOppourtunityPageNo($event)">
+                                </datatable-pager>
+                              </ng-template>
+                            </ngx-datatable-footer>
+                          </ngx-datatable>
+                        </div>
+                      </div>
+                    </div>
+                  </div>-->
+                            <!--==================================================== Related Contacts ===========================================================-->
+                            <!--<div class="panel active">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#Contact" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodynine"><span>  Contacts ({{RelatedContactsCount}})</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+                    </h4>
+                  </div>
+                  <div id="panelBodynine" class="panel-collapse active show p-0 border-0" data-parent="#accordion">
+                    <a *ngIf="!IsStandard" href="javascript:void(0);" class="btn-in-panel"
+                      (click)="AddContact()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add</a>
+                    <div class="panel-body px-2">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                          <form [formGroup]="configurationSetings">
+
+                            <div class="table-responsive">
+                              <table class="table mb-0">
+                                <thead>
+                                  <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Mobile</th>
+                                    <th *ngIf="!IsStandard"> Is Primary</th>
+                                    <th>Enable Login</th>-->
+                            <!--<th *ngIf="isUsertypeBanker">Role</th>-->
+                            <!--<th>Login</th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="accoundetailView">
+
+                    <tr [formGroupName]="i" *ngFor="let field of accoundetailView.controls; let i=index">
+                      <td>-->
+                            <!--[routerLink]="['/contactlist/editContact',field.get('contactID').value]"-->
+                            <!--<a href="javascript:void(0);" (click)="goToContact(field.get('contactID').value)">{{field.get('name').value}}  </a>
+
+                                      </td>
+                                      <td>
+                                        <span>{{field.get('email').value}}</span>
+                                      </td>
+
+                                      <td>
+                                        <span>{{field.get('phone').value}}</span>
+                                      </td>
+                                      <td>
+                                        <span>{{field.get('mobile').value}}</span>
+                                      </td>
+                                      <td *ngIf="!IsStandard && field.get('isPrimary').value==false">
+                                        <label class="switch">
+                                          <input type="checkbox" (change)="isPrimaryValidator(field,i)" formControlName="isPrimary" />
+                                          <span class="slider round"><span>Yes</span></span>
+                                        </label>
+                                      </td>
+                                      <td *ngIf="!IsStandard && field.get('isPrimary').value==true">
+                                        <label class="switch">
+                                          <input type="checkbox" formControlName="isPrimary" disabled />
+                                          <span class="slider round"><span>Yes</span></span>
+                                        </label>
+                                      </td>
+                                      <td>
+                                        <label class="switch">
+                                          <input type="checkbox" (change)="validator(field)" formControlName="enableLogin">
+                                          <span class="slider round"><span>Yes</span></span>
+                                        </label>
+                                      </td>
+                                      <td *ngIf="banker">
+                                        <div class="form-group">
+
+                                          <ng-select [items]="lstRole" placeholder="Select Role" bindValue="RoleIDAuto" bindLabel="RoleName" formControlName="role" (change)="selectUser($event,field,i)"
+                                                    [ngClass]="{'is-invalid': (field.get('role').invalid && (field.get('role').dirty || field.get('role').touched) && field.get('role').errors?.required) }"></ng-select>
+                                        </div>
+
+                                      </td>
+                                      <td>
+                                        <button [disabled]='!field.dirty'
+                                                class="btn btn-success mr-1" (click)="EnableLoginForAllUser(field)">
+                                          <i class="feather-save"></i> Save
+                                        </button>
+
+
+                                      </td>
+                                    </tr>
+
+                                    <tr *ngIf="accoundetailView.controls==null || accoundetailView.controls==''">
+                                      <td colspan="7" class="text-center"><span class="text-center text-danger">No data to display</span></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="panel active">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a href="#communicationList" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                          <span>Communications ({{CoomunicationCounts}})</span>
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="communicationList" class="panel-collapse collapse active show" style="" [ngClass]="{'disabled':loadSave}">
+                      <div class="panel-body p-2 mt-0">
+                        <div class="table-responsive ngxtbl">
+                          <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                        [rows]="lstCoomunication.data"
+                                        [scrollbarH]="true"
+                                        [rowHeight]="'40'"
+                                        [columnMode]="'force'"
+                                        [headerHeight]="40"
+                                        [footerHeight]="40"
+                                        [externalPaging]="true"
+                                        [externalSorting]="true"
+                                        [loadingIndicator]="loadSave"
+                                        [count]="lstCoomunication.pager.totalItems"
+                                        [offset]="lstCoomunication.pager.currentPage"
+                                        [limit]="lstCoomunication.pager.pageSize"
+                                        (page)='setCommunicationPageNo($event)'
+                                        (sort)="onCommunicationSort($event)">
+                            <ngx-datatable-column name="From Name" prop="FromName" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Play / Download" prop="Action" [sortable]="false">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="text-left" *ngIf="row.fileUrl!=null && row.fileUrl!=''">
+                                  <a (click)="ClickToPlay(row)" href="javascript:void(0)"><i title="Click to play Audio." class="fa fa-file-audio-o" style="font-size:24px"></i></a>&nbsp;&nbsp;&nbsp;
+                                </div>
+                                <div class="text-left" *ngIf="row.fileUrl==null || row.fileUrl==''">
+                                  <div *ngIf="row.PrivateRecordingFilePath==null || row.PrivateRecordingFilePath==''">
+                                    <a href="javascript:void(0)" class="disabled">
+                                      <i class="fa fa-download text-secondary" style="font-size:24px"></i>
+                                    </a>&nbsp;&nbsp;&nbsp;
+                                  </div>
+                                  <div *ngIf="row.PrivateRecordingFilePath!=null && row.PrivateRecordingFilePath!=''">
+                                    <a href="javascript:void(0)" (click)="downloadFileSharePoint(row.PrivateRecordingFilePath)">
+                                      <i title="Click to downloand."
+                                        class="fa fa-download text-primary" style="font-size:24px"></i>
+                                    </a>&nbsp;&nbsp;&nbsp;
+                                  </div>
+
+                                </div>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Vendor" prop="Vendor" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div *ngIf="row.Vendor=='Twilio'">
+                                  <span>Twilio</span>
+                                </div>
+                                <div *ngIf="row.Vendor!='Twilio'">
+                                  <span>Ring Central</span>
+                                </div>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Result" prop="Result" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="To Phone Number" prop="ToPhoneNumber" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="From Phone Number" prop="FromPhoneNumber" [sortable]="true"> </ngx-datatable-column>
+                            <ngx-datatable-column name="Start Time" prop="StartTime" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.StartTime |utcdatetimetolocal}}
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Duration(Min)" prop="Duration" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Type" prop="CallType" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Direction" prop="Direction" [sortable]="true">
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Action" prop="Action" [sortable]="true">
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Location" prop="Location" [sortable]="true">
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="From Extension Id" prop="FromExtensionId" [sortable]="true">
+                            </ngx-datatable-column>
+                            <ngx-datatable-footer>
+                              <ng-template ngx-datatable-footer-template
+                                          let-rowCount="rowCount"
+                                          let-pageSize="lstCoomunication.pager.pageSize"
+                                          let-selectedCount="selectedCount"
+                                          let-currentPage="lstCoomunication.pager.currentPage"
+                                          let-offset="offset"
+                                          let-isVisible="isVisible">
+                                <div class="page-count" *ngIf='(rowCount  > 0)'>
+                                  {{commonService.PageString(lstCoomunication.pager.currentPage,lstCoomunication.pager.pageSize,rowCount)}}
+                                </div>
+
+                                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                [page]="lstCoomunication.pager.currentPage"
+                                                [size]="lstCoomunication.pager.pageSize"
+                                                [count]="lstCoomunication.pager.totalItems"
+                                                [hidden]="!((rowCount / lstCoomunication.pager.pageSize) > 1)"
+                                                (change)="setCommunicationPageNo($event)">
+                                </datatable-pager>
+                              </ng-template>
+                            </ngx-datatable-footer>
+                          </ngx-datatable>
+                        </div>-->
+                            <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>-->
+                            <!--</div>
+                    </div>
+                  </div>
+                  <div class="panel active">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a href="#contract" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                          <span>Contract ({{ContractCount}})</span>
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="contract" class="panel-collapse collapse active show" style="">
+                      <div class="panel-body p-2 mt-0">
+                        <div class="table-responsive ngxtbl">
+                          <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                        [rows]="lstContract.data"
+                                        [scrollbarH]="true"
+                                        [rowHeight]="'40'"
+                                        [columnMode]="'force'"
+                                        [headerHeight]="40"
+                                        [footerHeight]="40"
+                                        [externalPaging]="true"
+                                        [externalSorting]="true"
+                                        [loadingIndicator]="loadSave"
+                                        [count]="lstContract.pager.totalItems"
+                                        [offset]="lstContract.pager.currentPage"
+                                        [limit]="lstContract.pager.pageSize"
+                                        (page)='setContractPageNo($event)'
+                                        (sort)="onContractSort($event)">
+                            <ngx-datatable-column name="Contract Number" prop="ContractNumber" [sortable]="true"> </ngx-datatable-column>
+                            <ngx-datatable-column name="NTP Date" prop="NTPDate" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span title="row.NTPDate | DateTimeToLocal">{{row.NTPDate | DateTimeToLocal}}</span>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="PTO Date" prop="PTODate" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span title="row.PTODate| DateTimeToLocal">{{row.PTODate | DateTimeToLocal}}</span>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Open Transaction Balance" prop="OpenTransactionBalance" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span title="row.OpenTransactionBalance">{{row.OpenTransactionBalance | currency}}</span>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Status" prop="Status" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-footer>
+                              <ng-template ngx-datatable-footer-template
+                                          let-rowCount="rowCount"
+                                          let-pageSize="lstContract.pager.pageSize"
+                                          let-selectedCount="selectedCount"
+                                          let-currentPage="lstContract.pager.currentPage"
+                                          let-offset="offset"
+                                          let-isVisible="isVisible">
+                                <div class="page-count" *ngIf='(rowCount  > 0)'>
+                                  {{commonService.PageString(lstContract.pager.currentPage,lstContract.pager.pageSize,rowCount)}}
+                                </div>
+
+                                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                [page]="lstContract.pager.currentPage"
+                                                [size]="lstContract.pager.pageSize"
+                                                [count]="lstContract.pager.totalItems"
+                                                [hidden]="!((rowCount / lstContract.pager.pageSize) > 1)"
+                                                (change)="setContractPageNo($event)">
+                                </datatable-pager>
+                              </ng-template>
+                            </ngx-datatable-footer>
+                          </ngx-datatable>
+                        </div>
+                      </div>
+                    </div>
+                  </div>-->
+                            <!--==============================================================================================================================-->
+                            <!--======================================================Work Orders=============================================================-->
+                            <!--<div class="panel active">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#workOrders" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                        <span>Work Orders ({{workOrderCount}})</span>
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="workOrders" class="panel-collapse collapse active show" style="">
+                    <div class="panel-body p-2 mt-0">
+                      <div class="table-responsive ngxtbl">
+                        <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                      [rows]="lstWorkOrders.data"
+                                      [scrollbarH]="true"
+                                      [rowHeight]="'40'"
+                                      [columnMode]="'force'"
+                                      [headerHeight]="40"
+                                      [footerHeight]="40"
+                                      [externalPaging]="true"
+                                      [externalSorting]="true"
+                                      [loadingIndicator]="loadSave"
+                                      [count]="lstWorkOrders.pager.totalItems"
+                                      [offset]="lstWorkOrders.pager.currentPage"
+                                      [limit]="lstWorkOrders.pager.pageSize"
+                                      (page)='setWorkorderPageNo($event)'
+                                      (sort)="onWorkOrdersSort($event)">-->
+                            <!--<ngx-datatable-column name="Work Order Number" prop="WorkOrderNumber" [sortable]="true"></ngx-datatable-column>-->
+                            <!--<ngx-datatable-column name="Work Order Number" prop="WorkOrderNumber" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <a class="view-list" [routerLink]="['/workorder/view',row.Id]" href="javascript:void(0);" [title]="row.WorkOrderNumber">{{row.WorkOrderNumber}}</a>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Subject" prop="Subject" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Status" prop="Status" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Sub Status" prop="SubStatus" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Work Type" prop="WorkType" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Created Date" prop="CreatedDate" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span *ngIf="!row.CreatedDate" [title]="row.CreatedDate">-</span>
+                                <span *ngIf="row.CreatedDate" [title]="row.CreatedDate">{{row.CreatedDate | DateTimeToLocal }}</span>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="End Date" prop="EndDate" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span *ngIf="!row.EndDate" [title]="row.EndDate">-</span>
+                                <span *ngIf="row.EndDate" [title]="row.EndDate">{{row.EndDate | DateTimeToLocal }}</span>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="FollowUp DateTime" prop="FollowUpDateTime" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="FollowUp Note" prop="FollowUpNote" [sortable]="true"></ngx-datatable-column>
+
+                            <ngx-datatable-footer>
+                              <ng-template ngx-datatable-footer-template
+                                          let-rowCount="rowCount"
+                                          let-pageSize="lstWorkOrders.pager.pageSize"
+                                          let-selectedCount="selectedCount"
+                                          let-currentPage="lstWorkOrders.pager.currentPage"
+                                          let-offset="offset"
+                                          let-isVisible="isVisible">
+                                <div class="page-count" *ngIf='(rowCount  > 0)'>
+                                  {{commonService.PageString(lstWorkOrders.pager.currentPage,lstWorkOrders.pager.pageSize,rowCount)}}
+                                </div>
+
+
+
+                                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                [page]="lstWorkOrders.pager.currentPage"
+                                                [size]="lstWorkOrders.pager.pageSize"
+                                                [count]="lstWorkOrders.pager.totalItems"
+                                                [hidden]="!((rowCount / lstWorkOrders.pager.pageSize) > 1)"
+                                                (change)="setWorkorderPageNo($event)">
+                                </datatable-pager>
+                              </ng-template>
+                            </ngx-datatable-footer>
+                          </ngx-datatable>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="panel active">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a href="#proposal" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                          <span>Proposals ({{ProposalCount}})</span>
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="proposal" class="panel-collapse collapse active show" style="">
+                      <div class="panel-body p-2 mt-0">
+                        <div class="table-responsive ngxtbl">
+                          <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                        [rows]="lstProposals.data"
+                                        [columnMode]="'force'"
+                                        [scrollbarH]="true"
+                                        [rowHeight]="'40'"
+                                        [headerHeight]="40"
+                                        [footerHeight]="40"
+                                        [externalPaging]="true"
+                                        [externalSorting]="true"
+                                        [loadingIndicator]="loadSave"
+                                        [count]="lstProposals.pager.totalItems"
+                                        [offset]="lstProposals.pager.currentPage"
+                                        [limit]="lstProposals.pager.pageSize"
+                                        (page)='setProposalPageNo($event)'
+                                        (sort)="onProposalSort($event)">
+                            <ngx-datatable-column name="Proposal Number" prop="ProposalNumber" [sortable]="true"> </ngx-datatable-column>
+                            <ngx-datatable-column name="Proposal Name" prop="Name" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <a [routerLink]="['/proposal-list/viewproposal',row.Id]">{{row.Name}}</a>
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Total System Cost" prop="TotalSystemCost" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Primary" sortable="true" prop="IsPrimary">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                <label class="switch">
+                                  <input type="checkbox" disabled [checked]="row.IsPrimary">
+                                  <span class="slider round"><span>Yes</span></span>
+                                </label>
+                              </ng-template>
+                            </ngx-datatable-column>                      <ngx-datatable-footer>
+                              <ng-template ngx-datatable-footer-template
+                                          let-rowCount="rowCount"
+                                          let-pageSize="lstProposals.pager.pageSize"
+                                          let-selectedCount="selectedCount"
+                                          let-currentPage="lstProposals.pager.currentPage"
+                                          let-offset="offset"
+                                          let-isVisible="isVisible">
+                                <div class="page-count" *ngIf='(rowCount  > 0)'>-->
+                            <!--Showing {{(lstProposals.pager.currentPage - 1 )* lstProposals.pager.pageSize + 1}}  to {{lstProposals.pager.currentPage * lstProposals.pager.pageSize}} out of {{rowCount}}  enteries-->
+                            <!--{{commonService.PageString(lstProposals.pager.currentPage,lstProposals.pager.pageSize,rowCount)}}
+                                </div>
+                                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                [page]="lstProposals.pager.currentPage"
+                                                [size]="lstProposals.pager.pageSize"
+                                                [count]="lstProposals.pager.totalItems"
+                                                [hidden]="!((rowCount / lstProposals.pager.pageSize) > 1)"
+                                                (change)="setProposalPageNo($event)">
+                                </datatable-pager>
+                              </ng-template>
+                            </ngx-datatable-footer>
+                          </ngx-datatable>
+                        </div>
+                      </div>
+                    </div>
+                  </div>-->
+                            <!--==============================================================================================================================-->
+                            <!--======================================================Service Appointments=============================================================-->
+                            <!--<div class="panel active">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a href="#ServiceAppointments" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                          <span>Service Appointments ({{serviceAppointmentsCount}})</span>
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="ServiceAppointments" class="panel-collapse collapse active show" style="">
+                      <div class="panel-body p-2 mt-0">
+                        <div class="table-responsive ngxtbl">
+                          <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                        [rows]="lstServiceAppointments.data"
+                                        [columnMode]="'force'"
+                                        [scrollbarH]="true"
+                                        [rowHeight]="'40'"
+                                        [headerHeight]="40"
+                                        [footerHeight]="40"
+                                        [externalPaging]="true"
+                                        [externalSorting]="true"
+                                        [loadingIndicator]="loadSave"
+                                        [count]="lstServiceAppointments.pager.totalItems"
+                                        [offset]="lstServiceAppointments.pager.currentPage"
+                                        [limit]="lstServiceAppointments.pager.pageSize"
+                                        (page)='setserviceAppointmentPageNo($event)'
+                                        (sort)="onServiceAppointmentSort($event)">
+
+                            <ngx-datatable-column name="Appointment Number" prop="AppointmentNumber" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Subject" prop="Subject" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Status" prop="Status" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Scheduled Start" prop="SchedStartTime" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.SchedStartTime | DateTimeToLocal}}
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Scheduled End" prop="SchedEndTime" [sortable]="true">
+                              <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.SchedEndTime | DateTimeToLocal}}
+                              </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Work Type" prop="WorkType" [sortable]="true"></ngx-datatable-column>
+
+                            <ngx-datatable-footer>
+                              <ng-template ngx-datatable-footer-template
+                                          let-rowCount="rowCount"
+                                          let-pageSize="lstServiceAppointments.pager.pageSize"
+                                          let-selectedCount="selectedCount"
+                                          let-currentPage="lstServiceAppointments.pager.currentPage"
+                                          let-offset="offset"
+                                          let-isVisible="isVisible">
+                                <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                                  {{commonService.PageString(lstServiceAppointments.pager.currentPage,lstServiceAppointments.pager.pageSize,rowCount)}}
+                                </div>
+
+                                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                [page]="lstServiceAppointments.pager.currentPage"
+                                                [size]="lstServiceAppointments.pager.pageSize"
+                                                [count]="lstServiceAppointments.pager.totalItems"
+                                                [hidden]="!((rowCount / lstServiceAppointments.pager.pageSize) > 1)"
+                                                (change)="setserviceAppointmentPageNo($event)">
+                                </datatable-pager>
+                              </ng-template>
+                            </ngx-datatable-footer>
+                          </ngx-datatable>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="panel active">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a href="#Product" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                          <span>Products ({{productCount}})</span>
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="Product" class="panel-collapse collapse active show" style="">
+                      <div class="panel-body p-2 mt-0">
+                        <div class="table-responsive ngxtbl">
+                          <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                        [rows]="lstProducts.data"
+                                        [columnMode]="'force'"
+                                        [headerHeight]="40"
+                                        [scrollbarH]="true"
+                                        [rowHeight]="'40'"
+                                        [footerHeight]="40"
+                                        [externalPaging]="true"
+                                        [externalSorting]="true"
+                                        [loadingIndicator]="loadSave"
+                                        [count]="lstProducts.pager.totalItems"
+                                        [offset]="lstProducts.pager.currentPage"
+                                        [limit]="lstProducts.pager.pageSize"
+                                        (page)='setProductsPageNo($event)'
+                                        (sort)="onProductsSort($event)">
+
+                            <ngx-datatable-column name="Product Name " prop="ProductName" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Product Family" prop="ProductFamily" [sortable]="true"></ngx-datatable-column>
+                            <ngx-datatable-column name="Product Code" prop="ProductCode" [sortable]="true"></ngx-datatable-column>
+
+
+                            <ngx-datatable-footer>
+                              <ng-template ngx-datatable-footer-template
+                                          let-rowCount="rowCount"
+                                          let-pageSize="lstProducts.pager.pageSize"
+                                          let-selectedCount="selectedCount"
+                                          let-currentPage="lstProducts.pager.currentPage"
+                                          let-offset="offset"
+                                          let-isVisible="isVisible">
+                                <div class="page-count" *ngIf='(rowCount  > 0)'>
+                                  {{commonService.PageString(lstProducts.pager.currentPage,lstProducts.pager.pageSize,rowCount)}}
+                                </div>
+
+                                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                [page]="lstProducts.pager.currentPage"
+                                                [size]="lstProducts.pager.pageSize"
+                                                [count]="lstProducts.pager.totalItems"
+                                                [hidden]="!((rowCount / lstProducts.pager.pageSize) > 1)"
+                                                (change)="setProductsPageNo($event)">
+                                </datatable-pager>
+                              </ng-template>
+                            </ngx-datatable-footer>
+                          </ngx-datatable>
+                        </div>
+                      </div>
+                    </div>
+                  </div>-->
+                            <!--==============================================================================================================================-->
+                            <!--Notes-->
+                            <!--<div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#notes" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                        <span>Notes ({{notescount}}) </span>
+                      </a>
+                    </h4>
+                  </div>-->
+                            <!--End-->
+                            <!--</div>-->
+                            <!--========================================================Old Related tab End===========================================================================-->
+                            <!--=============================================================File Section ==========================================================-->
+                            <!--<app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="{{accountId}}"></app-files>-->
+                            <!--=====================================================================================================================================-->
+                            <!--=============================================================Notes Section ==========================================================-->
+                            <!--<app-newnoteslist #listnotesmodel [view]="false" [DisplayOnEmpty]="true" subModuleName="account" [AccountId]="accountId"
+                                    [ObjectRefId]="accountId" (newItemEvent)="addItem($event)">
+
+                  </app-newnoteslist>-->
+                            <!--============================================================================================================================================-->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--=================================================== Contact add ==================================================================-->
+<div bsModal #addContact="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Contact</h4>
+
+                <button type="button" class="close" (click)="closeContact()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style="margin-bottom:10px; max-height:600px;">
+                <app-addcontact #addcontact12 [accountId]=accountId [contactId]="EditContactId" [isAccount]="isAccount" [ownerId]="ownerId" [solgenpower]="solgenpower" solgenpower=true [newItemEvent]="recordId" (contactemit)="contactmsg(true)"></app-addcontact>
+            </div>
+            <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>-->
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="isVisibleWelcomeCall">
+    <!--<div>
+    <app-voicecall #voiceCallPopup columnName="MobilePhone" refTable="tblContacts" refColumn="AccountId" refId="{{accountId}}" (refreshParentEmitter)="closeWelcomeCall()"></app-voicecall>
+  </div>-->
+    <div class="welcome-call active">
+        <app-welcomecallpopup #welcomecall title="Welcome Call" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="{{accountId}}" (refreshParentEmitter)="closeWelcomeCall()"></app-welcomecallpopup>
+    </div>
+</ng-container>
+
+
+<div id="audioModal" bsModal #audioModel="bs-modal" [config]="{backdrop: 'static'}" style=" background: none !important;" class="modal fade announcement-pop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="height:450px!important;width:100%!important; ">
+        <div class="modal-content" style="z-index:1; height:auto;">
+            <div class="modal-header">
+                <h4 class="modal-title">{{modalTitle}}</h4>
+                <button type="button" (click)="CloseAudio()" class="close" data-dismiss="modal" aria-label="Close" style="padding: 13px 17px;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style="overflow-y: visible; overflow-x: visible;">
+                <ng-container *ngIf="isAudio; else elseblock">
+                    <div class="text-center">
+                        <audio controls controlsList="nodownload" [src]="audioSrc" href="audioSrc" type="audio/ogg" style="width:100%!important">
+              Browser not supported
+            </audio>
+                        <!--<iframe [src]="audioSrc" width="100%" height="100%" frameBorder="0" ></iframe>-->
+                    </div>
+                </ng-container>
+
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<app-addeditprojectrequirements #addeditprojectrequirements (callGetRequirementListingData)="callRequirementListingData(true)"></app-addeditprojectrequirements>
+<app-accountJurisdiction #addeditaccountJurisdiction (callGetJurisdictionListingData)="callGetJurisdictionListingData(true)"></app-accountJurisdiction>

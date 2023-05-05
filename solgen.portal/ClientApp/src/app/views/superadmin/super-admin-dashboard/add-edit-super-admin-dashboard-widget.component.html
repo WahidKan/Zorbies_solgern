@@ -1,0 +1,67 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<div class="clearfix"></div>
+<div class="panel" style="background:none;">
+  <div class="panel-content p-3"> 
+    <ng-container *ngIf='tilewidget'>
+      <h3 class="form-heading mt-0">Count Widgets</h3>
+      <div class="row mb-2">
+        <div id="dashboardtabs" class="col-12 mb-3">
+          <div class="tabs tabs-linetriangle edit-dash">
+            <ul class="nav nav-tabs group2  ">
+              <li *ngFor="let widget of tilewidget" class="my-2">
+                <span class="d-block main-c py-0">
+                  <span class="custom-control custom-checkbox mb-4">
+                    <input class="custom-control-input" [id]="widget.widgetID" type="checkbox" [checked]="widget.isSelected" (change)="onChange(widget.widgetID,widget.widgetGroupCode,$event)">
+                    <label class="custom-control-label" [for]="widget.widgetID">&nbsp;</label>
+                  </span>
+                  <a href="javascript:void(0);" [ngStyle]="{'background-color':widget.widgetBoxClass}">
+                    <span class="headingtext" [ngStyle]="{'color':widget.widgetTextClass}">
+                      {{widget.widgetName}}
+                    </span>
+                    <span class="numbers" [ngStyle]="{'color':widget.widgetTextClass}" *ngIf="widget.widgetGroupCode =='Tile_Widget'">##</span>
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+
+    <ng-container *ngIf='widgetTableData'>
+      <h3 class="form-heading mt-0">List Widgets</h3>
+      <div class="row mb-2">
+        <div id="dashboardtabs" class="col-12 mb-3">
+          <div class="tabs tabs-linetriangle edit-dash">
+            <ul class="nav nav-tabs group2  ">
+              <li *ngFor="let widget of widgetTableData" class="my-2">
+                <span class="d-block main-c py-0">
+                  <span class="custom-control custom-checkbox mb-4">
+                    <input class="custom-control-input" [id]="widget.widgetID  + widget.widgetGroupCode" type="checkbox" [checked]="widget.isSelected" (change)="onGraphChange(widget.widgetID,widget.widgetGroupCode,$event)">
+                    <label class="custom-control-label" [for]="widget.widgetID + widget.widgetGroupCode">&nbsp;</label>
+                  </span>
+                  <a href="javascript:void(0);" [ngStyle]="{'background-color':widget.widgetBoxClass}">
+                    <span class="headingtext" [ngStyle]="{'color':widget.widgetTextClass}" style="padding-right:5px;">
+                      <strong>{{widget.widgetName}}</strong>
+                    </span>
+                    <span style="text-align: center; margin-top: 5px;">
+                      <img src="../../../assets/default-theme/imagesNew/table.png" style="height:auto;width:100%" />
+                    </span>
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="row mb-3">
+      <div class="col-sm-12 col-md-12 text-right">
+        <a href="javascript:void(0);" *ngIf='tilewidget != null' class="btn btn-success mr-1" (click)="save()"><i class="feather-save"></i> Submit</a>
+        <a href="javascript:void(0);" class="btn btn-danger" (click)="Cancel()"><i class="fa fa-times"></i> Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,348 @@
+<app-breadcrumb *ngIf="!loadSave" [data]="contentHeader">
+</app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Company Setup</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a routerLink="/dashboard">Dashboard</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="panel">
+    <div class="panel-content p-3">
+        <form [formGroup]="companysetupForm" autocomplete="off">
+            <div class="row mx-auto mb-2">
+                <h3 class="form-heading ng-star-inserted"><span>General Information</span></h3>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-4">
+                        <label>Company Name:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <input type="text" class="form-control" formControlName="companyName" maxlength="100" placeholder="Enter Company Name" [ngClass]="{'is-invalid': (companyName.invalid && (companyName.dirty || companyName.touched) && (companyName.errors?.required || companyName.errors?.maxlength)) }">
+                            <small *ngIf="companyName.invalid && (companyName.dirty || companyName.touched) && companyName.errors?.required" class="text-danger">Company Name is required</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-4">
+                        <label>Company Type:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <ng-select [items]="lstCompantType" placeholder="Select company Type" formControlName="companyType" bindValue="value" bindLabel="text" [ngClass]="{'is-invalid': (companyType.invalid && (companyType.dirty || companyType.touched) && companyType.errors?.required) }"
+                                class="custom"></ng-select>
+                            <small *ngIf="companyType.invalid && (companyType.dirty || companyType.touched) && companyType.errors?.required" class="text-danger">Please Company Type</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-4">
+                        <label>Phone:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <input Class="form-control" mask="(999) 999-9999" formControlName="phone" placeholder="(___) ___-____" [ngClass]="{'is-invalid': (phone.invalid && (phone.dirty || phone.touched) && (phone.errors?.required || phone.errors?.pattern)) }">
+
+                            <small *ngIf="phone.invalid && (phone.dirty || phone.touched) && phone.errors?.required" class="text-danger">Phone is required</small>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4">
+                        <label>Select company Logo Image:</label>
+                        <div class="form-group">
+                            <!-- <div class="col-md-9 col-lg-9 mb-0 p-0 float-left">
+                <div class="custom-file w-100">
+                  <input class="custom-file-input" #file type="file" name='file' #fileInput [accept]="fileExtension" (change)="setFile($event)" lang="es">
+                  <label class="custom-file-label">{{fileName}}</label>
+                </div>
+                <small>Valid image format is {{fileExtension}}</small>
+              </div> -->
+                            <div class="col-md-9 col-lg-9 mb-0 p-0 float-left">
+                                <div class="custom-file w-100">
+                                    <input class="custom-file-input" #file type="file" name='file' #fileInput [accept]="fileExtension" (change)="setFile($event)" lang="es">
+                                    <label class="custom-file-label">{{fileName}}</label>
+                                </div>
+                                <small class="text-danger">Valid file format is {{fileExtension}}</small>
+                            </div>
+                            <div class="col-md-3 col-lg-3 mb-0 float-left pl-0 pl-md-3 pr-0" *ngIf="imageLink!=''">
+                                <span class="uploadedimg">
+                  <img src={{imageLink}} alt="img" style="height: 28px; width: 75px; margin-top: 3px; cursor: pointer" data-toggle="modal" data-target="#myModal"><a href="javascript:void(0);" (click)="delImage(userID,fileUrl)" class="" *ngIf="imageLink.indexOf('NoImage')<0"><i title="Delete" class="feather-trash-2"></i></a>
+                </span>
+                                <div id="myModal" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" style="height:450px!important;width:450px!important; ">
+                                        <div class="">
+                                            <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-content">
+                                            <div class="text-center">
+                                                <img src={{imageLink}} alt="img" style="height:450px!important;width:450px!important; " class="img-responsive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4">
+                        <label>Select company Email Template Image:</label>
+                        <div class="form-group">
+                            <div class="col-md-9 col-lg-9 mb-0 p-0 float-left">
+                                <div class="custom-file w-100">
+                                    <input class="custom-file-input" #file type="file" name='file' #fileInputemail [accept]="fileExtension" (change)="setFileemail($event)" lang="es">
+                                    <label class="custom-file-label">{{fileNameemail}}</label>
+                                </div>
+                                <small class="text-danger">Valid file format is {{fileExtension}}</small>
+                            </div>
+                            <div class="col-md-3 col-lg-3 mb-0 float-left pl-0 pl-md-3 pr-0" *ngIf="imageLink!=''">
+                                <span class="uploadedimg">
+                  <img src={{imageLinkemail}} alt="img" style="height: 28px; width: 75px; margin-top: 3px; cursor: pointer" data-toggle="modal" data-target="#myModal1"><a href="javascript:void(0);" (click)="delImageemail(userID,fileUrl)" class="" *ngIf="imageLink.indexOf('NoImage')<0"><i title="Delete" class="feather-trash-2"></i></a>
+                </span>
+                                <div id="myModal1" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" style="height:450px!important;width:450px!important; ">
+                                        <div class="">
+                                            <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-content">
+                                            <div class="text-center">
+                                                <img src={{imageLinkemail}} alt="img" style="height:450px!important;width:450px!important; " class="img-responsive">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-4" style="display: none !important;">
+                        <label>Refresh Interval (Minute):<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <input type="text" pKeyFilter="int" maxlength="3" class="form-control" placeholder="Enter Refresh Interval Minute" formControlName="referenceInterval" [ngClass]="{'is-invalid':(referenceInterval.invalid && (referenceInterval.dirty || referenceInterval.touched) && (referenceInterval.errors?.required || referenceInterval.errors?.maxlength)) }"
+                            />
+                            <!-- <small *ngIf="referenceInterval.invalid && (referenceInterval.dirty || referenceInterval.touched) && referenceInterval.errors?.required"
+                     class="text-danger">Reference Interval required</small>
+              <small *ngIf="referenceInterval.invalid && (referenceInterval.dirty || referenceInterval.touched) && referenceInterval.errors?.min"
+                     class="text-danger">Reference Interval should be greater than 5</small> -->
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+                        <label>Auto Save Interval (Minute):<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <input type="text" pKeyFilter="int" maxlength="2" min="2" class="form-control" placeholder="Enter Auto Save Interval Minute" formControlName="autoSaveInterval" [ngClass]="{'is-invalid':(autoSaveInterval.invalid && (autoSaveInterval.dirty || autoSaveInterval.touched) && (autoSaveInterval.errors?.required || autoSaveInterval.errors?.maxlength)) }"
+                            />
+                            <small *ngIf="autoSaveInterval.invalid && (autoSaveInterval.dirty || autoSaveInterval.touched) && autoSaveInterval.errors?.required" class="text-danger">Auto Save Interval required</small>
+                            <small *ngIf="autoSaveInterval.invalid && (autoSaveInterval.dirty || autoSaveInterval.touched) && autoSaveInterval.errors?.min" class="text-danger">Auto Save Interval should be greater than 2</small>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4 " *ngIf="isSolar !=  true">
+                        <label>Loan Document Signer:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <ng-select [items]="lstSignerType" placeholder="Select Signer Type" formControlName="signerType" bindValue="value" bindLabel="text" (change)="dropdownChange($event)" [ngClass]="{'is-invalid': (signerType.invalid && (signerType.dirty || signerType.touched) && signerType.errors?.required) }"></ng-select>
+                            <small *ngIf="signerType.invalid && (signerType.dirty || signerType.touched) && signerType.errors?.required" class="text-danger">Please Select Primary Signer</small>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-md-12 col-lg-4" *ngIf="isSolar != true">
+                        <label></label>
+                        <div class="form-group" style="margin-top:15px;font-size:large">
+                            <label>Loan Document Signer:&nbsp;&nbsp;</label><span>{{PrimarySigner}}</span>
+                        </div>
+                    </div> -->
+                </div>
+
+                <h3 class="form-heading ng-star-inserted mt-4"><span>Company Address</span></h3>
+                <div class="clearfix"></div>
+                <div class="col-md-12 p-0">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-4">
+                            <label>Address Line 1:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <textarea type="text" class="form-control" formControlName="addressLineOne" placeholder="Enter address line 1" [ngClass]="{'is-invalid': (addressLineOne.invalid && (addressLineOne.dirty || addressLineOne.touched) && (addressLineOne.errors?.required || address.errors?.maxlength)) }"></textarea>
+                                <small *ngIf="addressLineOne.invalid && (addressLineOne.dirty || addressLineOne.touched) && addressLineOne.errors?.required" class="text-danger">Address  is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <label>Address Line 2:</label>
+                            <div class="form-group">
+                                <textarea maxlength="300" type="text" class="form-control" formControlName="addressLineTwo" placeholder="Enter address line 2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-lg-4">
+                            <label>Country:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <!-- <input type="text" class="form-control" placeholder="Enter Country" formControlName="country" [ngClass]="{'is-invalid': (country.invalid && (country.dirty || country.touched) && (country.errors?.required || country.errors?.maxlength)) }"> -->
+                                <ng-select [items]="countryLists" placeholder="Select Country" bindValue="value" bindLabel="text" [closeOnSelect]="true" formControlName="country" [ngClass]="{'is-invalid': (country.invalid && (country.dirty || country.touched) && (country.errors?.required || country.errors?.maxlength)) }">
+                                </ng-select>
+                                <small *ngIf="country.invalid && (country.dirty || country.touched) && country.errors?.required" class="text-danger">Country is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <label>State:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="lstStates" placeholder="Select State" formControlName="state" bindValue="value" bindLabel="text" [ngClass]="{'is-invalid': (state.invalid && (state.dirty || state.touched) && state.errors?.required) }"></ng-select>
+                                <small *ngIf="state.invalid && (state.dirty || state.touched) && state.errors?.required" class="text-danger">Please select State</small>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <label>City:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter City" formControlName="city" [ngClass]="{'is-invalid': (city.invalid && (city.dirty || city.touched) && (city.errors?.required || city.errors?.maxlength)) }">
+                                <small *ngIf="city.invalid && (city.dirty || city.touched) && city.errors?.required" class="text-danger">City is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <label>Zip/Postal Code:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter Zip Code" formControlName="zipCode" [ngClass]="{'is-invalid': (zipCode.invalid && (zipCode.dirty || zipCode.touched) && (zipCode.errors?.required || zipCode.errors?.maxlength)) }">
+                                <small *ngIf="zipCode.invalid && (zipCode.dirty || zipCode.touched) && zipCode.errors?.required" class="text-danger">Zip Code is required</small>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <h3 class="form-heading ng-star-inserted mt-4"><span>Email Settings</span></h3>
+                <div class="clearfix"></div>
+                <div class="col-md-12 p-0">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-4">
+                            <label>SMTP Host:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter SMTP Host (smtp.gmail.com)" formControlName="smtpHost" [ngClass]="{'is-invalid': (smtpHost.invalid && (smtpHost.dirty || smtpHost.touched) && (smtpHost.errors?.required || smtpHost.errors?.maxlength)) }">
+                                <small *ngIf="smtpHost.invalid && (smtpHost.dirty || smtpHost.touched) && smtpHost.errors?.required" class="text-danger">SMTP Host is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <label>SMTP Username:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter SMTP Usrname" formControlName="smtpUsername" [ngClass]="{'is-invalid': (smtpUsername.invalid && (smtpUsername.dirty || smtpUsername.touched) && (smtpUsername.errors?.required || smtpUsername.errors?.maxlength)) }">
+                                <small *ngIf="smtpUsername.invalid && (smtpUsername.dirty || smtpUsername.touched) && smtpUsername.errors?.required" class="text-danger">SMTP Username is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <label>SMTP Password:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Enter SMTP Password" passwordToggle formControlName="smtpPassword" [ngClass]="{'is-invalid': (smtpPassword.invalid && (smtpPassword.dirty || smtpPassword.touched) && (smtpPassword.errors?.required || smtpPassword.errors?.maxlength)) }">
+                                <small *ngIf="smtpPassword.invalid && (smtpPassword.dirty || smtpPassword.touched) && smtpPassword.errors?.required" class="text-danger">SMTP Password is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <label>SMTP Port:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter SMTP Port" formControlName="smtpPort" [ngClass]="{'is-invalid': (smtpPort.invalid && (smtpPort.dirty || smtpPort.touched) && (smtpPort.errors?.required || smtpPort.errors?.maxlength)) }">
+                                <small *ngIf="smtpPort.invalid && (smtpPort.dirty || smtpPort.touched) && smtpPort.errors?.required" class="text-danger">SMTP Port is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <label>From Email:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" formControlName="fromEmail" placeholder="Enter From Email" [ngClass]="{'is-invalid': (fromEmail.invalid && (fromEmail.dirty || fromEmail.touched) && (fromEmail.errors?.required || fromEmail.errors?.maxlength)) }">
+                                <small *ngIf="fromEmail.invalid && (fromEmail.dirty || fromEmail.touched) && fromEmail.errors?.required" class="text-danger">From Email is required</small>
+                            </div>
+                        </div>
+
+                        <!--<div class="col-md-12 col-lg-4">
+
+              <label>Enable TLS:</label>
+
+              <div class="form-group">
+                <label class="switch">
+                  <input type="checkbox" formControlName="IsTLS">
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+
+            </div>-->
+
+                        <div class="col-md-12 col-lg-4">
+                            <label>Enable SSL:</label>
+                            <div class="form-group">
+                                <label class="switch">
+                  <input type="checkbox" formControlName="IsEnableSSL">
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-12">
+                    <a *ngIf="isUpdate" href="javascript:void(0);" class="btn btn-success mr-2" (click)="AddEditCompanySetup()"><i class="feather-save"></i> Submit</a>
+                    <a *ngIf="isUpdate" href="javascript:void(0);" class="btn btn-white mr-2" (click)="Cancel()"><i class="feather-rotate-ccw"></i> Reset</a>
+                    <a *ngIf="isUpdate" href="javascript:void(0)" (click)="checktestemail()" class="btn btn-blue"><i class="fa fa-key"></i> Check Test Email</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>
+
+
+
+<div class="modal fade show" bsModal #changePassModal="bs-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="headerexampleModalLabel">Test Email</h4>
+                <button #closeButton type="button" (click)="closepopup()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="testEmailForm">
+                    <div class="row mt-3">
+
+                        <!--<div class="col-sm-6">
+              <label>SMTP Host : </label>
+              <div class="form-group">
+                <input type="text" class="form-control" disabled formControlName="smtpHosttest">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label>SMTP Port : </label>
+              <div class="form-group">
+                <input type="text" class="form-control" disabled formControlName="smtpPorttest">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label>SMTP Username : </label>
+              <div class="form-group">
+                <input type="text" class="form-control" disabled formControlName="smtpUN">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label>From Email : </label>
+              <div class="form-group">
+                <input type="text" class="form-control" disabled formControlName="fromEmailtest">
+              </div>
+            </div>-->
+                        <div class="col-sm-6">
+                            <label>Email:</label><span class="text-danger">*</span>
+                            <div class="form-group">
+                                <input class="form-control" type="text" formControlName="emailTo" [ngClass]="{'is-invalid': (emailTo.invalid && (emailTo.dirty || emailTo.touched) && (emailTo.errors?.required || emailTo.errors?.email)) }">
+                                <small *ngIf="emailTo.invalid && (emailTo.dirty || emailTo.touched) && emailTo.errors?.required" class="text-danger">Email is required</small>
+
+                                <small *ngIf="emailTo.invalid && (emailTo.dirty || emailTo.touched) && emailTo.errors?.email" class="text-danger">Please enter valid email address</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Message:</label><span class="text-danger">*</span>
+                            <div class="form-group">
+                                <input class="form-control" type="text" formControlName="messageText" [ngClass]="{'is-invalid': (messageText.invalid && (messageText.dirty || messageText.touched) && (messageText.errors?.required)) }">
+                                <small *ngIf="messageText.invalid && (messageText.dirty || messageText.touched) && messageText.errors?.required" class="text-danger">Message is required</small>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success form-btns" (click)="sendEmail();"><i class="feather-save"></i> Send Email</button>
+                <button type="submit" class="btn btn-danger form-btns" (click)="closepopup()"><i class="feather-x text-white"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>

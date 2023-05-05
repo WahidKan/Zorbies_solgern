@@ -1,0 +1,214 @@
+<div [formGroup]="leaseRequestDetailForm" class="row">
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Perposal Request:<span class="text-danger">*</span></label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Please enter the requirement of Perposal Requested.</span>
+    </span>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="leaseRequest" maxlength="100"
+             [ngClass]="{'is-invalid': (leaseRequest.invalid && (leaseRequest.dirty || leaseRequest.touched) && (leaseRequest.errors?.required || leaseRequest.errors?.maxlength)) }">
+      <small *ngIf="leaseRequestDetailForm.get('leaseRequest').touched
+             && leaseRequestDetailForm.get('leaseRequest').errors?.required" class="text-danger">
+        Perposal Request is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>
+      Rate To Bank (%):
+    </label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Please enter Rate To Bank.Rate Percentage should not more than 100.</span>
+    </span>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="leaseRequestRateToBank" maxlength="5"
+             [ngClass]="{'is-invalid': (leaseRequestRateToBank.invalid && (leaseRequestRateToBank.dirty || leaseRequestRateToBank.touched) && (leaseRequestRateToBank.errors?.required)) }">
+
+      <small *ngIf="leaseRequestDetailForm.get('leaseRequestRateToBank').errors?.notValid"
+             style="color:red;">Please enter valid Rate To Bank</small>
+
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Term:<span class="text-danger">*</span></label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Perposal Term is tenture of your perposal and revenue of lease.</span>
+    </span>
+    <div class="form-group">
+      <ng-select [items]="lstterms"
+                 placeholder="Select Term" bindValue="value" bindLabel="text" formControlName="leaseRequestTerm"
+                 [ngClass]="{'is-invalid': (leaseRequestDetailForm.get('leaseRequestTerm').invalid && (leaseRequestDetailForm.get('leaseRequestTerm').dirty || leaseRequestDetailForm.get('leaseRequestTerm').touched) && (leaseRequestDetailForm.get('leaseRequestTerm').errors?.required)) }"></ng-select>
+      <small *ngIf="leaseRequestDetailForm.get('leaseRequestTerm').touched && leaseRequestDetailForm.get('leaseRequestTerm').errors?.required" class="text-danger">
+        Term is required
+      </small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Payment ({{this.commonService.GetCurrency()}}):</label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Perposal Amount and your strength of Perposal.</span>
+    </span>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="leaseRequestPayment" maxlength="10" />
+      <small *ngIf="leaseRequestDetailForm.get('leaseRequestPayment').errors?.pattern"
+             class="text-danger">Please enter valid Payment</small>
+
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Residual Percentage:</label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Please enter Residual Amount amount here.</span>
+    </span>
+    <div class="form-group">
+      <ng-select [items]="lstrespercentages"
+                 placeholder="Select Percentage" bindValue="value" bindLabel="text" formControlName="leaseRequestResidual"></ng-select>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-12 col-lg-12">
+    <label>Collateral Information (Year, Make, Model):</label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Collateral Information is information about the Perposal(Year, Make, Model).</span>
+    </span>
+    <div class="form-group">
+      <textarea type="text" class="form-control" formControlName="leaseRequestCollateral"> </textarea>
+    </div>
+  </div>
+  <div class="col-12 col-md-12 col-lg-12">
+    <label>Collateral Description:</label>
+      <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Collateral Decsription is second information about the Perposal.</span>
+    </span>
+    <div class="form-group">
+      <textarea type="text" class="form-control" formControlName="leaseRequestDescription"></textarea>
+    </div>
+  </div>
+  <div class="col-12 col-md-12 col-lg-12">
+    <label class="m-label-s">Perposal purpose and source of payment:</label>
+    <hr size="4" class="mt-0 border-secondary">
+  </div>
+  <div class="col-12 col-md-12 col-lg-12">
+    <label>Purpose:<span class="text-danger">*</span></label>
+      <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Please enter the Purpose of Perposal</span>
+    </span>
+    <div class="form-group">
+      <textarea class="form-control" formControlName="leaseRequestPurpose" maxlength="1000"
+                [ngClass]="{'is-invalid': (leaseRequestPurpose.invalid && (leaseRequestPurpose.dirty || leaseRequestPurpose.touched) && (leaseRequestPurpose.errors?.required || leaseRequestPurpose.errors?.maxlength)) }"></textarea>
+      <small *ngIf="leaseRequestDetailForm.get('leaseRequestPurpose').touched && leaseRequestDetailForm.get('leaseRequestPurpose').errors?.required" class="text-danger">
+        Purpose is required
+      </small>
+    </div>
+  </div>
+  <style>
+   
+  </style>
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>SOR #1:<span class="text-danger">*</span></label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">SOR #1 is first source of Return.</span>
+    </span>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="leaseRequestSOROne" maxlength="200"
+             [ngClass]="{'is-invalid': (leaseRequestSOROne.invalid && (leaseRequestSOROne.dirty || leaseRequestSOROne.touched) && (leaseRequestSOROne.errors?.required || leaseRequestSOROne.errors?.maxlength)) }">
+      <small *ngIf="leaseRequestDetailForm.get('leaseRequestSOROne').touched && leaseRequestDetailForm.get('leaseRequestSOROne').errors?.required" class="text-danger">
+        SOR #1 is required
+      </small>
+    </div>
+
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>SOR #2:</label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">SOR #2 is second source of Return</span>
+    </span>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="leaseRequestSORTwo" maxlength="200">
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>SOR #3:</label>
+    
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">SOR #3 is single amount you should change the proveide information of the lease to another vendor transfer</span>
+    </span>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="leaseRequestSORThree" maxlength="200">
+    </div>
+  </div>
+  <div class="col-12 col-md-12 col-lg-12">
+    <label class="m-label-s">Deposit Account if Required:</label>
+    <hr size="4" class="mt-0 border-secondary">
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Account Type:<span class="text-danger"></span></label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Please enter your Account Type</span>
+    </span>
+    <div class="form-group">
+      <textarea class="form-control" formControlName="leaseRequestAccountType" maxlength="1000"></textarea>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Bank Name:<span class="text-danger"></span></label>
+        <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Please enter the Bank Name here.</span>
+    </span>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="leaseRequestBankName" maxlength="200">
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Name on Account:<span class="text-danger"></span></label>
+    
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Please enter Name on Account.</span>
+    </span>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="leaseRequestNameOnBank" maxlength="200" />
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Balance ({{this.commonService.GetCurrency()}}):<span class="text-danger"></span></label>
+     <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Please enter Balance.</span>
+    </span>
+    <div class="form-group">
+      <input type="text" class="form-control" formControlName="leaseRequestBalance" maxlength="200" />
+      <small *ngIf="leaseRequestDetailForm.get('leaseRequestBalance').touched && leaseRequestDetailForm.get('leaseRequestBalance').errors?.pattern"
+             class="text-danger">Please enter valid Balance</small>
+    </div>
+  </div>
+  <div class="col-12 col-md-12 col-lg-12">
+    <label class="m-label-s">Company Overview:</label>
+    <span class="customTooltip">
+      <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+      <span class="customToolTiptext">Enter detail overview of the your company,profile and achievements of the company</span>
+    </span>
+    <hr size="4" class="mt-0 border-secondary">
+  </div>
+  <div class="col-12 col-md-12 col-lg-12">
+    <div class="form-group">
+      <textarea type="text" class="form-control" formControlName="leaseRequestCompanyoverview"></textarea>
+    </div>
+  </div>
+</div>
+

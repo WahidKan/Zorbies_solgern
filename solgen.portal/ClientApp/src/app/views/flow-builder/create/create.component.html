@@ -1,0 +1,129 @@
+<div bsModal #createModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" *ngIf="createRecordForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Create Records</h5>
+                <button type="button" (click)="closeCreateModal()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div *ngIf="createRecordForm && nodeId" [formGroup]="createRecordForm">
+                    <p>Create records using values from the flow.</p>
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <label for="label" class="form-label"> <span style="color: red;">*</span> Label (Max Char Limit 50)</label>
+                            <input type="text" formControlName="name" maxlength="50" class="form-control" id="label" [ngClass]="{'is-invalid': (createName.invalid && (createName.dirty || createName.touched) && (createName.errors?.required || createName.errors?.maxlength)) }">
+                            <small *ngIf="(createName.invalid && (createName.dirty || createName.touched)) && createName.errors?.required" class="text-danger">label is required</small>
+                            <small *ngIf="(createName.invalid && (createName.dirty || createName.touched)) && createName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+                        </div>
+                        <div class="col-12">
+                            <label for="Description" class="form-label">Description (Max Char Limit 200)</label>
+                            <textarea formControlName="description" maxlength="200" class="form-control" id="Description" rows="2" [ngClass]="{'is-invalid': (createDescription.invalid && (createDescription.dirty || createDescription.touched) && (createDescription.errors?.required || createDescription.errors?.maxlength)) }"></textarea>
+                            <small *ngIf="(createDescription.invalid && (createDescription.dirty || createDescription.touched)) && createDescription.errors?.maxlength" class="text-danger">Description should be less then 200</small>
+                        </div>
+
+                        <hr class="mt-2 mb-2">
+
+                    </div>
+
+                    <div class="row">
+                        <!-- <div class="col-12">
+                            <strong>How Many Records to Create</strong>
+                            <div class="custom-control custom-radio">
+                                <input [checked]="true" formControlName="recordToCreate" value="One" type="radio" id="one" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="one">One</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input formControlName="recordToCreate" value="Two" type="radio" id="Multiple" name="customRadio" class="custom-control-input">
+                                <label class="custom-control-label" for="Multiple">Multiple</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <strong>How to Set the Record Fields</strong>
+                            <div class="custom-control custom-radio">
+                                <input [checked]="true" formControlName="setRecordValue" value="Use_all_values" type="radio" id="Radio1" name="customRadio1" class="custom-control-input">
+                                <label class="custom-control-label" for="Radio1">Use all values from a record</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input formControlName="setRecordValue" value="Use_separate_resources" type="radio" id="Radio2" name="customRadio1" class="custom-control-input">
+                                <label class="custom-control-label" for="Radio2">Use separate resources, and literal values</label>
+                            </div>
+                        </div>
+
+                        <hr class="mt-2 mb-2">
+
+                        <div class="col-7 ">
+
+                            <h6>Create a Record from These Values</h6>
+                            <label class="form-label"> <span style="color: red;">*</span> Record</label>
+                            <ng-select [items]="DUMMYDATA" bindLabel="text" bindValue="value" formControlName="recordValues" placeholder="Search records..." [closeOnSelect]="true" [virtualScroll]="true">
+                            </ng-select>
+                            <p>Make sure that ID is blank. After the flow creates the records, ID is set to match the record that was created.</p>
+                        </div>
+
+                        <div class="col-7">
+
+                            <h6>Select Values to Create Multiple Records</h6>
+                            <label class="form-label"> <span style="color: red;">*</span>Record Collection</label>
+                            <ng-select [items]="DUMMYDATA" bindLabel="text" bindValue="value" formControlName="recordCollection" placeholder="Search record collection..." [closeOnSelect]="true" [virtualScroll]="true">
+                            </ng-select>
+                            <p>
+                                For each item in the collection, make sure that ID is blank. After the flow creates the records, each ID is set to the ID of the corresponding record that was created.
+                            </p>
+                        </div> -->
+                        <div class="col-7">
+                            <h6>Create a Record of This Object</h6>
+                            <label class="form-label"> <span style="color: red;">*</span>Object</label>
+                            <ng-select (change)="GetObjectId($event)" appendTo="body" [items]="objectList" formControlName="subModuleId" placeholder="Select object" bindLabel="text" bindValue="value">
+                            </ng-select>
+                        </div>
+                        <hr class="mt-2 mb-2">
+                        <div class="col-12" *ngIf="createRecordForm && createRecordForm.get('subModuleId').value > 0">
+                            <div formArrayName="fieldMapping">
+                                <h6>Set Field Values for the Action Link Template Records</h6>
+                                <div *ngFor="let vm of createRecordForm.get('fieldMapping').controls;let i = index" [formGroupName]="i" class="row mt-2" class="row align-items-end justify-content-between mt-2">
+                                    <div class="col-3">
+                                        <label class="form-label">Field</label>
+                                        <ng-select [items]="customFieldList" appendTo="body" placeholder="Select" formControlName="customFieldId" required="required" appendTo="body" [closeOnSelect]="true" bindLabel="label" bindValue="form_field_id">
+                                        </ng-select>
+
+                                    </div>
+                                    <div class="col-1 align-self-center">
+                                        <span><i class="feather-arrow-left"></i></span>
+                                    </div>
+                                    <div *ngIf="isAutoLunched" class="col-3 pr-0">
+                                        <label class="form-label">Resource</label>
+                                        <ng-select [items]="resourceList" placeholder="Select object" groupBy="groupName" formControlName="resourceId" bindLabel="displayName" bindValue="id" (change)="onResourceChange($event,vm)" [appendTo]="'body'">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">Value</label>
+                                        <ng-select *ngIf="isAutoLunched" [items]="valueList" bindLabel="displayName" bindValue="PrimaryTableColumn" formControlName="value" [appendTo]="'body'" [addTag]="CreateNew" addTagText="add new value" placeholder="Enter value or search resources...">
+                                        </ng-select>
+                                        <ng-select *ngIf="!isAutoLunched" [items]="valueList" bindLabel="displayName" bindValue="id" formControlName="value" [appendTo]="'body'" [addTag]="CreateNew" addTagText="add new value" placeholder="Enter value or search resources...">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-1 ">
+                                        <button [disabled]="fieldMapping.length < 2" (click)="deleteField()" class="btn btn-danger form-btns mb-2" tooltip="Delete">
+                                <span><i class="feather-trash-2"></i></span>
+                             </button>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-3">
+                                        <button (click)="addField()" class="btn btn-success"><i class=" feather-plus"></i>Add Condition</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0);" (click)="saveCreateForm()" class="btn btn-success mr-2"><i class="feather-save"></i> Submit</a>
+                <a href="javascript:void(0);" class="btn btn-danger" (click)="closeCreateModal()"><i class="feather-x"></i> Cancel</a>
+            </div>
+        </div>
+    </div>

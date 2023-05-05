@@ -1,0 +1,286 @@
+<div bsModal #pauseModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" *ngIf="pauseForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Pause</h5>
+                <button type="button" (click)="closePauseModal()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+            </div>
+            <div class="modal-body" *ngIf="pauseForm && nodeId" [formGroup]="pauseForm" style="overflow-y: auto; max-height:  700px;">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label>Label:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <input type="text" formControlName="name" class="form-control" required="required" name="name" #name [ngClass]="{'is-invalid': (name.invalid && (name.dirty || name.touched) && name.errors?.required)}">
+                            <small *ngIf="name.invalid && (name.dirty || name.touched) && name.errors?.required" class="text-danger">Label is required</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label>Description:</label>
+                        <div class="form-group">
+                            <input type="text" formControlName="description" class="form-control" name="description" #description [ngClass]="{'is-invalid': (description.invalid && (description.dirty || description.touched) && description.errors?.required)}">
+                            <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.required" class="text-danger">Description is required</small>
+                        </div>
+                    </div>
+                </div>
+                <p>Add a pause configuration for each event that can resume the flow. Such an event can be a specified time or a platform event message. Pause conditions determine whether to pause the flow until the event occurs. When no pause conditions
+                    are met, the flow takes the default path without pausing. </p>
+                <div class="row pl-3 pb-3">
+                    <div class="card col-2 overflow-auto">
+                        <div class="card-title d-flex justify-content-between border-bottom">
+                            <p style="font-size:70%" class="mt-3 ">PAUSE CONFIGURATIONS
+                            </p>
+                            <div class="mt-3">
+                                <a (click)="addNewPauseConfig()" href="javascript:void(0);" class="btn btn-success form-btns mr-1 smview" tooltip="New Pause Configuration"><i
+                                    class="feather-plus"></i></a>
+                            </div>
+                        </div>
+                        <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+                            <li *ngFor="let pauseConfig of pauseConfigs.controls;let i=index" class="nav-item">
+                                <a style="font-size:80%" class="nav-link" #tabLinks data-toggle="tab" [ngClass]="{'show active':activeTab==i}" href="#newPauseConfig{{i}}" role="tab" aria-selected="true">{{pauseConfig.get('name').value}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a style="font-size:80%" class="nav-link" [class.show]="activeTab===-1" [class.active]="activeTab===-1" data-toggle="tab" href="#defaultPath" role="tab" aria-selected="true">Default Path</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card col-10">
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent" *ngIf="pauseConfigs">
+                                <div formArrayName="pauseConfigs" class="tab-pane fade" #tabContent *ngFor="let pauseConfig of pauseConfigs.controls;let i=index" [ngClass]="{'show active':activeTab==i}" id="newPauseConfig{{i}}">
+                                    <div [formGroup]="pauseConfig">
+                                        <h6 *ngIf="pauseConfigs.length > 1" class="card-title">
+                                            <div class="row justify-content-between">
+                                                <p class="h6 ml-2 font-weight-bold text-uppercase">PAUSE CONFIGURATION DETAILS</p>
+                                                <button (click)="deletePauseConfig($event,i)" class="btn btn-outline-secondary text-blue">Delete Pause Configuration</button>
+                                            </div>
+                                        </h6>
+                                        <div class="row mb-2">
+                                            <div class="col-md-6">
+                                                <label>Label:<span class="text-danger">*</span></label>
+                                                <div class="form-group">
+                                                    <input type="text" formControlName="name" class="form-control" name="name">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="nav nav-tabs nav-cust" role="tablist">
+                                                    <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#PAUSE_CONDITIONS{{i}}" role="tab" aria-controls="nav-profile" aria-selected="true">PAUSE CONDITIONS</a>
+                                                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#RESUME_EVENT{{i}}" role="tab" aria-controls="nav-contact" aria-selected="true">RESUME EVENT</a>
+                                                </div>
+                                            </div>
+                                            <div class="tab-content" id="nav-tabContent">
+                                                <div class="tab-pane fade show active" id="PAUSE_CONDITIONS{{i}}" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <label>when to Pause:<span
+                                                              class="text-danger">*</span></label>
+                                                            <div class="form-group">
+                                                                <ng-select [items]="decisionList" placeholder="Select condition" formControlName="condition" bindLabel="text" bindValue="value">
+                                                                </ng-select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-2" *ngIf="pauseConfig && pauseConfig.get('condition') && pauseConfig.get('condition').value === 3">
+                                                        <div class="col-md-12">
+                                                            <label>Condition Logic:<span class="text-danger">*</span></label>
+                                                            <div class="form-group">
+                                                                <input type="text" formControlName="customCondition" class="form-control" name="customCondition">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="pauseConfig.get('condition') && pauseConfig.get('condition').value !== 4">
+                                                        <div formArrayName="conditions" *ngIf="pauseConfig">
+                                                            <div *ngFor="let condition of pauseConfig.get('conditions').controls as FormArray; let j=index">
+                                                                <div [formGroup]="condition" class="row">
+                                                                    <div class="col-3 pr-0">
+                                                                        <label class="form-label">Resource</label>
+                                                                        <ng-select [items]="resourceList" placeholder="Select object" formControlName="resourceId" bindLabel="displayName" bindValue="id" (change)="onResourceChange($event,condition)" [appendTo]="'body'">
+                                                                        </ng-select>
+                                                                    </div>
+                                                                    <div class="col-3 pr-0" *ngIf="condition.get('isResource') && condition.get('isResource').value == true">
+                                                                        <label class="form-label">Field</label>
+                                                                        <ng-select [items]="condition.get('customfieldsList').value" placeholder="Select Field" formControlName="customFieldId" bindLabel="displayName" bindValue="PrimaryTableColumn" (change)="onFieldChange($event,condition)" [appendTo]="'body'">
+                                                                        </ng-select>
+                                                                    </div>
+                                                                    <div class="pr-0" [ngClass]="(condition.get('isResource') && condition.get('isResource').value != true) ? 'col-4': 'col-3'">
+                                                                        <label class="form-label">Operator</label>
+                                                                        <ng-select [items]="condition.get('operatorList').value" placeholder="Select Operator" formControlName="operator" bindLabel="text" bindValue="value" (change)="onOperatorChange($event,condition)" [appendTo]="'body'">
+                                                                        </ng-select>
+                                                                    </div>
+                                                                    <div class="pr-0" [ngClass]="(condition.get('isResource') && condition.get('isResource').value != true) ? 'col-4': 'col-2'">
+                                                                        <label for="Value" class="form-label">Value</label>
+                                                                        <input type="text" formControlName="value" class="form-control" name="value">
+                                                                    </div>
+                                                                    <div class="col-1 text-center mt-4">
+                                                                        <button [disabled]="pauseConfig.get('conditions').length < 2" (click)="deleteCondition($event,i,j)" class="btn btn-danger form-btns" tooltip="Delete">
+                                                                        <span><i class="feather-trash-2"></i></span>
+                                                                    </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-3">
+                                                                <button (click)="addCondition(i)" class="btn btn-outline-secondary"><i
+                                                                                                      class="feather-plus"></i>Add Condition</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" *ngIf="pauseConfig.get('resumeEvent')" id="RESUME_EVENT{{i}}" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                                    <p>When this event occurs, the flow resumes and takes the associated path.</p>
+                                                    <strong>Pause Until...<span class="text-danger">*</span></strong>
+                                                    <div [formGroup]="pauseConfig.get('resumeEvent')" class="row">
+                                                        <div class="col-12">
+                                                            <div class="nav nav-tabs nav-cust" role="tablist">
+                                                                <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#A_SPECIFIED_TIME" role="tab" aria-controls="nav-profile" aria-selected="true">A Specified Time</a>
+                                                                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#PLATEFORM_EVENT" role="tab" aria-controls="nav-contact" aria-selected="true">A Platform Event Message is Received</a>
+                                                            </div>
+
+                                                            <div class="tab-content" id="nav-tabContent">
+                                                                <div class="tab-pane fade show active" id="A_SPECIFIED_TIME" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <strong>
+                                                                              Time Source<span class="text-danger">*</span>
+                                                                            </strong>
+                                                                            <div class="custom-control custom-radio">
+                                                                                <input (change)="showHideDefineResumeTime()" id="Specific_time" name="timeSource" formControlName="timeSource" value="Specific_time" type="radio" class="custom-control-input" [checked]="true">
+                                                                                <label class="custom-control-label" for="Specific_time">Specific time</label>
+                                                                            </div>
+                                                                            <div class="custom-control custom-radio">
+                                                                                <input (change)="showHideDefineResumeTime()" id="record_field" name="timeSource" formControlName="timeSource" value="A_record_field" type="radio" class="custom-control-input">
+                                                                                <label for="record_field" class="custom-control-label">A record field</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr class="mt-2 mb-2">
+
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <h5>
+                                                                                Define Resume Time
+                                                                            </h5>
+                                                                            <div *ngIf="isVisibleSpecificTimeFields">
+                                                                                <label>Base Time<span class="text-danger">*</span></label>
+                                                                                <div class="form-group">
+                                                                                    <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " formControlName="baseTime" [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div *ngIf="isVisibleRecordFieldFields">
+                                                                        <div class="row">
+                                                                            <div class="col-6">
+                                                                                <label>Object<span class="text-danger">*</span></label>
+                                                                                <div class="form-group">
+                                                                                    <input type="text" formControlName="object" class="form-control" name="object">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-6">
+                                                                                <label>Field<span class="text-danger">*</span></label>
+                                                                                <div class="form-group">
+                                                                                    <input type="text" formControlName="field" class="form-control" name="field">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-6">
+                                                                                <label>Record ID<span class="text-danger">*</span></label>
+                                                                                <div class="form-group">
+                                                                                    <!-- <ng-select [items]="DUMMYDATA" placeholder="Enter value or research sources..." formControlName="recordId" bindLabel="text" bindValue="value" [appendTo]="'body'">
+                                                                                    </ng-select> -->
+                                                                                    <input type="text" formControlName="recordId" class="form-control" name="field">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <label>Offset Number</label>
+                                                                            <div class="form-group">
+                                                                                <input type="text" formControlName="offSetNumber" class="form-control" name="offSetNumber">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <label>Offset Unit (Hours or Days)</label>
+                                                                            <div class="form-group">
+                                                                                <input type="text" formControlName="offSetUnit" class="form-control" name="offSetUnit">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!--<hr class="mt-2 mb-2">
+                                                                 <div class="row">
+                                                                        <div class="col-6">
+                                                                            <h5>
+                                                                                Store Output Values in Variables
+                                                                            </h5>
+                                                                            <label>Resume Time</label>
+                                                                            <div class="form-group">
+                                                                                <ng-select [items]="DUMMYDATA" placeholder="Search variable..." formControlName="resumeTime" bindLabel="text" bindValue="value" [appendTo]="'body'">
+                                                                                </ng-select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <label>Event Delivery Status</label>
+                                                                            <div class="form-group">
+                                                                                <ng-select [items]="DUMMYDATA" placeholder="Search variable..." formControlName="eventDelivery" bindLabel="text" bindValue="value" [appendTo]="'body'">
+                                                                                </ng-select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> -->
+                                                                </div>
+                                                                <div class="tab-pane fade" id="PLATEFORM_EVENT" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                                                    <p>PLATEFORM EVENT</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="defaultPath" [class.show]="activeTab===-1" [class.active]="activeTab===-1">
+                                    <h6 class="card-title">
+                                        <div class="row justify-content-between">
+                                            <p class="h6 ml-2 font-weight-bold text-uppercase">PAUSE CONFIGURATION DETAILS</p>
+                                        </div>
+                                    </h6>
+                                    <div class="row mb-2">
+                                        <div class="col-md-6">
+                                            <label>Default Path Label:<span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <input type="text" formControlName="defaultPath" value="Default Path" class="form-control" name="defaultPath">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0);" (click)="savePauseForm()" class="btn btn-success mr-2"><i class="feather-save"></i> Submit</a>
+                <a href="javascript:void(0);" class="btn btn-danger" (click)="closePauseModal()"><i class="fa fa-times"></i> Cancel</a>
+            </div>
+
+        </div>

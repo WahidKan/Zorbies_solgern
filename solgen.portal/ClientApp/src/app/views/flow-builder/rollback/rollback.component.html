@@ -1,0 +1,50 @@
+<div bsModal #rollBackModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" *ngIf="rollBackForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Roll Back Records</h5>
+                <button type="button" (click)="closeRollBackModal()" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div>
+                    <div *ngIf="rollBackForm && nodeId" [formGroup]="rollBackForm">
+                        <div class="row">
+                            <div class="col-6 col-md-6 col-lg-6">
+                                <label>Name (Max Char Limit 50)<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <input id="nameInput" maxlength="50" class="form-control" formControlName="name"[ngClass]="{'is-invalid': (rollBackName.invalid && (rollBackName.dirty || rollBackName.touched) && (rollBackName.errors?.required || rollBackName.errors?.maxlength)) }">
+                                    <small *ngIf="(rollBackName.invalid && (rollBackName.dirty || rollBackName.touched)) && rollBackName.errors?.required" class="text-danger">label is required</small>
+                                    <small *ngIf="(rollBackName.invalid && (rollBackName.dirty || rollBackName.touched)) && rollBackName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 col-lg-12">
+                                <label>Description (Max Char Limit 200)</label>
+                                <div class="form-group">
+                                    <textarea class="form-control" maxlength="200" formControlName="description"  [ngClass]="{'is-invalid': (rollBackDescription.invalid && (rollBackDescription.dirty || rollBackDescription.touched) && rollBackDescription.errors?.maxlength)}"></textarea>
+                                    <small
+                            *ngIf="rollBackDescription.invalid && (rollBackDescription.dirty || rollBackDescription.touched) && rollBackDescription.errors?.maxlength"
+                            class="text-danger">Description should be less then 200</small>
+                                </div>
+                            </div>
+
+                            <hr class="mt-2 mb-2">
+
+                            <div class="col-12 col-md-12 col-lg-12">
+                                <h6>Learn about this element</h6>
+                                <p>When a flow runs, record changes are executed and saved to the database as part of a transaction. This element rolls back the current transaction and cancels all its pending record changes. To roll back changes based on
+                                    business logic, add this element in a Decision element’s outcome. To roll back changes when an error occurs, add this element in a Fault path. To roll back all record changes in a transaction, add this element to the
+                                    end of the transaction.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success form-btns" (click)="saveRollBackForm()"><i class="feather-save text-white pr-2"></i>Submit</button>
+                <button type="button" class="btn btn-danger form-btns" (click)="closeRollBackModal()" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

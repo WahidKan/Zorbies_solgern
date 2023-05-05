@@ -1,0 +1,92 @@
+<div bsModal #accountJurisdictionPopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1"
+  role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info req_pop" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}  </h4>&nbsp;&nbsp;
+        <h4 *ngIf="title==='Edit Jurisdiction'" class="modal-title">{{Name}} </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="addForm" autocomplete="off">
+          <div class="row  mb-2">
+            <div class="col-12 col-md-12 col-lg-12">
+              <h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>Information:</span></h3>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Jurisdiction:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstappointmentstatus" placeholder="None" bindValue="text" bindLabel="text"
+                  formControlName="JurisdictionName" [closeOnSelect]="true">
+                </ng-select>
+                <small
+                  *ngIf="JurisdictionName.invalid && (JurisdictionName.dirty || JurisdictionName.touched) && JurisdictionName.errors?.required"
+                  style="color:red;">Please select Jurisdiction</small>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Account:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" disabled formControlName="Account">
+                <!-- <ng-select [items]="lstRequiredBy" placeholder="None" bindValue="value" bindLabel="text"
+                  formControlName="Account" [closeOnSelect]="true">
+                </ng-select> -->
+              </div>
+            </div>
+
+            <div *ngIf="title==='Edit Jurisdiction'" class="col-md-12 col-lg-6">
+              <label>Jurisdiction Name:</label>
+              <div class="form-group">
+                <span>{{JurisdictionSFName}}</span>
+              </div>
+            </div>
+            <div *ngIf="title==='Edit Jurisdiction'" class="col-md-12 col-lg-6">
+              <label>Type:</label>
+              <div class="form-group">
+                <span>{{JurisdictionType}}</span>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12">
+              <label>Notes:</label>
+              <textarea type="text" class="form-control" formControlName="Note" placeholder="Enter Notes"></textarea>
+              <!--   <small *ngIf="address.invalid && (address.dirty || address.touched) && address.errors?.required"
+                     class="text-danger">Address is required</small>  -->
+            </div>
+
+            <div class="col-md-12 col-lg-4">
+              <label>Update:</label>
+              <div class="form-group">
+                <label class="switch">
+                  <input type="checkbox" formControlName="IsUpdate">
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+          <div class="row" *ngIf="title==='Edit Jurisdiction'">
+            <div class="col-md-12 col-lg-6">
+              <label>Install W/O Permit:</label>
+              <div class="form-group">
+              <span>{{accountInstallWOPermitting}}</span>
+            </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="Save()"><i class="feather-save text-white"></i>
+          Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal"
+          aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

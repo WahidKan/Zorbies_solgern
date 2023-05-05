@@ -1,0 +1,54 @@
+<div
+  #box
+  class="resizable-draggable"
+  [style.width]="component.get('width').value"
+  [style.height]="component.get('height').value"
+  [class.active]="status === 1 || status === 2"
+  (mousedown)="setStatus($event, 2)"
+  (window:mouseup)="setStatus($event, 0)"
+>
+  <div class="resize-action" (mousedown)="setStatus($event, 1)"></div>
+  <div class="custom-tooptip">
+    <div
+      style="
+        border-radius: 2px;
+        background-color: #414247;
+        box-shadow: 0 2px 6px 0 rgb(0 0 0 / 15%);
+      "
+    >
+      <ul style="list-style-type: none">
+        <button
+          *ngIf="component.get('type').value === 'table'"
+          style="margin-right: 2px"
+          (click)="tableService.onRowAdd.emit(component.get('id').value)"
+          title="Add Row"
+        >
+          <i class="fa fa-bars"></i>
+        </button>
+        <button
+          *ngIf="component.get('type').value === 'table'"
+          style="margin-right: 2px"
+          (click)="tableService.onColumnAdd.emit(component.get('id').value)"
+          title="Add Column"
+        >
+          <i class="fa fa-columns"></i>
+        </button>
+        <button
+          class="duplicate"
+          style="margin-right: 2px"
+          (click)="duplicateControl()"
+          title="Duplicate"
+        >
+          <i class=" feather-copy duplicate"></i>
+        </button>
+        <button (click)="deleteControl()" title="Delete">
+          <i class="feather-trash-2"></i>
+        </button>
+        <button (click)="advancedSettings()" title="Advanced Settings">
+          <i class="fa fa-sliders"></i>
+        </button>
+      </ul>
+    </div>
+  </div>
+  <div #componentHolder></div>
+</div>

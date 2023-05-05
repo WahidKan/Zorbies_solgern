@@ -1,0 +1,23 @@
+<div class="col-md-12 bg-light py-3" *ngIf="addDocPermission">
+  <div class="row">
+    <div class="col-md-12 col-lg-12 col-xl-12">
+      <div>
+        <app-adddocument (refresh)="getDocuments()" [contactId]="contactId" [prefixNameOfDocument]="prefixNameOfDocument" [calledFrom]="calledFrom"
+                          [attr.isCustomerAllForms]="isCustomerAllForms"></app-adddocument>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 mt-4">
+  <div class="table-responsive">
+    <div class="table table-striped">
+      <app-documentlist [pagedData]="uploadList" [loading]="loadSave"  [contactId]="contactId"
+                         [calledFrom]="calledFrom"
+                        [attr.isCustomerAllForms]="isCustomerAllForms"></app-documentlist>
+    </div>
+  </div>
+  </div>
+
+
+

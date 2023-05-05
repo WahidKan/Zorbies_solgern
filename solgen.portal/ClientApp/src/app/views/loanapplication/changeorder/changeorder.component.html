@@ -1,0 +1,259 @@
+
+<div class="panel">
+  <div class="col-md-12 p-0">
+    <div class="panel-body">
+      <div class="row  mb-2" *ngIf="loanapplicantdata.length>0">
+        <h3 class="form-heading ng-star-inserted"><span>Current Loan Details</span></h3>
+        <div class="clearfix"></div>
+        <div class="row w-100" *ngFor="let item of loanapplicantdata">
+
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Sales Price</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.SalesPrice | MyCurrencyPipe}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">KW Capacity Installed</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.KWCapacity}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Installation Property State</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.StateName}}</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row  mb-2" *ngIf="loanapplicantdata.length>0">
+        <h3 class="form-heading ng-star-inserted"><span>Payment Debt Calculation</span></h3>
+        <div class="clearfix"></div>
+        <div class="row" *ngFor="let item of loanapplicantdata">
+         
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Income</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.RegularIncome | MyCurrencyPipe}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Income Frequency</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.IncomeFrequencyCO}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Other Income</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b *ngIf="item.OtherMonthlyIncome!=null">{{item.OtherMonthlyIncome | MyCurrencyPipe}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Other Income Frequency</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.OtherIncomeFrequencyCO}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Other Income Source</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.OtherIncomeSource}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Gross Income</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.GrossIncome | MyCurrencyPipe}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Monthly Gross Income</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.MonthlyGrossIncome | MyCurrencyPipe}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">DTI(%)</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.DTI}}</b></div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="col-6 mb-2 pb-2 border-bottom float-left">Disposable Income</div>
+            <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.DisposableIncome | MyCurrencyPipe}}</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+   </div>
+
+    <div class="panel-content " [ngClass]="{'disabled':loadSave}">
+
+
+      <form [formGroup]="changeOrderForm" *ngIf="changeOrderForm" autocomplete="off">
+
+        <ng-container *ngFor="let item of formControlList">
+
+          <h3 class="form-heading">
+            <span>{{ item.group_display_name}} </span>
+          </h3>
+          <div class="row  mb-2">
+            <ng-container *ngFor="let inner of item.InnerData">
+
+              <div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : inner.form_field_visibility == 'NO', 'col-lg-12 col-xl-12': inner.layout_type =='single', 'col-lg-6 col-xl-6': inner.layout_type =='double', 'col-lg-4 col-xl-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                             inner.layout_type =='four' }" ngShow="inner.dependent_show_type == true"
+                   *ngIf="inner.ColumnName!='DiffLoanAmount'">
+
+                <!---->
+
+                <input type="hidden" *ngIf="inner.form_field_visibility == 'NO'" />  <!--v-model="item.value" v-bind:id="item.name"     -->
+                <label *ngIf="inner.form_field_visibility == 'YES' && inner.ColumnName!='IsNewAmountGreater'">{{ inner.display_name}} <span class="text-danger" [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+                <div class="form-group" *ngIf="inner.form_field_visibility == 'YES'">
+
+
+
+                  <!--text  [placeholder]="inner.display_name"-->
+                  <input type="text" class="form-control" [readonly]="(inner.is_readOnly || fromStage)"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (changeOrderForm.get(inner.form_controlName)?.invalid && (changeOrderForm.get(inner.form_controlName)?.dirty || changeOrderForm.get(inner.form_controlName)?.touched) && (changeOrderForm.get(inner.form_controlName)?.errors?.required || changeOrderForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.picklist_options != 'Lookup' && inner.dt_code !='date'  && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='int' && inner.dt_code !='decimal' && inner.dt_code !='bigint' && inner.dt_code!='fileupload'" />
+
+
+
+                  <input type="text" fdgdfg="dfg" class="form-control" [readonly]="(inner.is_readOnly || fromStage)"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (changeOrderForm.get(inner.form_controlName)?.invalid && (changeOrderForm.get(inner.form_controlName)?.dirty || changeOrderForm.get(inner.form_controlName)?.touched) && (changeOrderForm.get(inner.form_controlName)?.errors?.required || changeOrderForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'int' && inner.dt_code!='fileupload'" />
+
+                  <small *ngIf="inner.dt_code == 'int' &&(changeOrderForm.get(inner.form_controlName).touched &&
+                       changeOrderForm.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+                  <input type="text" class="form-control" [readonly]="(inner.is_readOnly || fromStage)"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (changeOrderForm.get(inner.form_controlName)?.invalid && (changeOrderForm.get(inner.form_controlName)?.dirty || changeOrderForm.get(inner.form_controlName)?.touched) && (changeOrderForm.get(inner.form_controlName)?.errors?.required || changeOrderForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'bigint' && inner.dt_code!='fileupload'" />
+
+                  <small *ngIf="inner.dt_code == 'bigint' &&(changeOrderForm.get(inner.form_controlName).touched &&
+                       changeOrderForm.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+                  <input type="text" class="form-control" [readonly]="(inner.is_readOnly || fromStage)"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (changeOrderForm.get(inner.form_controlName)?.invalid && (changeOrderForm.get(inner.form_controlName)?.dirty || changeOrderForm.get(inner.form_controlName)?.touched) && (changeOrderForm.get(inner.form_controlName)?.errors?.required || changeOrderForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'decimal'   && inner.range_from==null && inner.dt_code!='fileupload'" />
+
+
+                  <input type="text" class="form-control" [readonly]="(inner.is_readOnly || fromStage)" (ngModelChange)="validatorRange(inner.form_controlName,inner.is_required,inner.actual_data_type,inner.range_from,inner.range_to)"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (changeOrderForm.get(inner.form_controlName)?.invalid && (changeOrderForm.get(inner.form_controlName)?.dirty || changeOrderForm.get(inner.form_controlName)?.touched) && (changeOrderForm.get(inner.form_controlName)?.errors?.required || changeOrderForm.get(inner.form_controlName)?.errors?.maxlength)&&changeOrderForm.get(inner.form_controlName)?.errors?.min && changeOrderForm.get(inner.form_controlName)?.errors?.max) }"
+                         *ngIf="inner.dt_code == 'decimal' && inner.dt_code!='url' && inner.range_from!=null && inner.dt_code!='fileupload'" />
+
+                  <small *ngIf="(changeOrderForm.get(inner.form_controlName).touched && changeOrderForm.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+
+                  <textarea class="form-control" *ngIf="inner.dt_code == 'textarea'" [ngClass]="{'is-invalid': (changeOrderForm.get(inner.form_controlName)?.invalid && (changeOrderForm.get(inner.form_controlName)?.dirty || changeOrderForm.get(inner.form_controlName)?.touched) && (changeOrderForm.get(inner.form_controlName).errors?.required || changeOrderForm.get(inner.form_controlName)?.errors?.maxlength)) }" [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+
+
+                  <!--<p-calendar inputStyleClass="form-control start-date" *ngIf="inner.dt_code == 'date'" [baseZIndex]="9999" [formControlName]="inner.form_controlName"
+            [maxDate]="maxDateValue" [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>-->
+                  <!--<p-calendar inputStyleClass="form-control start-date" [ngClass]="{'disabledddl':()}" *ngIf="(inner.dt_code == 'date')" [baseZIndex]="9999" [formControlName]="inner.form_controlName"
+            [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>-->
+
+                  <p-calendar inputStyleClass="form-control start-date" [ngClass]="{'disabledddl':(inner.is_readOnly || fromStage)}" *ngIf="inner.dt_code == 'date'" [baseZIndex]="9999" [formControlName]="inner.form_controlName" (onSelect)="onSelectMethod($event,inner.form_controlName)"
+                              [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                  <!--<p-calendar inputStyleClass="form-control start-date" *ngIf="inner.dt_code == 'date'" [formControlName]="inner.form_controlName"
+            [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>-->
+
+
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                    <div *ngFor="let options of inner.listoptions">
+                      <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                        <div class="custom-control custom-checkbox">
+                          <input id="chk_{{inner.form_field_id}}_{{option}}_{{i}}"
+                                 value="5555" [checked]="checkvalue(inner.value,option)" (change)="onCheckboxChange($event,item,inner)" class="dynamic custom-control-input" type="checkbox">
+                          <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="chk_{{inner.form_field_id}}_{{option}}_{{i}}">{{option}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!--<div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+              <div class="form-check form-check-inline">
+                <div class="custom-control custom-checkbox pl-0">
+                  <label class="switch">
+                    <input type="checkbox" [ngClass]="{'disabledddl':(inner.is_readOnly || fromStage)}" (ngModelChange)="validator(inner.form_controlName,inner.is_required)" id="{{inner.form_controlName}}" [formControlName]="inner.form_controlName">
+                    <span [ngClass]="{'disabledddl':(inner.is_readOnly)}" class="slider round" id="{{inner.form_controlName}}"><span>Yes</span></span>
+                  </label>
+                </div>
+              </div>
+            </div>-->
+
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean' && inner.ColumnName!='IsNewAmountGreater'">
+                    <div class="form-check form-check-inline">
+                      <div class="custom-control custom-checkbox pl-0">
+                        <label class="switch">
+                          <input type="checkbox" [attr.disabled]="(inner.is_readOnly == 1 || inner.is_readOnly == 'true'|| inner.is_readOnly == true || fromStage)" (ngModelChange)="validator(inner.form_controlName,inner.is_required)" id="{{inner.form_controlName}}" [formControlName]="inner.form_controlName">
+                          <span class="slider round" id="{{inner.form_controlName}}"><span>Yes</span></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!--Radio button-->
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio'">
+                    <div *ngFor="let options of inner.listoptions">
+
+                      <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                        <div class="custom-control custom-radio mx-2  p-0">
+                          <input id="radio-{{inner.form_field_id}}_{{option}}" [formControlName]="inner.form_controlName" [value]="option" type="radio">
+                          <label for="radio-{{inner.form_field_id}}_{{option}}" class="radio-label">{{option}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--Ng Dropdown-->
+                  <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [ngClass]="{'disabledddl':(inner.is_readOnly || fromStage)
+                               }" [closeOnSelect]="true" placeholder="Select" (change)="ShowData($event)"
+                             *ngIf="inner.dt_code=='select' && inner.picklist_options==''" [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+                  </ng-select>
+
+                  <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [ngClass]="{'disabledddl':(inner.is_readOnly || fromStage)}" [closeOnSelect]="true" placeholder="Select"
+                             *ngIf="inner.dt_code=='select' && inner.picklist_options=='true'" [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name" bindValue="value">
+
+                  </ng-select>
+
+
+
+                  <div class="row" *ngIf="inner.dt_code == 'fileupload'">
+                    <div class="col-md-10 col-lg-10 mb-0">
+                      <div class="custom-file w-100">
+                        <input class="custom-file-input" #file type="file" [ngClass]="{'disabledddl':(inner.is_readOnly=='true' || fromStage)}" name='file' #fileInput accept="application/pdf" (change)="setFile($event)" lang="es">
+                        <label class="custom-file-label">{{fileName}}</label>
+                      </div>
+                      <small><i class="text-primary">Valid image format is image/x-png, image/gif, image/jpeg and limit upto 10MB.</i> </small>
+                    </div>
+                    <div class="col-md-2 col-lg-2 mt-3" *ngIf="imageLink!=''">
+                      <a (click)="downloadFile($event,imageLink)" class="text-dark" download="{{fileName}}"  href="{{imageLink}}">
+                        <i title="Click to downloand." class="fa fa-download text-primary"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                   
+
+                  <small *ngIf="((changeOrderForm.get(inner.form_controlName)?.invalid) && (changeOrderForm.get(inner.form_controlName).dirty) || (changeOrderForm.get(inner.form_controlName)?.touched)) && (changeOrderForm.get(inner.form_controlName)?.errors != null) && (changeOrderForm.get(inner.form_controlName)?.errors?.required)"
+                         class="text-danger">{{inner.display_name}} is required</small>
+
+                  <small *ngIf="(changeOrderForm.get(inner.form_controlName)?.errors != null && changeOrderForm.get(inner.form_controlName)?.errors?.lessthan18) && inner.name == 'DOB'"
+                         class="text-danger">Age should be greater than 18</small>
+
+                  <small *ngIf="(changeOrderForm.get(inner.form_controlName)?.errors != null && changeOrderForm.get(inner.form_controlName)?.errors?.max)"
+                         class="text-danger">{{inner.display_name}} should be less than 12</small>
+                </div>
+
+              </div>
+            </ng-container>
+
+          </div>
+        </ng-container>
+
+
+        <div class="row  mb-3 text-right" *ngIf="CallFrom == 'STAGE' && !hideChangeOrderButton"> <!--&& changeOrderDocWithR_F_S == 0-->
+          <div class="col-sm-12 col-md-12" *ngIf="!fromStage && !isBankUser">
+            <button [disabled]=" isSubmitted" class="btn btn-success mr-2" (click)="onSubmitData()"><i class="feather-save"></i> Submit</button>
+            <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+  </div>

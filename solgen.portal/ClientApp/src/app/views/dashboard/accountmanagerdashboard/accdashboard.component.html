@@ -1,0 +1,299 @@
+<section class="page">
+
+
+  <div class="header header d-flex flex-wrap justify-content-between">
+    <div class="header-left">
+      <h2 class="float-left pr-2"><strong>Dashboard</strong></h2>
+    </div>
+    <div class="header-center">
+      <div class="row">
+        <div class="col-md-8">
+          <ng-select style="min-width: 300px !important;" #ddlSearch [ngClass]="ddlselect" [items]="users$ | async"
+            placeholder="Enter min. 3 characters to search..." [closeOnSelect]="true" (change)="OnChange($event)"
+            (clear)="Clearddl()" (scrollToEnd)="onScrollToEnd()" [virtualScroll]="true" [typeahead]="typeahead"
+            (keyup)="OnChange($event)" [(ngModel)]="selectedData" bindLabel="name" bindValue="value">
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm" class="p-1">
+              <div class="card">
+                <div class="card-body search_res p-2 smview">
+                  <a href="javascript:void(0);" class="smview" (click)="redirectToPage(item.link_name)">
+                    <span class="iconbx bg-info"><i class="{{item.icon}}"></i></span>
+                    <div class="search_des">
+                      <h5 class="text-truncate" [title]="item.data">{{item.data}}</h5>
+                      <p>{{item.type}}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+          <div class="input-group">
+            <label class="switch mr-4 mt-1">
+              <input type="checkbox" checked="">
+              <span class="slider round"><span>KWs</span></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="header-right">
+
+
+      <div class="input-group" style="width: auto !important;"
+        *ngIf="usertype !='usertypecompanyadmin' && isHOD != true">
+        <input type="text" class="form-control" placeholder="All" (click)="ShowCustomDateFilter()"
+          [(ngModel)]="selectedFilter" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <span class="input-group-text closeCustomFilter" id="basic-addon2" (click)="ShowCustomDateFilter()"><i
+              class="fa fa-calendar m-0"></i></span>
+        </div>
+        <div class="dasboard-calc" *ngIf="showDateFilter">
+          <span><a href="javascript:void(0);" (click)="today()"
+              [ngClass]="{'cal-active' : selectedFilter==='Today'}">Today</a> </span>
+          <span> <a href="javascript:void(0);" (click)="yesterday()"
+              [ngClass]="{'cal-active' : selectedFilter==='Yesterday'}">Yesterday</a></span>
+          <!--<span> <a href="javascript:void(0);" (click)="onWeek()" [ngClass]="{'cal-active' : selectedFilter==='Last 7 Days'}">Last 7 Days </a></span>-->
+          <span> <a href="javascript:void(0);" (click)="ThisWeek()"
+              [ngClass]="{'cal-active' : selectedFilter==='This Week'}">This Week</a></span>
+          <!--<span> <a href="javascript:void(0);" (click)="onMonth()" [ngClass]="{'cal-active' : selectedFilter==='Last 30 Days'}">Last 30 Days</a></span>-->
+          <span> <a href="javascript:void(0);" (click)="LastWeek()"
+              [ngClass]="{'cal-active' : selectedFilter==='Last Week'}">Last Week</a></span>
+          <span> <a href="javascript:void(0);" (click)="thisMopnth()"
+              [ngClass]="{'cal-active' : selectedFilter==='This Month'}">This Month</a></span>
+          <span> <a href="javascript:void(0);" (click)="lastMonth()"
+              [ngClass]="{'cal-active' : selectedFilter==='Last Month'}">Last Month</a> </span>
+          <span> <a href="javascript:void(0);" (click)="thisYear()"
+              [ngClass]="{'cal-active' : selectedFilter==='This Year'}">This Year </a> </span>
+          <span> <a href="javascript:void(0);" (click)="lastYear()"
+              [ngClass]="{'cal-active' : selectedFilter==='Last Year'}">Last Year </a> </span>
+          <span class="w-100 border-0 text-center"><a href="javascript:void(0);">Custom Range</a></span>
+
+          <div class="date-box p-2">
+            <p-calendar #myStartCalendar placeholder="From Date - To Date" [(ngModel)]="rangeDates"
+              selectionMode="range" [readonlyInput]="true" inputId="range" (onSelect)="OnChangedDateRange($event)"
+              [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030" (click)="customRange()"
+              [ngClass]="{'cal-active' : selectedFilter==='Custom Range'}"></p-calendar>
+            <span id="basic-addon2"><i class="fa fa-calendar-o"></i></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="dashboardtabs" class="col-12 mb-3">
+      <div class="tabs tabs-linetriangle">
+        <ul class="nav nav-tabs group2  ">
+          <li *ngFor="let c of tilewidget">
+            <a href="javascript:void(0);" (click)="gotopage(c)" [ngStyle]="{'background-color':c.widgetBoxClass}"
+              class="border">
+              <span class="headingtext" [ngStyle]="{'color':c.widgetTextClass}">{{c.widgetName}}</span>
+              <span class="numbers" [ngStyle]="{'color':c.widgetTextClass}"> {{c.widgetCount }}</span>
+              <span class="description" [ngStyle]="{'color':c.widgetTextClass}"
+                *ngIf="c.widgetRoute!=='' && c.widgetRoute!=='javascript:void(0);'"> View Report</span>
+              <span class="description" [ngStyle]="{'color':c.widgetTextClass}"
+                *ngIf="c.widgetRoute=='' || c.widgetRoute=='javascript:void(0);'">&nbsp;</span>
+              <span class="block-icon"><i class="{{c.widgetIconClass}}"></i></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-6 mb-3">
+      <div class="bg-white p-3 border mt-3">
+        <p-chart type="pie" [data]="graphWidgetData" [options]="graphOption"></p-chart>
+      </div>
+    </div>
+    <div class="col-6 mb-3">
+      <div class="bg-white p-3 border mt-3">
+        <p-chart type="horizontalBar" [data]="graphWidgetData" [options]="graphOption"></p-chart>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+
+
+
+<!--<section class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Dashboard</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch" [ngClass]="{'disabled':loadtop}">
+
+        <div class="col-md-12 col-lg-6 col-xl-3" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+          <div class="stattics-data first-color w-100 mb-3" [routerLink]="['/lease/inprogresslease']">
+            <div class="stattics-data-left">
+              <span class="display-5 mt-2"> Total Proposal</span>
+            </div>
+            <div class="stattics-data-right">
+              <span class="display-4 mt-2 float-left ml-auto"><i class="fa fa-clipboard-list"></i></span>
+              <span class="display-4 mt-2 float-right">{{dashboardCounts.totalLease}}</span>
+              <app-loader [size]=60 [color]="'white'" *ngIf="loadtop" class="sidebar-loader"></app-loader>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-lg-6 col-xl-3" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+          <div class="stattics-data third-color w-100 mb-3" [routerLink]="['/lease/inprogresslease']" [queryParams]="{ statusId: '1dd74585-e8ea-4afc-bd36-9a17517b7fd4'  }">
+            <div class="stattics-data-left">
+              <span class="display-5 mt-2">Approved Proposal</span>
+            </div>
+            <div class="stattics-data-right">
+              <span class="display-4 mt-2 float-left ml-auto"><i class="fa fa-thumbs-up"></i></span>
+              <span class="display-4 mt-2 float-right">{{dashboardCounts.approvedLease}}</span>
+              <app-loader [size]=60 [color]="'white'" *ngIf="loadtop" class="sidebar-loader"></app-loader>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-lg-6 col-xl-3" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+          <div class="stattics-data fifth-color w-100 mb-3" [routerLink]="['/lease/inprogresslease']" [queryParams]="{ statusId: '1dd74585-e8ea-4afc-bd36-9a17517b7fd5'  }">
+            <div class="stattics-data-left">
+              <span class="display-5 mt-2">InProgress Proposal</span>
+            </div>
+            <div class="stattics-data-right">
+              <span class="display-4 mt-2 float-left ml-auto"><i class="fa fa-thumbs-up"></i></span>
+              <span class="display-4 mt-2 float-right">{{dashboardCounts.activeLease}}</span>
+              <app-loader [size]=60 [color]="'white'" *ngIf="loadtop" class="sidebar-loader"></app-loader>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-lg-6 col-xl-3" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+          <div class="stattics-data fourth-color w-100 mb-3" [routerLink]="['/leasefundingpackage']">
+            <div class="stattics-data-left">
+              <span class="display-5 mt-2">Funding Packages</span>
+            </div>
+            <div class="stattics-data-right">
+              <span class="display-4 mt-2 float-left ml-auto"><i class="fa fa-thumbs-up"></i></span>
+              <span class="display-4 mt-2 float-right">{{dashboardCounts.sentLease}}</span>
+              <app-loader [size]=60 [color]="'white'" *ngIf="loadtop" class="sidebar-loader"></app-loader>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-lg-12 col-xl-6 mb-4">
+          <div class="bg-white border rounded">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-md-12 mt-4">
+                  <h3 class="heading">
+                    Notifications
+                    <a style="float:right" [routerLink]="['/notifications']"><i class="feather-eye text-info" title="View All Notifications"> View All</i></a>
+                  </h3>
+                  <div class="overflow-auto">
+                    <ngx-datatable class="bootstrap"
+                                   [rows]="listNotification"
+                                   [columnMode]="'force'"
+                                   [externalPaging]="false"
+                                   [externalSorting]="false"
+                                   [count]="10"
+                                   (page)='10'
+                                   [headerHeight]="40"
+                                   [rowHeight]="'auto'"
+                                   >
+                      <ngx-datatable-column name="Sender Name" prop="senderName" [sortable]="true" headerClass="thead-dark">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <span *ngIf="!row.IsReadBank" class="font-weight-bold">{{row.senderName}}</span>
+                        </ng-template>
+                      </ngx-datatable-column>
+
+                      <ngx-datatable-column name="Subject" prop="Subject" [sortable]="true">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <span *ngIf="!row.IsReadBank" [innerHtml]="row.Subject" class="font-weight-bold"></span>
+                        </ng-template>
+                      </ngx-datatable-column>
+
+
+                      <ngx-datatable-column name="View" [sortable]="false" headerClass="text-center">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <div class="icon-text-center" *ngIf="!row.IsReadBank">
+                            <a href="javascript:void(0);" (click)="displayDetail(row)"><i class="feather-eye text-info" title="View"></i></a>
+                          </div>
+
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Date" prop="CreatedOn" [sortable]="true">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <span *ngIf="!row.IsReadBank" class="font-weight-bold">{{row.CreatedOn | date: 'MM-dd-yyyy hh:mm:ss a'}}</span>
+                        </ng-template>
+                      </ngx-datatable-column>
+                    </ngx-datatable>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-lg-12 col-xl-6 mb-4" *ngIf="showLease">
+          <div class="bg-white border rounded">
+            <div class="col-12">
+              {{listLeases}}
+              <div class="row">
+                <div class="col-md-12 mt-4">
+                  <h3 class="heading">New Proposal</h3>
+                  <div class="overflow-auto">
+                    <ngx-datatable class="bootstrap"
+                                    [rows]="pagedData.data"
+                                   [columnMode]="'force'"
+                                   [externalPaging]="false"
+                                   [externalSorting]="false"
+                                   [count]="10"
+                                   (page)='10'
+                                   [headerHeight]="40"
+                                   [rowHeight]="'auto'"
+                                   [loadingIndicator]="loadingActiveLeases"
+                                   >
+                      <ngx-datatable-column [width]="80" name="Proposal#" prop="LeaseNumber" [sortable]="true" *ngIf="modulePermission.roleModuleReadFlag">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <a [routerLink]="['/lease/editlease',row.LeaseId]">{{row.LeaseNumber }}</a>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Proposal Status" prop="LeaseStatus" [sortable]="true" headerClass="thead-dark">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <div *ngIf="row.LeaseStatus ==='Approved for Purchase'">Approved for Purchase</div>
+                          <div *ngIf="row.LeaseStatus !=='Approved for Purchase'">InProgress Proposal</div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Business Name" prop="BusinessName" [sortable]="true" headerClass="thead-dark"></ngx-datatable-column>
+
+                      <ngx-datatable-column name="Created Date" prop="LeaseCreatedOn" [sortable]="true">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{row.LeaseCreatedOn | date: 'MM-dd-yyyy hh:mm:ss a'}}
+                        </ng-template>
+                      </ngx-datatable-column>
+                    </ngx-datatable>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</section>
+
+<app-notificationdetail #dashboarNotificationDetailModal></app-notificationdetail>-->

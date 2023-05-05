@@ -1,0 +1,93 @@
+
+<div class="table-responsive overflow-auto rule-table" [formGroup]="resultForm">
+  <table class="table table-hover table-dynamic" formArrayName="tableFields">
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Data Type</th>
+        <!--<th>Is Calculate</th>-->
+        <th>Value</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody *ngIf="resultForm.get('action').value">
+      <ng-container *ngIf="resultForm.get('action').value.code=='create'">
+        <tr *ngFor="let tableField of tableFields.controls;let i=index" [formGroupName]="i">
+          <ng-template [ngIf]="tableField.get('name').value != 'LoanApplicationId' && tableField.get('name').value != 'CompanyId' && tableField.get('name').value != 'StatusId'">
+            <td>
+              <strong>{{tableField.get('name').value}}</strong>
+            </td>
+            <td>
+              <strong>{{tableField.get('dataType').value}}</strong>
+            </td>
+            <td>
+
+              <label class="switch disabled" [ngClass]="{'toggle-disabled':tableField.get('isCalculate').disabled}">
+                <input type="checkbox" formControlName="isCalculate" (change)="onFieldCalculateChange(tableField.get('isCalculate'),tableField)" checked="">
+                <span class="slider round"><span>Yes</span></span>
+              </label>
+            </td>
+            <td>
+              <div *ngIf="tableField.get('isCalculate').value else isNotCalculate">
+                <button (click)="showResultCalculation(tableField)" type="button" class="btn btn-primary">
+                  {{tableField.get('fieldValue').value ? 'Edit': 'Add'}}
+                </button>
+                {{tableField.get('fieldDisplayValue').value}}
+              </div>
+              <ng-template #isNotCalculate>
+                <app-flow-input [formGroup]="tableField" [from]="result" [controlName]="'fieldValue'" [id]="i"></app-flow-input>
+              </ng-template>
+            </td>
+           
+            <td class="align-middle" *ngIf="i>0">
+            </td>
+          </ng-template>
+
+        </tr>
+      </ng-container>
+      <ng-container *ngIf="resultForm.get('action').value.code=='update'">
+        <tr *ngFor="let tableField of tableFields.controls;let i=index" [formGroupName]="i">
+          <td>
+            <ng-select [items]="resultForm.get('fieldList').value" formControlName="fieldId"
+                       placeholder="Select Field" bindLabel="name" (change)="onTableFieldChange($event,tableField)"
+                       [closeOnSelect]="true">
+            </ng-select>
+          </td>
+          <td>
+            <strong>{{tableField.get('dataType').value}}</strong>
+          </td>
+          <!--<td>
+
+            <label class="switch disabled" [ngClass]="{'toggle-disabled':tableField.get('isCalculate').disabled}">
+              <input type="checkbox" formControlName="isCalculate" (change)="onFieldCalculateChange(tableField.get('isCalculate'),tableField)" checked="">
+              <span class="slider round"><span>Yes</span></span>
+            </label>
+          </td>-->
+          <td>
+
+            <div *ngIf="tableField.get('isCalculate').value else isNotCalculate">
+              <button (click)="showResultCalculation(tableField)" type="button" class="btn btn-primary">
+                {{tableField.get('fieldValue').value ? 'Edit': 'Add'}}
+              </button>
+              {{tableField.get('fieldDisplayValue').value}}
+            </div>
+            <ng-template #isNotCalculate>
+              <app-flow-input [formGroup]="tableField" [from]="result" [controlName]="'fieldValue'" [id]="i"></app-flow-input>
+            </ng-template>
+          </td>
+          <td class="align-middle" *ngIf="i>0">
+            <a href="javascript:void(0);" (click)="removeTableField(i)" class="text-red font-16"><i class="feather-trash-2"></i></a>
+          </td>
+
+        </tr>
+      </ng-container>
+
+    </tbody>
+
+  </table>
+  <app-work-flow-result-calculation #resultCalculation [moduleId]="moduleId" [resultForm]="resultForm"></app-work-flow-result-calculation>
+</div>
+<div class="p-3 text-right" *ngIf="resultForm.get('action')?.value?.code !='create'">
+  <button [disabled]="!tableFields.valid" class="btn btn-success mr-1" (click)="addTableField()"><span><i class="feather-plus"></i> Add</span></button>
+</div>
+

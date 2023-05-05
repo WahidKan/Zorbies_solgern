@@ -1,0 +1,347 @@
+<div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+        <h2 class="float-left pr-2 w-100"><strong>CUSTOMERS</strong></h2>
+        <div class="breadcrumb-wrapper w-100">
+            <ol class="breadcrumb">
+                <li>
+                    <a class="smview" routerLink="/dashboard">Dashboard</a>
+                </li>
+                <li>
+                    <a class="smview" routerLink="/">Customers</a>
+                </li>
+
+                <li class="active">View Customers</li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+        <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i
+                class="fa fa-sign-in mr-1"></i>Switch Company</a>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+
+<div class="panel cntainerwithoutbg clearfix">
+    <div class="panel-content clearfix mb-4 p-0">
+
+        <div class="float-left">
+            <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link  active show" (click)="updateActive('contact')" id="overview-tab" data-toggle="tab" href="#Overview" role="tab" aria-selected="true">Overview</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="updateActive('transection')" id="transection-tab" data-toggle="tab" href="#Transections" role="tab" aria-selected="true">Transections</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="updateActive('mails')" id="mails-tab" data-toggle="tab" href="#Mails" role="tab" aria-selected="true">Mails</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="updateActive('statment')" id="statment-tab" data-toggle="tab" href="#Statement" role="tab" aria-selected="true">Statement</a>
+                </li>
+            </ul>
+        </div>
+        <div class="float-right">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a *ngIf="isUpdate" href="javascript:void(0);" [routerLink]="['/customer/edit', 1]" class="btn btn-success text-white mr-2 smview"><i class="fa fa-pencil mr-1"></i> Edit</a>
+                    <a href="javascript:void(0);" class="btn btn-dark text-white smview" routerLink="/customer"><i
+                            class="fa fa-arrow-left mr-1"></i> Back</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade active show" *ngIf="overviewTab" id="Overview" role="tabpanel">
+                <div class="card">
+                    <div class="row mt-3 mb-3 mr-3  ml-2">
+                        <div class="col-sm-4 border-right">
+                            <div class="row">
+                                <div class="col-4">
+                                    <img height="100" src="{{overview.img}}">
+                                </div>
+                                <div class="col-6 ml-2">
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <h3 class="fw-bold h3">{{overview.firstName+' '+overview.lastName}}</h3>
+                                        </li>
+                                        <li><label class="fw-bold"><i class="fa fa-phone"
+                                                    aria-hidden="true"></i>{{overview.phone}}</label></li>
+                                        <li><label class="fw-bold"><i
+                                                    class="icon-envelope"></i>{{overview.email}}</label>
+                                        </li>
+                                        <li>
+                                            <a class="smview" [routerLink]="['/']" title="Edit"><i
+                                                    class="fa fa-pencil text-success pr-2"></i></a>
+                                            <a href="javascript:void(0);" class="text-danger mx-1">
+                                                <i title="Delete" class="feather-trash-2"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 border-right">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <h3 class="fw-bold h3">address</h3>
+                                </li>
+                                <li>Billing: {{overview.billingAddress}}</li>
+                                <li class="mb-2"><a href="#">Add New Address</a></li>
+                                <li>shipping: {{overview.shippingAddress}}</li>
+                                <li><a href="#">Add New Address</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-5">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <h3 class="fw-bold h3">Other Details</h3>
+                                </li>
+                                <li class="mb-2">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6">Customer Type : {{overview.customerType}}</div>
+                                        <div class="col-12 col-sm-6">Portal Status : <span [ngClass]="{'text-danger': overview.portalStatus=='Disabled'}">{{overview.portalStatus}}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mb-2">
+                                    <div class="row">
+                                        <div class=" col-12 col-sm-6">Currency Code : {{overview.currencyCode}}</div>
+                                        <div class=" col-12 col-sm-6">Portal Language : {{overview.portalLanguage}}
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="mb-2">
+                                    Payment Term : {{overview.paymentTerm}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 mt-3">
+                        <app-contact-person></app-contact-person>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+                            <div class="header-chart mb-1">
+                                <span>Subscription</span>
+                            </div>
+                            <div class="col-sm-12 mt-2">
+                                <h3 class="text-warning d-inline-block">{{overview.subscription.planName}}</h3>
+                                <h3 class="pl-3 pr-3 pt-2 pb-2 bg-primary text-white float-right">
+                                    ${{overview.subscription.amount}}</h3>
+                            </div>
+                            <div class="col-sm-12 mt-2">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <label>Subscription ID: {{overview.subscription.subscriptionId}}</label>
+                                    </li>
+                                    <li>
+                                        <label>Subscription #: {{overview.subscription.subscriptionNo}}</label>
+                                        <label class="float-right">Last Billing Date:
+                                            {{overview.subscription.lastBillingDate}} Next Billing Date:
+                                            {{overview.subscription.nextBillingDate}}</label>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 mt-2">
+                                <app-recent-activities></app-recent-activities>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade active" *ngIf="transectionTab" id="Transections" role="tabpanel">
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+                            <div class="header-chart mb-1">
+                                <span>Subscription</span>
+                            </div>
+                            <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="transactions.subscription" [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [externalSorting]="true" [loadingIndicator]="loadSave" (sort)="onSort($event)">
+                                <ngx-datatable-column [width]="22" name="#" prop="id" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Created On" prop="createdOn" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Subscription" sortable="true" prop="subscriptionNo">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Reference" sortable="true" prop="reference">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Plan Name" sortable="true" prop="planName">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Amount" sortable="true" prop="amount">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="nextBillingOn" sortable="true" prop="Next Billing On">
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+                            <div class="header-chart mb-1">
+                                <span>Invoice</span>
+                            </div>
+                            <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="transactions.invoice" [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [externalSorting]="true" [loadingIndicator]="loadSave" (sort)="onSort($event)">
+                                <ngx-datatable-column [width]="22" name="#" prop="id" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Date" prop="date" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Invoice#" sortable="true" prop="invoiceNo">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Order Number" sortable="true" prop="orderNo">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Amount" sortable="true" prop="amount">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Balance" sortable="true" prop="balance">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Status" sortable="true" prop="status">
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+                            <div class="header-chart mb-1">
+                                <span>Customer Payment</span>
+                            </div>
+                            <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="transactions.customerPayment" [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [externalSorting]="true" [loadingIndicator]="loadSave" (sort)="onSort($event)">
+                                <ngx-datatable-column [width]="22" name="#" prop="id" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Created On" prop="date" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Payment" sortable="true" prop="payment">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Reference" sortable="true" prop="reference">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Plan Mode" sortable="true" prop="paymentMode">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Amount Recieved" sortable="true" prop="amountRecieved">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Unused Amount" sortable="true" prop="unUsedAmount">
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade active" *ngIf="mailsTab" id="Mails" role="tabpanel">
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+                            <div class="header-chart mb-1">
+                                <span>System Mails</span>
+                            </div>
+                            <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="mail.systemMails" [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [externalSorting]="true" [loadingIndicator]="loadSave" (sort)="onSort($event)">
+                                <ngx-datatable-column [width]="22" name="#" prop="id" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="To" prop="to" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Description" sortable="true" prop="description">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="type" sortable="true" prop="type">
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade active" *ngIf="statmentTab" id="Statement" role="tabpanel">
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+                            <div class="row">
+                                <div class="header-chart col-12 mb-1">
+                                    <span>Customer Statement for {{overview.firstName+' '+overview.lastName}}
+                                        ({{statement.from +' To '+statement.to}})</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <ul class="list-unstyled float-right">
+                                        <li class="mt-3 border-top p-1">Statement of Accounts</li>
+                                        <li class="border-top p-1">{{statement.from +' To '+statement.to}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-7 col-12"></div>
+                                <div class="col-sm-5 col-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            Account Summary
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <div class="row">
+                                                        <label class="col-6">Opening Balance</label>
+                                                        <label class="col-6 text-right">${{statement.accountSummary.openingBalance}}</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <label class="col-6">Invoice Amount</label>
+                                                        <label class="col-6 text-right">${{statement.accountSummary.invoicedAmount}}</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <label class="col-6">Amount Recieved</label>
+                                                        <label class="col-6 text-right">${{statement.accountSummary.amountRecieved}}</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-header">
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <div class="row">
+                                                        <label class="col-6">Due Balance</label>
+                                                        <label class="col-6 text-right">${{statement.accountSummary.balanceDue}}</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="statement.customerStatement" [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40" [externalSorting]="true" [loadingIndicator]="loadSave"
+                                (sort)="onSort($event)">
+                                <ngx-datatable-column [width]="22" name="#" prop="id" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Date" prop="date" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Transactions" sortable="true" prop="transactions">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Details" sortable="true" prop="details">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Amount" sortable="true" prop="amount">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Payment" sortable="true" prop="payment">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Balance" sortable="true" prop="balance">
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                            <!-- <div class="row">
+                                <div class="col-12 col-sm-8"></div>
+                                <div class="col-12 col-sm-4">
+                                    <ul class="list-unstyled">
+                                        <li>over due</li>
+                                    </ul>
+                                    <label></label>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

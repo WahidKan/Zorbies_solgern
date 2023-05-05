@@ -1,0 +1,375 @@
+<app-breadcrumb *ngIf="!loadSave" [data]="contentHeader">
+</app-breadcrumb>
+<div class="clearfix"></div>
+<div class="card border-0">
+    <div class=" panel">
+        <div class="col-lg-12 border-bottom">
+            <app-view-filter-bar-manager [submoduleName]="'Products'" [titleName]="ProductName" [customCompnentValuesTop]="customCompnentValuesTop" [logoClass]="'feather-list'" [pageLink]="'/product/editProduct'"></app-view-filter-bar-manager>
+        </div>
+        <div class="row ">
+
+            <div class="col-lg-12 mt-3">
+                <div class="panel-content w-100  p-2 px-3 ">
+                    <div class="row mt-2 scroll-in-content">
+
+                        <div class="col-sm-12 col-lg-8">
+                            <h3 class="form-heading mt-0"><span>Details</span></h3>
+                            <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                                <form [formGroup]="form" *ngIf="form">
+                                    <ng-container *ngFor="let item of formControlList">
+                                        <div class="panel active">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a href="#{{item.group_display_name}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                        <span> {{item.group_name}}</span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="{{item.group_display_name}}" class="panel-collapse collapse active show" style="">
+                                                <div class="panel-body row px-0 mt-0">
+                                                    <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let inner of item.InnerData;">
+                                                        <div class="input-group border-bottom">
+                                                            <div class="col-sm-12 col-md-6 px-0">
+
+                                                                <span class="py-2 d-block"><strong>{{ inner.display_name}}:</strong></span>
+                                                            </div>
+
+                                                            <!--=====================================Icone Image =======================================-->
+                                                            <div class="col-sm-12 col-md-6" *ngIf="inner.dt_code=='IconUpload'">
+                                                                <!--<span class="py-2 d-block">{{inner.value}}</span>-->
+                                                                <i class="{{icontoShow}} selectedico"></i>
+                                                            </div>
+                                                            <!--=================================================================================================-->
+
+                                                            <div class="col-sm-12 col-md-6" *ngIf="inner.dt_code!='IconUpload'">
+                                                                <span *ngIf='inner.dt_code=="datetime" || inner.dt_code=="date" ' class="py-2 d-block">
+                                                  <ng-container *ngIf='inner.dt_code=="datetime"'>{{ inner.value | DateTimeToLocal}}</ng-container>
+                                                  <ng-container *ngIf='inner.dt_code=="date"'>{{ inner.value | date: 'MM-dd-yyyy'}}</ng-container>
+                                                </span>
+                                                                <span *ngIf="inner.value!=null && inner.dt_code!='boolean' && inner.dt_code!='datetime' && inner.dt_code!='date' && inner.dt_code !='decimal'" class="py-2 d-block">{{ inner.value}}</span>
+
+                                                                <span *ngIf="inner.group_name =='Product Details' &&  inner.dt_code =='decimal' && inner.ColumnName =='ProductPrice'" class="py-2 d-block">${{ inner.value}}</span>
+                                                                <!--============================== For CheckBox ===========================-->
+                                                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                                                                    <div class="form-check form-check-inline">
+                                                                        <div class="custom-control custom-checkbox pl-0">
+                                                                            <label class="switch  mb-0">
+                              <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                              <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!--============================== For CheckBox ===========================-->
+                                                                <!-- <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                        <div class="form-check form-check-inline">
+                          <div class="custom-control custom-checkbox pl-0">
+                            <label class="switch mb-0">
+                              <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                              <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-4 relatedtab">
+                            <h3 class="form-heading mt-0"><span>Related</span></h3>
+                            <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                                <!-- <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#campaignManagers" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>Price Books ({{priceBooksCount}})</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="campaignManagers" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="lstPriceBooks.data" [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true"
+                                                        [loadingIndicator]="loadSave" [count]="lstPriceBooks.pager.totalItems" [offset]="lstPriceBooks.pager.currentPage" [limit]="lstPriceBooks.pager.pageSize" (page)='setPriceBooksPageNo($event)' (sort)="onPriceBooksSort($event)">
+
+                                                        <ngx-datatable-column name="Price Book Name" prop="PriceBookName" [sortable]="true"></ngx-datatable-column>
+                                                        <ngx-datatable-column name="List Price" prop="ListPrice" [sortable]="true">
+                                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                                <span [title]="row.ListPrice">{{' '+row.ListPrice | currency:'USD':'symbol-narrow':'1.2-2'}}</span>
+                                                            </ng-template>
+                                                        </ngx-datatable-column>
+                                                        <ngx-datatable-column name="Use Standard Price" prop="UseStandardPrice" [sortable]="false">
+                                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                                <label class="switch mb-0">
+                        <input type="checkbox" id="chk_{{row.Id}}" [checked]="row.UseStandardPrice" disabled>
+                        <span class="slider round" id="chk_{{row.Id}}"> </span>
+                      </label>
+                                                            </ng-template>
+                                                        </ngx-datatable-column>
+                                                        <ngx-datatable-column name="Active" prop="Active" [sortable]="false">
+                                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                                <label class="switch mb-0">
+                        <input type="checkbox" id="chkActive_{{row.Id}}" [checked]="row.Active" disabled>
+                        <span class="slider round" id="chkActive_{{row.Id}}"> </span>
+                      </label>
+                                                            </ng-template>
+                                                        </ngx-datatable-column>
+
+                                                        <ngx-datatable-footer>
+                                                            <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="lstPriceBooks.pager.pageSize" let-selectedCount="selectedCount" let-currentPage="lstPriceBooks.pager.currentPage" let-offset="offset" let-isVisible="isVisible">
+                                                                <div class="page-count">
+                                                                    {{rowCount}} total
+                                                                </div>
+
+                                                                <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'" [pagerRightArrowIcon]="'fa fa-angle-double-right'" [pagerPreviousIcon]="'fa fa-angle-left'" [pagerNextIcon]="'fa feather-chevron-left'" [page]="lstPriceBooks.pager.currentPage" [size]="lstPriceBooks.pager.pageSize"
+                                                                    [count]="lstPriceBooks.pager.totalItems" [hidden]="!((rowCount / lstPriceBooks.pager.pageSize) > 1)" (change)="setPriceBooksPageNo($event)">
+                                                                </datatable-pager>
+                                                            </ng-template>
+                                                        </ngx-datatable-footer>
+                                                    </ngx-datatable>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+
+                                <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#files" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>Files (0)</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="files" class="panel-collapse collapse  active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <div class="w-100 text-center text-danger">No Record Found.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#notes" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>Notes (0)</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="notes" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <div class="w-100 text-center text-danger">No Record Found.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#quotes" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>Quotes (0)</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="quotes" class="panel-collapse collapse  active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <div class="w-100 text-center text-danger">No Record Found.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div> -->
+
+                                <!-- <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#quotesInventer" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>Quotes (Inverter) (0)</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="quotesInventer" class="panel-collapse collapse  active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <div class="w-100 text-center text-danger">No Record Found.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#quotesRacking" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>Quotes (Racking) (0)</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="quotesRacking" class="panel-collapse collapse  active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <div class="w-100 text-center text-danger">No Record Found.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#campaigns" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>Campaigns ({{campaignCount}})</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="campaigns" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="lstCampaigns.data" [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                                                        [count]="lstCampaigns.pager.totalItems" [offset]="lstCampaigns.pager.currentPage" [limit]="lstCampaigns.pager.pageSize" (page)='setCampaignPageNo($event)' (sort)="onCampaignsSort($event)">
+
+                                                        <ngx-datatable-column name="Campaign Name" prop="CampaignName" [sortable]="true"></ngx-datatable-column>
+                                                        <ngx-datatable-column name="Status" prop="Status" [sortable]="true"></ngx-datatable-column>
+                                                        <ngx-datatable-column name="Start Date" prop="StartDate" [sortable]="true">
+                                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                                <span [title]="row.StartDate">{{row.StartDate | DateTimeToLocal}}</span>
+                                                            </ng-template>
+                                                        </ngx-datatable-column>
+
+                                                        <ngx-datatable-footer>
+                                                            <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="lstCampaigns.pager.pageSize" let-selectedCount="selectedCount" let-currentPage="lstCampaigns.pager.currentPage" let-offset="offset" let-isVisible="isVisible">
+                                                                <div class="page-count">
+                                                                    {{rowCount}} total
+                                                                </div>
+
+                                                                <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'" [pagerRightArrowIcon]="'fa fa-angle-double-right'" [pagerPreviousIcon]="'fa fa-angle-left'" [pagerNextIcon]="'fa feather-chevron-left'" [page]="lstCampaigns.pager.currentPage" [size]="lstCampaigns.pager.pageSize"
+                                                                    [count]="lstCampaigns.pager.totalItems" [hidden]="!((rowCount / lstCampaigns.pager.pageSize) > 1)" (change)="setCampaignPageNo($event)">
+                                                                </datatable-pager>
+                                                            </ng-template>
+                                                        </ngx-datatable-footer>
+                                                    </ngx-datatable>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#serviceTerritoriesPanel" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>Service Territories Panel (0)</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="serviceTerritoriesPanel" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <div class="w-100 text-center text-danger">No Record Found.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#serviceTerritoriesInverter" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>Service Territories Inverter (0)</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="serviceTerritoriesInverter" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <div class="w-100 text-center text-danger">No Record Found.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#statePanel" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>State Panel (0)</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="statePanel" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <div class="w-100 text-center text-danger">No Record Found.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="panel active">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a href="#stateDefaultInverter" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                <span>State Default Inverter (0)</span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="stateDefaultInverter" class="panel-collapse collapse active show" style="">
+                                        <div class="panel-body row px-3">
+                                            <div class="table-responsive">
+                                                <div class="table table-striped">
+                                                    <div class="w-100 text-center text-danger">No Record Found.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>

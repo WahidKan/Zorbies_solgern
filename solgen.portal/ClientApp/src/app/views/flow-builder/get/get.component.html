@@ -1,0 +1,233 @@
+<div bsModal #getModal="bs-modal"   [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-info " *ngIf="getForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Get Records</h4>
+                <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body " style="max-height: 800px ; overflow-y: auto;">
+                <div *ngIf="getForm && nodeId" [formGroup]="getForm">
+                    <p>Find records and store their field values in flow variables.</p>
+                    <div class="row mb-2">
+                        <div class="col-md-12 col-lg-12">
+                            <label><span class="text-danger">*</span> Label (Max Char Limit 50)</label>
+                            <input type="text" maxlength="50" formControlName="name" class="form-control"[ngClass]="{'is-invalid': (getName.invalid && (getName.dirty || getName.touched) && (getName.errors?.required || getName.errors?.maxlength)) }">
+                            <small *ngIf="(getName.invalid && (getName.dirty || getName.touched)) && getName.errors?.required" class="text-danger">label is required</small>
+                            <small *ngIf="(getName.invalid && (getName.dirty || getName.touched)) && getName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <label>Description (Max Char Limit 200)</label>
+                            <textarea formControlName="description" maxlength="200" class="form-control" rows="2" [ngClass]="{'is-invalid': (getDescription.invalid && (getDescription.dirty || getDescription.touched) && getDescription.errors?.maxlength)}"></textarea>
+                            <small
+                            *ngIf="getDescription.invalid && (getDescription.dirty || getDescription.touched) && getDescription.errors?.maxlength"
+                            class="text-danger">Description should be less then 200</small>
+                        </div>
+                    </div>
+                    <span class="h5">Get Records of This Object</span>
+                    <div class="row mb-2">
+                        <div class="col-md-6 col-lg-6">
+                            <label> <span class="text-danger">*</span> Object</label>
+                            <ng-select [items]="objectList" [appendTo]="'body'" formControlName="subModuleId" placeholder="Select object" bindLabel="text" bindValue="value">
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div *ngIf="getForm && getForm.get('subModuleId').value > 0">
+                        <hr class="">
+                        <span class="h5">Filter AI Record Insight Records</span>
+                        <div class="row mt-2 mb-2">
+                            <div class="col-md-6 col-lg-6">
+                                <label> <span class="text-danger">*</span>Condition Requirements</label>
+                                <ng-select [closeOnSelect]="true" [appendTo]="'body'" [items]="decisionList" placeholder="Select" (change)="onFilterCondtionChange($event)" formControlName="filterCondition" bindLabel="name" bindValue="value">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="row mb-2" *ngIf="getForm && getForm.get('filterCondition') && getForm.get('filterCondition').value === 3">
+                            <div class="col-md-12">
+                                <label>Condition Logic:<span class="text-danger">*</span></label>
+                                <div class="form-group">
+                                    <input type="text" formControlName="customFilterCondition" class="form-control" name="customCondition">
+                                </div>
+                            </div>
+                        </div>
+                        <div formArrayName="filterConditions">
+                            <div class="row mb-2 align-items-end justify-content-between" *ngFor="let condit of filterConditions.controls;let i=index" [formGroupName]="i">
+                                <div class="col-1 text-center mt-4">
+                                    <strong *ngIf="getForm.get('filterConditions') && getForm.get('filterCondition').value === 3">{{i
+                                        + 1}}</strong>
+                                    <strong class="d-block pb-2" *ngIf="filterConditions.length > 1 && i>0 &&  getForm.get('filterCondition').value === 1 ">AND</strong>
+                                    <strong class="d-block pb-2" *ngIf="filterConditions.length > 1 && i>0 &&  getForm.get('filterCondition').value === 2 ">OR</strong>
+                                </div>
+                                <div class="col-3 ">
+                                    <label>Variable</label>
+                                    <ng-select [items]="customFieldList" [appendTo]="'body'" (change)="onVariableChange($event,condit)" formControlName="field" placeholder="Select Variable" bindLabel="label" bindValue="PrimaryTableColumn">
+                                    </ng-select>
+                                </div>
+                                <div class="col-2">
+                                    <label>Operator</label>
+                                    <ng-select [items]="Operators" [appendTo]="'body'" placeholder="Select Operator" formControlName="operator" bindLabel="text" bindValue="value">
+                                    </ng-select>
+                                </div>
+                                <div *ngIf="isAutoLunched" class="col-2 pr-0">
+                                    <label class="form-label">Resource</label>
+                                    <ng-select [items]="autoResourceList" placeholder="Select object" groupBy="groupName"
+                                        formControlName="resourceId" bindLabel="displayName" bindValue="id" (change)="onResourceChange($event,condit)" [appendTo]="'body'">
+                                    </ng-select>
+                                </div>
+                                <div class="col-3">
+                                    <label>Value</label>
+                                    <!-- <ng-select [appendTo]="'body'" [items]="resourceList" formControlName="value" placeholder="Enter Value Or Search Resource" bindLabel="displayName" bindValue="id">
+                                    </ng-select> -->
+                                    <ng-select *ngIf="(isAutoLunched && !isTextValue)" [items]="resourceList" bindLabel="displayName" bindValue="PrimaryTableColumn" formControlName="value" [appendTo]="'body'"  [addTag]="CreateNew" addTagText="add new value"  placeholder="Enter value or search resources...">
+                                    </ng-select>
+                                    <input *ngIf="(isAutoLunched && isTextValue)" type="text" formControlName="value" class="form-control">
+
+                                    <ng-select *ngIf="!isAutoLunched" [items]="resourceList" bindLabel="displayName" bindValue="id" formControlName="value" [appendTo]="'body'"  [addTag]="CreateNew" addTagText="add new value"  placeholder="Enter value or search resources...">
+                                    </ng-select> 
+                                </div>
+                                <div class="col-1 text-center mt-4">
+                                    <button [disabled]="filterConditions.length < 2" (click)="deleteCondition(i)" class="btn btn-danger form-btns" tooltip="Delete">
+                                        <span><i class="feather-trash-2"></i></span>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-md-3 col-lg-3">
+                                <button class="btn btn-success  float-left" (click)="addNewCondition()"><i
+                                        class="feather-plus"></i>Add Condition</button>
+                            </div>
+                        </div>
+
+                        <hr class="mt-2 mb-2">
+
+                        <P class="mt-2">Sort AI Record Insight Records</P>
+                        <div class="row mt-2">
+                            <div class="col-md-3 col-lg-3">
+                                <label>Sort Order</label>
+                                <ng-select [items]="sortList" [appendTo]="'body'" formControlName="sortCondition" placeholder="Select Sort Order" bindLabel="name" bindValue="value">
+                                </ng-select>
+                            </div>
+                            <div class="col-md-3 col-lg-3" *ngIf="getForm.get('sortCondition').value === 1 || getForm.get('sortCondition').value===2">
+                                <label>Sort By</label>
+                                <!-- <ng-select [items]="customFieldList" [appendTo]="'body'" (change)="onSortChange($event)" placeholder="Select Sort By" (clear)="onClearCustomField(customFieldList)" formControlName="sortBy" required="required" (keyup)="onKeyCustomField($event,customFieldList)"
+                                    (scrollToEnd)="onScrollToEndCustomFields(customFieldList)" required="required" [virtualScroll]="true" bindLabel="label" bindValue="form_field_id">
+                                </ng-select> -->
+                                <ng-select [items]="customFieldList" [appendTo]="'body'" (change)="onSortChange($event)" formControlName="sortBy" placeholder="Select Sort By" bindLabel="label" bindValue="form_field_id">
+                                </ng-select>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <hr class="mt-2 mb-2">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>How Many Records to Store</strong>
+                                <div class="custom-radio">
+                                    <input type="radio" id="OnlyTheFirstRecord" value="OnlyTheFirstRecord" (change)="onRecordCountChange($event)" formControlName="howManyToStore" name="howManyToStore" class="custom-control-input">
+                                    <label class="custom-control-label" for="OnlyTheFirstRecord">Only the first
+                                        record</label>
+                                </div>
+                                <div class="custom-radio">
+                                    <input type="radio" id="Allrecords" value="Allrecords" formControlName="howManyToStore" (change)="onRecordCountChange($event)" name="howManyToStore" class="custom-control-input">
+                                    <label class="custom-control-label" for="Allrecords">All records</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <strong>How to Store Record Data</strong>
+                                <div class="custom-radio">
+                                    <input type="radio" id="Automaticallystore" (change)="showHideField()" value="Automaticallystore" formControlName="howToMap" name="howToMap" class="custom-control-input">
+                                    <label class="custom-control-label" for="Automaticallystore">Automatically store all
+                                        fields</label>
+                                </div>
+                                <div class="custom-radio">
+                                    <input type="radio" id="letSalesforce" (change)="showHideField()" value="letSalesforce" formControlName="howToMap" name="howToMap" class="custom-control-input">
+                                    <label class="custom-control-label" for="letSalesforce">Choose fields</label>
+                                </div>
+                                <div class="custom-radio">
+                                    <input type="radio" id="Variable" (change)="showHideField()" value="Variable" formControlName="howToMap" name="howToMap" class="custom-control-input">
+                                    <label class="custom-control-label" for="Variable">Record Variable</label>
+                                </div>
+                                <!-- <div class="custom-control custom-radio">
+                                    <input type="radio" id="assignvariables" name="customRadio2"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="assignvariables">Choose fields and assign
+                                        variables
+                                        (advanced)</label>
+                                </div> -->
+                            </div>
+
+                        </div>
+                        <div *ngIf="getForm.get('howToMap').value==='letSalesforce'">
+
+
+                            <div formArrayName="choosenFields">
+                                <!-- <div class="row mb-2 align-items-end justify-content-between"
+                            > -->
+                                <!-- <div class="col-1 text-center mt-4">
+                                <strong *ngIf="getForm.get('choosenFields') && getForm.get('filterCondition').value === 3">{{i + 1}}</strong>
+                                <strong class="d-block pb-2" *ngIf="choosenFields.length > 1 && i>0 &&  getForm.get('filterCondition').value === 1 ">AND</strong>
+                                <strong class="d-block pb-2" *ngIf="choosenFields.length > 1 && i>0 &&  getForm.get('filterCondition').value === 2 ">OR</strong>
+                            </div> -->
+                                <div class="row mb-2" *ngFor="let condit of choosenFields.controls;let i=index" [formGroupName]="i">
+                                    <div class="col-1 text-center mt-4">
+
+                                    </div>
+                                    <div class="col-10 ">
+                                        <label>Field</label>
+                                        <!-- <ng-select [items]="customFieldList" [appendTo]="'body'" (change)="onFieldChange($event,i)" placeholder="Select" (clear)="onClearCustomField(customFieldList)" formControlName="customFieldId" required="required" (keyup)="onKeyCustomField($event,customFieldList)"
+                                            (scrollToEnd)="onScrollToEndCustomFields(customFieldList)" required="required" [virtualScroll]="true" bindLabel="label" bindValue="form_field_id">
+                                        </ng-select> -->
+                                        <ng-select [items]="customFieldList" [appendTo]="'body'" (change)="onFieldChange($event,i)" formControlName="customFieldId" placeholder="Select Variable" bindLabel="label" bindValue="form_field_id">
+                                        </ng-select>
+                                    </div>
+
+                                    <div class="col-1 text-center mt-4">
+                                        <button [disabled]="choosenFields.length < 2" (click)="deletechoosenFields(i)" class="btn btn-danger form-btns" tooltip="Delete">
+                                        <span><i class="feather-trash-2"></i></span>
+                                    </button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12 col-lg-12">
+                                    <button class="btn btn-success  float-left" (click)="addNewchoosenFields()"><i
+                                        class="feather-plus"></i>Add Fields</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="getForm.get('howToMap').value === 'Variable'">
+                            <strong>Select Variable to Store</strong>
+                            <div class="row mt-2 mb-2">
+                                <div class="col-md-6 col-lg-6">
+                                    <label> <span class="text-danger">*</span>Record</label>
+                                    <ng-select [closeOnSelect]="true" [appendTo]="'body'" [items]="recordList" placeholder="Search record" formControlName="recordVariableId" bindLabel="name" bindValue="resourceId">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+
+                <div class="col-lg-12 col-sm-12 col-md-12 text-right">
+                    <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="Save()"><i
+                            class="feather-save"></i> Submit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-times"></i>
+                        Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

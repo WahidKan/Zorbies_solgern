@@ -1,0 +1,361 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+
+<div class="clearfix"></div>
+<div class="card border-0" >
+
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+
+  <div class="panel">
+    <div class="row">
+      <div class="col-lg-12 border-bottom">
+        <div class="panel-content w-100 bg-white p-2 px-3 border-0">
+          <app-view-filter-bar-manager [adViewStatus]="isUpdate" (callToViewFilterBarFunction)="showEditServiceCrewPopup($event)"  [submoduleName]="'servicecrew'" [titleName]="ServiceCrewName"  
+          [customCompnentValuesTop]="customCompnentValuesTop" [logoClass]="'feather-users'"  ></app-view-filter-bar-manager>
+        </div>
+      </div>
+    <div class="col-lg-12">
+      <div class="panel-content w-100 bg-white border-0 p-3 scroll-in-content">
+        <div class="row">
+
+          <div class="col-sm-12 col-lg-8">
+            <h3 class="form-heading mt-0"><span>Details</span></h3>
+            <div id="accordion" [ngClass]="{'disabled':loadSave}">
+              <form [formGroup]="form" *ngIf="form">
+                <ng-container *ngFor="let item of formControlList">
+                  <div class="panel active">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a href="#{{item.group_display_name}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                          <span> {{item.group_name}}</span>
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="{{item.group_display_name}}" class="panel-collapse collapse active show" style="">
+                      <div class="panel-body row px-0 mt-0">
+                        <div [ngClass]="{'col-6 px-0':item.group_name=='System Information','col-12':item.group_name!='System Information'}" *ngFor="let inner of item.InnerData;">
+                          <div class="input-group border-bottom">
+                            <div [ngClass]="{'col-sm-12 col-md-4 px-0':item.group_name=='System Information','col-sm-12 col-md-2 px-0':item.group_name!='System Information'}">
+                              <span class="py-2 d-block"><strong>{{ inner.display_name}}:</strong></span>
+                            </div>
+                            <div [ngClass]="{'col-sm-12 col-md-8 px-0':item.group_name=='System Information','col-sm-12 col-md-10 px-0':item.group_name!='System Information'}">
+                              <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.field_route==null" class="py-2 d-block">{{ inner.value}}</span>
+                              <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.field_route!=null" class="py-2 d-block">
+                                <a href="javascript:void(0);" [routerLink]="[inner.field_route,inner.ref_value]">{{ inner.value}}</a>
+                              </span>
+                              <!--<span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.name=='Resources'" class="py-2 d-block">{{ Resources }}</span>-->
+                              <!--============================== For CheckBox ===========================-->
+                              <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                                <div class="form-check form-check-inline">
+                                  <div class="custom-control custom-checkbox pl-0">
+                                    <label class="switch  mb-0">
+                                      <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                      <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                              <!--============================== For CheckBox ===========================-->
+                              <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                                <div class="form-check form-check-inline">
+                                  <div class="custom-control custom-checkbox pl-0">
+                                    <label class="switch mb-0">
+                                      <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                      <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </form>
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4 relatedtab">
+            <h3 class="form-heading mt-0"><span>Related</span></h3>
+            <div id="accordion" class="panel-group">
+
+              <div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#serviceCrewMember" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true"><span>Service Crew Members ({{ServiceCrewMembersCount}})</span></a>
+                  </h4>
+                </div>
+                <div id="serviceCrewMember" class="panel-collapse collapse active show" style="">
+                  <a  href="javascript:void(0);" class="btn-in-panel" (click)="ShowManageCrewMemberPopup('')" data-dismiss="modal" data-toggle="modal" style="top:8px;"><i class="feather-plus mr-2"></i> Add</a>
+                  <div class="panel-body p-2 mt-0">
+                    <div class="table-responsive ngxtbl">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                     [rows]="lstServiceCrewMembers.data"
+                                     [scrollbarH]="true"
+                                     [rowHeight]="'40'"
+                                     [columnMode]="'force'"
+                                     [headerHeight]="40"
+                                     [footerHeight]="40"
+                                     [externalPaging]="true"
+                                     [externalSorting]="true"
+                                     [loadingIndicator]="loadSave"
+                                     [count]="lstServiceCrewMembers.pager.totalItems"
+                                     [offset]="lstServiceCrewMembers.pager.currentPage"
+                                     [limit]="lstServiceCrewMembers.pager.pageSize"
+                                     (page)='setServiceCrewMemberPageNo($event)'
+                                     (sort)="onServiceCrewMembersSort($event)">
+
+                        <ngx-datatable-column name="Name" prop="Name" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Service Resource" prop="ServiceResource" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Start Date" prop="StartDate" [sortable]="true">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span *ngIf="!row.StartDate">-</span>
+                            <span *ngIf="row.StartDate" title="{{row.StartDate | DateTimeToLocal}}">{{row.StartDate | DateTimeToLocal}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="End Date" prop="EndDate" [sortable]="true">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span *ngIf="!row.EndDate">-</span>
+                            <span *ngIf="row.EndDate" title="{{row.EndDate | DateTimeToLocal}}">{{row.EndDate | DateTimeToLocal}}</span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <!--<ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="text-center">
+            <a href="javascript:void(0);" class="actions-onclick view-list" (click)="ShowManageCrewMemberPopup(row.id)" title="Edit"><i class="fa fa-pencil text-success pr-2"></i></a>
+            <a href="javascript:void(0);" (click)="deleteCrew(row.id,'Crew')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>-->
+                        <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="text-center">
+                              <a href="javascript:void(0);" (click)="ShowManageCrewMemberPopup(row.id)" title="Edit"><i class="fa fa-pencil text-success pr-2"></i></a>
+                              <a href="javascript:void(0);" (click)="deleteCrew(row.id,'Crew')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                            </div>
+
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-footer *ngIf="lstServiceCrewMembers.pager.totalItems>0">
+                          <ng-template ngx-datatable-footer-template
+                                       let-rowCount="rowCount"
+                                       let-pageSize="lstServiceCrewMembers.pager.pageSize"
+                                       let-selectedCount="selectedCount"
+                                       let-currentPage="lstServiceCrewMembers.pager.currentPage"
+                                       let-offset="offset"
+                                       let-isVisible="isVisible">
+
+
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                                  <!--Showing {{(lstServiceCrewMembers.pager.currentPage - 1 )* lstServiceCrewMembers.pager.pageSize + 1}}  to {{lstServiceCrewMembers.pager.currentPage * lstServiceCrewMembers.pager.pageSize}} out of {{rowCount}}  enteries-->
+                                  {{commanService.PageString(lstServiceCrewMembers.pager.currentPage,lstServiceCrewMembers.pager.pageSize,rowCount)}}
+
+                            </div>
+
+                            <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                             [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                             [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                             [pagerNextIcon]="'fa fa-angle-double-right'"
+                                             [page]="lstServiceCrewMembers.pager.currentPage"
+                                             [size]="lstServiceCrewMembers.pager.pageSize"
+                                             [count]="lstServiceCrewMembers.pager.totalItems"
+                                             [hidden]="!((rowCount / lstServiceCrewMembers.pager.pageSize) > 1)"
+                                             (change)="setServiceCrewMemberPageNo($event)">
+                            </datatable-pager>
+                          </ng-template>
+                        </ngx-datatable-footer>
+                      </ngx-datatable>
+                   
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+
+
+              <div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#CrewSkills Skillssals" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>Crew Skills    ({{SkillsCount}})</span>
+                    </a>
+
+                  </h4>
+                </div>
+                <div id="CrewSkills" class="panel-collapse collapse active show" style="">
+                  <a href="javascript:void(0);" class="btn-in-panel" (click)="openSkillPopup()"><span data-toggle="modal"><i class="feather-plus mr-2"></i>Add</span></a>
+                  <div class="panel-body p-2 mt-0">
+                    <div class="table-responsive ngxtbl">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                     [rows]="lstSkill.data"
+                                     [columnMode]="'force'"
+                                     [scrollbarH]="true"
+                                     [rowHeight]="'40'"
+                                     [headerHeight]="40"
+                                     [footerHeight]="40"
+                                     [externalPaging]="true"
+                                     [externalSorting]="true"
+                                     [loadingIndicator]="loadSave"
+                                     [count]="lstSkill.pager.totalItems"
+                                     [offset]="lstSkill.pager.currentPage"
+                                     [limit]="lstSkill.pager.pageSize"
+                                     (page)='setSkillPageNo($event)'
+                                     (sort)="onSkillSort($event)">
+
+                        <ngx-datatable-column name="Service Name" prop="ServiceResourceName" [sortable]="true">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.ServiceResourceName}}
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Skill Name" prop="skilName" [sortable]="true">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.skilName}}
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Skill Number" prop="SkillNumber" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Skill Level" prop="SkillLevel" [sortable]="true"></ngx-datatable-column>
+
+                        <ngx-datatable-column name="Start Date" prop="startDate" [sortable]="true">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.startDate | DateTimeToLocal}}
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="End Date" prop="endDate" [sortable]="true">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.endDate | DateTimeToLocal}}
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="text-center">
+                              <a href="javascript:void(0);" (click)="EditSkill(row)" title="Edit"><i class="fa fa-pencil text-success pr-2"></i></a>
+                              <a href="javascript:void(0);" (click)="deleteSkill(row,'serviceSkill')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                            </div>
+
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-footer>
+                          <ng-template ngx-datatable-footer-template
+                                       let-rowCount="rowCount"
+                                       let-pageSize="lstSkill.pager.pageSize"
+                                       let-selectedCount="selectedCount"
+                                       let-currentPage="lstSkill.pager.currentPage"
+                                       let-offset="offset"
+                                       let-isVisible="isVisible">
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                                {{commanService.PageString(SkillPageNo,lstSkill.pager.pageSize,rowCount)}}
+                            </div>
+
+                            <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                             [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                             [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                             [pagerNextIcon]="'fa fa-angle-double-right'"
+                                             [page]="SkillPageNo"
+                                             [size]="lstSkill.pager.pageSize"
+                                             [count]="lstSkill.pager.totalItems"
+                                             [hidden]="!((rowCount / lstSkill.pager.pageSize) > 1)"
+                                             (change)="setSkillPageNo($event)">
+                            </datatable-pager>
+                          </ng-template>
+                        </ngx-datatable-footer>
+                      </ngx-datatable>
+                    
+                  </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#serviceAppointment" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true"><span>Service Appointments ({{ServiceAppointmentsCount}})</span></a>
+                  </h4>
+                </div>
+               <div id="serviceAppointment" class="panel-collapse collapse active show" style="">
+                  <div class="panel-body p-2 mt-0">
+                    <div class="table-responsive ngxtbl">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                     [rows]="lstServiceAppointments.data"
+                                     [scrollbarH]="true"
+                                     [rowHeight]="'40'"
+                                     [columnMode]="'force'"
+                                     [headerHeight]="40"
+                                     [footerHeight]="40"
+                                     [externalPaging]="true"
+                                     [externalSorting]="true"
+                                     [loadingIndicator]="loadSave"
+                                     [count]="lstServiceAppointments.pager.totalItems"
+                                     [offset]="lstServiceAppointments.pager.currentPage"
+                                     [limit]="lstServiceAppointments.pager.pageSize"
+                                     (page)='setServiceAppointmentPageNo($event)'
+                                     (sort)="onServiceAppointmentSort($event)">
+
+                        <ngx-datatable-column name="Appointment Number" prop="AppointmentNumber" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Account" prop="Account" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Contact" prop="Contact" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Status" prop="Status" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Service Appointment Owner" prop="OwnerName" [sortable]="true"></ngx-datatable-column>
+                         
+                        <!--<ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="text-center">
+            <a href="javascript:void(0);" class="actions-onclick view-list" (click)="ShowManageCrewMemberPopup(row.id)" title="Edit"><i class="fa fa-pencil text-success pr-2"></i></a>
+            <a href="javascript:void(0);" (click)="deleteCrew(row.id,'Crew')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>-->
+                        
+                        <ngx-datatable-footer *ngIf="lstServiceCrewMembers.pager.totalItems>0">
+                          <ng-template ngx-datatable-footer-template
+                                       let-rowCount="rowCount"
+                                       let-pageSize="lstServiceCrewMembers.pager.pageSize"
+                                       let-selectedCount="selectedCount"
+                                       let-currentPage="lstServiceCrewMembers.pager.currentPage"
+                                       let-offset="offset"
+                                       let-isVisible="isVisible">
+
+
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                                  <!--Showing {{(lstServiceCrewMembers.pager.currentPage - 1 )* lstServiceCrewMembers.pager.pageSize + 1}}  to {{lstServiceCrewMembers.pager.currentPage * lstServiceCrewMembers.pager.pageSize}} out of {{rowCount}}  enteries-->
+                                  {{commanService.PageString(lstServiceAppointments.pager.currentPage,lstServiceAppointments.pager.pageSize,rowCount)}}
+
+                            </div>
+
+                            <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                             [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                             [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                             [pagerNextIcon]="'fa fa-angle-double-right'"
+                                             [page]="lstServiceCrewMembers.pager.currentPage"
+                                             [size]="lstServiceCrewMembers.pager.pageSize"
+                                             [count]="lstServiceCrewMembers.pager.totalItems"
+                                             [hidden]="!((rowCount / lstServiceCrewMembers.pager.pageSize) > 1)"
+                                             (change)="setServiceAppointmentPageNo($event)">
+                            </datatable-pager>
+                          </ng-template>
+                        </ngx-datatable-footer>
+                      </ngx-datatable>
+                   
+                    </div>
+                  </div>
+                </div>
+              </div>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<app-resourceskill #resourceSkill (resourceSkillEvent)="resourceSkillEvent()"></app-resourceskill>
+<app-addeditservicecrewmember #AddEditServiceCrewMember [id]="Id" (ServiceCrewMemberEmitter)="refreshServiceCrewMembersList()"></app-addeditservicecrewmember>
+<app-addeditservicecrewpopup #AddEditServiceCrew (manageServiceCrewEmitter)="refreshList()"></app-addeditservicecrewpopup>

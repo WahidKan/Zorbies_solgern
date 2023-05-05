@@ -1,0 +1,317 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loading" class="loader-popup"></app-loader>
+<div class="page" (click)="hideCalendar($event)">
+  <app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+  <!-- <div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+      <h2 class="float-left pr-2 w-100"><strong>Report Details</strong></h2>
+      <div class="breadcrumb-wrapper w-100">
+        <ol class="breadcrumb">
+          <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+          <li><a class="smview" routerLink="/solgenreport/customreports">Dynamic Reports</a></li>
+          <li class="active">Report Details</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+      <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+    </div>
+  </div> -->
+
+  <div class="clearfix"></div>
+
+  <div class="clearfix">
+    <div class="row">
+      <div class="col-lg-12 portlets">
+        <div class="panel" style="overflow: visible;" [ngClass]="{'disabled':loadSave}">
+
+
+          <div class="panel-header border-0 pb-1 btn-iconres">
+            <div class="row mt-2">
+              <div class="col-12 col-md-6 col-lg-2 mb-lg-0 mb-2">
+                <label>Report Name:</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" [(ngModel)]="reportName" disabled />
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-2 mb-lg-0 mb-2">
+                <label>Sub Module Name:</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" [(ngModel)]="subModuleName" disabled />
+                </div>
+              </div>
+
+              <div class="col-12 col-md-2 col-lg-3">
+                <div *ngIf="showDateFilterTop">
+                  <label>Date Range:</label>
+                  <div class="input-group" style="width: auto !important;">
+                    <input type="text"
+                           [ngClass]="{'is-invalid':  isDateFilterValid}"
+                           class="form-control" placeholder="Select Date" (click)="ShowCustomDateFilter()" [(ngModel)]="selectedFilter" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+
+                    <div class="input-group-append">
+                      <span class="input-group-text closeCustomFilter" id="basic-addon2" (click)="ShowCustomDateFilter()"><i class="fa fa-calendar m-0"></i></span>
+                    </div>
+
+                    <div class="dasboard-calc" *ngIf="showDateFilter" style=" z-index: 999;">
+                      <span><a href="javascript:void(0);" (click)="today()" [ngClass]="{'cal-active' : selectedFilter==='Today'}">Today</a> </span>
+                      <span> <a href="javascript:void(0);" (click)="yesterday()" [ngClass]="{'cal-active' : selectedFilter==='Yesterday'}">Yesterday</a></span>
+
+                      <span> <a href="javascript:void(0);" (click)="ThisWeek()" [ngClass]="{'cal-active' : selectedFilter==='This Week'}">This Week</a></span>
+
+                      <span> <a href="javascript:void(0);" (click)="LastWeek()" [ngClass]="{'cal-active' : selectedFilter==='Last Week'}">Last Week</a></span>
+                      <span> <a href="javascript:void(0);" (click)="thisMopnth()" [ngClass]="{'cal-active' : selectedFilter==='This Month'}">This Month</a></span>
+                      <span> <a href="javascript:void(0);" (click)="lastMonth()" [ngClass]="{'cal-active' : selectedFilter==='Last Month'}">Last Month</a>   </span>
+                      <span>  <a href="javascript:void(0);" (click)="thisYear()" [ngClass]="{'cal-active' : selectedFilter==='This Year'}">This Year </a> </span>
+                      <span>   <a href="javascript:void(0);" (click)="lastYear()" [ngClass]="{'cal-active' : selectedFilter==='Last Year'}">Last Year </a> </span>
+                      <span class="w-100 border-0 text-center"><a href="javascript:void(0);">Custom Range</a></span>
+
+                      <div class="date-box p-2">
+                        <p-calendar #myStartCalendar appendTo="body" placeholder="From Date - To Date" [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true" inputId="range" (onSelect)="OnChangedDateRange($event)" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"
+                                    (click)="customRange()" [ngClass]="{'cal-active' : selectedFilter==='Custom Range'}"></p-calendar>
+                        <span id="basic-addon2"><i class="fa fa-calendar-o"></i></span>
+                      </div>
+                    </div>
+
+                  </div>
+                  <small *ngIf="isDateFilterValid"
+                         style="color:red;">Please select Date Filter</small>
+                </div>
+              </div>
+
+
+              <div class="col-12 col-md-3 col-lg-5 mt-4" style="text-align: end;">
+                <button *ngIf="!showFilter" class="btn btn-primary mr-2" (click)="showFilterButton()" href="javascript:void(0)"><i class="feather-eye mr-1"></i>Show Filter</button>
+                <button *ngIf="hideFilter" class="btn btn-primary mr-2" (click)="hideFilterButton()" href="javascript:void(0)"><i class="feather-eye-off mr-1"></i>Hide Filter</button>
+                <span class="float-right">
+                  <a href="javascript:void(0);" (click)="download('excel')" title="Download Excel" tooltip="Download Excel" class=" btn btn-success mr-1" style="background:#1D6F42; border-color:#1D6F42;"><i class="fa fa-file-excel-o"></i></a>
+                  <a href="javascript:void(0);" (click)="generatePdf('pdf')" title="Download Pdf" tooltip="Download Pdf" class=" btn btn-danger mr-1" style="background:#c0392b; border-color:#c0392b;"><i class="fa fa-file-pdf-o"></i> </a>
+                  <a href="javascript:void(0);" class="btn btn-dark text-white mb-0 smview" tooltip="Back To List" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back To List</a>
+                </span>
+              </div>
+
+              <!--<div class="col-lg-12 col-xl-12 mb-3 mb-xl-0 mt-4">
+                <div class="row">
+                  <div class="col-lg-12 ml-4" style="text-align:right;">
+                    <div class="d-inline-block" *ngIf='showEditBtns'>
+                      <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="runloanapplication()"><i class="feather-eye"></i> Run</a>
+                    </div>
+                    <div class="d-inline-block">
+                      <a href="javascript:void(0);" class="btn btn-danger mr-2" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+                    </div>
+                  </div>
+                </div>
+              </div>-->
+              <!--<div class="col-12 col-md-6 col-lg-9 pt-3">
+                <span class="float-right">
+                  <a href="javascript:void(0);" (click)="download('excel')" title="Download Excel" tooltip="Download Excel" class=" btn btn-success mr-1" style="background:#1D6F42; border-color:#1D6F42;"><i class="fa fa-file-excel-o"></i></a>
+                  <a href="javascript:void(0);" (click)="generatePdf('pdf')" title="Download Pdf" tooltip="Download Pdf" class=" btn btn-danger mr-1" style="background:#c0392b; border-color:#c0392b;"><i class="fa fa-file-pdf-o"></i> </a>
+                </span>
+              </div>-->
+            </div>
+
+            <div *ngIf="hideShowFilterSection">
+              <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link" id="filter-tab" data-toggle="tab" href="#filter" role="tab">Filter</a>
+                </li>
+              </ul>
+
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane active" id="filter" role="tabpanel" *ngIf="!hideBlankFilter">
+                  <form [formGroup]="reportForm" autocomplete="off">
+                    <div class="table-responsive overflow-visible">
+                      <table id="example" class="table ">
+                        <thead class="thead-bg">
+                          <tr>
+                            <th scope="col" width="400">Field Name</th>
+                            <th scope="col" width="250">Conditional Operator</th>
+                            <th scope="col" width="250">Value</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                          </tr>
+                        </thead>
+                        <tbody formArrayName="fields">
+                          <tr [formGroupName]="i" *ngFor="let field of fields.controls; let i=index">
+                            <td>
+                              <div class="form-group" style="width: 100%; padding: 0px;  margin: 0px; float: left; max-width:100%; min-width:250px;">
+                                <ng-select [items]="customFieldList1" placeholder="Sub Module Fields"
+                                           formControlName="filedNameId" [closeOnSelect]="true"
+                                           bindLabel="name" bindValue="form_field_id" [ngClass]="{'disabledddl' : true}">
+                                </ng-select>
+                              </div>
+                            </td>
+
+                            <td>
+                              <div class="form-group" style="width: 100%;">
+                                <ng-select [items]="(field.get('operators')==null ? null : field.get('operators').value)" [closeOnSelect]="true" placeholder="Select operator"
+                                           formControlName="operatorId"
+                                           bindLabel="text" bindValue="value" [ngClass]="{'disabledddl' : true}">
+                                </ng-select>
+                              </div>
+                            </td>
+                            <td>
+
+                              <div class="form-group" *ngIf="field.get('dtCode') != null && !field.get('dtCode').value && field.get('fieldText').value!='datetime' && field.get('fieldText').value!='date' && field.get('fieldText').value!='boolean'" style="width: 100%;">
+                                <input type="text" class="form-control" formControlName="txtvaluefrom" maxlength="50"
+                                       placeholder="Enter Value" (keyup)="onKey($event)" disabled>
+                              </div>
+
+                              <div *ngIf="field.get('dtCode') != null && !field.get('dtCode').value && field.get('fieldText').value=='date'" style="width: 100%; padding: 0px; margin: 0px; float: left;">
+                                <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date" formControlName="txtvaluefrom" hideOnDateTimeSelect="true"
+                                            [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+                              </div>
+
+                              <div *ngIf="field.get('dtCode') != null && !field.get('dtCode').value && field.get('fieldText').value=='datetime'" style="width: 100%; padding: 0px;  margin: 0px; float: left;">
+                                <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " formControlName="txtvaluefrom" hideOnDateTimeSelect="true"
+                                            [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030" [hourFormat]="(timeFormat==24)?24:12"></p-calendar>
+                              </div>
+
+                              <div class="form-group" *ngIf="field.get('dtCode') != null && field.get('dtCode').value" style="width: 100%; padding: 0px; margin: 0px; float: left;">
+                                <ng-select [items]="DdlValues[i]" [closeOnSelect]="true" placeholder="Select Value" formControlName="txtvaluefrom" [multiple]="true"
+                                           bindLabel="name" bindValue="value"
+                                           [ngClass]="{'disabledddl' : true}">
+                                </ng-select>
+                              </div>
+
+                              <div class="form-control pl-0 border-0 bg-transparent" *ngIf="field.get('dtCode') != null && field.get('fieldText').value=='boolean'">
+                                <div class="form-check form-check-inline">
+                                  <div class="custom-control custom-checkbox pl-0">
+                                    <label class="switch">
+                                      <input type="checkbox" id="{{form_controlName}}" formControlName="txtvaluefrom" disabled>
+                                      <span class="slider round" id="{{form_controlName}}"><span>Yes</span></span>
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </td>
+
+                            <td>
+                              <div class="form-group" *ngIf="field.controls.operatorId.value=='8' && field.get('fieldText').value!='datetime' && field.get('fieldText').value!='date' " style="width: 100%; padding: 0px;  margin: 0px; float: left;">
+                                <input type="text" class="form-control" formControlName="txtvalueto" maxlength="50" placeholder="Enter Value" [ngClass]="{'disabledddl' : true}">
+                              </div>
+                              <div *ngIf="field.controls.operatorId.value=='8' && field.get('fieldText').value=='datetime'" style="width: 100%; padding: 0px;  margin: 0px; float: left;">
+                                <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " formControlName="txtvalueto" hideOnDateTimeSelect="true"
+                                            [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030" [hourFormat]="(timeFormat==24)?24:12"></p-calendar>
+                              </div>
+                              <div *ngIf="field.controls.operatorId.value=='8' && field.get('fieldText').value=='date'" style="width: 100%; padding: 0px;  margin: 0px; float: left;">
+                                <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date" formControlName="txtvalueto" hideOnDateTimeSelect="true"
+                                            [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+                              </div>
+                            </td>
+                            <td style="min-width:100px;">
+                              <div *ngIf="field.controls.type.value!=null && field.controls.type.value!=''" class="d-inline-block mr-2">
+                                <span class="or-and rounded-circle">{{field.controls.type.value}}</span>
+                              </div>
+                              <div class="form-group mt-2 mb-0 d-inline-block float-right">
+                                <a *ngIf="i > 0" href="javascript:void(0);" (click)="removeFields(i)"><i class="feather-trash-2 text-danger" style="font-size:18px;" [ngClass]="{'disabledddl' : true}"></i></a>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-lg-12 px-0 text-center mt-2 mb-4 bg-light py-2">
+                      <ng-select [items]="ddlData" placeholder="Add" #condition
+                                 bindLabel="name" bindValue="id" (change)="addFields($event.name)" style="max-width:120px;display:inline-block;" [ngClass]="{'disabledddl' : true}">
+                      </ng-select>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="tab-pane active" id="filter" role="tabpanel" *ngIf="hideBlankFilter">
+                  <span>No filter applied.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel-content px-3 pagination2 table-responsive no-padding" *ngIf="columnheading!=null && columnheading!='' && columnheading.length!=0">
+            <div class="table-responsive">
+              <div class="table table-striped">
+                <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                               [rows]="columndata"
+                               [columnMode]="'force'"
+                               [scrollbarH]="true"
+                               [rowHeight]="'40'"
+                               [headerHeight]="40"
+                               [footerHeight]="40"
+                               [externalPaging]="true"
+                               [rowClass]="ApplyCssClassOnRow"
+                               [externalSorting]="true"
+                               [loadingIndicator]="isloadSave"
+                               [count]="totalRecords"
+                               [offset]="currentPage"
+                               [limit]="pageSizeValue"
+                               (page)='setPage($event)'
+                               (sort)="onSort($event)">
+                  <ngx-datatable-column *ngFor="let col of columnheading" [name]="col.DISPLAY_NAME" [prop]="col.COLUMN_NAME" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <div class="doc-count">
+                        <div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE!='date' && col.isColor !=true">
+                          {{row[col.COLUMN_NAME]}}
+                        </div>
+
+                        <div *ngIf="col.FieldFrom==null && col.isColor ==true">
+                          <div *ngFor="let itemColorCode of getListingColorCode(row[col.COLUMN_NAME]);">
+                            <div *ngIf="itemColorCode.colorkey==undefined">
+                              {{itemColorCode.color}}
+                            </div>
+                            <div *ngIf="itemColorCode.colorkey!=undefined" style="max-width:150px !important;" class="status-box" [title]="itemColorCode.color" [ngStyle]="{background: itemColorCode.colorkey}">
+                              {{itemColorCode.color}}
+                            </div>
+                          </div>
+                        </div>
+                        <div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE=='date'">
+                          {{ (row[col.COLUMN_NAME] !== null) ? (row[col.COLUMN_NAME]  | date: 'MM-dd-yyyy' ) : "" }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-footer>
+                    <ng-template ngx-datatable-footer-template
+                                 let-rowCount="rowCount"
+                                 let-pageSize="pageSize"
+                                 let-selectedCount="selectedCount"
+                                 let-currentPage="curPage"
+                                 let-offset="offset"
+                                 let-isVisible="isVisible">
+                      <div>
+                        <div style="color:black; margin-right:10px;" class="page-size-record" *ngIf='(rowCount  > 0)'>
+                          <span style="text-align:right; width:80px;vertical-align: middle;">
+                            <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                       bindLabel="text" bindValue="text"></ng-select>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                        <!--Showing {{(curPage - 1 )* pageSizeValue + 1}}  to {{curPage * pageSizeValue}} out of {{totalRecords}}  enteries-->
+                        {{commonService.PageString(curPage,pageSizeValue,rowCount)}}
+                      </div>
+                      <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                       [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                       [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                       [pagerNextIcon]="'fa fa-angle-double-right'"
+                                       [page]="curPage"
+                                       [size]="pageSizeValue"
+                                       [count]="totalRecords"
+                                       [hidden]="!((rowCount / pageSize) > 1)"
+                                       (change)="setPage($event)"
+                                       [ngClass]="{'text-lg-right':true,'text-md-right':true}">
+                      </datatable-pager>
+                    </ng-template>
+                  </ngx-datatable-footer>
+                </ngx-datatable>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+

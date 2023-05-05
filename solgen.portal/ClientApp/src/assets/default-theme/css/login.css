@@ -1,0 +1,32 @@
+/*********************Login **************/
+html,body{height:100%;}
+.login{background:#1c5e9a;}
+.login-container{width:100%; height:100%; float:left; margin:0px; padding:0px; background:#2f4050; display:flex; align-content: center; align-items: center;  justify-content: center;}
+.login-main{max-width:500px; padding:10px; text-align:center; width:100%;}
+.login-main img{padding-bottom:30px; max-width:260px;}
+.login-main h2{color:#454545; text-align:center; margin:0px; padding:0px; font-weight:400; padding-bottom:0px;}
+.login-main .login-box{width:100%; float:left; background:#fff; padding:40px; text-align:left;}
+.login-main .login-box input{font-size:18px; margin-bottom:0;}
+.login-main .custom-control {height: 37px;}
+.login-main .custom-checkbox .custom-control-label::before { width: 25px; height: 25px; border-radius: 0px; background-color: #41b2f9 !important; }
+.login-main .custom-control-label { margin-bottom: 0; font-size: 14px; line-height: 30px; font-weight: 400; color: #454545; padding-left: 10px; }
+.login-main .forgot { color: #454545; font-size: 14px; margin-top:5px; }
+.login-main .custom-control-label::after { width: 25px; height: 25px; left: -2px !important; }
+.login-main .login-box input[type="button"], .login-main .login-box input[type="submit"],.login-main .login-box button{width:100%; border:none; background:#28a745; margin-top:20px; }
+.login-main .login-box input[type="button"]:hover, .login-main .login-box input[type="submit"]:hover,.login-main .login-box button:hover,.login-main .login-box input[type="button"]:focus, .login-main .login-box input[type="submit"]:focus,.login-main .login-box button:focus{background:#2f4050; box-shadow: none; }
+.btn-primary:not([disabled]):not(.disabled):active, .btn-primary:not([disabled]):not(.disabled).active, .show > .btn-primary.dropdown-toggle{ background:#335d81; box-shadow: 0 0 0 0.2rem rgba(51, 93, 129, 0.5);}
+.error {font-size: 12px; display: none; padding: 5px; margin-top: 1px; border-radius: 0px; margin-bottom: 0px; width: 100%; }
+.error.field-validation-error { font-size: 12px; display: inline-block; }
+
+@media only screen and (min-width:320px) and (max-width:767px) {
+.login-container{display:inline-block;}	
+.login-width .login-box{width:100%; padding:15px;}
+.login-main .login-box.register-bg p, .login-main .login-box.register-bg{min-height:auto;}	
+.login-main h2{padding-bottom:10px;}
+.login-main .login-box{padding:15px;}
+.login-main{display:inline-block; max-width:100%; margin-bottom:10px;}
+}
+
+
+
+

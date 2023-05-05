@@ -1,0 +1,549 @@
+<div bsModal #propertiesPopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{fieldName}} Properties
+        </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="max-height:600px; overflow:auto; overflow-x: hidden;">
+      
+          <form [formGroup]="properties" autocomplete="off" class="w-100">
+            <div class="row" *ngIf="singleLine">
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" *ngIf="is_system_generated" disabled class="form-control" formControlName="singleLineNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (singleLineNameDisplay.invalid && (singleLineNameDisplay.dirty || singleLineNameDisplay.touched) && singleLineNameDisplay.errors?.required) }">
+                  <input type="text" *ngIf="!is_system_generated" class="form-control" formControlName="singleLineNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (singleLineNameDisplay.invalid && (singleLineNameDisplay.dirty || singleLineNameDisplay.touched) && singleLineNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="singleLineNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (singleLineNameDisplay.invalid && (singleLineNameDisplay.dirty || singleLineNameDisplay.touched) && singleLineNameDisplay.errors?.required) }">
+
+                  <small *ngIf="singleLineNameDisplay.invalid && (singleLineNameDisplay.dirty || singleLineNameDisplay.touched) && singleLineNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Number of characters allowed:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="singleLineCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (singleLineCharactersAllowed.invalid && (singleLineCharactersAllowed.dirty || singleLineCharactersAllowed.touched) && singleLineCharactersAllowed.errors?.required) }">
+
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="singleLineCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (singleLineCharactersAllowed.invalid && (singleLineCharactersAllowed.dirty || singleLineCharactersAllowed.touched) && singleLineCharactersAllowed.errors?.required) }">
+
+                  <small *ngIf="singleLineCharactersAllowed.invalid && (singleLineCharactersAllowed.dirty || singleLineCharactersAllowed.touched) && singleLineCharactersAllowed.errors?.required"
+                         style="color:red;">Please enter Number of characters</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="singleLineMarkRequired" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="multiLine">
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" *ngIf="is_system_generated" disabled class="form-control" formControlName="multiLineNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (multiLineNameDisplay.invalid && (multiLineNameDisplay.dirty || multiLineNameDisplay.touched) && multiLineNameDisplay.errors?.required) }">
+
+                  <input type="text" *ngIf="!is_system_generated" class="form-control" formControlName="multiLineNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (multiLineNameDisplay.invalid && (multiLineNameDisplay.dirty || multiLineNameDisplay.touched) && multiLineNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="multiLineNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (multiLineNameDisplay.invalid && (multiLineNameDisplay.dirty || multiLineNameDisplay.touched) && multiLineNameDisplay.errors?.required) }">
+
+                  <small *ngIf="multiLineNameDisplay.invalid && (multiLineNameDisplay.dirty || multiLineNameDisplay.touched) && multiLineNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Number of characters allowed:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" *ngIf="is_system_generated" disabled class="form-control" formControlName="multiLineCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (multiLineCharactersAllowed.invalid && (multiLineCharactersAllowed.dirty || multiLineCharactersAllowed.touched) && multiLineCharactersAllowed.errors?.required) }">
+                  <input type="text" *ngIf="!is_system_generated" class="form-control" formControlName="multiLineCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (multiLineCharactersAllowed.invalid && (multiLineCharactersAllowed.dirty || multiLineCharactersAllowed.touched) && multiLineCharactersAllowed.errors?.required) }">
+
+                  <small *ngIf="multiLineCharactersAllowed.invalid && (multiLineCharactersAllowed.dirty || multiLineCharactersAllowed.touched) && multiLineCharactersAllowed.errors?.required"
+                         style="color:red;">Please enter Number of characters</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="multiLineMarkRequired" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="SelectList">
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="selectListLineNameDisplay" maxlength="50"
+             placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (selectListLineNameDisplay.invalid && (selectListLineNameDisplay.dirty || selectListLineNameDisplay.touched) && selectListLineNameDisplay.errors?.required) }">
+
+      <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="selectListLineNameDisplay" maxlength="50"
+             placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (selectListLineNameDisplay.invalid && (selectListLineNameDisplay.dirty || selectListLineNameDisplay.touched) && selectListLineNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="selectListLineNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (selectListLineNameDisplay.invalid && (selectListLineNameDisplay.dirty || selectListLineNameDisplay.touched) && selectListLineNameDisplay.errors?.required) }">
+                  <small *ngIf="selectListLineNameDisplay.invalid && (selectListLineNameDisplay.dirty || selectListLineNameDisplay.touched) && selectListLineNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Select Type:</label>
+                <ng-select [items]="lstdropdown" placeholder="Select dropdown " formControlName="selectDropdown"
+                           bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (selectDropdown.invalid && (selectDropdown.dirty || selectDropdown.touched) && selectDropdown.errors?.required) }"></ng-select>
+                <small *ngIf="selectDropdown.invalid && (selectDropdown.dirty || selectDropdown.touched) && selectDropdown.errors?.required"
+                       style="color:red;">Please select Dropdown</small>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-6" style="display:none">
+                <label>Pick List Option:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" formControlName="selectListCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (multiLineCharactersAllowed.invalid && (selectListCharactersAllowed.dirty || selectListCharactersAllowed.touched) && selectListCharactersAllowed.errors?.required) }">
+                  <small *ngIf="selectListCharactersAllowed.invalid && (selectListCharactersAllowed.dirty || selectListCharactersAllowed.touched) && selectListCharactersAllowed.errors?.required"
+                         style="color:red;">Enter comma separated values</small>
+                </div>
+              </div>
+              <!--<div class="col-lg-12 p-0 px-1" *ngIf ="is_system_generated == false" >
+    <div class="row" *ngIf ="is_system_generated == false">
+      <div class="col-12 col-md-6 col-lg-6">
+        <label>Options:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input type="text" class="form-control" formControlName="ddloptions" maxlength="50">
+          <small *ngIf="ddloptionsvalidation"
+                 style="color:red;">Enter Option</small>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-6">
+        <label>Color:</label>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-12 col-md-8 col-lg-8">
+              <div class="form-control">
+                <p-colorPicker formControlName="ddloptionscolor" (click)="SetColorFor()">
+                </p-colorPicker>
+                <span>{{colorCode}}</span>
+              </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-4">
+                <button type="button" class="btn btn-primary form-btns" (click)="add()"><i class="feather-plus text-white"></i> Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-12 col-lg-12">
+        <div class="table-responsive">
+          <table class="table mb-5"style="min-width:400px;">
+            <thead>
+            <th>Name</th>
+            <th>Color</th>
+            <th>Action</th>
+            </thead>
+            <tbody>
+              <tr [formGroupName]="i" *ngFor="let item of selectlistvalues">
+                <td>{{item.value}}</td>
+                <td>
+                  <p-colorPicker [formControlName]="item.color">
+                  </p-colorPicker>
+                  <span>{{item.color}}</span>
+                </td>
+                <td><a href="javascript:void(0)" (click)="editselectlist(item.id,item.value,item.color)">Edit</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>-->
+              <div class="col-12 col-md-12 col-lg-12">
+             
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="selectListMarkRequired" type="checkbox">
+                   
+                    
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+
+                    <input id="ddlmultiselect" *ngIf="is_system_generated == false" class="dynamic custom-control-input" formControlName="selectListMultiddl" type="checkbox">
+                    <input id="ddlmultiselect" *ngIf="is_system_generated == true" class="dynamic custom-control-input" disabled formControlName="selectListMultiddl" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="ddlmultiselect">
+                      Multi Select
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="intShow">
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="intNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (intNameDisplay.invalid && (intNameDisplay.dirty || selectListLineNameDisplay.touched) && intNameDisplay.errors?.required) }">
+
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="intNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (intNameDisplay.invalid && (intNameDisplay.dirty || selectListLineNameDisplay.touched) && intNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="intNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (intNameDisplay.invalid && (intNameDisplay.dirty || selectListLineNameDisplay.touched) && intNameDisplay.errors?.required) }">
+                  <small *ngIf="intNameDisplay.invalid && (intNameDisplay.dirty || intNameDisplay.touched) && intNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Number of characters allowed:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="intCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (intCharactersAllowed.invalid && (intCharactersAllowed.dirty || intCharactersAllowed.touched) && intCharactersAllowed.errors?.required) }">
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="intCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (intCharactersAllowed.invalid && (intCharactersAllowed.dirty || intCharactersAllowed.touched) && intCharactersAllowed.errors?.required) }">
+
+
+                  <small *ngIf="intCharactersAllowed.invalid && (intCharactersAllowed.dirty || intCharactersAllowed.touched) && intCharactersAllowed.errors?.required"
+                         style="color:red;">Length is required</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="intMarkRequired" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="bigInt">
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="bigintNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (bigintNameDisplay.invalid && (bigintNameDisplay.dirty || bigintNameDisplay.touched) && bigintNameDisplay.errors?.required) }">
+
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="bigintNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (bigintNameDisplay.invalid && (bigintNameDisplay.dirty || bigintNameDisplay.touched) && bigintNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="bigintNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (bigintNameDisplay.invalid && (bigintNameDisplay.dirty || bigintNameDisplay.touched) && bigintNameDisplay.errors?.required) }">
+
+                  <small *ngIf="bigintNameDisplay.invalid && (bigintNameDisplay.dirty || bigintNameDisplay.touched) && bigintNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Number of characters allowed:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="bigintCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (bigintCharactersAllowed.invalid && (bigintCharactersAllowed.dirty || bigintCharactersAllowed.touched) && bigintCharactersAllowed.errors?.required) }">
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="bigintCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (bigintCharactersAllowed.invalid && (bigintCharactersAllowed.dirty || bigintCharactersAllowed.touched) && bigintCharactersAllowed.errors?.required) }">
+
+
+                  <small *ngIf="bigintCharactersAllowed.invalid && (bigintCharactersAllowed.dirty || bigintCharactersAllowed.touched) && bigintCharactersAllowed.errors?.required"
+                         style="color:red;">Length is required</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="bigintMarkRequired" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="decimalShow">
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="decimalNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (decimalNameDisplay.invalid && (decimalNameDisplay.dirty || decimalNameDisplay.touched) && decimalNameDisplay.errors?.required) }">
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="decimalNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (decimalNameDisplay.invalid && (decimalNameDisplay.dirty || decimalNameDisplay.touched) && decimalNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="decimalNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (decimalNameDisplay.invalid && (decimalNameDisplay.dirty || decimalNameDisplay.touched) && decimalNameDisplay.errors?.required) }">
+
+                  <small *ngIf="decimalNameDisplay.invalid && (decimalNameDisplay.dirty || decimalNameDisplay.touched) && decimalNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Number of characters allowed:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="decimalCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (decimalCharactersAllowed.invalid && (decimalCharactersAllowed.dirty || decimalCharactersAllowed.touched) && decimalCharactersAllowed.errors?.required) }">
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="decimalCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (decimalCharactersAllowed.invalid && (decimalCharactersAllowed.dirty || decimalCharactersAllowed.touched) && decimalCharactersAllowed.errors?.required) }">
+
+                  <small *ngIf="decimalCharactersAllowed.invalid && (decimalCharactersAllowed.dirty || decimalCharactersAllowed.touched) && decimalCharactersAllowed.errors?.required"
+                         style="color:red;">Length is required</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="decimalMarkRequired" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="dateShow">
+              <div class="col-12 col-md-12 col-lg-12">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="dateNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (dateNameDisplay.invalid && (dateNameDisplay.dirty || dateNameDisplay.touched) && dateNameDisplay.errors?.required) }">
+
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="dateNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (dateNameDisplay.invalid && (dateNameDisplay.dirty || dateNameDisplay.touched) && dateNameDisplay.errors?.required) }">
+
+                  <small *ngIf="dateNameDisplay.invalid && (dateNameDisplay.dirty || dateNameDisplay.touched) && dateNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="decimalMarkRequired" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="booleanShow">
+              <div class="col-12 col-md-12 col-lg-12">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="booleanNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (booleanNameDisplay.invalid && (booleanNameDisplay.dirty || booleanNameDisplay.touched) && booleanNameDisplay.errors?.required) }">
+
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="booleanNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (booleanNameDisplay.invalid && (booleanNameDisplay.dirty || booleanNameDisplay.touched) && booleanNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="booleanNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (booleanNameDisplay.invalid && (booleanNameDisplay.dirty || booleanNameDisplay.touched) && booleanNameDisplay.errors?.required) }">
+
+                  <small *ngIf="dateNameDisplay.invalid && (booleanNameDisplay.dirty || booleanNameDisplay.touched) && booleanNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="row" *ngIf="checkboxShow">
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="checkboxNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (checkboxNameDisplay.invalid && (checkboxNameDisplay.dirty || checkboxNameDisplay.touched) && checkboxNameDisplay.errors?.required) }">
+
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="checkboxNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (checkboxNameDisplay.invalid && (checkboxNameDisplay.dirty || checkboxNameDisplay.touched) && checkboxNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="checkboxNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (checkboxNameDisplay.invalid && (checkboxNameDisplay.dirty || checkboxNameDisplay.touched) && checkboxNameDisplay.errors?.required) }">
+
+                  <small *ngIf="checkboxNameDisplay.invalid && (checkboxNameDisplay.dirty || checkboxNameDisplay.touched) && checkboxNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Pick List Option:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="checkboxCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (checkboxCharactersAllowed.invalid && (checkboxCharactersAllowed.dirty || checkboxCharactersAllowed.touched) && checkboxCharactersAllowed.errors?.required) }">
+                  <input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="checkboxCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (checkboxCharactersAllowed.invalid && (checkboxCharactersAllowed.dirty || checkboxCharactersAllowed.touched) && checkboxCharactersAllowed.errors?.required) }">
+                  <small *ngIf="checkboxCharactersAllowed.invalid && (checkboxCharactersAllowed.dirty || checkboxCharactersAllowed.touched) && checkboxCharactersAllowed.errors?.required"
+                         style="color:red;">Enter comma separated values</small>
+                </div>
+              </div>
+
+
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="checkboxMarkRequired" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="radioShow">
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="radioNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (radioNameDisplay.invalid && (radioNameDisplay.dirty || radioNameDisplay.touched) && radioNameDisplay.errors?.required) }">
+
+                  <input type="text" class="form-control" formControlName="radioNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (radioNameDisplay.invalid && (radioNameDisplay.dirty || radioNameDisplay.touched) && radioNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="radioNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (radioNameDisplay.invalid && (radioNameDisplay.dirty || radioNameDisplay.touched) && radioNameDisplay.errors?.required) }">
+
+                  <small *ngIf="radioNameDisplay.invalid && (radioNameDisplay.dirty || radioNameDisplay.touched) && radioNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Pick List Option:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="radioCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (radioCharactersAllowed.invalid && (radioCharactersAllowed.dirty || radioCharactersAllowed.touched) && radioCharactersAllowed.errors?.required) }">
+                  <input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="radioCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (radioCharactersAllowed.invalid && (radioCharactersAllowed.dirty || radioCharactersAllowed.touched) && radioCharactersAllowed.errors?.required) }">
+                  <small *ngIf="radioCharactersAllowed.invalid && (radioCharactersAllowed.dirty || radioCharactersAllowed.touched) && radioCharactersAllowed.errors?.required"
+                         style="color:red;">Enter comma separated values</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="radioMarkRequired" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="urlShow">
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Display Name:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <!--<input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="urlNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (urlNameDisplay.invalid && (urlNameDisplay.dirty || urlNameDisplay.touched) && urlNameDisplay.errors?.required) }">
+
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="urlNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (urlNameDisplay.invalid && (urlNameDisplay.dirty || urlNameDisplay.touched) && urlNameDisplay.errors?.required) }">-->
+                  <input type="text" class="form-control" formControlName="urlNameDisplay" maxlength="50"
+                         placeholder="{{fieldName}}" [ngClass]="{'is-invalid': (urlNameDisplay.invalid && (urlNameDisplay.dirty || urlNameDisplay.touched) && urlNameDisplay.errors?.required) }">
+
+                  <small *ngIf="urlNameDisplay.invalid && (urlNameDisplay.dirty || urlNameDisplay.touched) && urlNameDisplay.errors?.required"
+                         style="color:red;">Please enter display name</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <label>Number of characters allowed:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" *ngIf="is_system_generated" disabled formControlName="urlCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (urlCharactersAllowed.invalid && (urlCharactersAllowed.dirty || urlCharactersAllowed.touched) && urlCharactersAllowed.errors?.required) }">
+
+                  <input type="text" class="form-control" *ngIf="!is_system_generated" formControlName="urlCharactersAllowed" maxlength="50"
+                         placeholder="Find Customer" [ngClass]="{'is-invalid': (urlCharactersAllowed.invalid && (urlCharactersAllowed.dirty || urlCharactersAllowed.touched) && urlCharactersAllowed.errors?.required) }">
+
+                  <small *ngIf="urlCharactersAllowed.invalid && (urlCharactersAllowed.dirty || urlCharactersAllowed.touched) && urlCharactersAllowed.errors?.required"
+                         style="color:red;">Enter comma separated values</small>
+                </div>
+              </div>
+              <div class="col-6 col-md-12 col-lg-12">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="SingleLine" class="dynamic custom-control-input" formControlName="urlMarkRequired" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="SingleLine">
+                      Mark as Required
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-3 col-md-3 col-lg-3">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="chklistfieldvisible" *ngIf="is_system_generated == false" class="dynamic custom-control-input" formControlName="listfieldvisible" type="checkbox">
+                    <input id="chklistfieldvisible" *ngIf="is_system_generated == true" class="dynamic custom-control-input" disabled formControlName="listfieldvisible" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="chklistfieldvisible">
+                      List Field Visibility
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-3 col-md-3 col-lg-3">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="chkformfieldvisible" *ngIf="is_system_generated == false" class="dynamic custom-control-input" formControlName="formfieldvisible" type="checkbox">
+                    <input id="chkformfieldvisible" *ngIf="is_system_generated == true" class="dynamic custom-control-input" disabled formControlName="formfieldvisible" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="chkformfieldvisible">
+                      Form Field Visibility
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-3 col-md-3 col-lg-3">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input id="chkformis_readOnly" class="dynamic custom-control-input" formControlName="is_readOnly" type="checkbox">
+                    <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                           for="chkformis_readOnly">
+                      Is Readonly
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+       
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="Save()"><i class="feather-save text-white"></i> Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

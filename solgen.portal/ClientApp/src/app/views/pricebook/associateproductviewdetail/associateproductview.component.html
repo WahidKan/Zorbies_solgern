@@ -1,0 +1,41 @@
+<div bsModal #totalDocAssociateProduct="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body scrolable-height" style=" max-height:600px; overflow-y:auto;">
+        <div class="table-responsive">
+          <table class="table mb-0" style="min-width:300px;">
+            <thead class="thead-bg">
+              <tr>
+                <th>Document Name</th>
+                <th>List Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of documents; let i=index">
+                <td>
+                  <span>{{item.ProductName}}</span>
+
+                </td>
+                <td><span>{{item.ListPrice}}</span></td>
+                <td>
+                  <a title="Click to delete." (click)="DeletePriceBook(item.PriceMapId,item.PriceBookID,item.ProductName)" href="javascript:void(0);"><i class="feather-trash-2 text-danger"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

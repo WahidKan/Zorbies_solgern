@@ -1,0 +1,82 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9 mt-3">
+          <span class="dash">Manage Master</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a routerLink="/master">Manage Master</a></li>
+            <!--<li class="breadcrumb-item active">{{pageTitle}}</li>-->
+          </ul>
+        </div>
+        <div class="col-md-3 mt-4 text-right">
+          <button class="w-auto sw-100 btn btn-dark" (click)="close()"><i class="fa fa-arrow-left"></i>&nbsp;Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <app-dynamicform moduleName="lead"></app-dynamicform>
+
+
+            <!--<form [formGroup]="form" *ngIf="form">
+              <ng-container *ngFor="let item of formControlList">
+                <div class="col-md-12 mt-4">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-0 mb-xl-0 float-left">
+                      <label>{{ item.group_name}}</label>
+                    </div>
+                    <ng-container *ngFor="let inner of item.InnerData">
+                      <div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : inner.form_field_visibility == 'NO', 'col-lg-12 col-xl-12': inner.layout_type =='single', 'col-lg-6 col-xl-6': inner.layout_type =='double', 'col-lg-4 col-xl-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                             inner.layout_type =='four' }"
+                         ngShow="inner.dependent_show_type == true">
+                        <input type="hidden" *ngIf="inner.form_field_visibility == 'NO'" />  
+                        <div class="form-group"  *ngIf="inner.form_field_visibility == 'YES'">
+                          <label>{{ inner.display_name}} <span [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+                          <a href="javascript:void(0);" data-toggle="popoveruserguide" data-content="inner.user_guide">
+                            <i class="fa fa-question-circle-o text-popover" style="font-size: 14px;"></i>
+                          </a>
+                          <div class="row">
+                            <div class="col-12 float-left">
+                              <input type="text" class="form-control"
+                                     [placeholder]="inner.display_name"
+                                     [formControlName]="inner.form_controlName"
+                                     [ngClass]="{'is-invalid': (form.get(inner.form_controlName).invalid && (form.get(inner.form_controlName).dirty || form.get(inner.form_controlName).touched) && (form.get(inner.form_controlName).errors?.required || form.get(inner.form_controlName).errors?.maxlength)) }"
+                                *ngIf="inner.picklist_options == 'Lookup' && inner.dt_code !='date'  && inner.dt_code !='radio'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox'" />
+                              <small *ngIf="form.get(inner.form_controlName).invalid && (form.get(inner.form_controlName).dirty || form.get(inner.form_controlName).touched) && form.get(inner.form_controlName).errors?.required"
+                                     class="text-danger">{{inner.display_name}} is required</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+</ng-container>
+
+                  </div>
+                </div>
+              </ng-container>
+
+
+              
+
+              <div class="col-12">
+                <a href="javascript:void(0);" class="btn btn-primary form-btns" (click)="onSubmit()"><i class="fas fa-save"></i> Submit</a>
+
+
+
+                <a href="javascript:void(0);" class="btn btn-danger form-btns" (click)="close()"><i class="fas fa-times"></i> Cancel</a>
+              </div>
+
+            </form>-->
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

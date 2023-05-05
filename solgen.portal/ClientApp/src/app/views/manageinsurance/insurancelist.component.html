@@ -1,0 +1,172 @@
+<div class="page">
+  <!-- Breadcrumb-->
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Manage Insurance Company</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active">Manage Insurance Company</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>         <!-- Header Section-->
+  <div class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white custom-shadow">
+            <div class="col-md-12 border-bottom py-3">
+              <div class="row">
+                <div class="col-md-12 col-lg-12 col-xl-12">
+                  <div class="row mx-0 custom-top-padding">
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group mb-xl-0">
+                        <input class="form-control" type="text" [(ngModel)]='listFilter' placeholder="Search By Name/Agent Email" (keyup)='updateFilter($event)'>
+                        <input type="button" class="btn btn-primary src-icon" (click)="search()" value="Search">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-2 mr-auto">
+                      <div class="form-group mb-xl-0">
+                       
+                        <input type="button" class="btn btn-danger reset-icon" value="Reset" (click)="reset()" />
+                      </div>
+                    </div>
+                    <div *ngIf='modulePermission!==null && modulePermission.roleModuleAddFlag' class="col-12 col-md-6 col-lg-6 col-xl-3 text-md-right float-right"><a routerLink="/insurance/addinsurance" class="btn btn-success form-btns"><i class="feather-plus"></i> Add Insurance</a></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="">
+              <div class="table-responsive">
+                <div class="table table-striped">
+                  <ngx-datatable  #table class="bootstrap table table-hover table-dynamic"
+                                 [rows]="pagedData.data"
+                                 [columnMode]="'force'"
+                                 [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="40"
+                                 
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="pagedData.pager.totalItems"
+                                 [offset]="pagedData.pager.currentPage"
+                                 [limit]="pagedData.pager.pageSize"
+                                 (page)='setPage($event)'
+                                 (sort)="onSort($event)">
+                    <ngx-datatable-column name="Name" prop="Name" [sortable]="true"
+                                          *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div><a [routerLink]="['/insurance/editinsurance',row.InsuranceId]">{{row.Name}}</a></div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Name" prop="Name" [sortable]="true" *ngIf='modulePermission!==null && !modulePermission.roleModuleReadFlag'></ngx-datatable-column>
+
+                    <ngx-datatable-column name="Agent Email" prop="AgentEmail" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div title="{{row.AgentEmail}}">
+                          {{row.AgentEmail | truncate}}
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Agent Name" prop="AgentName" [sortable]="true" headerClass="m-min-width115">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div title="{{row.AgentName}}">
+                          {{row.AgentName | truncate}}
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="County" prop="COUNTY" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="State" prop="State" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="City" prop="City" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Zip Code" prop="ZipCode" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Address" prop="Address" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div title="{{row.Address}}">
+                          {{row.Address | truncate}}
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="IsActive" [sortable]="true" headerClass="text-center"
+                                          *ngIf='modulePermission!==null &&  modulePermission.roleModuleUpdateFlag'>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center">
+                          <a *ngIf="row.IsActive == 0 && row.AssociateUser==null" href="javascript:void(0);" (click)="enable(row)"><i title="Click to enable." class="fa fa-times text-danger icon_tick"></i></a>
+                          <a *ngIf="row.IsActive == 1 && row.AssociateUser==null" href="javascript:void(0);" (click)="disable(row)"><i title="Click to disable." class="feather-check text-success icon_tick"></i></a>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="IsActive" [sortable]="true" headerClass="text-center"
+                                          *ngIf='!modulePermission!==null && !modulePermission.roleModuleUpdateFlag'>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center" *ngIf="row.IsActive == 0 && row.AssociateUser==null">
+                          <span><i class="fa fa-times text-danger icon_tick"></i></span>
+                        </div>
+                        <div class="icon-text-center" *ngIf="row.IsActive == 1 && row.AssociateUser==null">
+                          <span><i class="feather-check text-success icon_tick"></i></span>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Delete" [sortable]="false" headerClass="text-center"
+                                          *ngIf='modulePermission!==null && modulePermission.roleModuleDeleteFlag'>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center" *ngIf="row.AssociateUser==null">
+                          <a href="javascript:void(0);" (click)="DeleteInsurance(row)" class="btn-delete mx-1"><i title="Click to delete." class="feather-trash-2"></i></a>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="currentPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count">
+                          {{rowCount}} total
+                        </div>
+                        <div>
+                          <div class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                         [pagerPreviousIcon]="'fa fa-angle-left'"
+                                         [pagerNextIcon]="'fa feather-chevron-left'"
+                                         [page]="pagedData.pager.currentPage+1"
+                                         [size]="pageSizeValue"
+                                         [count]="pagedData.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPage($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

@@ -1,0 +1,169 @@
+<div class="header float-left w-100 mb-2">
+    <h2 class="float-left pr-2"  *ngIf="ScreenView.isHeaderShown" ><strong>{{ScreenView.name}}</strong></h2>
+</div>
+<div class="clearfix"></div>
+<div class="row" *ngIf="executionForm">
+    <div class="col-12">
+        <div class="panel">
+            <div class="panel-content">
+                <form [formGroup]="executionForm">
+                    <div class="row">
+                    <ng-container *ngFor="let control of ScreenView.controls;let j=index">
+                       
+                        <div [ngClass]="{'col-lg-12 col-xl-12': (ScreenView.displayFormat =='single' ||  ScreenView.displayFormat == '')
+                                ,'col-lg-6 col-xl-6': ScreenView.displayFormat =='double' , 'col-lg-4 col-xl-4':ScreenView.displayFormat =='triple', 'col-lg-3 col-xl-3': (ScreenView.displayFormat =='four' || ScreenView.displayFormat == undefined ) }">
+                        <span [ngSwitch]="control.fieldType">
+                            <span *ngSwitchCase="'textbox'">
+                                    <label>{{control.name}}:<span *ngIf="control.isRequired"
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group mb-3 ">
+                                        <input type="text" [formControlName]="control.formControlName" class="form-control"
+                                            [name]="control.formControlName"  [title]="control.helpText"
+                                            [ngClass]="{'is-invalid': (executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched || submitted) && executionForm.get(control.formControlName)?.errors?.required)}">
+                                    </div>
+                                    <div>
+                                        <small
+                                            *ngIf="executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched || submitted) && executionForm.get(control.formControlName)?.errors?.required"
+                                            class="text-danger">{{control.validateInput}}</small>
+                                    </div>
+                                   
+                            </span>
+                            <span *ngSwitchCase="'span'">
+                                    <label>{{control.name}}:</label>
+                                    <div class="input-group mb-3 ">
+                                        <label>{{control.description}}</label>
+                                    </div>
+                            </span>
+                            <span *ngSwitchCase="'number'">
+                                    <label>{{control.name}}:<span *ngIf="control.isRequired"
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group mb-3 ">
+                                        <input type="number" [formControlName]="control.formControlName" class="form-control"
+                                            [name]="control.formControlName"  [title]="control.helpText"
+                                            [ngClass]="{'is-invalid': (executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched) && executionForm.get(control.formControlName)?.errors?.required)}">
+                                    </div>
+                                    <div>
+                                        <small
+                                            *ngIf="executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched  || submitted) && executionForm.get(control.formControlName)?.errors?.required"
+                                            class="text-danger">{{control.validateInput}} </small>
+                                    </div>
+                            </span>
+                            <span *ngSwitchCase="'radio'">
+                                    <label>{{control.name}}:<span *ngIf="control.isRequired"
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group mb-3 ">
+                                        <div *ngFor="let rdoption of control.pickListOptions">
+                                            <input id="{{rdoption.field}}" type="radio"  [title]="control.helpText" value="{{rdoption.field}}" name="{{control.formControlName}}"
+                                              formControlName="{{control.formControlName}}">
+                                            <label for="{{rdoption.field}}">{{rdoption.field}}</label>
+                                          </div>
+                                    </div>
+                                    <div>
+                                        <small
+                                            *ngIf="executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched || submitted) && executionForm.get(control.formControlName)?.errors?.required"
+                                            class="text-danger">{{control.validateInput}} </small>
+                                    </div>
+                                
+                            </span>
+                            <span *ngSwitchCase="'checkbox'">
+                                    <label>{{control.name}}:<span *ngIf="control.isRequired"
+                                            class="text-danger">*</span></label>
+                                    <div class="mb-3">
+                                        <input type="checkbox" [formControlName]="control.formControlName" class="form-control"
+                                             >
+                                    </div>
+                                    <div>
+                                        <small
+                                        *ngIf="executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched || submitted) && executionForm.get(control.formControlName)?.errors?.required"
+                                            class="text-danger">{{control.name}} is required</small>
+                                    </div>
+                            </span>
+                            <span *ngSwitchCase="'dropdown'">
+                                <div  >
+                                    <label>{{control.name}}:<span *ngIf="control.isRequired"
+                                        class="text-danger">*</span></label>
+                                <div class="mb-3">
+                                <ng-select  *ngIf="!control.isCustomField" [formControlName]="control.formControlName"
+                                            placeholder="Select object"  [items]="control.pickListOptions" bindLabel="field" [title]="control.helpText"
+                                            (clear)="onClearLang(control,j)"></ng-select>
+                                 <ng-select *ngIf="control.isCustomField" 
+                                            [formControlName]="control.formControlName"
+                                            placeholder="Select object"
+                                            [closeOnSelect]="true"
+                                              [items]="control.pickListOptions" 
+                                              bindLabel="name"
+                                            (scrollToEnd)="onScrollToEnd(control,j)"
+                                             [virtualScroll]="true" 
+                                             (keyup)="onKey($event,control,j)"
+                                            ></ng-select> 
+                                     <!-- <ng-select *ngIf="control.isCustomField"  [(ngModel)]="control.defaultValue" [formControlName]="control.formControlName"
+                                    [ngClass]="{'is-invalid': (executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched) && executionForm.get(control.formControlName)?.errors?.required)}">
+                                        <ng-option *ngFor="let item of control.pickListOptions"   [value]="item">{{item.name}}</ng-option>
+                                     </ng-select> -->
+                                </div>
+                                <div>
+                                    <small *ngIf="((executionForm.get(control.formControlName)?.invalid) && (executionForm.get(control.formControlName).dirty) || (executionForm.get(control.formControlName)?.touched) && (executionForm.get(control.formControlName)?.errors?.required))"
+                                    class="text-danger">{{control.validateInput}}</small>
+                                    <!-- <small
+                                        *ngIf="executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched) && executionForm.get(control.formControlName)?.errors?.required"
+                                        class="text-danger">{{control.name}} is required</small>  -->
+                                </div>
+                                </div>
+                                    
+                            </span>
+                            <span *ngSwitchCase="'date'">
+                                    <label>{{control.name}}:<span *ngIf="control.isRequired"
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group mb-3  datepickerinpop">
+                                       
+                                      <p-calendar class="calendarwidth" inputStyleClass="form-control significantdate"
+                                      placeholder="Select Date" [showIcon]="true" [showTime]="false" [title]="control.helpText"
+                                      dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true"
+                                      [yearNavigator]="true" yearRange="1919:2030"
+                                      [formControlName]="control.formControlName">
+                                  </p-calendar>
+                                    </div>
+                                    <div>
+                                        <small
+                                            *ngIf="executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched || submitted) && executionForm.get(control.formControlName)?.errors?.required"
+                                            class="text-danger">{{control.validateInput}} </small>
+                                    </div>
+                            </span>
+                            <span *ngSwitchCase="'datetime'">
+                                    <label>{{control.name}}:<span *ngIf="control.isRequired"
+                                            class="text-danger">*</span></label>
+                                    <div class="input-group mb-3  datepickerinpop">
+                                       
+                                      <p-calendar class="calendarwidth" inputStyleClass="form-control significantdate"
+                                      placeholder="Select Date" [showIcon]="true" [showTime]="true" [title]="control.helpText"
+                                      dateFormat="mm/dd/yy" hourFormat="24" showButtonBar="true" [monthNavigator]="true"
+                                      [yearNavigator]="true" yearRange="1919:2030"
+                                      [formControlName]="control.formControlName">
+                                  </p-calendar>
+
+                                    </div>
+                                    <div>
+                                        <small
+                                            *ngIf="executionForm.get(control.formControlName)?.invalid && (executionForm.get(control.formControlName)?.dirty || executionForm.get(control.formControlName)?.touched || submitted) && executionForm.get(control.formControlName)?.errors?.required"
+                                            class="text-danger">{{control.validateInput}} </small>
+                                    </div>
+                            </span>
+                            <span *ngSwitchDefault>
+                                    <label>{{control.Name}}:</label>
+                            </span>
+                        </span>
+                        </div>
+                   
+                    </ng-container>
+                </div>
+                    <div class="col-sm-12 col-md-12 text-right" *ngIf="ScreenView.isFooterShown">
+                        <input type="button" style="float: left;" *ngIf="ScreenView.isPauseButtonShown" class="btn btn-info mr-2" [value]="pausebutton">
+                        <input type="button" *ngIf="ScreenView.isPreviousbuttonShown" class="btn btn-info mr-2" [value]="previousbutton" (click)="Prev()">
+                        <input type="button" *ngIf="ScreenView.isNextOrFinishButtonShown" class="btn btn-success" [value]="nextOrFinishButton" (click)="Next()">
+                    </div>
+                </form>
+            </div>
+            <!-- <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader> -->
+        </div>
+    </div>
+</div>

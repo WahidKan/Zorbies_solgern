@@ -1,0 +1,419 @@
+<!-- <div class="header float-left w-100 mb-2">
+  <h2 *ngIf="!banker" class="float-left pr-2"><strong>Account Detail</strong></h2>
+  <h2 *ngIf="banker" class="float-left pr-2"><strong>User Detail</strong></h2>
+  <div class="breadcrumb-wrapper w-100">
+    <ol class="breadcrumb">
+      <li><a routerLink="/dashboard" class="smview">Dashboard</a></li>
+      <li *ngIf="!banker && !dealer"><a class="smview" routerLink="/accountslist">Manage Accounts</a></li>
+      <li *ngIf="!banker" class="active">Account Detail</li>
+      <li *ngIf="banker" class="active">User Detail</li>
+    </ol>
+  </div>
+
+</div> -->
+<!-- <div class="clearfix"></div> -->
+<!-- <app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb> -->
+<div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+        <h2 class="float-left pr-2 w-100">
+            <h2 *ngIf="!banker" class="float-left pr-2"><strong>Account Detail</strong></h2>
+            <h2 *ngIf="banker" class="float-left pr-2"><strong>User Detail</strong></h2>
+        </h2>
+        <div class="breadcrumb-wrapper w-100">
+            <ol class="breadcrumb">
+                <li><a routerLink="/dashboard" class="smview">Dashboard</a></li>
+                <li *ngIf="!banker && !dealer"><a class="smview" routerLink="{{rolueRoute}}">Manage {{roleName}}</a></li>
+                <li *ngIf="!banker" class="active">{{roleName}} Detail</li>
+                <li *ngIf="banker" class="active">User Detail</li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+        <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i
+        class="feather-repeat mr-1"></i>Switch Company</a>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="panel" *ngIf="AccountDetails!=null && AccountDetails!='undefined'">
+    <div class="panel-content ">
+
+        <div class="row flex-row-reverse py-3 border-bottom mx-0">
+            <div class="col-md-5 col-lg-3 text-md-right btns-viewui">
+                <a class="btn btn-dark text-white smview" href="javascript:void(0);" (click)="close()">
+                    <i class="feather-arrow-left mr-1"></i> Back
+                </a>
+            </div>
+            <div class="col-md-7 col-lg-9 view-details d-flex">
+                <span class="user-imgicon"><i class="feather-user"></i></span>
+                <ul class="user-content w-100" *ngIf="AccountDetails">
+                    <li><strong>{{AccountDetails.userType}} Account:</strong> {{AccountDetails.name}}</li>
+
+                    <li *ngIf="AccountDetails!=null && AccountDetails!='undefined'">
+                        <strong>Address:</strong> {{AccountDetails.street}} {{AccountDetails.city}} {{AccountDetails.state}} {{AccountDetails.country }}
+                    </li>
+
+                    <li *ngIf="AccountDetails!=null && AccountDetails!='undefined'">
+                        <strong>Modified By:</strong> {{AccountDetails.modifiedByName }}
+                    </li>
+                    <li *ngIf="AccountDetails!=null && AccountDetails!='undefined'">
+                        <strong>Created By:</strong> {{AccountDetails.createdByName }}
+                    </li>
+                    <li *ngIf="AccountDetails!=null && AccountDetails!='undefined'">
+                        <strong>Modified On:</strong> {{(AccountDetails.modifiedOn !== null) ? (AccountDetails.modifiedOn | utctolocal) : "" }}
+                    </li>
+                    <li *ngIf="AccountDetails!=null && AccountDetails!='undefined'">
+                        <strong>Created On:</strong> {{AccountDetails.createdOnDate | utctolocal }}
+                    </li>
+                    <li *ngIf="AccountDetails!=null && AccountDetails!='undefined'">
+                        <strong>Company URL:</strong>
+                        <a target="_blank" href='http://{{AccountDetails.companyUrl }}'>{{AccountDetails.companyUrl }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <app-loader [size]=60 [color]="'white'" *ngIf="loadSave " class="loader"></app-loader>
+            <!-- <div class="col-md-12" *ngIf="AccountDetails.userType != 'Dealer'">
+
+        <h3  *ngIf="IsStandard" class="form-heading">
+          <span>Contact List</span>
+        </h3>
+
+      </div> -->
+            <div class="col-md-12 px-2">
+
+                <div class="panel-header border-bottom pb-3 btn-iconres mb-3">
+                    <div class="row mt-2">
+                        <div class="col-md-12 col-lg-6 pr-3 pr-lg-0">
+                            <div class="row searchfield">
+                                <div class="col-lg-4 float-left mb-lg-0 mb-2">
+                                    <input class="form-control input-sm" type="text" [(ngModel)]='listFilter' placeholder="Search By Name" (keyup)='updateFilter($event)'>
+                                </div>
+                                <div class="col-lg-8 float-left pl-3 pl-lg-0">
+                                    <a class="btn btn-dark form-btns mr-2 " href="javascript:void(0);" (click)="searchByName()" tooltip="Search"><span><i class="feather-search mr-1"></i> Search</span></a>
+                                    <a class="btn btn-white form-btns" href="javascript:void(0);" (click)="resetName()" tooltip="Reset"><span><i class="feather-repeat mr-1"></i> Reset</span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 text-right">
+                            <a *ngIf="!IsStandard && AccountDetails.userType != 'Dealer'" (click)="showpopup(this.accountId)" class="btn btn-success form-btns  mr-2 smview" href="javascript:void(0)"><i
+                class="feather-plus"></i> Add Contact </a>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-12 col-md-12 px-4 mb-3">
+                    <form [formGroup]="configurationSetings">
+                        <div class="table-responsive border" style="overflow:visible;">
+                            <table class="table mb-0">
+                                <thead class="thead-bg">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Mobile</th>
+                                        <th *ngIf="!IsStandard"> Is Primary</th>
+                                        <th>Enable Login</th>
+                                        <!--<th *ngIf="isUsertypeBanker">Role</th>-->
+                                        <th *ngIf="(banker || isCompanyAdmin) && !IsStandard">Assign Role<span class="text-danger">*</span></th>
+                                        <th>Login</th>
+                                        <th>Email Confirmed</th>
+                                        <th>Set Password</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody formArrayName="accoundetailView">
+                                    <tr [formGroupName]="i" *ngFor="let field of accoundetailView.controls; let i=index">
+                                        <td>
+                                            <!--[routerLink]="['/contactlist/editContact',field.get('contactID').value]"-->
+                                            <a href="javascript:void(0);" class="smview" (click)="showPopupForEdit(field.get('contactID').value)">{{field.get('name').value}} </a>
+                                        </td>
+                                        <td>
+                                            <span>{{field.get('email').value}}</span>
+                                        </td>
+
+                                        <td>
+                                            <span>{{field.get('phone').value}}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{field.get('mobile').value}}</span>
+                                        </td>
+                                        <td *ngIf="!IsStandard && field.get('isPrimary').value==false">
+                                            <!--{{field.get('isPrimary').value}}-->
+                                            <label class="switch">
+                                            <input type="checkbox" disabled="{{isDealerAccount}}" (change)="isPrimaryValidator(field,i,true)" formControlName="isPrimary" />
+                                            <span class="slider round"><span>Yes</span></span>
+                                          </label>
+                                        </td>
+                                        <td *ngIf="!IsStandard && field.get('isPrimary').value==true">
+                                            <!--{{field.get('isPrimary').value}}-->
+                                            <label class="switch">
+                                            <input type="checkbox" formControlName="isPrimary"  (change)="isPrimaryValidator(field,i,false)" disabled="{{isDealerAccount}}" />
+                                            <span class="slider round"><span>Yes</span></span>
+                                          </label>
+                                        </td>
+                                        <td>
+                                            <label class="switch">
+                                            <input type="checkbox" (change)="validator(field)" formControlName="enableLogin" disabled="{{isDealerAccount}}">
+                                                <span class="slider round"><span>Yes</span></span>
+                                            </label>
+                                        </td>
+                                        <td *ngIf="(dealer || banker || isCompanyAdmin) && !IsStandard">
+                                            <div class="form-group mb-0">
+
+                                                <ng-select [items]="lstRole" placeholder="Select Role" bindValue="RoleIDAuto" bindLabel="RoleName" formControlName="role" appendTo="body" (change)="selectUser($event,field,i)" [ngClass]="{'disabledddl':isDealerAccount}" [ngClass]="{'is-invalid': (field.get('role').invalid && (field.get('role').dirty || field.get('role').touched) && field.get('role').errors?.required) }">
+                                                </ng-select>
+                                                <small *ngIf="field.get('role').errors?.required" class="text-danger">Role is required</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button [disabled]='!field.dirty' disabled="isDealerAccount" class="btn btn-success mr-1" (click)="EnableLoginForAllUser(field)">
+                                                <i class="feather-save"></i> Save
+                                            </button>
+
+                                            <!--<a href="javascript:void(0);" class="btn btn-success mr-1 disabled" (click)="EnableLoginForAllUser(field)"></a>-->
+                                            <!--<a href="javascript:void(0);"  class="btn btn-success mr-1" (click)="EnableLoginForAllUser(field)"><i class="feather-save"></i> Save</a>-->
+                                        </td>
+
+
+                                        <td>
+                                            <span *ngIf="field.get('emailConfirmed').value==false || field.get('enableLogin').value==false || (field.get('enableLogin').value==true && field.get('emailConfirmed').value==false)" title="No" class="status-box bg-danger">Not Confirmed</span>
+                                            <span *ngIf="field.get('emailConfirmed').value==true ||  (field.get('enableLogin').value==true && field.get('emailConfirmed').value==true)" title="Yes" class="status-box bg-success">Confirmed</span>
+                                        </td>
+
+                                        <!---->
+                                        <td *ngIf="field.get('checkEnabledLogin').value==true">
+
+                                            <a *ngIf="field.get('emailConfirmed').value!=true || (field.get('enableLogin').value==true && field.get('emailConfirmed').value==false)" (click)="sharePasswordLink(field)" title="Share Password Link"><i class="feather-share-2 pr-2"></i></a>
+                                            <a *ngIf="field.get('emailConfirmed').value==true || (field.get('enableLogin').value==true && field.get('emailConfirmed').value==true)" (click)="showModel(field)" title="setPassword"><i class="fa fa-key text-info pr-2"></i></a>
+                                        </td>
+                                        <td *ngIf="!field.get('checkEnabledLogin').value==true"></td>
+
+                                        <td>
+                                            <a [ngClass]="{'disabled': isDealerAccount}" title="Click to delete." (click)="DeleteUser(field)" href="javascript:void(0);"><i
+                                            class="feather-trash-2 text-danger"></i></a>
+                                        </td>
+                                    </tr>
+                                    <!--<tr *ngIf="!accoundetailView.controls"><td colspan="11">No Record found</td></tr>-->
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+    </div>
+    <!--<div class="row my-4">
+      <div class="col-sm-12 col-md-12">
+
+        <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-backward"></i> Back</a>
+      </div>
+    </div>-->
+    <!--<a *ngIf='addOrUpdatePermission' href="javascript:void(0);" class="btn btn-success mr-1" (click)="onSubmit()"><i class="feather-save"></i> Submit</a>-->
+
+    <div *ngIf="accountId &&  AccountDetails !='undefined' && AccountDetails.accountTypeKey == 'AccountTypeBanker' && user.userType == 'usertypecompanyadmin'" class="d-flex">
+        <div class="col-lg-12 portlets mt-3">
+            <div class="panel cntainerwithoutbg clearfix">
+                <div class="panel-content clearfix mb-4 p-0">
+                    <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active show" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-selected="true">Bank Documents</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="routes-tab" data-toggle="tab" href="#routes" role="tab" aria-selected="true">Data
+                Routes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="mappings-tab" data-toggle="tab" href="#mappings" role="tab" aria-selected="true">Document/Data Route Mappings</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade active show" id="documents" role="tabpanel">
+                            <div class="addabsoultebtn"><a class="btn btn-primary" href="javscript:;" (click)="uploadFormStackDocument()"><i class="feather-upload"></i> Upload Document</a></div>
+                            <div class="panel-content p-0 pagination2 table-responsive no-padding " [ngClass]="{'disabled':loadSave}">
+                                <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="loanDocuments" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40" [rowHeight]="'auto'" [loadingIndicator]="loadSave">
+                                    <ngx-datatable-column name="Document Name" prop="name"></ngx-datatable-column>
+                                    <ngx-datatable-column name="Document Id" prop="id"></ngx-datatable-column>
+                                    <ngx-datatable-column name="Path" prop="folder"></ngx-datatable-column>
+
+                                    <ngx-datatable-column name="Download">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <a class="text-dark" download="{{row.name}}" href="{{siteurl1+row.Url1}}">
+                                                <!--<img src="{{c.fileUrl}}" style="height:50px;width:50px" />-->
+
+                                                <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:40px;width:33px" />
+
+                                            </a>
+
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+
+                                    <!--<ngx-datatable-column name="Path" prop="DateOpened">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{row.folder}}/{{row.name}}
+      </ng-template>
+    </ngx-datatable-column>-->
+                                    <!--<ngx-datatable-column name="Edit">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="OpenMapping(row)"><i class="feather-edit-2"></i> Edit Mapping</a>
+      </ng-template>
+    </ngx-datatable-column>-->
+                                    <ngx-datatable-column name="Edit">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <a href="javascript:void(0);" class="btn btn-success text-white mr-2" (click)="EditDocument(row)"><i
+                          class="feather-edit-2"></i> Edit Document</a>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                </ngx-datatable>
+                                <app-loader [size]=60 [color]="'white'" *ngIf="loadDocuments" class="loader"></app-loader>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="routes" role="tabpanel">
+                            <div class="addabsoultebtn"><a class="btn btn-primary" href="javscript:;" (click)="createDataRoute()"><i
+                    class="feather-plus"></i> Create Data Route</a></div>
+
+                            <div class="panel-content p-0 pagination2 table-responsive no-padding " [ngClass]="{'disabled': loadSave}">
+                                <ngx-datatable #table2 class="bootstrap table table-hover table-dynamic" [rows]="dataRoutes" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40" [rowHeight]="'auto'" [loadingIndicator]="loadSave">
+                                    <ngx-datatable-column name="Data Route Name" prop="name"></ngx-datatable-column>
+                                    <ngx-datatable-column name="Data Route Id" prop="id"></ngx-datatable-column>
+                                    <ngx-datatable-column name="Path" prop="folder"></ngx-datatable-column>
+                                    <!--<ngx-datatable-column name="Path" prop="DateOpened">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.folder}}/{{row.name}}
+                      </ng-template>
+                    </ngx-datatable-column>-->
+                                    <ngx-datatable-column name="Edit">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <a href="javascript:void(0);" class="btn btn-success  text-white mr-2" (click)="OpenRoute(row)"><i
+                          class="feather-edit-2"></i> Edit Data Route</a>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Manage">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <a href="javascript:void(0);" class="btn btn-success  text-white mr-2" (click)="OpenRouteDelivery(row)"><i
+                          class="feather-edit-2"></i>Manage Delivery</a>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                </ngx-datatable>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="mappings" role="tabpanel">
+                            <div class="addabsoultebtn"><a class="btn btn-primary smview" href="javscript:;" (click)="createWebmergeMapping()"><i class="feather-plus"></i> Create Document/Data Route Mapping</a>
+                            </div>
+                            <div class="panel-content p-0 pagination2 table-responsive no-padding " [ngClass]="{'disabled': loadSave}">
+                                <ngx-datatable #table2 class="bootstrap table table-hover table-dynamic" [rows]="webmergeMappingsPagedData.data" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40" [rowHeight]="'auto'" [loadingIndicator]="loadSave">
+                                    <ngx-datatable-column name="Mapping Name" prop="Name"></ngx-datatable-column>
+                                    <ngx-datatable-column name="Mapping Object Id" prop="WebmergeObjectId"></ngx-datatable-column>
+                                    <ngx-datatable-column name="Mapping Object Type" prop="WebmergeObjectType"></ngx-datatable-column>
+                                    <ngx-datatable-column name="Is Default" prop="IsDefault">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <label class="switch">
+                        <input type="checkbox" [checked]="row.IsDefault == true" (change)="onIsDefaultChange(row)" />
+                        <span class="slider round">
+                          <span>Yes</span>
+                        </span>
+                      </label>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column name="Edit">
+                                        <ng-template let-row="row" ngx-datatable-cell-template>
+                                            <a href="javascript:void(0);" class="btn btn-success text-white mr-2 smview" (click)="updateWebmergeMapping(row)"><i class="feather-edit-2"></i> Edit Mapping</a>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                </ngx-datatable>
+                                <app-loader [size]=60 [color]="'white'" *ngIf="loadWebmergeMappingsPagedData" class="loader">
+                                </app-loader>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<app-data-routing #dataRouting (dataRoutingEmit)="dataRoutingEmit()"></app-data-routing>
+<app-upload-document #uploadDocument (uploadDocuments)="uploadDocuments()"></app-upload-document>
+<app-documentmapping #documentMapping (documentMappings)="documentMappings()"></app-documentmapping>
+<app-routing-delivery #delivery></app-routing-delivery>
+
+
+<div class="modal fade in show" bsModal #setPassword="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-lg modal-info ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Set Password Of {{Name}}</h4>
+                <button type="button" class="close" (click)="Closemodel()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style="height:100%;">
+
+                <div class="login-container">
+                    <div class="login-main">
+                        <!--<a href="javascript:void(0);"><img class="img-fluid mb-3" src="assets/default-theme/imagesNew/login-logo.png" style="background: #2f4050; padding:15px;"/></a>-->
+                        <div class="login-box" [ngClass]="{'disabled':loadSave}">
+
+                            <form [formGroup]="setPasswordForm" autocomplete="off">
+                                <div class="form-group pwdtoggle">
+                                    <input class="form-control" type="password" formControlName="password" passwordToggle placeholder="Please enter password" [ngClass]="{'is-invalid': (password.invalid && (password.dirty || password.touched) && (password.errors?.required || password.errors?.maxlength)) }">
+                                    <small *ngIf="password.invalid && (password.dirty || password.touched) && password.errors?.required" class="text-danger">Password is required</small>
+                                </div>
+                                <div class="form-group pwdtoggle">
+                                    <input class="form-control" type="password" formControlName="confirmPassword" passwordToggle placeholder="Please enter confirm password" [ngClass]="{'is-invalid': (confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) && (confirmPassword.errors?.required || confirmPassword.errors?.maxlength)) }">
+                                    <small *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) && confirmPassword.errors?.required" class="text-danger">Confirm Password is required</small>
+                                    <small *ngIf="!confirmPassword.valid  && confirmPassword.hasError('notmatch')" class="text-danger">Confirm password does not match</small>
+                                </div>
+
+                                <div class="col-sm-12 p-0">
+                                    <p class="alert-warning p-2">Note: Password should be combination of lower case, upper case, numeric and special character.</p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-success text-white mr-2 smview" (click)="PasswordSet()"><i class="feather-save"></i>Submit</a>
+                <button type="submit" class="btn btn-danger form-btns smview" (click)="Closemodel()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade in show" bsModal #addEditModal="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div *ngIf="AccountDetails" class="modal-dialog modal-lg modal-info ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{this.popUpState}} Accounts</h4>
+                <button type="button" class="close" (click)="Close(true)" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style="height:100%;">
+                <app-addcontact [Usertype]="Usertype" [newItemEvent]="newItemEvent" [ownerId]="loginid" [accountId]="accountId" (closePopup)="Close(true)" [forAccount]="true" #addEditContactDetail></app-addcontact>
+            </div>
+            <!-- <div class="modal-footer">
+        <div class="row">
+          <div class="mr-2">
+            <a  href="javascript:void(0);" class="btn btn-success mr-1" ><i
+                class="feather-save"></i> Submit</a>
+            <a href="javascript:void(0);" class="btn btn-danger" ><i class="feather-x"></i> Cancel</a>
+          </div>
+        </div>
+      </div> -->
+        </div>
+    </div>
+</div>

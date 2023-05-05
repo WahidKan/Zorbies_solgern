@@ -1,0 +1,25 @@
+<div class="table-responsive">
+  <div class="table table-striped">
+    <ngx-datatable class="bootstrap"
+                   [rows]="pagedData.data"
+                   [columnMode]="'force'"
+                   [externalPaging]="false"
+                   [externalSorting]="false"
+                   [count]="10"
+                   (page)='10'
+                   [loadingIndicator]="loadSave"
+                   [headerHeight]="40"
+                   [footerHeight]="40"
+                   [rowHeight]="'auto'">
+      <ngx-datatable-column name="Added By" prop="Name" [sortable]="true"></ngx-datatable-column>
+      <ngx-datatable-column name="UserType" prop="UserType" [sortable]="true"></ngx-datatable-column>
+      <ngx-datatable-column name="Added On" prop="NotesCreatedOn" [sortable]="true">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{row.NotesCreatedOn | date: 'MM-dd-yyyy'}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Comments" prop="NotesComments" [sortable]="true"></ngx-datatable-column>
+
+    </ngx-datatable>
+  </div>
+</div>

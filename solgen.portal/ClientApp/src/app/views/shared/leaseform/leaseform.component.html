@@ -1,0 +1,445 @@
+<div [formGroup]="leaseDetailForm" class="row" *ngIf="!showForCustomer">
+  <div class="col-12 col-md-12 col-lg-4">
+    <label><b>Use Type:</b><span class="text-danger">*</span></label>
+    <div class="form-group">
+      <div class="form-check-inline">
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" id="customerRadioBussines" [attr.disabled]="isDisabled" name="leaseUseType" value="Business Use" formControlName="leaseUseType" checked="checked">
+          <label class="custom-control-label" for="customerRadioBussines">Business Use </label>
+        </div>
+      </div>
+      <div class="form-check-inline">
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" id="customerRadioConsumer" [attr.disabled]="isDisabled" name="leaseUseType" value="Consumer Use" formControlName="leaseUseType">
+          <label class="custom-control-label" for="customerRadioConsumer">Consumer Use</label>
+        </div>
+      </div>
+      <small *ngIf="leaseDetailForm.get('leaseUseType').invalid && (leaseDetailForm.get('leaseUseType').dirty || leaseDetailForm.get('leaseUseType').touched) && leaseDetailForm.get('leaseUseType').errors?.required"
+             class="text-danger">Use type is required</small>
+    </div>
+  </div>
+  <div class="col-12 col-md-12 col-lg-4">
+    <label><b>Lease Type:</b><span class="text-danger">*</span></label>
+    <div class="form-group">
+      <div class="form-check-inline">
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" [attr.disabled]="isdisable" id="customerRadioVehical" name="leaseType" value="Vehicle Lease" formControlName="leaseType" checked="checked">
+          <label class="custom-control-label" for="customerRadioVehical">Vehicle Lease </label>
+        </div>
+      </div>
+      <div class="form-check-inline">
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" [attr.disabled]="isdisable" id="customerRadioEquipment" name="leaseType" value="Equipment Lease" formControlName="leaseType">
+          <label class="custom-control-label" for="customerRadioEquipment">Equipment Lease</label>
+        </div>
+      </div>
+      <small *ngIf="leaseDetailForm.get('leaseType').invalid && (leaseDetailForm.get('leaseType').dirty || leaseDetailForm.get('leaseType').touched) && leaseDetailForm.get('leaseType').errors?.required"
+             class="text-danger">Lease Type is required</small>
+    </div>
+  </div>
+  <div class="col-12 col-md-12 col-lg-4" *ngIf="!isLeaseDocumentPrefrered && !isSalesUser">
+    <label><b>Lease Preferred Document Signed:</b><span class="text-danger">*</span></label>
+    <div class="form-group">
+      <div class="form-check-inline">
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" id="customRadio" [attr.disabled]="isDisabled"
+                 name="leasePreferredDocumentSignedBy" value="DocuSign" formControlName="leasePreferredDocumentSignedBy">
+          <label class="custom-control-label" for="customRadio">DocuSign</label>
+        </div>
+      </div>
+      <div class="form-check-inline">
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" id="customRadio1" [attr.disabled]="isDisabled" name="leasePreferredDocumentSignedBy" value="Wet Signature" formControlName="leasePreferredDocumentSignedBy">
+          <label class="custom-control-label" for="customRadio1">Wet Signature</label>
+        </div>
+      </div>
+      <small *ngIf="leaseDetailForm.get('leasePreferredDocumentSignedBy').invalid && (leaseDetailForm.get('leasePreferredDocumentSignedBy').dirty || leaseDetailForm.get('leasePreferredDocumentSignedBy').touched) && leaseDetailForm.get('leasePreferredDocumentSignedBy').errors?.required"
+             class="text-danger">Preferred Document Signed is required</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-12 col-lg-4" *ngIf="isLeaseDocumentPrefrered">
+    <label><b>Lease Preferred Document Signed:</b><span class="text-danger">*</span></label>
+    <div class="form-group">
+      <div class="form-check-inline">
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" id="customRadio" [attr.disabled]="isDocumentPreferedDisabled"
+                 name="leasePreferredDocumentSignedBy" value="DocuSign" formControlName="leasePreferredDocumentSignedBy">
+          <label class="custom-control-label" for="customRadio">DocuSign</label>
+        </div>
+      </div>
+      <div class="form-check-inline">
+        <div class="custom-control custom-radio">
+          <input type="radio" class="custom-control-input" id="customRadio1" [attr.disabled]="isDocumentPreferedDisabled" name="leasePreferredDocumentSignedBy" value="Wet Signature" formControlName="leasePreferredDocumentSignedBy">
+          <label class="custom-control-label" for="customRadio1">Wet Signature</label>
+        </div>
+      </div>
+      <small *ngIf="leaseDetailForm.get('leasePreferredDocumentSignedBy').invalid && (leaseDetailForm.get('leasePreferredDocumentSignedBy').dirty || leaseDetailForm.get('leasePreferredDocumentSignedBy').touched) && leaseDetailForm.get('leasePreferredDocumentSignedBy').errors?.required"
+             class="text-danger">Preferred Document Signed is required</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-12 col-lg-4" *ngIf="!showHideTag && customerHideTag">
+    <label>Assign Bank:</label>
+    <div class="form-group">
+      <ng-select [items]="banks"
+                 placeholder="Select Bank" (change)="SetBankAssignId($event.value)" bindValue="value" bindLabel="text" formControlName="leaseAssignedBankId" (clear)="AssignBankddl()">
+      </ng-select>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4" *ngIf="!showHideTag && customerHideTag && !isBankUser">
+    <label>Lease Template:</label><span class="text-danger">*</span>
+    <div class="row">
+      <div class="col-md-10 pr-0">
+        <div class="form-group">
+          <ng-select [items]="templates"
+                     placeholder="Select Template" [ngModel]="LeaseTemplateId"
+                     (change)="onPageSizeChanged($event.value,LeaseTemplateId)"
+                     bindValue="value" bindLabel="text" formControlName="leaseTemplateId"
+                     [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseTemplateId').invalid && (leaseDetailForm.get('leaseTemplateId').dirty || leaseDetailForm.get('leaseTemplateId').touched) && (leaseDetailForm.get('leaseTemplateId').errors?.required)) }"></ng-select>
+          <small *ngIf="leaseDetailForm.get('leaseTemplateId').invalid && (leaseDetailForm.get('leaseTemplateId').dirty || leaseDetailForm.get('leaseTemplateId').touched) && leaseDetailForm.get('leaseTemplateId').errors?.required"
+                 style="color:red;">Lease Template is required</small>
+
+        </div>
+      </div>
+      <div class="col-md-2 pl-0 text-right" *ngIf="isEditLease && !IsGenerateLeaseDoc">
+        <a href="javascript:void(0);" (click)="LeaseTemplateOpen()" class="btn btn-orange"><i class="fas fa-edit"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-12 col-lg-12">
+    <label>Collateral Information (Year, Make, Model):</label>
+    <div class="form-group">
+      <textarea class="form-control" formControlName="leaseOtherDescription" [attr.disabled]="isDisabled"></textarea>
+    </div>
+  </div>
+  <div class="col-12 col-md-12 col-lg-12">
+    <label>Collateral Description:</label>
+    <div class="form-group">
+      <textarea class="form-control" formControlName="leaseDescription" [attr.disabled]="isDisabled"></textarea>
+    </div>
+  </div>
+  <div class="col-12 col-md-12" *ngIf="!showHideTag">
+    <label>VIN or Serial Number:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" placeholder="" [attr.disabled]="isDisabled" formControlName="leaseSerialNumber" maxlength="25"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseSerialNumber').invalid && (leaseDetailForm.get('leaseSerialNumber').dirty || leaseDetailForm.get('leaseSerialNumber').touched) && (leaseDetailForm.get('leaseSerialNumber').errors?.required)) }">
+      <small *ngIf="leaseDetailForm.get('leaseSerialNumber').invalid && (leaseDetailForm.get('leaseSerialNumber').dirty || leaseDetailForm.get('leaseSerialNumber').touched) && leaseDetailForm.get('leaseSerialNumber').errors?.required"
+             style="color:red;">Serial Number is required</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Lease Term:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <ng-select [items]="lstterms"
+                 placeholder="Select Term" bindValue="value" bindLabel="text" formControlName="leaseTerm" (change)="setLeaseTerm($event)"
+                 [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseTerm').invalid && (leaseDetailForm.get('leaseTerm').dirty || leaseDetailForm.get('leaseTerm').touched) && (leaseDetailForm.get('leaseTerm').errors?.required)) }"></ng-select>
+      <small *ngIf="leaseDetailForm.get('leaseTerm').invalid && (leaseDetailForm.get('leaseTerm').dirty || leaseDetailForm.get('leaseTerm').touched) && leaseDetailForm.get('leaseTerm').errors?.required"
+             style="color:red;">Lease Term is required</small>
+
+    </div>
+  </div>
+  <div class="col-12 col-md-6"></div>
+
+  <div class="col-12 col-md-6" *ngIf="!showHideTag && customerHideTag">
+    <label>Date of Lease:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <p-calendar (onSelect)="selectDateOfLease($event)" (onClearClick)="selectDateOfLease($event)" inputStyleClass="form-control start-date" formControlName="leaseDate" placeholder="Select Date of Lease" [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                  [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseDate').invalid && (leaseDetailForm.get('leaseDate').dirty || leaseDetailForm.get('leaseDate').touched) && (leaseDetailForm.get('leaseDate').errors?.required)) }"></p-calendar>
+      <small *ngIf="leaseDetailForm.get('leaseDate').invalid && (leaseDetailForm.get('leaseDate').dirty || leaseDetailForm.get('leaseDate').touched) && leaseDetailForm.get('leaseDate').errors?.required"
+             style="color:red;">Date of Lease is required</small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6" *ngIf="!showHideTag && customerHideTag">
+    <label>Maturity Date:</label>
+    <div class="form-group">
+      <input class="form-control start-date" disabled="disabled" formControlName="leaseMaturityDate" />
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Lease Rate (%):<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" placeholder="" [attr.disabled]="isDisabled" formControlName="leaseRate" maxlength="8" (keyup)="setLeaseRate()"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseRate').invalid && (leaseDetailForm.get('leaseRate').dirty || leaseDetailForm.get('leaseRate').touched) && (leaseDetailForm.get('leaseRate').errors?.required)) }">
+      <small *ngIf="leaseDetailForm.get('leaseRate').invalid && (leaseDetailForm.get('leaseRate').dirty || leaseDetailForm.get('leaseRate').touched) && leaseDetailForm.get('leaseRate').errors?.required"
+             style="color:red;">Lease Rate is required</small>
+      <small *ngIf="leaseDetailForm.get('leaseRate').touched && leaseDetailForm.get('leaseRate').errors?.pattern"
+             class="text-danger">Please enter valid Lease Rate</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Fee Percentage (%):<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" placeholder="" [attr.disabled]="isDisabled" formControlName="leaseFeePercentage" maxlength="5"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseFeePercentage').invalid && (leaseDetailForm.get('leaseFeePercentage').dirty || leaseDetailForm.get('leaseFeePercentage').touched) && (leaseDetailForm.get('leaseFeePercentage').errors?.required || leaseDetailForm.get('leaseFeePercentage').errors?.maxlength) ||  leaseDetailForm.get('leaseFeePercentage').errors?.notValid) }">
+      <small *ngIf="leaseDetailForm.get('leaseFeePercentage').invalid && (leaseDetailForm.get('leaseFeePercentage').dirty || leaseDetailForm.get('leaseFeePercentage').touched) && leaseDetailForm.get('leaseFeePercentage').errors?.required"
+             style="color:red;">Fee Percentage is required</small>
+
+      <small *ngIf="leaseDetailForm.get('leaseFeePercentage').errors?.notValid && isDisabled==null"
+             style="color:red;">Please enter valid Fee Percentage</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Residual Percentage:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <ng-select [items]="lstrespercentages"
+                 placeholder="Select Percentage" [attr.disabled]="isDisabled" bindValue="value" bindLabel="text" formControlName="leaseResidualPercentage" (change)="setResidualPercentage($event)"
+                 [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseResidualPercentage').invalid && (leaseDetailForm.get('leaseResidualPercentage').dirty || leaseDetailForm.get('leaseResidualPercentage').touched) && (leaseDetailForm.get('leaseResidualPercentage').errors?.required)) }"></ng-select>
+      <small *ngIf="leaseDetailForm.get('leaseResidualPercentage').invalid && (leaseDetailForm.get('leaseResidualPercentage').dirty || leaseDetailForm.get('leaseResidualPercentage').touched) && leaseDetailForm.get('leaseResidualPercentage').errors?.required"
+             style="color:red;">Residual Percentage is required</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Purchase Price ({{this.commonService.GetCurrency()}}):<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" [attr.disabled]="isDisabled" placeholder="" formControlName="leaseEquipmentCost" maxlength="15"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseEquipmentCost').invalid && (leaseDetailForm.get('leaseEquipmentCost').dirty || leaseDetailForm.get('leaseEquipmentCost').touched) && (leaseDetailForm.get('leaseEquipmentCost').errors?.required)) }"
+              (blur)="onblurPurchasePrice();"
+             >
+      <small *ngIf="leaseDetailForm.get('leaseEquipmentCost').invalid && (leaseDetailForm.get('leaseEquipmentCost').dirty || leaseDetailForm.get('leaseEquipmentCost').touched) && leaseDetailForm.get('leaseEquipmentCost').errors?.required"
+             style="color:red;">Purchase Price is required</small>
+      <small *ngIf="leaseDetailForm.get('leaseEquipmentCost').touched && leaseDetailForm.get('leaseEquipmentCost').errors?.pattern"
+             class="text-danger">Please enter valid Purchase Price</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Sales Price ({{this.commonService.GetCurrency()}}):<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" [attr.disabled]="isDisabled" placeholder="" formControlName="leaseEquipmentMSRP" maxlength="15"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseEquipmentMSRP').invalid && (leaseDetailForm.get('leaseEquipmentMSRP').dirty || leaseDetailForm.get('leaseEquipmentMSRP').touched) && (leaseDetailForm.get('leaseEquipmentMSRP').errors?.required)) }"
+             (blur)="onblurSalePrice();"
+             >
+      <small *ngIf="leaseDetailForm.get('leaseEquipmentMSRP').invalid && (leaseDetailForm.get('leaseEquipmentMSRP').dirty || leaseDetailForm.get('leaseEquipmentMSRP').touched) && leaseDetailForm.get('leaseEquipmentMSRP').errors?.required"
+             style="color:red;">Sales Price is required</small>
+      <small *ngIf="leaseDetailForm.get('leaseEquipmentMSRP').touched && leaseDetailForm.get('leaseEquipmentMSRP').errors?.pattern"
+             class="text-danger">Please enter valid Sales Price</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Added Equipment ({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" placeholder="" [attr.disabled]="isDisabled" formControlName="leaseAdditions2" maxlength="15"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseAdditions2').invalid && (leaseDetailForm.get('leaseAdditions2').dirty || leaseDetailForm.get('leaseAdditions2').touched) && (leaseDetailForm.get('leaseAdditions2').errors?.pattern)) }"
+              (blur)="onblurAddedEquipment();"
+             >
+      <small *ngIf="leaseDetailForm.get('leaseAdditions2').errors?.pattern"
+             class="text-danger">Please enter valid Added Equipment</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Added Equipment ({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" [attr.disabled]="isDisabled" placeholder="" formControlName="leaseAdditions1" maxlength="15"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseAdditions1').invalid && (leaseDetailForm.get('leaseAdditions1').dirty || leaseDetailForm.get('leaseAdditions1').touched)) && (leaseDetailForm.get('leaseAdditions1').errors?.pattern) }"
+             (blur)="onblurAddedEquipment2();"
+             >
+      <small *ngIf="leaseDetailForm.get('leaseAdditions1').errors?.pattern"
+             class="text-danger">Please enter valid Added Equipment</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 ">
+    <label>Sales Tax ({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" placeholder="" [attr.disabled]="isDisabled" formControlName="leaseSalesTax" maxlength="15"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseSalesTax').invalid && (leaseDetailForm.get('leaseSalesTax').dirty || leaseDetailForm.get('leaseSalesTax').touched) && (leaseDetailForm.get('leaseSalesTax').errors?.required) || leaseDetailForm.get('leaseSalesTax').errors?.pattern) }"
+             (blur)="onblurSalesTax();"
+             >
+      <small *ngIf="leaseDetailForm.get('leaseSalesTax').errors?.pattern"
+             class="text-danger">Please enter valid Sales Tax</small>
+    </div>
+  </div>
+
+
+  <div class="col-12 col-md-6 ">
+    <label>Total Equipment MSRP ({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input [value]="calculteTotalEquipMSRP()" class="form-control" type="text" placeholder="" formControlName="leaseTotalEquipmentMSRP" readonly="readonly" />
+    </div>
+  </div>
+  <div class="col-12 col-md-6">
+    <label>Delivery/Extended Warranty ({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" [attr.disabled]="isDisabled" placeholder="" formControlName="leaseWarranty" maxlength="15"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseWarranty').invalid && (leaseDetailForm.get('leaseWarranty').dirty || leaseDetailForm.get('leaseWarranty').touched) && (leaseDetailForm.get('leaseWarranty').errors?.required)) }"
+             (blur)="onblurDelivery();">
+      <small *ngIf="leaseDetailForm.get('leaseWarranty').touched && leaseDetailForm.get('leaseWarranty').errors?.pattern"
+             class="text-danger">Please enter valid Delivery/Extended Warranty</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Residual Amount ({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input class="form-control" type="text" placeholder="" formControlName="leaseResidualAmount" readonly="readonly" />
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Other ({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input value="" class="form-control" type="text" [attr.disabled]="isDisabled" placeholder="" formControlName="leaseOther" maxlength="15"
+             [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseOther').invalid && (leaseDetailForm.get('leaseOther').dirty || leaseDetailForm.get('leaseOther').touched)) }"  (blur)="onblurOther();">
+      <small *ngIf="leaseDetailForm.get('leaseOther').touched && leaseDetailForm.get('leaseOther').errors?.pattern"
+             class="text-danger">Please enter valid Other</small>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Monthly Rental Payment ({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input [value]="calculatePMT()" class="form-control" type="text" placeholder="" formControlName="leaseMonthlyRentalPayment" readonly="readonly" />
+      
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Placement Fee ($):</label>
+    <div class="form-group">
+      <input [value]="calculatePlaceMentFee()" class="form-control" type="text" placeholder="" formControlName="leasePlacementFee" readonly="readonly" />
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Amount Due at Signing ($):</label>
+    <div class="form-group">
+      <input [value]="calculateAmountDueSigning()" class="form-control" type="text" placeholder="" formControlName="leaseAmountDueAtSigining" readonly="readonly" />
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Total Lease Amount ($):</label>
+    <div class="form-group">
+      <input [value]="calculateTotalLeaseAmount()" class="form-control" type="text" placeholder="" formControlName="leaseTotalAmount" readonly="readonly" />
+    </div>
+  </div>
+  <div class="col-12 col-md-6">
+    <label>Documentation Fee ($):<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <input class="form-control" type="text" placeholder="Documentation Fee" formControlName="leaseLicenceFee" maxlength="15"   [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseLicenceFee').invalid && (leaseDetailForm.get('leaseLicenceFee').dirty || leaseDetailForm.get('leaseLicenceFee').touched) && (leaseDetailForm.get('leaseLicenceFee').errors?.required)) }"
+             (blur)="onblurDocumentationFee();"
+             />
+      <small *ngIf="leaseDetailForm.get('leaseLicenceFee').invalid && (leaseDetailForm.get('leaseLicenceFee').dirty || leaseDetailForm.get('leaseLicenceFee').touched) && leaseDetailForm.get('leaseLicenceFee').errors?.required"
+             style="color:red;">Documentation Fee is required</small>
+      <small *ngIf="leaseDetailForm.get('leaseLicenceFee').touched && leaseDetailForm.get('leaseLicenceFee').errors?.pattern"
+             class="text-danger">Please enter valid Documentation Fee</small>
+    </div>
+  </div>
+  <div class="col-12 col-md-6" *ngIf="!showHideTag && customerHideTag">
+    <label>Insurance Required:</label>
+    <div class="form-group">
+      <ng-select [items]="insurance"
+                 placeholder="Select Insurance Required" bindValue="value" bindLabel="text" formControlName="leaseInsurance">
+      </ng-select>
+    </div>
+  </div>
+  <div class="col-12 col-md-6" *ngIf="isSuperAdminUser || isOrperationUser">
+    <div  *ngIf="!showHideTag && customerHideTag">
+      <label>Insurance Expiration Date:</label>
+      <span class="customTooltip">
+        <i class="fa fa-info-circle" style="font-size: 12px; margin-left:5px;"></i>
+        <span class="customToolTiptext">This information will be filled after getting insurance certificate.</span>
+      </span>
+      <div class="form-group">
+        <p-calendar inputStyleClass="form-control start-date" formControlName="insuranceExpirationDate" placeholder="Select Insurance Expiration Date" [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6" *ngIf="isBankUser">
+    <label>Name:</label>
+    <div class="form-group">
+      <input value="" class="form-control" disabled="disabled" type="text" placeholder=""
+             formControlName="lenderName" maxlength="100" />
+
+    </div>
+  </div>
+  <div *ngIf="!isBankUser" style="display:none">
+    <input type="hidden" formControlName="lenderName" />
+  </div>
+  <div class="col-12 col-md-6" *ngIf="isBankUser">
+    <label> Date:</label>
+    <div class="form-group">
+      <input class="form-control start-date" disabled="disabled" formControlName="lenderDate" />
+    </div>
+  </div>
+  <div *ngIf="!isBankUser" style="display:none">
+    <input type="hidden" formControlName="lenderDate" />
+  </div>
+  <div class="col-12 col-md-12 col-lg-12" *ngIf="isBankUser">
+    <label>Notes:</label>
+    <div class="form-group">
+      <textarea class="form-control" formControlName="lenderNotes"></textarea>
+    </div>
+  </div>
+  <div *ngIf="!isBankUser" style="display:none">
+    <input type="hidden" formControlName="lenderNotes" />
+  </div>
+</div>
+
+<div [formGroup]="leaseDetailForm" class="row" *ngIf="showForCustomer">
+
+  <div class="col-12 col-md-6">
+    <label>Lease Number:</label>
+    <div class="form-group">
+      <input class="form-control" type="text" formControlName="leaseNumber" disabled />
+
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>VIN or Serial Number:</label>
+    <div class="form-group">
+      <input class="form-control" type="text" formControlName="leaseSerialNumber" disabled />
+
+    </div>
+  </div>
+
+  <div class="col-12 col-md-12 col-lg-12">
+    <label>Collateral Information (Year, Make, Model):</label>
+    <div class="form-group">
+      <textarea class="form-control" formControlName="leaseOtherDescription" disabled></textarea>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>Date of Lease:</label>
+    <div class="form-group">
+      <input class="form-control start-date" disabled="disabled" formControlName="leaseDate" />
+    </div>
+  </div>
+  <div class="col-12 col-md-6">
+    <label>Maturity Date:</label>
+    <div class="form-group">
+      <input class="form-control start-date" disabled="disabled" formControlName="leaseMaturityDate" />
+    </div>
+  </div>
+  <div class="col-12 col-md-6">
+    <label>Monthly Rental Payment({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input [value]="calculatePMT()" class="form-control" type="text" formControlName="leaseMonthlyRentalPayment" disabled />
+    </div>
+  </div>
+  <div class="col-12 col-md-6">
+    <label>Residual Amount({{this.commonService.GetCurrency()}}):</label>
+    <div class="form-group">
+      <input class="form-control" type="text" formControlName="leaseResidualAmount" disabled />
+    </div>
+  </div>
+</div>
+
+  <app-leasetemplatedetail #leasetemplatedetail></app-leasetemplatedetail>
+
+
+
+<script>
+  function setUSformat(this) { alert("dfdf");}
+</script>

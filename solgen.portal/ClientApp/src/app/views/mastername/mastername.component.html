@@ -1,0 +1,53 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Master Name</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active">Add/Edit Master Name</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <div class="col-md-12 mt-4">
+              <form [formGroup]="masterNameForm" autocomplete="off">
+                <div class="row">
+
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <label>Master Name Value:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="masterNameValue" placeholder="Please enter Master Name Value" [attr.disabled]="isDisabled"
+                             [ngClass]="{'is-invalid': (masterNameValue.invalid && (masterNameValue.dirty || masterNameValue.touched) && (masterNameValue.errors?.required || masterNameValue.errors?.maxlength)) }">
+                      <small *ngIf="masterNameValue.invalid && (masterNameValue.dirty || masterNameValue.touched) && masterNameValue.errors?.required"
+                             class="text-danger">Master Name is required</small>
+                      <small *ngIf="masterNameValue.invalid && (masterNameValue.dirty || masterNameValue.touched) && masterNameValue.errors?.maxlength"
+                             style="color:red;">Master Name Value must be less than 50 characters.</small>
+                    </div>
+                  </div>
+                </div>
+
+              </form>
+              <div class="col-12 p-0">
+                <a href="javascript:void(0);" class="btn btn-primary form-btns" (click)="save()"><i class="feather-save"></i> Submit</a>
+                <a href="javascript:void(0);" class="btn btn-danger form-btns" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+
+
+

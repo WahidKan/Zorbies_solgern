@@ -1,0 +1,90 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Manage Users</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Manage Users</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <lib-dynamic-list *ngIf="load" [jsoninput]="jsonData" [currentPage]="currentPage" [pageSizeValue]="pageSizeValue" [lstPageSize]="lstPageSize"
+                        (MainMethod)="MainMethod($event)" (curPageemit)="curPageemit($event)" [sortDir]="sortDir" [sortColumn]="sortColumn"
+                        primaryid="Id" (selectdata)="selectdata($event)" [companytype]="companyType" (goToPage)="goToPage($event)" [jsoncondition]="jsoncondition"
+                        [actionarray]="actionarray" [listFilter]="listFilter"
+                        [myCheckboxemit]="myCheckbox" [vewId]="vewId" [manageviewList]="pagedData.data"
+                        (updateFilter)="updateFilter($event)" (displayDetailDetail)="displayDetailDetail($event)"
+                        (search)="search()" (reset)="reset()" (add)="add()" (deleteAll)="deleteAll()" (switchClicked)="switchClicked($event)" (filterpopup)="filterpopup()"
+                        [placeholder]="placeholder" (SetManageViewValue)="SetManageViewValue($event)" [isAdd]="isAdd" [isUpdate]="isUpdate" [isDelete]="isDelete"
+                        Showheader="true" [userinfodata]="userinfodata" [searchlabelName]="searchlabelName" [listLabelName]="listLabelName">
+
+      </lib-dynamic-list>
+
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade in show" bsModal #setPassword="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Set Password Of {{Name}}</h4>
+        <button type="button" class="close" (click)="Closemodel()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="height:100%;">
+
+        <div class="login-container">
+          <div class="login-main">
+            <!--<a href="javascript:void(0);"><img class="img-fluid mb-3" src="assets/default-theme/imagesNew/login-logo.png" style="background: #2f4050; padding:15px;"/></a>-->
+            <div class="login-box">
+
+              <form [formGroup]="setPasswordForm" autocomplete="off">
+                <div class="form-group password-view" [ngClass]="{'disabled':loadSave}">
+                  <input type="password" passwordToggle formControlName="password" placeholder="Please enter password" class="form-control">
+                </div>
+                <div class="col-sm-12 p-0 mb-3" *ngIf="password.invalid && (password.dirty || password.touched)" style=" margin-top: -13px;">
+                  <div *ngIf="password.errors.required" class="alert alert-danger p-1">Password is required</div>
+                </div>
+                <div class="form-group password-view">
+                  <input type="password" passwordToggle formControlName="confirmPassword" placeholder="Please enter confirm password" class="form-control" />
+                </div>
+                <div class="col-sm-12 p-0 mb-3" *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)" style=" margin-top: -13px;">
+                  <div *ngIf="confirmPassword.errors.required" class="alert-danger p-1">Confirm password is required</div>
+                  <div *ngIf="confirmPassword.errors.mismatched" class="alert-danger p-1">Confirm password does not match</div>
+                </div>
+                <div class="col-sm-12 p-0">
+                  <p class="alert-warning p-2">Note: Password must be combination of lower case, upper case, numeric and special character.</p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+      </div>
+
+      <div class="modal-footer">
+        <a class="btn btn-success text-white mr-2" (click)="PasswordSet()"><i class="feather-save"></i> Submit</a>
+        <button type="submit" class="btn btn-danger form-btns" (click)="Closemodel()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-searchfilteradd (searchFilterCondition)="ApplyAdvanceFilter($event)" #templateFilterView moduleName="users" subModuleName="user"></app-searchfilteradd>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

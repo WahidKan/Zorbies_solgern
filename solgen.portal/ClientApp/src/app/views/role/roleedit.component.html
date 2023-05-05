@@ -1,0 +1,175 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  <app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Add Roles</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+        <li><a class="smview" routerLink="/role">Manage Roles</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="panel" style="overflow: visible;">
+  <div class="panel-content p-4">
+    <form [formGroup]="roleForm" autocomplete="off">
+      <div class="row" [ngClass]="{'disabled':loadSave}">
+        <div class="col-md-12 col-lg-4">
+          <label>Role Name:<span class="text-danger"> *</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Please enter name" formControlName="roleName"
+                   [ngClass]="{'is-invalid': (roleName.invalid && (roleName.dirty || roleName.touched) && (roleName.errors?.required || roleName.errors?.maxlength)) }">
+
+            <small *ngIf="roleName.invalid && (roleName.dirty || roleName.touched) && roleName.errors?.required"
+                   class="text-danger">Role name is required</small>
+            <small *ngIf="roleName.invalid && (roleName.dirty || roleName.touched) && roleName.errors?.maxlength"
+                   class="text-danger">Role name must be less than 50 characters.</small>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>User Type:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <ng-select [items]="lstUserType" placeholder="Select User Type" bindValue="value" bindLabel="text" [attr.disabled]="isDisabled" formControlName="userType" (change)="selectUser($event)"
+                       [ngClass]="{'is-invalid': (userType.invalid && (userType.dirty || userType.touched) && userType.errors?.required)}"></ng-select>
+            <small *ngIf="userType.invalid && (userType.dirty || userType.touched) && userType.errors?.required"
+                   class="text-danger">Please select User Type</small>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>Status:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <ng-select [items]="statuses" [loading]="loadSave" [closeOnSelect]="true" placeholder="Select status" formControlName="roleStatusId"
+                       bindLabel="text" bindValue="value"
+                       [ngClass]="{'is-invalid': (roleStatusId.invalid && (roleStatusId.dirty || roleStatusId.touched) && roleStatusId.errors?.required) }"></ng-select>
+            <small *ngIf="roleStatusId.invalid && (roleStatusId.dirty || roleStatusId.touched) && roleStatusId.errors?.required"
+                   style="color:red;">Please select Status</small>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4" *ngIf="!isLoanHomi">
+          <label>Report To:</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Please enter name" formControlName="reportto" />
+            <div class="input-group-append bg-primary border-0 ml-1">
+              <span class="input-group-text bg-primary border-0"><a href="javascript:void(0);" class="text-white" (click)="openPopup()"><i class="feather-user mr-1"></i>Report To</a></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <label>Description:</label>
+          <div class="form-group">
+            <textarea rows="3" class="form-control" placeholder="Please enter description" formControlName="roleDescription"
+                      [ngClass]="{'is-invalid': (roleDescription.invalid && (roleDescription.dirty || roleDescription.touched) && roleDescription.errors?.maxlength) }" style="height:auto;"></textarea>
+            <small *ngIf="roleDescription.invalid && (roleDescription.dirty || roleDescription.touched) && roleDescription.errors?.maxlength"
+                   class="text-danger">Description must be less than 200 characters</small>
+          </div>
+        </div>
+        <div class="col-12 col-md-12 col-lg-12" *ngIf="tabshow"><h3 class="form-heading ng-star-inserted ml-0 mt-0 mb-3"><span>Module Privileges:</span></h3></div>
+        <div class="col-md-12 mb-12">
+          <div id="accordion" *ngIf="tabshow" class="panel-group accordion mb-3 resp-adbtn">
+            <ng-container *ngFor="let t of tabdata">
+
+              <div class="panel" *ngFor="let s of t.SUB_MODULES; let i=index">
+                <div class="panel-heading" *ngIf="t.parentIsSelected==true">
+                  <h4 class="panel-title">
+                    <a href="javascript:void(0);" class="accordion-toggle collapsed" style="background-color: #efeefa" data-toggle="collapse" [attr.data-target]="'#collapse'+s.SUB_MODULE_ID"> <span>{{s.SUB_MODULE_NAME}}</span></a>
+
+                  </h4>
+                  <div class="btn-in-panel">
+                    <div class="custom-control custom-checkbox pr-2">
+                      <input class="custom-control-input" [checked]="t.parentIsSelected" type="checkbox" (change)="onChangeMainCheckbox($event,s.SUB_MODULE_ID,s)" [id]="s.SUB_MODULE_ID">
+                      <label class="custom-control-label text-capitalize" [for]="s.SUB_MODULE_ID">
+
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <!--------------------------- This section for color change of div when internal check boxs are selected ------------------->
+               
+                <div class="panel-heading" *ngIf="t.parentIsSelected==false">
+                  
+                  <h4 class="panel-title">
+                    <a *ngIf="checkisSelect(s.PRIVILEGE_LISTS,i,s.SUB_MODULE_ID)" href="javascript:void(0);" class="accordion-toggle collapsed" style="background-color: #efeefa " data-toggle="collapse" [attr.data-target]="'#collapse'+s.SUB_MODULE_ID"> <span>{{s.SUB_MODULE_NAME}}</span></a>
+                    <a *ngIf="!checkisSelect(s.PRIVILEGE_LISTS,i,s.SUB_MODULE_ID)" href="javascript:void(0);" class="accordion-toggle collapsed"  data-toggle="collapse" [attr.data-target]="'#collapse'+s.SUB_MODULE_ID"> <span>{{s.SUB_MODULE_NAME}}</span></a>
+                  </h4>
+                    <div class="btn-in-panel">
+                      <div class="custom-control custom-checkbox pr-2">
+                        <input class="custom-control-input" [checked]="t.parentIsSelected" type="checkbox" (change)="onChangeMainCheckbox($event,s.SUB_MODULE_ID,s)" [id]="s.SUB_MODULE_ID">
+                        <label class="custom-control-label text-capitalize" [for]="s.SUB_MODULE_ID">
+                        </label>
+                      </div>
+                    </div>
+                  
+                </div>
+
+                <!-------------------------------------------------------------------------------------------------------------------------->
+
+                <div [attr.id]="'collapse'+s.SUB_MODULE_ID" class="panel-collapse collapse" aria-labelledby="headingOne" data-parent="#accordion">
+
+
+                  <div class="panel-body mt-0">
+                    <div class="table-responsive">
+                      <table class="table" style="min-width: 100%;">
+                        <tbody>
+                          <ng-container *ngFor="let type of getUniquePriviledgesType(s.PRIVILEGE_LISTS)">
+                            <ng-container *ngFor="let p of getPriviledgesByType(s.PRIVILEGE_LISTS, type); let pIndex = index">
+
+                              <tr *ngIf="pIndex == 0 && p.PRIVILEGE_TYPE!='URL'" class="widget-heading">
+                                <td><strong>{{p.PRIVILEGE_TYPE}}</strong></td>
+                              </tr>
+                              <tr [ngClass]="{'widgets': p.PRIVILEGE_TYPE=='Widget'}">
+
+                                <td class="fulwith-radio-n-check px-0">
+                                  <div class="custom-control custom-checkbox p-0" *ngIf=" !p.IS_SUB_CHILD && p.SUB_CHILD_GROUP == 0 ||p.PARENT_ID == 0 ">
+
+                                    <div class="clearfix"></div>
+                                    <input type="checkbox" class="custom-control-input"
+                                           [id]="p.PRIVILEGE_ID" [checked]="p.IS_Selected" (change)="onChange(p.PRIVILEGE_ID,$event,p,s.PRIVILEGE_LISTS)" name="example1">
+                                    <label class="custom-control-label text-capitalize w-100" style="font-weight:600;" [for]="p.PRIVILEGE_ID"><i *ngIf="p.PRIVILEGE_TYPE!='URL'" class="feather-circle"></i> {{p.PRIVILEGE_DESC}}</label>
+                                  </div>
+                                  <div class="custom-control custom-radio  p-0" *ngIf="(p.IS_SUB_CHILD || p.SUB_CHILD_GROUP != 0 )&& p.PARENT_ID != 0 ">
+                                    <input id="radio{{p.PRIVILEGE_ID}}" [checked]="p.IS_Selected" [name]="p.SUB_CHILD_GROUP" (click)="check($event,p,s.PRIVILEGE_LISTS)" [value]="p.PRIVILEGE_ID" type="radio">
+                                    <label for="radio{{p.PRIVILEGE_ID}}" class="radio-label text-capitalize"> {{p.PRIVILEGE_DESC}} </label>
+                                  </div>
+                                </td>
+                              </tr>
+                            </ng-container>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-md-12 mb-4 ">
+          <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="save()"><i class="feather-save"></i> Submit</a>
+          <a href="javascript:void(0);" class="btn btn-danger" (click)="cancelForm()"><i class="feather-x"></i> Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal fade in show" bsModal #treepopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Report To</h4>
+        <button type="button" class="close" (click)="ClosePopup()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <p-tree [value]="files2" [(selection)]="reportid" class="w-100" selectionMode="single" (onNodeSelect)="nodeSelect($event)"></p-tree>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger form-btns" (click)="ClosePopup()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

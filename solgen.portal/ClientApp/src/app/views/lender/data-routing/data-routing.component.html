@@ -1,0 +1,114 @@
+<div bsModal #dataRouting="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content" style="z-index:1">
+      <div class="modal-header">
+        <h4 class="modal-title">{{action}} Data Routing</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body mapping-select" style="max-height:600px; ">
+        <div>
+          <div class="row">
+            <div class="col-md-12 col-lg-12">
+              <label>Route Name:</label>
+              <div class="form-group">
+                <input type="text" [(ngModel)]="dataRouteRequestModel.name" class="form-control" />
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+            <div *ngFor="let rule of dataRouteRequestModel.rules; index as i;" class="col-md-12 mrules mb-3">
+              <div *ngIf="rule.deleted == false">
+                <div class="border">
+                  <div class="rule-header step-default border mb-2 col-md-12">
+                    <span class="rule-name">Rule <input type="text" [(ngModel)]="rule.sort" /></span>
+                    <button type="button" class="btn btn-danger float-right" (click)="deleteRule(rule)">
+                      <i class="feather-trash-2"></i> Delete
+                    </button>
+                  </div>
+                  <div class="row px-3">
+                    <div class="Sent-datato col-md-6">
+                      <label>Send Data to Document:<span class="text-danger">*</span></label>
+                      <ng-select [(ngModel)]="rule.document_id" [closeOnSelect]="true">
+                        <ng-option *ngFor="let document of webmergeDocuments" [value]="document.id">{{document.name}}</ng-option>
+                      </ng-select>
+                    </div>
+                    <div class="col-md-6">
+                      <label>Include in combined PDF</label>
+                      <div class="form-group">
+                        <label class="switch">
+                          <input type="checkbox" [checked]="rule.combine == 1" (change)="onCombineChanged(rule)" />
+                          <span class="slider round">
+                            <span>Yes</span>
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="list-group" style="min-height: 210px;">
+                      <h3 class="form-heading">Trigger this rule if:</h3>
+                      <ul class="form-header">
+                        <li class="pl-3">Field</li>
+                        <li class="pl-3"></li>
+                        <li class="pl-3">Value</li>
+                      </ul>
+                      <div *ngFor="let condition of rule.conditions; index as j;">
+                        <div *ngIf="condition.deleted == false">
+                          <ul *ngIf="j > 0" class="from-rules text-center">
+                            <li class="text-center">
+                              <span class="or-and rounded-circle">{{condition.operator}}</span>
+                            </li>
+                          </ul>
+                          <ul class="from-rules">
+                            <li class="form-group align-middle px-2">
+                              <ng-select [items]="webmergeDocumentFields" [(ngModel)]="condition.field" [closeOnSelect]="true" [searchable]="true">
+
+                              </ng-select>
+                            </li>
+                            <li class="form-group align-middle px-2">
+                              <ng-select class="form-control" [(ngModel)]="condition.exp" [closeOnSelect]="true">
+                                <ng-option *ngFor="let expression of expressions" [value]="expression.value">{{expression.name}}</ng-option>
+                              </ng-select>
+                            </li>
+                            <li class="form-group align-middle px-2">
+                              <input class="form-control" type="text" [(ngModel)]="condition.value" placeholder="Field" />
+                            </li>
+                            <li class="text-center">
+                              <a href="javscript:;" (click)="deleteCondition(rule, condition)" class="text-red font-16"><i class="feather-trash-2"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-3 text-center">
+                    <div class="cstm-drop-btn text-center">
+                      <select #currentCondition class="btn ddlupdatestatus btn-success" (change)="onChange(currentCondition, $event, rule)">
+                        <option selected="selected"> Add</option>
+                        <option>Or</option>
+                        <option>And</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary mr-1" (click)="addNewRule()"><i class="feather-plus"></i> Add New Rule</button>
+        <button type="button" class="btn btn-success mr-1 " (click)="submit()"><i class="feather-save"></i> Save</button>
+        <button type="button" class="btn btn-danger" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,176 @@
+
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+ <!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Location Details</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+        <li><a class="smview" routerLink="/location">Manage Location</a></li>
+        <li class="active">Location Details</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+<div class="clearfix"></div>
+
+<!-- <div class="card mb-3 mb-4 border item-view">
+  <span class="text-capitalize p-3 font-weight-bold border-bottom heading-above-subhead">
+    <i class="fa fa-bullseye bg-info text-white float-left p-1 mr-2"></i>
+    <span class="float-left"><span>Location</span> {{CampaignName}}</span>
+    <span class="cntnt-right-btn mr15 btn-iconres">
+      <a href="javascript:;" [routerLink]="['/location/editlocation',Id]" class="btn btn-success text-white mr-2"><i class="fa fa-pencil mr-1"></i> Edit</a>
+      <a href="javascript:;" class="btn btn-dark text-white" (click)="OnBackToListClick()"><i class="fa fa-arrow-left mr-1"></i> Back</a>
+    </span>
+  </span>
+
+  <div class="col-12 float-left  d-flex p-0">
+    <ng-container *ngFor="let item of customCompnentValuesTop">
+
+      <div class="col py-3">
+        <span class="d-block"><strong>{{ item.DisplayName}}:</strong> {{ item.Value}}</span>
+      </div>
+    </ng-container>
+  </div>
+</div> -->
+
+<app-view-filter-bar-manager   [submoduleName]="'locations'" [titleName]="CampaignName"  
+[customCompnentValuesTop]="'customCompnentValuesTop'" [logoClass]="'fa fa-bullseye'" 
+[pageLink]="'/location/editlocation'"  >
+</app-view-filter-bar-manager> 
+
+<div class="card border-0">
+  <div class="panel">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="panel-content border-0 w-100 bg-white p-3 scroll-in-content">
+          <div class="row">
+
+            <div class="col-sm-12 col-lg-12">
+              <h3 class="form-heading mt-0"><span>Details</span></h3>
+              <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                <form [formGroup]="form" *ngIf="form">
+                  <ng-container *ngFor="let item of formControlList">
+                    <div class="panel active">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                          <a href="#{{item.group_display_name}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                            <span> {{item.group_name}}</span>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="{{item.group_display_name}}" class="panel-collapse collapse active show" style="">
+                        <div class="panel-body row px-0 mt-0">
+                          <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let inner of item.InnerData;">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>{{ inner.display_name}}:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6">
+
+                                <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean'&& inner.dt_code!='datetime' && inner.field_route==null && inner.ColumnName != 'VisitorAddress'" class="py-2 d-block">{{ inner.value}}</span>
+                                <span *ngIf="inner.ColumnName == 'VisitorAddress'" class="py-2 d-block">{{ addressLabel}}</span>
+                                <span *ngIf="inner.value!=null && inner.dt_code!='checkbox' && inner.dt_code!='boolean' && inner.dt_code!='datetime' && inner.field_route!=null" class="py-2 d-block">
+                                  <a href="javascript:void(0);" [routerLink]="[inner.field_route,inner.ref_value]">{{ inner.value}}</a>
+                                </span>
+
+
+                                <div class="mapbx" *ngIf="inner.value!=null && inner.display_name =='Latitude & Longitude'">
+                                  <app-locationmap [location]="addressLocation"></app-locationmap>
+                                  <!-- <app-goolemap [location]="addressLocation" #gmap></app-goolemap> -->
+                                </div>
+                                <!--============================== For CheckBox ===========================-->
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                                  <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox pl-0">
+                                      <label class="switch  mb-0">
+                                        <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                        <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!--============================== For CheckBox ===========================-->
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                                  <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-checkbox pl-0">
+                                      <label class="switch mb-0">
+                                        <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                        <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <!--============================== Date Formation ===========================-->
+                                <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='datetime'">
+                                  <span *ngIf="inner.value!=null && inner.dt_code=='datetime'" class="py-2 d-block">{{getTransformedDate(inner.value)}}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </form>
+              </div>
+
+            </div>
+            <!-- <div class="col-sm-12 col-lg-4 relatedtab">
+              <h3 class="form-heading mt-0"><span>Related</span></h3>
+              <div id="accordion" [ngClass]="{'disabled':loadSave}">
+               
+                <div class="panel active">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#mapping_locations" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                        <span>Mapping Locations ({{MappingLocationCount}})</span>
+                      </a>
+                    </h4>
+                  </div>
+                
+                  <div id="panelBodynine" class="panel-collapse active show p-0 border-0" data-parent="#accordion">
+                    <a href="javascript:void(0);" class="btn-in-panel" (click)="AddMappingLocations()"
+                      data-toggle="modal"><i class="feather-plus mr-2"></i> New</a>
+                      <div id="mapping_locations" class="panel-collapse collapse active show">
+                        <app-mapping-locations #listmappinglocationmodel [LocationType]="Id" [LocationId]="Id" (newMappingLocationItemEvent)="addMappingLocationItems($event)">
+                        </app-mapping-locations>
+                    </div>
+                  </div>
+                </div>
+               
+                <div class="panel active">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#mapping_members" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                        <span>Mapping Members  ({{MappingMemberCount}})</span>
+                      </a>
+                    </h4>
+                  </div>
+                  
+                  <div id="panelBodynine" class="panel-collapse active show p-0 border-0" data-parent="#accordion">
+                    <a class="btn-in-panel" [routerLink]="['/serviceresource/addserviceresource']"
+                      data-toggle="modal"><i class="feather-plus mr-2"></i> New</a>
+                      <div id="mapping_members" class="panel-collapse collapse active show">
+                        <app-mapping-members #listmappingmembersmodel [LocationType]="Id" [LocationId]="Id" (newMappingMemberItemEvent)="addMappingMembersItems($event)">
+                        </app-mapping-members>
+                       
+                    </div>
+                  </div>
+                </div>
+               
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>

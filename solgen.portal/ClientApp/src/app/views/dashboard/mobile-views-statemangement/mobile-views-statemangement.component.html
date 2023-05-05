@@ -1,0 +1,13 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+<div class="col-md-12 col col-xs-12 p-0 newstages-ui mt-4"
+    *ngIf="customCompnentValuesTop != null && customCompnentValuesTop != undefined">
+
+    <div class="timeline" *ngFor="let item of stagedatamaster | slice:0:6;let i=index">
+        <div class="border mb-2 p-2 d-flex justify-content-between align-items-center" [ngClass]="item.stageActive == '1' ? 'timeline-rw' : 'timeline-rw-g'" >
+            <div class="item-info">
+                <h4>{{item.loan_app_stage_name}}</h4>
+                <p>{{item.createdDate | DateTimeToLocal}}</p>
+            </div>
+        </div>
+    </div>
+</div>

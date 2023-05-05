@@ -1,0 +1,357 @@
+<div class="panel">
+  <div class="panel-content " [ngClass]="{'disabled':loadSave}">
+    <form [formGroup]="applicantForm" *ngIf="applicantForm" autocomplete="off">
+
+      <ng-container *ngFor="let item of formControlList">
+
+        <h3 class="form-heading" *ngIf="submoduleName == 'LoanApplicationApplicant' || submoduleName == 'LoanApplicationCoapplicant' || submoduleName == 'LoanApplicationInfo' || submoduleName == 'LoanApplicationPaymentInfo'">
+          <span>{{ item.group_display_name}} </span>
+        </h3>
+        <div class="row  mb-2">
+          <ng-container *ngFor="let inner of item.InnerData">
+            <ng-container *ngIf=" (isOhio ||
+                       (
+                         !isOhio && (inner.ColumnName != 'TotalTimesCompounded' && inner.ColumnName != 'EighteenMonthNumberOfTimesCompounded' && inner.ColumnName != 'TimesCompoundedPerYear' && inner.ColumnName != 'InterestRatePerCompoundTime' && inner.ColumnName != 'DailyPaymentCalculation' && inner.ColumnName != 'TaxCreditPercentage ')
+                       )
+                  )
+                  &&
+                  (
+                    (inner.ColumnName != 'DOB' && inner.ColumnName != 'SSN'  && inner.ColumnName != 'AGE'  && (isFinanceUser || isSalesUser || isDealerUser ||isAccountingUser || isAudit) && (stageStatus == false))
+                  || (!isFinanceUser && !isSalesUser && !isDealerUser && !isAccountingUser && !isAudit) || (stageStatus == true)
+                 )
+                 &&
+                 (
+                    (inner.ColumnName !='InstallerFundedAmount' && isBankUser)
+                    || ( !isBankUser )
+                 )
+                ">
+              <div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : inner.form_field_visibility == 'NO', 'col-lg-12 col-xl-12': inner.layout_type =='single', 'col-lg-6 col-xl-6': inner.layout_type =='double', 'col-lg-4 col-xl-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                             inner.layout_type =='four' }" ngShow="inner.dependent_show_type == true">
+                <input type="hidden" *ngIf="inner.form_field_visibility == 'NO'" />  <!--v-model="item.value" v-bind:id="item.name"     -->
+                <label *ngIf="inner.form_field_visibility == 'YES'">{{ inner.display_name}} <span class="text-danger" [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+                <div class="form-group" *ngIf="inner.form_field_visibility == 'YES'">
+
+
+
+                  <!--text  [placeholder]="inner.display_name"-->
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly || !isflag || (isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage '))" (keyup)="CalculateLoan(inner.form_controlName)"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (applicantForm.get(inner.form_controlName)?.invalid && (applicantForm.get(inner.form_controlName)?.dirty || applicantForm.get(inner.form_controlName)?.touched) && (applicantForm.get(inner.form_controlName)?.errors?.required || applicantForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.picklist_options != 'Lookup' && inner.dt_code !='date'  && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='date' && inner.dt_code !='int' && inner.dt_code !='decimal' && inner.dt_code !='bigint'" />
+
+
+
+                  <input type="text" fdgdfg="dfg" class="form-control" [readonly]="(inner.is_readOnly || !isflag ||(isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage ')))" (keyup)="CalculateLoan($event, inner.form_controlName)"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (applicantForm.get(inner.form_controlName)?.invalid && (applicantForm.get(inner.form_controlName)?.dirty || applicantForm.get(inner.form_controlName)?.touched) && (applicantForm.get(inner.form_controlName)?.errors?.required || applicantForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.ColumnName!='NoofMortgage' && inner.dt_code == 'int'" />
+
+                  <input type="text" fdgdfg="dfg" class="form-control" [readonly]="extStageAtive" (keyup)="CalculateLoan(inner.form_controlName)"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (applicantForm.get(inner.form_controlName)?.invalid && (applicantForm.get(inner.form_controlName)?.dirty || applicantForm.get(inner.form_controlName)?.touched) && (applicantForm.get(inner.form_controlName)?.errors?.required || applicantForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.ColumnName=='NoofMortgage' && inner.dt_code == 'int'" />
+
+                  <small *ngIf="inner.dt_code == 'int' &&(applicantForm.get(inner.form_controlName).touched &&
+                       applicantForm.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly || !isflag ||(isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage '))"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (applicantForm.get(inner.form_controlName)?.invalid && (applicantForm.get(inner.form_controlName)?.dirty || applicantForm.get(inner.form_controlName)?.touched) && (applicantForm.get(inner.form_controlName)?.errors?.required || applicantForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'bigint'" />
+
+                  <small *ngIf="inner.dt_code == 'bigint' &&(applicantForm.get(inner.form_controlName).touched &&
+                       applicantForm.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly || !isflag ||(isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage '))"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (applicantForm.get(inner.form_controlName)?.invalid && (applicantForm.get(inner.form_controlName)?.dirty || applicantForm.get(inner.form_controlName)?.touched) && (applicantForm.get(inner.form_controlName)?.errors?.required || applicantForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'decimal'   && inner.range_from==null" />
+
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly || !isflag ||(isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage '))" (ngModelChange)="validatorRange(inner.form_controlName,inner.is_required,inner.actual_data_type,inner.range_from,inner.range_to)"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (applicantForm.get(inner.form_controlName)?.invalid && (applicantForm.get(inner.form_controlName)?.dirty || applicantForm.get(inner.form_controlName)?.touched) && (applicantForm.get(inner.form_controlName)?.errors?.required || applicantForm.get(inner.form_controlName)?.errors?.maxlength)&&applicantForm.get(inner.form_controlName)?.errors?.min && applicantForm.get(inner.form_controlName)?.errors?.max) }"
+                         *ngIf="inner.dt_code == 'decimal' && inner.dt_code!='url' && inner.range_from!=null" />
+
+                  <small *ngIf="(applicantForm.get(inner.form_controlName).touched && applicantForm.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+
+                  <textarea class="form-control" *ngIf="inner.dt_code == 'textarea'" [ngClass]="{'is-invalid': (applicantForm.get(inner.form_controlName)?.invalid && (applicantForm.get(inner.form_controlName)?.dirty || applicantForm.get(inner.form_controlName)?.touched) && (applicantForm.get(inner.form_controlName).errors?.required || applicantForm.get(inner.form_controlName)?.errors?.maxlength)) }" [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+
+
+                  <p-calendar inputStyleClass="form-control start-date" *ngIf="inner.dt_code == 'date' && inner.ColumnName=='EstimatedFundDate'" [baseZIndex]="9999" [formControlName]="inner.form_controlName"
+                              [maxDate]="maxDateValue" [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                  <p-calendar inputStyleClass="form-control start-date" [ngClass]="{'disabledddl':(!isflag || inner.is_readOnly || (isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage ')))}" *ngIf="(inner.dt_code == 'date' && inner.ColumnName!='EstimatedFundDate' && inner.ColumnName!='DOB')" [baseZIndex]="9999" [formControlName]="inner.form_controlName"
+                              [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                  <p-calendar inputStyleClass="form-control start-date" [ngClass]="{'disabledddl':(!isflag || inner.is_readOnly || (isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage ')))}"
+                              *ngIf="(inner.dt_code == 'date' && inner.ColumnName=='DOB')" [baseZIndex]="9999" [formControlName]="inner.form_controlName" (onSelect)="onSelectMethod($event,inner.form_controlName)"
+                              [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                  <!--<p-calendar inputStyleClass="form-control start-date" *ngIf="inner.dt_code == 'date'" [formControlName]="inner.form_controlName"
+          [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>-->
+
+
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                    <div *ngFor="let options of inner.listoptions">
+                      <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                        <div class="custom-control custom-checkbox">
+                          <input id="chk_{{inner.form_field_id}}_{{option}}_{{i}}"
+                                 value="5555" [checked]="checkvalue(inner.value,option)" (change)="onCheckboxChange($event,item,inner)" class="dynamic custom-control-input" type="checkbox">
+                          <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="chk_{{inner.form_field_id}}_{{option}}_{{i}}">{{option}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean' && inner.ColumnName != 'IsRequiredMortgageStatement'">
+                    <div class="form-check form-check-inline">
+                      <div class="custom-control custom-checkbox pl-0">
+                        <label class="switch">
+                          <input type="checkbox" [ngClass]="{'disabledddl':(!isflag || inner.is_readOnly ||(isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage ')))}" (ngModelChange)="validator(inner.form_controlName,inner.is_required)" id="{{inner.form_controlName}}" [formControlName]="inner.form_controlName">
+                          <span [ngClass]="{'disabledddl':(!isflag || inner.is_readOnly  ||(isOhio && (inner.ColumnName!='TotalTimesCompounded' && inner.ColumnName!='EighteenMonthNumberOfTimesCompounded' && inner.ColumnName!='TimesCompoundedPerYear' && inner.ColumnName!='InterestRatePerCompoundTime' && inner.ColumnName!='DailyPaymentCalculation' && inner.ColumnName!='TaxCreditPercentage ')))}" class="slider round" id="{{inner.form_controlName}}"><span>Yes</span></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean' && inner.ColumnName == 'IsRequiredMortgageStatement'">
+                    <div class="form-check form-check-inline">
+                      <div class="custom-control custom-checkbox pl-0">
+                        <label class="switch">
+                          <input type="checkbox" [attr.disabled]="(inner.is_readOnly == 1 || inner.is_readOnly == 'true'|| inner.is_readOnly == true)" (ngModelChange)="validator(inner.form_controlName,inner.is_required)" id="{{inner.form_controlName}}" [formControlName]="inner.form_controlName">
+                          <span class="slider round" id="{{inner.form_controlName}}"><span>Yes</span></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!--Radio button-->
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio'">
+                    <div *ngFor="let options of inner.listoptions">
+
+                      <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                        <div class="custom-control custom-radio mx-2  p-0">
+                          <input id="radio-{{inner.form_field_id}}_{{option}}" [formControlName]="inner.form_controlName" [value]="option" type="radio">
+                          <label for="radio-{{inner.form_field_id}}_{{option}}" class="radio-label">{{option}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--Ng Dropdown-->
+                  <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [ngClass]="{'disabledddl':(!isflag || inner.is_readOnly ||(isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage ')))
+                               && ((inner.name=='EmployerType' && !enablefields) || (inner.name != 'EmployerType'))
+                               }" [closeOnSelect]="true" placeholder="Select" (change)="ShowData($event)"
+                             *ngIf="inner.dt_code=='select' && inner.picklist_options==''" [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+                  </ng-select>
+
+                  <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [ngClass]="{'disabledddl':(!isflag || inner.is_readOnly ||(isOhio && (inner.ColumnName=='TotalTimesCompounded' || inner.ColumnName=='EighteenMonthNumberOfTimesCompounded' || inner.ColumnName=='TimesCompoundedPerYear' || inner.ColumnName=='InterestRatePerCompoundTime' || inner.ColumnName=='DailyPaymentCalculation' || inner.ColumnName=='TaxCreditPercentage ')))}" [closeOnSelect]="true" placeholder="Select"
+                             *ngIf="inner.dt_code=='select' && inner.picklist_options=='true'" [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name" bindValue="value">
+
+                  </ng-select>
+
+
+                  <small *ngIf="((applicantForm.get(inner.form_controlName)?.invalid) && (applicantForm.get(inner.form_controlName).dirty) || (applicantForm.get(inner.form_controlName)?.touched)) && (applicantForm.get(inner.form_controlName)?.errors != null) && (applicantForm.get(inner.form_controlName)?.errors?.required)"
+                         class="text-danger">{{inner.display_name}} is required</small>
+
+                  <small *ngIf="(applicantForm.get(inner.form_controlName)?.errors != null && applicantForm.get(inner.form_controlName)?.errors?.lessthan18) && inner.name == 'DOB'"
+                         class="text-danger">Age should be greater than 18</small>
+
+                  <small *ngIf="(applicantForm.get(inner.form_controlName)?.errors != null && applicantForm.get(inner.form_controlName)?.errors?.max)"
+                         class="text-danger">{{inner.display_name}} should be less than 12</small>
+                </div>
+
+              </div>
+            </ng-container>
+          </ng-container>
+          <div class="col-sm-12 col-md-12" *ngIf="!leadconvert && submoduleName == 'LoanApplicationSignedDoc'">
+            <h3 class="form-heading ng-star-inserted"><span>Loan Document History</span></h3>
+            <div class="table-responsive no-padding">
+              <table class="table table-hover" style="min-width:auto; max-height:300px;" *ngIf="showSignNowHistoryData">
+                <thead>
+                  <tr>
+                    <th>Event</th>
+                    <th>User</th>
+                    <th>Datetime</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let history of signNowDocumentHistory; index as i;">
+                    <td>{{history.event}}</td>
+                    <td>{{history.email}}</td>
+                    <td>{{history.created * 1000 | date:'medium':'UTC-0700'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="table table-hover" style="min-width:auto; max-height:300px;" *ngIf="showDocuSignHistoryData">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Activity</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let history of docuSignData">
+                    <td>{{history.date | date: 'dd/MM/yyyy hh:mm:ss a'}}</td>
+                    <td>{{history.user}}</td>
+                    <td>{{history.action}}</td>
+                    <td>{{history.message}}</td>
+                    <td>{{history.status}}</td>
+
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <!--<div class="row  totalemi" *ngIf="submoduleName == 'LoanApplicationProductInfo'">-->
+      <div class="row  totalemi" *ngIf="false">
+        <div class="d-inline-block mr-3 p-2">
+          Your monthly EMI is: <span class="text-info">{{MonthlyInstallment.value}}</span>
+        </div>
+        <div class="d-inline-block">
+          <a (click)="ShowLoanCalculator()" href="javascript:void(0);" class="text-primary viewlcalc"><i class="fa pr-2" [ngClass]="{'fa-eye': !showCalculator, 'fa-eye-slash ': showCalculator}"></i>View Loan Calculator</a>
+        </div>
+      </div>
+      <!--<div class="row  loancalc" *ngIf="showCalculator">-->
+      <div class="row  loancalc" *ngIf="false">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 pl-0">
+          <div class="input-group mb-5">
+            <div class="col-12 m-auto">
+              <label>
+                Select Loan Amount:
+              </label>
+              <div class="form-group">
+                <p-slider [min]="0" [max]="1000000" formControlName="LoanDefaultValue" (onChange)="handleLoanChange($event,'loan')"></p-slider>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">$</div>
+                </div>
+                <input type="text" name="txtLoanAmount" formControlName="LoanDefaultValue" class="form-control" size="7" (keyup)="calculate()">
+              </div>
+
+            </div>
+          </div>
+          <div class="input-group mb-5">
+            <div class="col-12 m-auto">
+              <label>
+                Estimated Home Value:
+              </label>
+              <div class="form-group">
+                <p-slider [min]="0" [max]="1000000" formControlName="HomeLoanDefaultValue" (onChange)="handleLoanChange($event,'home')"></p-slider>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">$</div>
+                </div>
+                <input type="text" name="txtEstimatedHomeValue" formControlName="HomeLoanDefaultValue" id="txtEstimatedHomeValue" class="form-control" size="7" (keyup)="calculate()" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+          <div class="text-center d-none">
+            <h3 class="text-dark font-weight-bold" style="font-size:18px;">Your Monthly Payment Estimate Is:</h3>
+            <h2 class="text-primary display-4">
+              <span name="txtMonthlyInstallment">{{MonthlyInstallment.value}}</span>
+            </h2>
+          </div>
+          <div class="clearfix"></div>
+          <p-chart type="pie" [data]="LoanChartdata" [options]="chartOptions"></p-chart>
+        </div>
+        <div class="col-lg-12">
+          <h2 class="mb-3">Assumptions</h2>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label>Mortgage Rate:</label>
+
+            <div class="input-group">
+              <input id="txtInterestRate" type="text" class="form-control" name="txtInterestRate" formControlName="InterestRate" (keyup)="calculate()" />
+              <div class="input-group-prepend">
+                <div class="input-group-text">%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label>Loan Terms (In Years):</label>
+            <input id="txtTerm" type="text" class="form-control" name="txtTerm" formControlName="LoanTerm" placeholder="Terms in year" (keyup)="calculate()" />
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label>Property Tax:</label>
+            <div class="input-group">
+
+              <input id="txtPropertyTax" type="text" class="form-control" placeholder="" name="txtPropertyTax" formControlName="PropertyTax" (keyup)="calculate()" />
+              <div class="input-group-prepend">
+                <div class="input-group-text">%</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label>Homeowners Insurance (Annual):</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">$</div>
+              </div>
+              <input id="txtHomeOwnersInsurance" type="text" class="form-control" name="txtHomeOwnersInsurance" formControlName="HomeOwnersInsurance" (keyup)="calculate()" />
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row  mb-3 text-right" *ngIf="isflag || isFinanceUser || !extStageAtive">
+
+        <div class="col-sm-12 col-md-12" *ngIf="!leadconvert">
+          <button [disabled]=" isSubmitted" class="btn btn-success mr-2" (click)="onSubmitData()"><i class="feather-save"></i> Submit</button>
+          <a *ngIf="isModel" href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+        </div>
+        <div class="col-sm-12 col-md-12 text-right" *ngIf="leadconvert">
+
+          <a *ngIf="(wizardIndex!=0)" href="javascript:void(0);" class="btn btn-danger mr-2" (click)="backStep()">
+            <i class="fa fa-angle-left" aria-hidden="true"></i> Back
+          </a>
+
+          <a href="javascript:void(0);" *ngIf="totalWizardlength!=(wizardIndex+1)" class="btn btn-secondary mr-2" (click)="skipStep()">
+            Skip <i class="fa feather-chevron-left" aria-hidden="true"></i>
+          </a>
+
+          <a href="javascript:void(0);" *ngIf="totalWizardlength!=(wizardIndex+1)" class="btn btn-success mr-2" (click)="onSubmitData()">
+            Next <i class="fa feather-chevron-left" aria-hidden="true"></i>
+          </a>
+          <a href="javascript:void(0);" *ngIf="totalWizardlength==(wizardIndex+1)" class="btn btn-success " (click)="finish()"><i class="feather-save"></i> Finish</a>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>
+

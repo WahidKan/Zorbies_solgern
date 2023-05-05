@@ -1,0 +1,151 @@
+<div class="modal fade" bsModal #formulaModal="bs-modal" id="condition" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content" style="min-height:500px !important">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Related Formula</h5>
+            <button type="button" class="close" (click)="hide()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form *ngIf="formulaForm" [formGroup]="formulaForm">
+              <div class="row">
+                <div class="col-12">
+                  <label>Formula</label>
+                  <div class="form-group">
+                    <ng-select  formControlName="formulaType" [items]= "customFormulasList"
+                    placeholder="Select Action" bindLabel="text"
+                    [closeOnSelect]="true" [clearable]="false">
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="formulaForm.get('formulaType').value && formulaForm.get('formulaType').value.value == 1">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-1">
+                      <label>Open</label>
+                      <div class="form-group">
+                        <input formControlName="openingBrackets" style="width: auto;min-width: 20px;max-width: 20px;" class="form-control txtOpeningBrackets px-1">
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <label>Field</label>
+                      <!-- [items]="resultActionList"(change)="onActionChange($event)" -->
+                      <div class="form-group">
+                        <ng-select  formControlName="fieldId" [items] = "customFieldsList"
+                        placeholder="Select Field" bindLabel="name" (change)="onFieldChange($event,formulaForm,i)"
+                        [closeOnSelect]="true" [clearable]="false">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-2">
+                      <label>Condition Operator</label>
+                      <div class="form-group">
+                        <!-- (change)="onOperatorChange($event,condition,i)" -->
+                        <ng-select  formControlName="operatorId" [items]="formulaForm.get('operators').value"
+                        placeholder="Select Operator" bindLabel="operator_display_name"
+                        [closeOnSelect]="true" [clearable]="false">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-2">
+                      <label>Conditions</label>
+                      <div class="form-group">
+                         <!--  [ngStyle]="condition.get('disableDropdown').value ? {'pointer-events': 'none'} : {}" -->
+                        <ng-select  formControlName="conditionsId" [items] = "customFormulaConditionsList"
+                          placeholder="Select Condition" bindLabel="text"
+                          [closeOnSelect]="true" [clearable]="false" >
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <label>Value</label>
+                      <div class="form-group">
+                       <solgen-rule-input [formGroup]="formulaForm" [operator]="formulaForm.get('operatorId').value" [from]="formulaForm" [disabled]="false"
+                       [controlName]="'fieldValue'" [id]="i" [operatorType]="formulaForm.get('conditionsId').value" [updateOnOperatorType]="true" [customFiledList]="customFieldsList"></solgen-rule-input>
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <label>Close</label>
+                      <div class="form-group">
+                       <input type="text" class="form-control" formControlName="closingBrackets" style="width:30px;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <label>If Body</label>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-5">
+                      <label>Conditions</label>
+                      <div class="form-group">
+                         <!--  [ngStyle]="condition.get('disableDropdown').value ? {'pointer-events': 'none'} : {}" -->
+                        <ng-select  formControlName="ifBodyConditionOperator" [items] = "customFormulaConditionsList"
+                          placeholder="Select Condition" bindLabel="text"
+                          [closeOnSelect]="true" [clearable]="false" >
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <label>Value</label>
+                      <div class="form-group">
+                        <input *ngIf="formulaForm.get('ifBodyConditionOperator').value == null || (formulaForm.get('ifBodyConditionOperator').value && formulaForm.get('ifBodyConditionOperator').value.value == '1')" formControlName="ifBodyFieldValue" class="form-control txtOpeningBrackets px-1">
+                        <ng-select  formControlName="ifBodyFieldValue" [items] = "customFieldsList"
+                        placeholder="Select Field" bindLabel="name"
+                        *ngIf="formulaForm.get('ifBodyConditionOperator').value && formulaForm.get('ifBodyConditionOperator').value.value == '2'"
+                        [closeOnSelect]="true" [clearable]="false">
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-12">
+                        <label>Else Body</label>
+                  </div>
+                </div>
+                  <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-5">
+                      <label>Conditions</label>
+                      <div class="form-group">
+                        <ng-select  formControlName="elseBodyConditionOperator" [items] = "customFormulaConditionsList"
+                          placeholder="Select Condition" bindLabel="text" [appendTo]="'body'"
+                          [closeOnSelect]="true" [clearable]="false" >
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <label>Value</label>
+                      <div class="form-group">
+                        <input *ngIf="formulaForm.get('elseBodyConditionOperator').value == null || (formulaForm.get('elseBodyConditionOperator').value && formulaForm.get('elseBodyConditionOperator').value.value == '1')" formControlName="elseBodyFieldValue" class="form-control txtOpeningBrackets px-1">
+                        <ng-select  formControlName="elseBodyFieldValue" [items] = "customFieldsList"
+                        placeholder="Select Field" bindLabel="name" [appendTo]="'body'"
+                        *ngIf="formulaForm.get('elseBodyConditionOperator').value && formulaForm.get('elseBodyConditionOperator').value.value == '2'"
+                        [closeOnSelect]="true" [clearable]="false">
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form> 
+          </div>
+          <div class="modal-footer">
+            <div class="row w-100">
+              <!-- <div class="col-md-6 text-left pl-0">
+                <button type="button" class="btn btn-danger" [ngClass]="{'invisible':(vwRuleId != null)}" *ngIf="resultForm.get('isEdit').value" data-dismiss="modal" (click)="deleteResultForm()"><i class="feather-trash-2"></i> Delete</button>
+              </div> -->
+              <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-success mr-1"  (click)="saveFormula()"><i class="feather-save"></i> Save</button>
+                <button type="button" class="btn btn-danger" (click)="hide()"><i class="feather-x"></i> Cancel</button>
+              </div>
+            </div>
+    
+          </div>
+        </div>
+      </div>
+  </div>

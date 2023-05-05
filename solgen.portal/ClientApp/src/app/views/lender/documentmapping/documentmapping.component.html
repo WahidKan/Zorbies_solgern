@@ -1,0 +1,100 @@
+<div bsModal #documentMapping="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content" style="z-index:1">
+      <div class="modal-header">
+        <h4 *ngIf="document" class="modal-title">Mapping of Document: {{document.name}} ({{documentId}}) | Folder: {{document.folder}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--<div class="modal-body">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="panel panel-default" *ngFor="let documentField of documentFields; index as i;">
+                <div class="panel-body"></div>
+                <div class="col-md-6 border">{{documentField.formStackField}}</div>
+                <div dnd-droppable (onDropSuccess)="transferDataSuccess($event, documentField.formStackField)" class="panel panel-info" id="documentField_{{documentField.formStackField}}" style="height: 20px">
+                  <div class="row">
+                    <div class="col-md-1" *ngFor="let mapping of documentField.mappings; index as j;">
+                      {{mapping.formFieldName}}
+                      <button type="button" class="close" (click)="remove(documentField, mapping)" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="panel panel-default" *ngFor="let formField of formFields; index as i;">
+                <div class="panel-body" dnd-draggable [dragEnabled]="true" [dragData]="formField">{{formField.formFieldName}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>-->
+    <div class="modal-body mapping-select" style="max-height:600px; ">
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-sm-6 col-md-6">
+            <label>Name:</label>
+            <div class="form-group">
+              <input type="text" class="form-control" [(ngModel)]="webmergeMapping.name">
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6">
+            <label>Type:</label>
+            <div class="form-group">
+              <div class="radio d-inline-block">
+                <input id="radio-1" name="type" type="radio" value="Document" [(ngModel)]="webmergeMapping.webmergeObjectType" (click)="selectWebmergeObjectType($event)">
+                <label for="radio-1" class="radio-label">Document</label>
+              </div>
+              <div class="radio d-inline-block ml-5">
+                <input id="radio-2" name="type" type="radio" value="Route" [(ngModel)]="webmergeMapping.webmergeObjectType" (click)="selectWebmergeObjectType($event)">
+                <label for="radio-2" class="radio-label">Route</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6">
+            <label>{{webmergeMapping.webmergeObjectType}}</label>
+            <div class="form-group">
+              <ng-select [items]="webmergeDocuments" [(ngModel)]="selectedObjectId" bindLabel="name" *ngIf="webmergeMapping.webmergeObjectType == 'Document'" placeholder="Select Document" [closeOnSelect]="true" (change)="onWebmergeObjectSelected($event)">
+              </ng-select>
+              <ng-select [items]="webmergeDataRoutes" [(ngModel)]="selectedObjectId" bindLabel="name" *ngIf="webmergeMapping.webmergeObjectType == 'Route'" placeholder="Select Route" [closeOnSelect]="true" (change)="onWebmergeObjectSelected($event)">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12 ">
+            <h3 class="form-heading"><span>Choose Mapping Fields</span></h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 py-1" *ngFor="let field of webmergeDocumentFields; index as i;">
+        <label class="ng-star-inserted">
+          {{field.webmergeDocumentFieldName}} - (Document Name : <strong>{{field.webmergeDocumentName}}</strong>)
+        </label>
+
+        <ng-select id="{{field.webmergeDocumentFieldName}}" [items]="formFields" [(ngModel)]="field.mappings"
+                   placeholder="Select Form Fields" bindLabel="displayName"
+                   [multiple]="true" [searchable]="true" (change)="onChange($event, field)"
+                   [closeOnSelect]="true">
+        </ng-select>
+      </div>
+    </div>
+
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="submit()"><i class="feather-save text-white"></i> Submit</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,2164 @@
+<style>
+  .hide {
+    display: none !important;
+  }
+</style>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Campaign Details</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a routerLink="/dashboard">Dashboard</a></li>
+        <li><a routerLink="/marketing/campaigns-list">Manage Campaigns</a></li>
+        <li class="active">Campaign Details</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+<div class="clearfix"></div>
+
+<div class="panel clearfix">
+  <div class="panel-content clearfix mb-4 p-0">
+
+    <!-- <div class="float-left p-3">
+      <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#Details" role="tab"
+            aria-selected="true">Details</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="lead-tab" data-toggle="tab" href="#AdSet" role="tab" (click)="onAdSetTabLoad()"
+            aria-selected="true">AD SETS & ADS</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="delivery-options" data-toggle="tab" href="#ReportMatrix" role="tab"
+            aria-selected="true">Report Matrix</a>
+        </li>
+      </ul>
+    </div>
+    <div class="float-right p-3">
+      <ul class="nav nav-tabs   " id="myTab" role="tablist">
+        <li class="nav-item">
+          <a *ngIf="isUpdate" href="javascript:void(0);" [routerLink]="['/marketing/editcampaign', id]"
+            class="btn btn-success text-white mr-2 smview"><i class="fa fa-pencil mr-1"></i> Edit</a>
+          <a href="javascript:void(0);" class="btn btn-dark text-white smview" routerLink="/marketing/campaigns-list"><i
+              class="fa fa-arrow-left mr-1"></i> Back</a>
+        </li>
+      </ul>
+    </div> -->
+
+
+    <app-view-filter-bar-manager [adViewStatus]="isUpdate" (callToViewFilterBarFunction)="onAdSetTabLoad($event)"  [submoduleName]="'facebookcampaign'" [titleName]="''"  
+    [customCompnentValuesTop]="''" [logoClass]="''" 
+    [pageLink]="'/marketing/editcampaign'"  ></app-view-filter-bar-manager>
+
+
+
+
+
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade active show" id="Details" role="tabpanel">
+        <div class="row">
+          <div class="col-sm-12 col-lg-8">
+            <div id="accordion" [ngClass]="{'disabled':loadSave}">
+              <div class="panel active" *ngIf="viewData">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#facebookcampaign" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+                      aria-expanded="true">
+                      <span>Campaign Information</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="facebookcampaign" class="panel-collapse collapse active show">
+                  <div class="panel-body row px-3">
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Campaign name:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.campaignName}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Campaign Id:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.facebookCampaignId}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Campaign Owner:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.campaign_owner}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>IsActive:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.IsActive}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Status:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.campaignStatus}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Type:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.type}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Start Date:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{viewData.start_time ||
+                            DateTimeToLocal | date:'MM/dd/yyyy'}} </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>End Date:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{viewData.end_time ||
+                            DateTimeToLocal | date:'MM/dd/yyyy'}} </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Discount Name:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.discount_name}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Discount Amount:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span
+                              *ngIf="viewData.discount_amount">$</span>{{
+                            viewData.discount_amount}}</span>
+                          <!-- <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.discount_amount}}</span> -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Sale Group Type:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.sale_group_type}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Service Territory:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.service_territory}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>External Id:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.external_id}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+
+
+
+
+
+                    <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Bid strategy:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.BidStrategy}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Budget:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span
+                              *ngIf="viewData.campaignBudget">$</span>{{ viewData.campaignBudget}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Buying Type:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.campaignBuyingType}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>End Time:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.endtime}}</span>
+                        </div>
+                      </div>
+                    </div> -->
+
+                    <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Discount Name:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.discount_name}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Discount Amount:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span
+                              *ngIf="viewData.discount_amount">$</span>{{
+                            viewData.discount_amount}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Service Territory:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.service_territory}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>External Id:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.external_id}}</span>
+                        </div>
+                      </div>
+                    </div> -->
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Campaign Status Facebook:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.campaign_status_facebook}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Daily Budget:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span
+                              *ngIf="viewData.daily_budget">$</span>{{
+                            viewData.daily_budget}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Impressions:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.Impressions}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Facebook Account Id:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.facebook_account_id}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Spends:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span
+                              *ngIf="viewData.daily_budget">$</span>{{
+                            viewData.spends}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Description:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.description}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Buying Type:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.buying_type}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Categories</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.special_ad_categories}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Campaign Objective:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.campaignObjective}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Created By:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">
+                            
+                            
+                            {{ (viewData.createdBy!==null) ?
+                            viewData.createdBy + ',' : ""}} 
+                            &nbsp;
+
+                            {{ (viewData.created_at !== null) ?
+                              (viewData.created_at | date:'MM/dd/yyyy') : "" }}
+
+                              &nbsp;
+                                {{ (viewData.created_at !== null) ?
+                                (viewData.created_at || DateTimeToLocal | date :'hh:mm a') : "-" }}
+                          
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Last Modified By:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">
+                            {{ (viewData.modifiedBy !== null) ?
+                            viewData.modifiedBy + ',' : "" }} 
+                            &nbsp;
+                            {{ (viewData.modified_at !== null) ?
+                              (viewData.modified_at | date:'MM/dd/yyyy') : "" }}
+
+                              &nbsp;
+                                {{ (viewData.modified_at !== null) ?
+                                (viewData.modified_at || DateTimeToLocal | date :'hh:mm a') : "-" }}
+                          
+                          </span>
+
+                            
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Num Sent In Campaign:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.num_sent_in_campaign}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Budgeted Cost In Campaign:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span *ngIf="viewData.budgeted_cost_in_campaign">$</span>{{
+                            viewData.budgeted_cost_in_campaign}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Expected Response:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.expected_response}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Actual Cost In Campaign:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span *ngIf="viewData.actual_cost_in_campaign">$</span>{{
+                            viewData.actual_cost_in_campaign}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Expected Revenue In Campaign:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.expected_revenue_in_campaign}}</span>
+                        </div>
+                      </div>
+                    </div> -->
+                    <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Created Time:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.campaignCreatedTime || DateTimeToLocal | date :'mediumTime'}}</span>
+                        </div>
+                      </div>
+                    </div> -->
+
+
+
+
+
+                    <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Reach:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.campaignReach}}</span>
+                        </div>
+                      </div>
+                    </div> -->
+
+                    <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Impressions:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.campaignImpressions}}</span>
+                        </div>
+                      </div>
+                    </div> -->
+
+                    <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Spend:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.campaignSpend}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Stop Date:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.campaignDateStop ||
+                            DateTimeToLocal | date}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Clicks:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.campaignClicks}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Website Purchases:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.campaignWebsitePurchase}}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>On-Facebook Purchases:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.campaignPurchase}}</span>
+                        </div>
+                      </div>
+                    </div> -->
+
+                  </div>
+                </div>
+              </div>
+              <div class="panel active" *ngIf="viewData">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#Planning" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+                      aria-expanded="true">
+                      <span>Planning</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="Planning" class="panel-collapse collapse active show">
+                  <div class="panel-body row px-3">
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Num Sent in Campaign:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.num_sent_in_campaign}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Budgeted Cost In Campaign:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span
+                              *ngIf="viewData.budgeted_cost_in_campaign">$</span>{{
+                            viewData.budgeted_cost_in_campaign}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Expected Response (%):</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;">{{
+                            viewData.expected_response}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Actual Cost in Campaign:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span
+                              *ngIf="viewData.actual_cost_in_campaign">$</span>{{
+                            viewData.actual_cost_in_campaign}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                      <div class="input-group border-bottom h-100">
+                        <div class="col-sm-12 col-md-6 px-0">
+                          <span class="py-2 d-block"><strong>Expected Revenue in Campaign:</strong></span>
+                        </div>
+                        <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                          <span class="py-2 d-block" style="word-break:break-all;"><span
+                              *ngIf="viewData.expected_revenue_in_campaign">$</span>{{
+                            viewData.expected_revenue_in_campaign}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-lg-4 relatedtab">
+            <h3 class="form-heading mt-0"><span>Related</span></h3>
+            <div id="accordion">
+              <ng-container>
+                <app-newnoteslist #listnotesmodel [view]="false" [DisplayOnEmpty]="true"
+                  subModuleName="{{submoduleName}}" [AccountId]="accountId" [ObjectRefId]="id"></app-newnoteslist>
+              </ng-container>
+              <!--==============================================Opportunity=========================================-->
+              <ng-container>
+                <div class="panel active">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#oppurtunity" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+                        aria-expanded="true">
+                        <span>Opportunities ({{OpportunityCount}})</span>
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="oppurtunity" class="panel-collapse collapse active show" style="">
+                    <div *ngIf="viewData"><a href="javascript:void(0);" routerLink="/opportunity/addOpportunity" [queryParams]="{campaign_id:viewData.facebookCampaignId}" class="btn-in-panel"><span data-toggle="modal"><i
+                      class="feather-plus mr-2"></i>New</span></a></div>
+                    <!-- <a href="javascript:void(0);" class="btn-in-panel" routerLink="/opportunity/addOpportunity"
+                      data-toggle="modal"><i class="feather-plus mr-2"></i> New</a> -->
+                    <div class="panel-body p-2 mt-0">
+                      <div class="table-responsive ngxtbl">
+                        <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                          [rows]="lstOpportunity.data" [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'"
+                          [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true"
+                          [loadingIndicator]="loadSave" [count]="lstOpportunity.pager.totalItems"
+                          [offset]="lstOpportunity.pager.currentPage" [limit]="lstOpportunity.pager.pageSize"
+                          (page)='setOpportunityPageNo($event)' (sort)="onOpportunitySort($event)">
+                          <ngx-datatable-column name="Opportunity Name" prop="OpportunityName" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                              <a href="javascript:void(0);"
+                                [routerLink]="['/opportunity/viewOpportunity',row.Id]">{{row.OpportunityName}}</a>
+                            </ng-template>
+                          </ngx-datatable-column>
+                          <ngx-datatable-column name="Account Name" prop="AccountName" [sortable]="true">
+                          </ngx-datatable-column>
+                          <ngx-datatable-column name="Close Date" prop="CloseDate" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                              {{row.CloseDate || DateTimeToLocal | date:'MM/dd/yyyy'}}
+                            </ng-template>
+                          </ngx-datatable-column>
+                          <ngx-datatable-column [width]="80" name="Action" [sortable]="false" [maxWidth]="200"
+                            headerClass="text-center">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                              <div class="text-center">
+                                <!-- <a class="actions-onclick"
+                                  [routerLink]="['/opportunity/editOpportunity/',row.Id]" title="Edit"><i
+                                    class="fa fa-pencil text-success pr-2"></i></a> -->
+                                <a class="btn-edit " href="javascript:void(0);"
+                                  [routerLink]="['/opportunity/editOpportunity/',row.Id]">
+                                  <i title="Edit Opportunity" class="fa fa-pencil text-success pr-2"></i></a>
+
+
+                                <a (click)="DeleteOpp(row)" class="btn-edit" href="javascript:void(0);"><i
+                                    class="feather-trash-2 text-danger pr-2" title="Delete this record"></i></a>
+                              </div>
+                            </ng-template>
+                          </ngx-datatable-column>
+                          <ngx-datatable-footer>
+                            <ng-template ngx-datatable-footer-template let-rowCount="rowCount"
+                              let-pageSize="lstOpportunity.pager.pageSize" let-selectedCount="selectedCount"
+                              let-currentPage="lstOpportunity.pager.currentPage" let-offset="offset"
+                              let-isVisible="isVisible">
+                              <div class="page-count" *ngIf='(rowCount  > 0)'>
+                              </div>
+                              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                [pagerNextIcon]="'fa fa-angle-double-right'" [page]="lstOpportunity.pager.currentPage"
+                                [size]="lstOpportunity.pager.pageSize" [count]="lstOpportunity.pager.totalItems"
+                                [hidden]="!((rowCount / lstOpportunity.pager.pageSize) > 1)"
+                                (change)="setOpportunityPageNo($event)">
+                              </datatable-pager>
+                            </ng-template>
+                          </ngx-datatable-footer>
+                        </ngx-datatable>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <!--==============================================Lead=========================================-->
+              <ng-container>
+                <div class="panel active">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#lead" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+                        aria-expanded="true">
+                        <span>Leads ({{LeadCount}})</span>
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="lead" class="panel-collapse collapse active show" style="">
+                    <div *ngIf="viewData">
+                    <a href="javascript:void(0);" class="btn-in-panel" routerLink="/lead/addlead" [queryParams]="{campaign_id:viewData.facebookCampaignId}"  data-toggle="modal"><i
+                        class="feather-plus mr-2"></i> New</a></div>
+                    <div class="panel-body p-2 mt-0">
+                      <div class="table-responsive ngxtbl">
+                        <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="lstlead.data"
+                          [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40"
+                          [footerHeight]="40" [externalPaging]="true" [externalSorting]="true"
+                          [loadingIndicator]="loadSave" [count]="lstlead.pager.totalItems"
+                          [offset]="lstlead.pager.currentPage" [limit]="lstlead.pager.pageSize"
+                          (page)='setLeadPageNo($event)' (sort)="onLeadSort($event)">
+                          <ngx-datatable-column name="Lead Name" prop="LeadName" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                              <a href="javascript:void(0);"
+                                [routerLink]="['/lead/view',row.LeadID]">{{row.LeadName}}</a>
+                            </ng-template>
+                          </ngx-datatable-column>
+                          <ngx-datatable-column name="Lead Source" prop="LeadSource" [sortable]="true">
+                          </ngx-datatable-column>
+
+                          <ngx-datatable-column name="Status" prop="StatusId" sortable="false">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                              <div class="text-center">
+                                <div class="status-box" [ngStyle]="{'background-color':row.colorclass}">
+                                  {{row.StatusName}}</div>
+                              </div>
+
+                            </ng-template>
+                          </ngx-datatable-column>
+
+
+
+                          <!-- <ngx-datatable-column name="Lead Status" prop="StatusName" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                              {{row.StatusName}}                     style="background-color: #dc3545;max-width:150px !important"        
+                            </ng-template>
+                          </ngx-datatable-column> -->
+                          <ngx-datatable-column [width]="80" name="Action" [sortable]="false" [maxWidth]="200"
+                            headerClass="text-center">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+
+
+
+                              <div class="text-center">
+                                <!-- <a class="actions-onclick"
+                                [routerLink]="['/opportunity/editOpportunity/',row.Id]" title="Edit"><i
+                                  class="fa fa-pencil text-success pr-2"></i></a> -->
+                                <a class="btn-edit " href="javascript:void(0);"
+                                  [routerLink]="['/lead/editlead/',row.LeadID]">
+                                  <i title="Edit Opportunity" class="fa fa-pencil text-success pr-2"></i></a>
+
+
+                                <a (click)="DeleteLead(row)" class="btn-edit" href="javascript:void(0);"><i
+                                    class="feather-trash-2 text-danger pr-2" title="Delete this record"></i></a>
+                              </div>
+                            </ng-template>
+                          </ngx-datatable-column>
+                          <ngx-datatable-footer>
+                            <ng-template ngx-datatable-footer-template let-rowCount="rowCount"
+                              let-pageSize="lstlead.pager.pageSize" let-selectedCount="selectedCount"
+                              let-currentPage="lstlead.pager.currentPage" let-offset="offset" let-isVisible="isVisible">
+                              <div class="page-count" *ngIf='(rowCount  > 0)'>
+                              </div>
+                              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                [pagerNextIcon]="'fa fa-angle-double-right'" [page]="lstlead.pager.currentPage"
+                                [size]="lstlead.pager.pageSize" [count]="lstlead.pager.totalItems"
+                                [hidden]="!((rowCount / lstlead.pager.pageSize) > 1)" (change)="setLeadPageNo($event)">
+                              </datatable-pager>
+                            </ng-template>
+                          </ngx-datatable-footer>
+                        </ngx-datatable>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <!--==============================================AdSet=========================================-->
+              <ng-container>
+                <div class="panel active">
+                  <div class="panel-heading">
+                    <h4 class="panel-title">
+                      <a href="#adset" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+                        aria-expanded="true">
+                        <span>Ad Sets ({{AdsetCount}})</span>
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="adset" class="panel-collapse collapse active show" style="">
+                    <div class="panel-body p-2 mt-0">
+                      <div class="table-responsive ngxtbl">
+                        <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="lstadset.data"
+                          [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40"
+                          [footerHeight]="40" [externalPaging]="true" [externalSorting]="true"
+                          [loadingIndicator]="loadSave" [count]="lstadset.pager.totalItems"
+                          [offset]="lstadset.pager.currentPage" [limit]="lstadset.pager.pageSize"
+                          (page)='setAdSetPageNo($event)' (sort)="onAdSetSort($event)">
+                          <ngx-datatable-column name="Ad Set Name" prop="AdsetName" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                              <a href="javascript:void(0);"
+                                [routerLink]="['/marketing/adSet-view/', row.adSetId]">{{row.AdsetName}}</a>
+                            </ng-template>
+                          </ngx-datatable-column>
+                          <ngx-datatable-column name="Optimization Goal" prop="OptimizationGoal" [sortable]="true">
+                          </ngx-datatable-column>
+                          <ngx-datatable-column name="Status" prop="status" [sortable]="true">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                              {{row.status}}
+                            </ng-template>
+                          </ngx-datatable-column>
+                          <ngx-datatable-footer>
+                            <ng-template ngx-datatable-footer-template let-rowCount="rowCount"
+                              let-pageSize="lstadset.pager.pageSize" let-selectedCount="selectedCount"
+                              let-currentPage="lstadset.pager.currentPage" let-offset="offset"
+                              let-isVisible="isVisible">
+                              <div class="page-count" *ngIf='(rowCount  > 0)'>
+                              </div>
+                              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                [pagerNextIcon]="'fa fa-angle-double-right'" [page]="lstadset.pager.currentPage"
+                                [size]="lstadset.pager.pageSize" [count]="lstadset.pager.totalItems"
+                                [hidden]="!((rowCount / lstadset.pager.pageSize) > 1)"
+                                (change)="setAdSetPageNo($event)">
+                              </datatable-pager>
+                            </ng-template>
+                          </ngx-datatable-footer>
+                        </ngx-datatable>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="AdSet" role="tabpanel">
+        <div class="row">
+          <div class="col-lg-12">
+            <div id="accordion" [ngClass]="{'disabled':loadSave}">
+              <div *ngIf="adSetData">
+                <h3 class="form-heading mt-0"><span>Ad Set Details</span></h3>
+                <ng-container *ngFor="let item of adSetData">
+                  <!-- *ngIf="item.IsVisible" -->
+                  <div class="panel active">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <!-- {{item.group_display_name}} -->
+                        <a href="#{{item.facebookAdSetId}}" class="accordion-toggle" data-toggle="collapse"
+                          data-parent="#accordion" aria-expanded="true">
+                          <span> {{item.adSetName}}</span>
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="{{item.facebookAdSetId}}" class="panel-collapse collapse active show">
+                      <div class="panel-body row px-0 mt-0">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                          <div class="row">
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Ad Set Id:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.facebookAdSetId}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Ad Set Name:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">
+                                    <a title="View Adset" [routerLink]="['/marketing/adSet-view/', item.adSetId]" >{{item.adSetName}}</a></span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Ad Set name:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetName}}</span>
+                                </div>
+                              </div>
+                            </div> -->
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Amount Spent:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;"><span
+                                      *ngIf="item.adSetspent_amount">$</span>{{ item.adSetspent_amount}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+
+
+
+
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Bid Strategy:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetBidStrategy}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Budget:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;"><span
+                                      *ngIf="item.adSetLifeTimeBudget">$</span>{{
+                                    item.adSetLifeTimeBudget}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Campaign:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.campaign}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Cost per Result:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;"><span
+                                      *ngIf="item.adSetcost_per_result">$</span>{{ item.adSetcost_per_result}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Frequency:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetfrequency}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Impressions:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetimpressions}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Reach:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetreach}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Unique Link Clicks:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetunique_link_clicks}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Cost Per Mile:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;"><span
+                                      *ngIf="item.adSetcost_per_mile">$</span>{{ item.adSetcost_per_mile}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Cost Per Pixel:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;"><span
+                                      *ngIf="item.adSetcost_per_pixel">$</span>{{ item.adSetcost_per_pixel}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Click Through Rate:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;"><span
+                                      *ngIf="item.adSetclick_through_rate">$</span>{{
+                                    item.adSetclick_through_rate}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Social Spend:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetsocial_spende}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Effective Status:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSeteffective_status}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Billing Event:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetbilling_event}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Video View:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetvideo_view}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Ad Objective:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetad_objective}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Daily Budget:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;"><span
+                                      *ngIf="item.daily_budget">$</span>{{ item.adSetDailyBudget}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Status:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetStatus}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Start Date:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">
+                                    {{ (item.start_time !== null) ?
+                                      (item.start_time || DateTimeToLocal | date:'MM/dd/yyyy') : "" }}                                     
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>End Date:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">
+                                    {{ (item.end_time !== null) ?
+                                      (item.end_time || DateTimeToLocal  | date:'MM/dd/yyyy'  ) : "" }}                                     
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>External Id:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetexternal_id}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Ad Set Objective:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetadset_objective}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Cost per Unique Clicks:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;"><span
+                                      *ngIf="item.adSetcostper_unique_clicks">$</span>{{
+                                        item.adSetcostper_unique_clicks}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Last Significant Edit:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">
+                                    {{ (item.adSetUpdate !== null) ?
+                                      (item.adSetUpdate | date:'MM/dd/yyyy') : "" }}
+                                           &nbsp;
+                                      {{ (item.adSetUpdate !== null) ?
+                                      (item.adSetUpdate || DateTimeToLocal | date :'hh:mm a') : "-" }}                                    
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Optimization Goal:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetOptimizationGoal}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Created By:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">
+                                    {{ (item.AdSetcreated_by!==null) ?
+                                      item.AdSetcreated_by + ',' : ""}}   
+                                      {{ (item.adSetcreated_at !== null) ?
+                                    (item.adSetcreated_at | date:'MM/dd/yyyy') : "" }}
+                                         &nbsp;
+                                    {{ (item.adSetcreated_at !== null) ?
+                                    (item.adSetcreated_at || DateTimeToLocal | date :'hh:mm a') : "-" }} </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div  class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Modified By:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">
+                                    
+                                    
+                                    {{ (item.AdSetmodified_by!==null) ?
+                                      item.AdSetmodified_by + ',' : ""}}   {{ (item.adSetmodified_at !== null) ?
+                                    (item.adSetmodified_at | date:'MM/dd/yyyy') : "" }}
+                                         &nbsp;
+                                    {{ (item.adSetmodified_at !== null) ?
+                                    (item.adSetmodified_at || DateTimeToLocal | date :'hh:mm a') : "-" }} 
+                                  
+                                  
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+
+                            <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Last Significant Edit:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetUpdate}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Budget Remaining:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">
+                                    <span *ngIf="item.adSetBudgetRemaining">$</span>{{
+                                    item.adSetBudgetRemaining}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Created Time:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetCreatedTime || DateTimeToLocal | date :'mediumTime' }}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Daily Budget:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;"><span
+                                      *ngIf="item.adSetDailyBudget">$</span>{{
+                                    item.adSetDailyBudget}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Optimization Goal:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetOptimizationGoal}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Schedule:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetStartTime + ' -'
+                                    + item.adSetEndTime}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Status:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetStatus}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Reach:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetReach}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Impressions:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetImpressions}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Spend:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetSpend}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>End:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetDateStop || DateTimeToLocal | date}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Clicks:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{ item.adSetClicks}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>Website Purchases:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetWebSitePurchase}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6 col-lg-4">
+                              <div class="input-group border-bottom h-100">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>On-Facebook Purchases:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                  <span class="py-2 d-block" style="word-break:break-all;">{{
+                                    item.adSetPurchase}}</span>
+                                </div>
+                              </div>
+                            </div> -->
+
+                          </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-lg-6" *ngIf="item.Ads">
+                          <h3 class="form-heading mt-0"><span>Ads Details</span></h3>
+                          <ng-container *ngFor="let ad of item.Ads">
+                            <div class="panel active">
+                              <div class="panel-heading">
+                                <h4 class="panel-title">
+                                  <a href="#{{ad.facebookAdId}}" class="accordion-toggle" data-toggle="collapse"
+                                    data-parent="#accordion" aria-expanded="true">
+                                    <span>{{ad.adName}}</span>
+
+                                  </a>
+                                </h4>
+                              </div>
+                              <div id="{{ad.facebookAdId}}" class="panel-collapse collapse active show">
+
+                                <div class="panel-body row px-3">
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Ad Name:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">
+                                          <a title="View Ad" [routerLink]="['/marketing/ad-view/', ad.adId]" >{{ad.adName}}</a></span>
+                                      </div>
+                                      <!-- <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.adName}}</span>
+                                      </div> -->
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Ad Id:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.facebookAdId}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Campaign Name:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">
+                                          <a title="View Campaign" [routerLink]="['/marketing/campaign-view/', ad.AdcampaignId]" >{{ad.Adcampaign}}</a></span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Ad Set Name:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">
+                                          <a title="View Adset" [routerLink]="['/marketing/adSet-view/', ad.adSetId]" >{{ad.AdAdsetname}}</a></span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Delivery:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.Addelivery}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Amount Spent:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;"><span>$</span>{{ ad.Adamount_spent}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Bid Strategy:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.Adbid_strategy}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Budget:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;"><span>$</span>{{
+                                          ad.Adbid_amount}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Conversion Rate Ranking:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">
+                                          {{ad.conversion_rate_rancking}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Cost Per Result:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;"><span>$</span>{{ ad.Adcost_per_result}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Ends:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.Adends}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Frequency:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.Adfrequency}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Impressions:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.Adimpressions}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Last Significant Edit:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">
+                                          {{ad.Adlast_significant_edit || DateTimeToLocal | date:'MM/dd/yyyy'}} {{' '}}  {{(ad.Adlast_significant_edit !== null && ad.Adlast_significant_edit) ? commonService.getUserUTCToSelectedZoneTime(ad.last_significant_edit_time) : ""}}                                         
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Reach:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.Adreach}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Result:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.Adresult}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Source:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.Adsource}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Unique Link Clicks:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.Adunique_links_clicks}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+            
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>External Id:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.Adexternal_id}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Last Edit Date Time:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">
+                                            
+                                            <!-- {{viewData.last_edit || DateTimeToLocal | date:'dd/MM/yyyy'}}     -->
+                                            {{ad.adlast_edit || DateTimeToLocal | date:'MM/dd/yyyy'}} {{' '}}  {{(ad.adlast_edit !== null && ad.adlast_edit ) ? commonService.getUserUTCToSelectedZoneTime(ad.Adlast_edit_time) : ""}}               
+                                        
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Status:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adStatus}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Ad Start Date:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;"> {{ ad.add_start_date | date:'MM/dd/yyyy'}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Daily Budget:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;"><span>$</span>{{ ad.addaily_budget}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Ad Objective:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.add_objective}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Link To Data:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{ ad.Adlink_url}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Created By:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">
+                                          {{ ad.Adcreated_by}} &nbsp;
+                                          {{ (ad.Adcreated_at !== null) ?
+                                            (ad.Adcreated_at | date:'MM/dd/yyyy') : "" }}
+                                            &nbsp;
+                                            {{ (ad.Adcreated_at !== null) ?
+                                            (ad.Adcreated_at || DateTimeToLocal | date :'hh:mm a') : "-" }}
+                                          
+                                          <!-- {{ viewData.createdBy}} &nbsp;  {{ (viewData.created_at !== null) ? (viewData.created_at | DateTimeToLocal) : "-" }}  -->
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div  class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Modified By:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">
+                                          {{ ad.Admodified_by}} &nbsp;
+                                          {{ (ad.Admodified_at !== null) ?
+                                            (ad.Admodified_at | date:'MM/dd/yyyy') : "" }}
+                                            &nbsp;
+                                            {{ (ad.Admodified_at !== null) ?
+                                            (ad.Admodified_at || DateTimeToLocal | date :'hh:mm a') : "-" }}
+            
+                                           <!-- {{ viewData.modifiedBy}} &nbsp; {{ (viewData.modified_at !== null) ? (viewData.modified_at | DateTimeToLocal) : "-" }} -->
+                                          <!-- {{ (viewData.modifiedBy !== null) ? (viewData.modifiedBy) : "-" }}  -->
+                                          <!-- ,{{ (viewData.modified_at !== null) ? (viewData.modified_at | DateTimeToLocal) : "" }} -->
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+
+                                 
+            
+                                  <!-- <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>adBidAmount:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adBidAmount}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Updated Time:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adUpdatedTime}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Quality Ranking:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adQualityRanking}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Engagement Rate Ranking:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adEngagementRateRanking}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Conversion Rate Ranking:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adConversionRateRanking}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Reach:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adReach}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Impressions:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adImpressions}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Spend:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adSpend}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>End:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adDateStop || DateTimeToLocal | date}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>adClicks:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adClicks}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>Website Purchase:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adWebsitePurchase}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-md-6 col-lg-4">
+                                    <div class="input-group border-bottom h-100">
+                                      <div class="col-sm-12 col-md-6 px-0">
+                                        <span class="py-2 d-block"><strong>On-Facebook Purchases:</strong></span>
+                                      </div>
+                                      <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                                        <span class="py-2 d-block" style="word-break:break-all;">{{
+                                          ad.adPurchase}}</span>
+                                      </div>
+                                    </div>
+                                  </div> -->
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6" *ngIf="item.Ads===null">
+                          <h3 class="form-heading mt-0"><span>Ads Details</span></h3>
+                          <ng-container>
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                              <!-- <div class="panel-heading">
+                                <h4 class="panel-title">
+                                  <a href="#adsno" class="accordion-toggle" data-toggle="collapse"
+                                    data-parent="#accordion" aria-expanded="true">
+                                    <span>Ads Details</span>
+                                  </a>
+                                </h4>
+                              </div> -->
+                              <div id="adsno" class="panel-collapse collapse active show">
+                                <div class="panel-body row px-3">
+                                  <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                      <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <div class="empty-row ng-star-inserted"
+                                          style="text-align: center; color: #dc3545;">No ad available to display.</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                          <div class="clearfix"></div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+
+              <div *ngIf="DataAvailable==='no'">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  <!-- <div class="panel-heading">
+                    <h4 class="panel-title">
+
+                      <a href="#AdSetNo" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+                        aria-expanded="true">
+                        <span> Ad Set</span>
+                      </a>
+                    </h4>
+                  </div> -->
+                  <div id="AdSetNo" class="panel-collapse collapse active show">
+                    <div class="panel-body row px-0 mt-0">
+                      <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="row">
+                          <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="empty-row ng-star-inserted" style="text-align: center; color: #dc3545;">No data
+                              to display</div>
+                          </div>
+                        </div>
+                      </div>
+                     
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="ReportMatrix" role="tabpanel">
+        <div class="row" *ngIf="viewData">
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="input-group border-bottom h-100">
+              <div class="col-sm-12 col-md-6 px-0">
+                <span class="py-2 d-block"><strong>Number of Leads:</strong></span>
+              </div>
+              <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.lead_count}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="input-group border-bottom h-100">
+              <div class="col-sm-12 col-md-6 px-0">
+                <span class="py-2 d-block"><strong>Cost Per Lead:</strong></span>
+              </div>
+              <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                <span class="py-2 d-block" style="word-break:break-all;">{{(viewData.account_currency=="USD"?
+                  "$":"")}}{{ viewData.coust_per_lead}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="input-group border-bottom h-100">
+              <div class="col-sm-12 col-md-6 px-0">
+                <span class="py-2 d-block"><strong>Number of Qualified Leads:</strong></span>
+              </div>
+              <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                <span class="py-2 d-block" style="word-break:break-all;">{{ viewData.no_of_qualified_lead}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="input-group border-bottom h-100">
+              <div class="col-sm-12 col-md-6 px-0">
+                <span class="py-2 d-block"><strong>Cost Per Qualified Lead:</strong></span>
+              </div>
+              <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                <span class="py-2 d-block" style="word-break:break-all;"> {{(viewData.account_currency=="USD"?
+                  "$":"")}}{{viewData.cost_per_qualified_lead}}</span>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="input-group border-bottom h-100">
+              <div class="col-sm-12 col-md-6 px-0">
+                <span class="py-2 d-block"><strong>Amount of Closes :</strong></span>
+              </div>
+              <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                <span class="py-2 d-block" style="word-break:break-all;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="input-group border-bottom h-100">
+              <div class="col-sm-12 col-md-6 px-0">
+                <span class="py-2 d-block"><strong>Cost of Closes :</strong></span>
+              </div>
+              <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                <span class="py-2 d-block" style="word-break:break-all;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="input-group border-bottom h-100">
+              <div class="col-sm-12 col-md-6 px-0">
+                <span class="py-2 d-block"><strong>Amount of Signed Deals :</strong></span>
+              </div>
+              <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                <span class="py-2 d-block" style="word-break:break-all;"> {{(viewData.account_currency=="USD"?
+                  "$":"")}}{{viewData.Amount_of_signed_deals}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="input-group border-bottom h-100">
+              <div class="col-sm-12 col-md-6 px-0">
+                <span class="py-2 d-block"><strong>Cost of Signed Deals :</strong></span>
+              </div>
+              <div class="col-sm-12 col-md-6  px-0 px-md-2 align-items-center">
+                <span class="py-2 d-block" style="word-break:break-all;">{{(viewData.account_currency=="USD"?
+                  "$":"")}}{{viewData.Cost_of_signed_deals}}</span>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+
+
+  <div class="clearfix"></div>

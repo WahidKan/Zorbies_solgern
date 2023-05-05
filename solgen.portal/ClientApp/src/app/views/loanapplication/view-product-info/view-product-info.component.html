@@ -1,0 +1,69 @@
+  <div class="panel-body">
+    <div class="row" *ngFor="let item of loanProductdata">
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Loan Term</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.LoanTerm}}</b></div>
+      </div>
+      <!--<div class="col-md-6 d-flex">
+    <div class="col-6 mb-2 pb-2 border-bottom float-left">Amount Financed</div>
+    <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.AmountFinanced}}</b></div>
+  </div>-->
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Loan Rate(%)</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.LoanRate}}</b></div>
+      </div>
+      <!--<div class="col-md-6 d-flex">
+    <div class="col-6 mb-2 pb-2 border-bottom float-left">Payment Amount</div>
+    <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.PermanentAmout}}</b></div>
+  </div>-->
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Bank Name</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.BankName}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Rate Type</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.RateType}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Security Type</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.SecurityType}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">UCC Filing Fee</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.TotalFeesCollectByLender| MyCurrencyPipe}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Estimated Tax Credit</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.EstTaxCredit| MyCurrencyPipe}}</b></div>
+      </div>
+
+
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Payment 1-18:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.Payment118| MyCurrencyPipe}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Payments 19+After Tax Credit Paid:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.AfterTaxCredit| MyCurrencyPipe}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Payments 19+Without Tax Credit Paid:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.WithoutTaxCredit| MyCurrencyPipe}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex" *ngIf="!isBanker">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Installer Funded Amount:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.InstallerFundedAmount| MyCurrencyPipe}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Sales Price:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.SalesPrice| MyCurrencyPipe}}</b></div>
+      </div>
+
+      <div class="col-md-6 d-flex" *ngIf="item.IsChangeOrder==true">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left" *ngIf="!isBanker">New Installer Funded Amount:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left" *ngIf="!isBanker"><b>{{item.COInstallerFundedAmount | MyCurrencyPipe}}</b></div>
+      </div>
+
+
+    </div>
+  </div>

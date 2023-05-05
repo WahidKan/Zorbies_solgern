@@ -1,0 +1,376 @@
+<!-- <div >
+  <app-breadcrumb *ngIf="!loadSave" [data]="contentHeader"></app-breadcrumb>
+</div> -->
+
+ <div class="header  w-90 mb-2 d-flex" [ngClass]="customerProfile == true ? 'ml-4 mr-4  mt-4 header-padding' : ''">
+  <div class="col-md-6 pl-0">
+    <h2 class=" pr-2 w-100"><strong>Calendar</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a routerLink="/dashboard">Dashboard</a></li>
+        <li class="active">Calendar</li>
+      </ol>
+    </div>
+  </div>
+  <!-- <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div> -->
+</div> 
+
+<div class="clearfix"></div>
+
+<div class="panel" [ngClass]="customerProfile == true ? 'ml-4 mr-4 mb-4 bg-white pt-2 pb-2' : ''" >
+
+
+    <div class="panel-header border-bottom btn-iconres" [ngClass]="customerProfile == true ? 'pl-4 pb-3 pt-2' : ' '">
+        <div class="row searchfield">
+
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-lg-3 float-left mb-lg-0 mb-2 ">
+                        <input class="form-control input-sm" type="text" [(ngModel)]='listFilter' placeholder="Search by Appointment Number / Subject">
+                    </div>
+                    <div class="col-lg-7 float-left pl-3 pl-lg-0">
+                        <div class="form-group d-inline-block align-top mr-1 mb-0 onlythisv">
+                            <a (click)="searchServiceAppointment()" class="btn btn-dark form-btns mr-2" href="javascript:void(0);" tooltip="Search"><span><i class="feather-search"></i></span></a>
+                        </div>
+                        <div class="form-group d-inline-block align-top mr-1 mb-0 onlythisv">
+                            <ng-select (clear)="clearCustomerId()" (change)="SetCustomerId($event.value)" [items]="customerList" placeholder="Select Layout Type" bindValue="value" placeholder="---Select Customer---" bindLabel="text" [closeOnSelect]="true">
+                            </ng-select>
+                        </div>
+                        <div class="form-group d-inline-block align-top mr-1 mb-0 onlythisv">
+                            <ng-select (clear)="clearAppointmentId()" (change)="SetAppointmentId($event.value)" [items]="AppointmentStatuses" bindValue="value" bindLabel="text" placeholder="---Select Appointment Status---" [closeOnSelect]="true">
+                            </ng-select>
+                        </div>
+                        <div class="form-group d-inline-block align-top mr-1 mb-0 onlythisv">
+                            <a class="btn btn-white form-btns" href="javascript:void(0);" tooltip="Reset" (click)="reset()"><span><i class="feather-repeat mr-1"></i> Reset</span></a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="col-3">
+                <div class="col-lg-12 d-flex justify-content-end " *ngIf="!isContact">
+                    <a *ngIf='isAdd' href="javascript:void(0);" (click)="makeAppointment()" class="btn btn-success form-btns" tooltip="Make an Appointment"><i class="feather-calendar mr-1"></i> Make an Appointment</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="panel-content p-4" [ngClass]="customerProfile == true ? 'mt-2' : ' '">
+        <div class="row justify-content-between">
+            <div class="col-lg-6 calendar-table">
+                <ng-fullcalendar #fullcalendar (dateClick)="dateClick($event)" (clickButton)="clickButton($event)" (eventDragStop)="eventDragStop($event)" [eventsModel]="eventsModel" [options]="options" (eventClick)="eventClick($event)"></ng-fullcalendar>
+            </div>
+            <div class="col-lg-6 pl-3">
+                <div class="appointment-list">
+                    <div class="table-responsive border">
+                        <div class="table table-striped">
+                            <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data" [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                                [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage" [limit]="pagedData.pager.pageSize" (page)='setPage($event)' (page)='setPageNo($event)' (sort)="onSort($event)">
+                                <ngx-datatable-column name="Appointment Number" prop="AppointmentNumber" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Subject" [sortable]="true" prop="Subject">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Customer" [sortable]="true" prop="Customer">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Assigned User" prop="AssignedUser" [sortable]="true">
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Appointment Status" prop="AppointmentStatus" [sortable]="true">
+                                </ngx-datatable-column>
+                                <!-- <ngx-datatable-column name="Appointment Date" prop="AppointmentDueDate" [sortable]="true"
+                  *ngIf="!isContact"> </ngx-datatable-column> -->
+                                <ngx-datatable-column name="Appointment Date" prop="AppointmentDueDate" [sortable]="true">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{ (row.AppointmentDueDate !== null) ? (row.AppointmentDueDate | DateTimeToLocal:'Date') : "" }}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <!-- <ngx-datatable-column name="Time" prop="Time" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ (row.AppointmentDueDate !== null) ? (row.AppointmentDueDate | DateTimeToLocal) : "" }}
+                </ng-template>
+                </ngx-datatable-column> -->
+                                <ngx-datatable-column name="Description" prop="Description" [sortable]="true">
+                                </ngx-datatable-column>
+                                <!-- <ngx-datatable-column name="Description" prop="Description" [sortable]="true" *ngIf="isContact">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div>
+                      <a href="javascript:void(0);" (click)="DisplayDescription(row)" [title]="row.Description">{{row.Description | truncate}}</a>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column> -->
+
+                                <ngx-datatable-column name="Action" prop="AppointmentStatus" [sortable]="false" headerClass="text-center" *ngIf="!isContact">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <div *ngIf="row.AppointmentStatus!='Cancelled' && row.AppointmentStatus!='Completed'" class="text-center">
+                                            <a *ngIf='!row.reschedule && isUpdate' href="javascript:void(0);" (click)="editAppointment(row)" title="Edit"><i
+                                               class="feather-edit-2 text-success pr-2"></i></a>
+                                            <a *ngIf='isDelete' href="javascript:void(0);" (click)="deleteAppointment(row)"><i
+                                               title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                                            <a *ngIf='row.reschedule' href="javascript:void(0);" (click)="ResceduleAppointment(row)"><i
+                                               title="Click to reScedule." class="fa fa-calendar"></i></a>
+                                            
+                       <!-- <a *ngIf="row.AppointmentStatus!='Cancelled' && row.AppointmentStatus!='Completed'" style="margin-left: 10px;" ><i
+                        title="Click to view history." class="fa fa-history"></i></a> -->
+                    </div>
+                    <div *ngIf="row.AppointmentStatus!='Cancelled' && row.AppointmentStatus!='Completed' && row.AppointmentStatus!='Expired'" class="text-center">
+                      <a *ngIf="!row.startMeeting" href="javascript:void(0);" class="blur">
+                        <i title="Start Appointment" class="fa fa-play"></i></a>
+                      <a *ngIf="row.startMeeting" href="javascript:void(0);" (click)="openDailer(row)">
+                        <i title="Start Appointment" class="fa fa-play"></i></a>
+                      </div> 
+                    <div *ngIf="row.AppointmentStatus=='Cancelled' || row.AppointmentStatus=='Completed'" class="text-center">
+                    <a href="javascript:void(0);" (click)="AppointmentHistory(row)"
+                    title="Click to view history"><i class="fa fa-history"></i></a>
+                    </div> 
+                  </ng-template>
+                </ngx-datatable-column>
+
+                                <ngx-datatable-footer>
+                                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset" let-isVisible="isVisible">
+                                        <!-- <div class="page-count">
+                                            {{rowCount}} total records
+                                        </div> -->
+                                        <div>
+                                            <div style="color:black; margin-right:10px;" class="page-size-record">
+                                                <span style="text-align:right; width:80px;vertical-align: middle;">
+                          <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body"
+                            [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)"
+                            draggable="false" [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                        </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="" *ngIf="rowCount > 0">
+                                            {{ commonService.PageString(pagedData.pager.currentPage + 1, pagedData.pager.pageSize, rowCount) }}
+                                        </div>
+                                        <datatable-pager [pagerLeftArrowIcon]="'feather-chevrons-left'" [pagerRightArrowIcon]="'feather-chevrons-right'" [pagerPreviousIcon]="'feather-chevron-left'" [pagerNextIcon]="'feather-chevron-right'" [page]="pagedData.pager.currentPage+1" [size]="pageSizeValue"
+                                            [count]="pagedData.pager.totalItems" [hidden]="!((rowCount / pageSize) > 1)" (change)="setPage($event)">
+                                        </datatable-pager>
+                                    </ng-template>
+                                </ngx-datatable-footer>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>
+
+<app-schedule-appointment #scheduleAppointment></app-schedule-appointment>
+<app-makeappointment #makeappointment (Onsaved)="OnDialogSaved($event)"></app-makeappointment>
+<app-callandardetail #callandarDetail></app-callandardetail>
+
+
+
+
+
+
+<div bsModal #messageDetailsPopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Description Detail</h4>
+                <button type="button" class="close" (click)="closemessageDetailsPopup()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <!--<div class="modal-body" style=" margin-bottom:10px; min-height:300px; max-height:300px">
+        <div class="col-lg-12">
+          <div class="table-responsive">
+            <div class="col-lg-12">
+              {{messageContent}}
+              </div>
+            </div>
+
+          </div>
+      </div>-->
+            <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;">
+                <div [ngClass]="{'disabled':loadSave}">
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                {{messageContent}}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger text-white" (click)="closemessageDetailsPopup()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+
+      </div>
+    </div>
+  </div>
+  <app-schedule-appointment #ScheduleAppointmen></app-schedule-appointment>
+</div>
+<div bsModal #AppointmentHistoryModal="bs-modal" class="modal fade"  tabindex="-1" role="dialog" aria-hidden="true">
+  <div style="max-width:40% !important;" class="modal-dialog modal-xl modal-info " [ngClass]="{'disabled':loadSave}">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">Appointment History</h4>
+              <button type="button" class="close" (click)="close()" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body container" style=" margin-bottom:10px; max-height:600px">
+
+            <h3 *ngIf="lstAppointmentHistory.Status=='Cancelled'" class="form-heading mt-0"><span>Cancelled Date/Time</span></h3>
+            <h3 *ngIf="lstAppointmentHistory.Status!='Cancelled'"  class="form-heading mt-0"><span>Completed Date/Time</span></h3>
+            <div *ngIf="lstAppointmentHistory.endTime != null">{{lstAppointmentHistory.endTime | DateTimeToLocal }}</div>
+  
+              <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="lstAppointmentHistory.History"
+              [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40"
+              [externalPaging]="false" [externalSorting]="false" 
+              >
+              <ngx-datatable-column name="Type" [sortable]="false" prop="Type"
+                headerClass="text-center">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Description" [sortable]="false" prop="Description"
+              headerClass="text-center">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Date/Time" [sortable]="false" prop="Date"
+              headerClass="text-center">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{row.Date | DateTimeToLocal }}  
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column name="Action" [sortable]="false" prop="Id"
+            headerClass="text-center">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a class="text-danger mr-2" *ngIf="row.Type!='File'" href="javascript:void(0);" (click)="ViewDetail(row)" title="View"><i  class="feather-eye text-info"></i>
+              </a>
+              <a  class="text-danger mr-2" *ngIf="row.Type=='File'" href="{{row.FileUrl}}" target="_blank" title="View"><i  class="feather-eye text-info"></i>
+              </a>
+
+            </ng-template>
+          </ngx-datatable-column>
+
+            </ngx-datatable>
+            
+           
+          </div>
+      </div>
+  </div>
+ 
+  <!-- <div bsModal #CallHistoryModal="bs-modal" class="modal fade"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div style="max-width:40% !important;" class="modal-dialog modal-xl modal-info ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Call History</h4>
+                <button type="button" class="close" (click)="closeCallHistory()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body container" style=" margin-bottom:10px; max-height:600px">
+              <div class="card card-block border-0" *ngFor="let item of callHistoryList;let i=index">
+                <div class="">
+                  <div class="card-main">
+                    <h5 class="card-title border-bottom mt-3 mb-3">
+                        <div class="row">
+                            <div class="col-6">To: <a href="javascript:void(0);" >{{item.To_PhoneNumber}}</a></div>
+                            <div class="col-6">From: <a href="javascript:void(0);" >{{item.From_PhoneNumber}}</a></div>
+                        </div>
+                    </h5>
+                    <div class="row">
+                      <div class="col-6"><p><strong>Vender:</strong> {{item.Vendor}}</p></div>
+                      <div class="col-6"><p><strong>Date:</strong> {{item.ImportDate | date: 'MM-dd-yyyy'}}</p></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6"><p><strong>Result:</strong> {{item.Result}}</p></div>
+                      <div class="col-6"><p><strong>Start Time:</strong> {{item.StartTime | DateTimeToLocal | date :'mediumTime' }}</p></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6"><p><strong>End Time:</strong> {{item.EndTime | DateTimeToLocal | date :'mediumTime' }}</p></div>
+                      <div class="col-6"><p><strong>Duration(sec):</strong> {{item.Duration}}</p></div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6"><p><strong>Call Type:</strong> {{item.Type}}</p></div>
+                      <div class="col-6"><p><strong>Direction:</strong> {{item.Direction}}</p></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <div style="padding-left: 10%;">
+                    
+                    <button style="margin-left: 90%;" type="button" class="btn btn-danger form-btns" (click)="closeCallHistory()" data-dismiss="modal" aria-label="Close">Close</button>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div bsModal #VideoCallHistoryModal="bs-modal" class="modal fade"  tabindex="-1" role="dialog" aria-hidden="true">
+  <div style="max-width:55% !important;" class="modal-dialog modal-xl modal-info ">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">Call History</h4>
+              <button type="button" class="close" (click)="closeVideoCallHistory()" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="col-md-12 col-sm-12 list-card-view">
+          <div class="modal-body container" style=" margin-bottom:10px; max-height:600px">
+            <div class="card card-block border-0">
+              <div class="">
+                <div class="card-main">
+                  <ngx-datatable *ngIf="VideoCallHistoryModalView" #table class="bootstrap table table-hover table-dynamic" [rows]="callHistoryList"
+                  [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40"
+                  [externalPaging]="false" [externalSorting]="false" 
+                  >
+                  <ngx-datatable-column name="Meeting Id" [sortable]="false" prop="Id"
+                    headerClass="text-center">
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Host Name" [sortable]="false" prop="ParticipantIdentity"
+                  headerClass="text-center">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Participant(s) Name" [sortable]="false" prop="ParticipantList"
+                  headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                   {{getParticipents(row["ParticipantList"])}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Start Date Time" [sortable]="false" prop="StartTime" headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.StartTime | DateTimeToLocal}} 
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="End Date Time" [sortable]="false" prop="EndTime" headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.EndTime | DateTimeToLocal}} 
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Duration" [sortable]="false" prop="Duration" headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                     <span>{{row.Duration }} <span *ngIf="row.Duration">Sec</span></span> 
+                     </ng-template>
+                </ngx-datatable-column>
+                </ngx-datatable>
+               
+                </div>
+
+                </div>
+              </div>
+            </div>
+              <div style="padding-left: 10%;">
+                  
+                  <button style="margin-left: 90%;" type="button" class="btn btn-danger form-btns" (click)="closeVideoCallHistory()" data-dismiss="modal" aria-label="Close">Close</button>
+                </div>
+          </div>
+      </div>
+  </div>
+</div> -->
+
+
+</div>

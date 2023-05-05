@@ -1,0 +1,306 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Manage Campaigns</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Manage Campaigns</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-header border-bottom pb-3 btn-iconres">
+        <div class="row mt-2 align-items-end">
+          <div class="col-md-4 col-lg-2 col-xl-2">
+            <div class="form-group mb-xl-0">
+              <input class="form-control" type="text" (keyup)="updateFilter($event)" [(ngModel)]='listFilter' placeholder=" Search by campaign name">
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-2 col-xl-2">
+            <div class="form-group mb-xl-0 d-inline-block w-100 flex-full">
+              <div class="input-group">
+                <p-calendar inputStyleClass="form-control start-date" placeholder="Start Date" [(ngModel)]="From"
+                            [maxDate]="To" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true"
+                            [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                <div class="input-group-append">
+                  <span class="input-group-text"><i class="feather-calendar font-16"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-2 col-xl-2 pr-md-0">
+            <div class="form-group mb-xl-0 d-inline-block w-100 flex-full">
+              <div class="input-group">
+                <p-calendar inputStyleClass="form-control start-date" placeholder="End Date" [(ngModel)]="To" [minDate]="From"
+                            [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                            yearRange="2000:2030"></p-calendar>
+                <div class="input-group-append">
+                  <span class="input-group-text"><i class="feather-calendar font-16"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 col-xl-3">
+            <div class="d-inline-block align-top">
+              <a class="btn btn-dark form-btns mr-2" href="javascript:void(0);" (click)="search()"
+                tooltip="Search"><span><i class="feather-search mr-1"></i> Search</span></a>
+              <a class="btn btn-white form-btns mr-1" href="javascript:void(0);" (click)="reset()"
+                tooltip="Reset"><span><i class="feather-repeat mr-1"></i> Reset</span></a>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 col-xl-3 text-md-right">
+            <div class="d-inline-block align-top">
+              <a *ngIf='isAdd' class="btn btn-success form-btns mr-2" href="javascript:void(0);" (click)="AddNew()"
+                tooltip="Add Campaign"><span><i class="feather-plus mr-1"></i> Add</span></a>
+                <a *ngIf='isDelete' class="btn btn-danger form-btns" (click)="onDeleteMultipleCamp()" href="javascript:void(0);" tooltip="Delete">
+                  <span><i class="feather-trash-2 mr-1"></i> Delete</span>
+                </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel-content px-3 pagination2 table-responsive no-padding">
+        <div class="header-chart mb-1">Campaigns</div>
+        <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data"
+                       [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40"
+                       [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                       [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage"
+                       [limit]="pagedData.pager.pageSize" (page)='setPageNo($event)' (sort)="onSort($event)"
+                       [selectionType]="SelectionType.checkbox"
+                       [selected]="selected" (select)="onSelect($event)">
+          <ngx-datatable-column [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                                [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="true">
+          </ngx-datatable-column>
+          <!--<ngx-datatable-column name="Name" prop="name" [sortable]="true"></ngx-datatable-column>-->
+          <ngx-datatable-column name="CampaignType" prop="FacebookCampaignId" [sortable]="false">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="text-center">
+                <span><i class="fa fa-facebook-square" style="color: #3b5998;"></i></span>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Campaign ID" prop="FacebookCampaignId" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a title="View Campaign" [routerLink]="['/marketing/campaign-view', row.CampaignId]">{{row.FacebookCampaignId }}</a>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Campaign Name" prop="Name" [sortable]="true"></ngx-datatable-column>
+
+          <ngx-datatable-column name="Campaign Owner" prop="campaignowner" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="IsActive" prop="IsActive" [sortable]="false" headerClass="text-center">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="icon-text-center" *ngIf="row.IsActive == 0">
+                No
+                <!-- <span><i class="fa fa-times text-danger icon_tick"></i></span> -->
+              </div>
+              <div class="icon-text-center" *ngIf="row.IsActive == 1">
+                Yes
+                <!-- <span><i class="feather-check text-success icon_tick"></i></span> -->
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Status" prop="campaignStatus" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Start Date" [sortable]="true" prop="start_time">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.start_time || DateTimeToLocal | date:'MM/dd/yyyy'}}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="End Date" [sortable]="true" prop="end_time">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.end_time || DateTimeToLocal | date:'MM/dd/yyyy'}}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Type" prop="type" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Discount Name" prop="discount_name" [sortable]="true"></ngx-datatable-column>
+
+
+          <ngx-datatable-column name="Discount Amount" prop="discount_amount" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.discount_amount">$</span> {{ row.discount_amount }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Sale Group Type" prop="sale_group_type" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Service Territory" prop="service_territory" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="External Id" prop="external_id" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Campaign Status Facebook" prop="campaign_status_facebook" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Daily Budget" prop="daily_budget" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.daily_budget">$</span> {{ row.daily_budget }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Impressions" prop="Impressions" [sortable]="true"></ngx-datatable-column>
+
+          <ngx-datatable-column name="Facebook Account Id" prop="facebook_account_id" [sortable]="true"></ngx-datatable-column>
+
+          <ngx-datatable-column name="Spends" prop="spends" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.spends">$</span> {{ row.spends }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Description" prop="description" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Buying Type" prop="buying_type" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Categories" prop="special_ad_categories" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Objective" prop="campaignObjective" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Num Sent in Campaign" prop="num_sent_in_campaign" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Budgeted Cost In Campaign" prop="budgeted_cost_in_campaign" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.budgeted_cost_in_campaign">$</span> {{ row.budgeted_cost_in_campaign }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Expected Response" prop="expected_response" [sortable]="true">
+
+            <!-- <ng-template let-row="row" ngx-datatable-cell-template>
+        <span *ngIf="row.Budget">$</span> {{ row.Budget }}
+
+      </ng-template> -->
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Actual Cost in Campaign" prop="actual_cost_in_campaign" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.actual_cost_in_campaign">$</span> {{ row.actual_cost_in_campaign }}
+
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Expected Revenue In Campaign" prop="expected_revenue_in_campaign" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Created By" prop="created_by" [sortable]="true"></ngx-datatable-column>
+          <!-- <ngx-datatable-column name="Module" prop="moduleName" [sortable]="true"></ngx-datatable-column>
+      <ngx-datatable-column name="SubModule" prop="subModuleName" [sortable]="true"></ngx-datatable-column> -->
+          <ngx-datatable-column name="Created On" [sortable]="true" prop="created_at">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <!-- {{ (row.created_at !== null) ? (row.created_at | utcdatetimetolocal) : "" }} -->
+              {{
+ (row.created_at !== null) ?
+                  (row.created_at | date:'MM/dd/yyyy') : ""
+              }}
+
+              &nbsp;
+              {{
+ (row.created_at !== null) ?
+                    (row.created_at || DateTimeToLocal | date :'hh:mm a') : "-"
+              }}
+
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Modified By" prop="modified_by" [sortable]="true"></ngx-datatable-column>
+          <!-- <ngx-datatable-column name="Module" prop="moduleName" [sortable]="true"></ngx-datatable-column>
+      <ngx-datatable-column name="SubModule" prop="subModuleName" [sortable]="true"></ngx-datatable-column> -->
+          <ngx-datatable-column name="Modified On" [sortable]="true" prop="modified_at">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <!-- // {{ (row.modified_at !== null) ? (row.modified_at | utcdatetimetolocal) : "" }} -->
+              {{
+ (row.modified_at !== null) ?
+                (row.modified_at | date:'MM/dd/yyyy') : ""
+              }}
+              &nbsp;
+              {{
+ (row.modified_at !== null) ?
+                (row.modified_at || DateTimeToLocal | date :'hh:mm a') : "-"
+              }}
+            </ng-template>
+          </ngx-datatable-column>
+          <!-- <ngx-datatable-column name="Amount Spent" prop="AmountSpent" [sortable]="true">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <span *ngIf="row.AmountSpent">$</span> {{ row.AmountSpent }}
+
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column  name="End Date" [sortable]="true" prop="EndTime">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{row.EndTime || DateTimeToLocal | date:'MM/dd/yyyy'}}
+
+        </ng-template>
+    </ngx-datatable-column>
+      <ngx-datatable-column name="Clicks" prop="Clicks" [sortable]="true"></ngx-datatable-column>
+      <ngx-datatable-column name="On Facebook Purchases" prop="OnFacebookPurchases" [sortable]="true">
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Status" prop="FacebookStatus" [sortable]="true"></ngx-datatable-column>camp
+      <ngx-datatable-column name="Website Purchases" prop="WebsitePurchases" [sortable]="true">
+      </ngx-datatable-column> -->
+
+          <ngx-datatable-column [sortable]="false" [width]="45" [maxWidth]="100" headerClass="text-center">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span class="actions rw_act" style="padding: 1px;">
+                <i class="feather-settings action_icon" [attr.attribute-id]="row.CampaignId" aria-hidden="true"></i>
+                <span class="action-list-box spn{{row.CampaignId}}">
+                  <span class="list-actions fsm-list" id="action-list" style="width:210px;">
+                    <!--<a class="actions-onclick view-list" [routerLink]="['/campaign/view',row.id]" href="javascript:void(0);" title="View Detail"><i class="fa text-info fa-eye pr-2"></i></a>-->
+                    <a class="actions-onclick view-list smview" [routerLink]="['/marketing/campaign-view', row.CampaignId]" title="View Campaign"><i class="feather-eye text-info pr-2"></i></a>
+                    <a class="actions-onclick view-list smview" *ngIf='isUpdate' [routerLink]="['/marketing/editcampaign', row.CampaignId]" title="Edit Campaign"><i class="feather-edit-2 text-success pr-2"></i></a>
+                    <a class="actions-onclick view-list smview close-action" *ngIf="isDelete" title="Delete Campaign." (click)="DeleteCampaign(row)"
+                       href="javascript:void(0);"><i class="feather-trash-2 text-danger pr-2"></i></a>
+
+                    <!-- <a href="javascript:void(0);" [routerLink]="['/marketing/campaign-view', row.CampaignId]" title="View"><i class="feather-eye text-info"></i></a>-->
+                    <i class="fa fa-times close close-action" aria-hidden="true"></i>
+
+                  </span>
+                </span>
+              </span>
+            </ng-template>
+          </ngx-datatable-column>
+          <!-- <ngx-datatable-column [width]="80" name="Action" [sortable]="false" [maxWidth]="200" headerClass="text-center">
+
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="text-center">
+            <a class="smview" [routerLink]="['/operating-hours/view', row.id]" title="View Operating Hours"><i class="feather-eye pr-2"></i></a>
+            <a (click)="showPopupForEdit(row.id)" class="btn-edit smview" href="javascript:void(0);">
+              <i title="Add/Edit Form Fields" class="fa fa-pencil text-success pr-2"></i>
+            </a>
+
+            <a (click)="deleteForm(row)" class="btn-edit" href="javascript:void(0);">
+              <i class="feather-trash-2 text-danger pr-2" title="Delete Form"></i>
+            </a>
+          </div>
+        </ng-template>
+      </ngx-datatable-column> -->
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                         let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset"
+                         let-isVisible="isVisible">
+              <div>
+                <div style="color: black; margin-right: 10px" class="page-size-record">
+                  <span style="text-align: right; width: 80px; vertical-align: middle">
+                    <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]="pageSize"
+                               dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false"
+                               [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                  </span>
+                </div>
+              </div>
+              <div class="page-count" *ngIf="rowCount > 0">
+                {{ commonService.PageString(pagedData.pager.currentPage + 1, pageSize, rowCount) }}
+              </div>
+              <datatable-pager [pagerLeftArrowIcon]="'feather-chevron-left'" [pagerRightArrowIcon]="'feather-chevron-right'"
+                               [pagerPreviousIcon]="'feather-chevrons-left'" [pagerNextIcon]="'feather-chevrons-right'"
+                               [page]="currentPage+1" [size]="pageSize" [count]="pagedData.pager.totalItems"
+                               [hidden]="!(rowCount / pageSize > 1)" (change)="setPage($event)">
+              </datatable-pager>
+            </ng-template>
+          </ngx-datatable-footer>
+        </ngx-datatable>
+      </div>
+      
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>

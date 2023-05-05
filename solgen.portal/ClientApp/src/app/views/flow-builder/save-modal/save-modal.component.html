@@ -1,0 +1,74 @@
+<div bsModal #SaveModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Save The Flow</h4>
+                <button type="button" class="close" (click)="close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;">
+                <div [formGroup]="form">
+                    <div class="row">
+                        <div class="col-6 col-md-6 col-lg-6">
+                            <label>Flow Name:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input id="nameInput" class="form-control" formControlName="name">
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-6">
+                            <label>Module Name:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="moduleList" placeholder="Select Module Name" bindValue="value" bindLabel="text" formControlName="moduleId" [closeOnSelect]="true">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-6">
+                            <label>Sub Module Name:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="subModulesList" placeholder="Select Sub Module Name" bindValue="sub_module_id" bindLabel="sub_module_name" formControlName="subModuleId" [closeOnSelect]="true">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-6" [ngStyle]="flowused == 'true' ? {'cursor':'not-allowed','color': 'gray','pointer-events': 'none','z-index': '1' } : {}">
+                            <label>Status:<span class="text-danger">*</span></label>
+                            <div class="form-group" >
+                                <ng-select [items]="statusList" tabindex="-1"  formControlName="statusId" placeholder="Select Status" bindValue="value" bindLabel="text" [closeOnSelect]="true">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <label>Process Type:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="typesList" placeholder="Select Process Type" bindValue="value" bindLabel="text" formControlName="flowType" [closeOnSelect]="true">
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-6" style="display: none !important;">
+                            <label>Run Condition:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="runConditionList" placeholder="Select Run Condition" bindValue="value" bindLabel="text" formControlName="runCondition" [closeOnSelect]="true">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <label>Description:</label>
+                            <div class="form-group">
+                                <textarea class="form-control" formControlName="description" maxlength="100"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>
+                    <div *ngIf="requiredAlertMessage" class="text-danger">Fields marked with * sign are required before save.</div>
+                </div>
+                <button type="submit " class="btn btn-primary form-btns " (click)="submit() "><i class="text-white "></i>Save</button>
+            </div>
+            <app-loader [size]=60 [color]=" 'white' " *ngIf="loadSave " class="loader-popup "></app-loader>
+        </div>
+    </div>
+</div>

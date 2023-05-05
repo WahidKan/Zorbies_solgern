@@ -1,0 +1,166 @@
+<div class="table-responsive">
+  <div class="table table-striped">
+    <ngx-datatable class="bootstrap"
+                   [rows]="pagedData.data"
+                   [columnMode]="'force'"
+                   [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                   [headerHeight]="40"
+                   [footerHeight]="40"
+                   [reorderable]="true"
+                   [externalPaging]="true"
+                   [externalSorting]="true"
+                   [loadingIndicator]="loadSave"
+                   [count]="pagedData.pager.totalItems"
+                   [offset]="pagedData.pager.currentPage"
+                   [limit]="pagedData.pager.pageSize"
+                   (page)='setPage($event)'
+                   (sort)="onSort($event)">
+      <ngx-datatable-column name="Document Title" prop="DocumentTitle" [sortable]="true">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div *ngIf="row.DocumentTitle==null || row.DocumentTitle=='' ">
+            - -
+          </div>
+          <div *ngIf="row.DocumentTitle!==null || row.DocumentTitle!=='' ">
+            <div [innerHtml]="row.DocumentTitle"></div>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Document Type" prop="DocumentName" [sortable]="true"></ngx-datatable-column>
+      <ngx-datatable-column name="Comments" prop="DocumentComment" [sortable]="true">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div title="{{row.DocumentComment}}">
+            {{row.DocumentComment | truncate}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!showAddedBy" name="Added By" prop="DocumentAddedBy" [sortable]="true"></ngx-datatable-column>
+      <ngx-datatable-column name="Uploaded On" prop="UploadedOn" [sortable]="true">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{row.UploadedOn | date: 'MM-dd-yyyy'}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Download" [sortable]="false" headerClass="text-center" *ngIf="!isSalesUser">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="icon-text-center"><a href="{{row.DocumentFileName}}" download class="text-success mx-1"><i class="fa fa-download" title="download"></i></a></div>
+        </ng-template>
+      </ngx-datatable-column>
+
+
+
+      <ngx-datatable-column [minWidth]="80" name="View" [sortable]="false" headerClass="text-center">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="icon-text-center">
+
+            <div *ngIf="!isSalesUser">
+              <a href="{{row.DocumentFileName}}" target="_blank" class="text-success mx-1"><i class="fas fa-eye text-info" title="View"></i></a>
+            </div>
+
+            <div *ngIf="isSalesUser">
+              <div *ngIf="row.DocumentType == '.pdf'">
+                <a href="javascript:void(0);" (click)="viewDocument(doc,row.DocumentFileName)" data-toggle="modal" data-target="#typeOfDoc"><i class="fas fa-eye text-info" title="View"></i></a>
+              </div>
+              <div *ngIf="row.DocumentType == '.docx'">
+                <a href="javascript:void(0);" (click)="viewDocDocument(doc1,row.DocumentFileName)" data-toggle="modal" data-target="#typeOfDoc"><i class="fas fa-eye text-info" title="View"></i></a>
+              </div>
+              <div *ngIf="row.DocumentType == '.doc'">
+                <a href="javascript:void(0);" (click)="viewDocDocument(doc1,row.DocumentFileName)" data-toggle="modal" data-target="#typeOfDoc"><i class="fas fa-eye text-info" title="View"></i></a>
+              </div>
+              <div *ngIf="row.DocumentType != '.pdf' && row.DocumentType != '.docx' && row.DocumentType != '.doc'">
+                <a href="{{row.DocumentFileName}}" target="_blank" class="text-success mx-1"><i class="fas fa-eye text-info" title="View"></i></a>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+
+
+      <ngx-datatable-column name="Delete" [minWidth]="20" [sortable]="false" headerClass="text-center" *ngIf="!isBankUser && DeleteDocPermission">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <div class="icon-text-center">
+            <a href="javascript:void(0);" (click)="DeleteDocument(row)" class="text-danger mx-1"><i title="Click to delete." class="feather-trash-2"></i></a>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-footer>
+        <ng-template ngx-datatable-footer-template
+                     let-rowCount="rowCount"
+                     let-pageSize="pageSize"
+                     let-selectedCount="selectedCount"
+                     let-currentPage="currentPage"
+                     let-offset="offset"
+                     let-isVisible="isVisible">
+          <div class="page-count" style="max-width:170px;">
+            {{rowCount}} total
+          </div>
+          <div>
+            <div style="color:black; margin-right:10px;" class="page-size-record">
+              <span style="text-align:right; width:80px;vertical-align: middle;">
+                <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                           bindLabel="text" bindValue="text"></ng-select>
+              </span>
+            </div>
+          </div>
+          <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                           [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                           [pagerPreviousIcon]="'fa fa-angle-left'"
+                           [pagerNextIcon]="'fa feather-chevron-left'"
+                           [page]="pagedData.pager.currentPage+1"
+                           [size]="pageSizeValue"
+                           [count]="pagedData.pager.totalItems"
+                           [hidden]="!((rowCount / pageSize) > 1)"
+                           (change)="setPage($event)">
+          </datatable-pager>
+        </ng-template>
+      </ngx-datatable-footer>
+    </ngx-datatable>
+  </div>
+</div>
+
+
+<div class="col-12">
+  <ng-template #doc>
+      <div class="modal-header" >
+        <h4 class="modal-title">View Document</h4>
+        <button type="button" class="close" (click)="modalRef.hide()" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body lease-notice" (contextmenu)="onRightClick()" onCopy="disablecopypaste()" onmousedown="disablecopypaste()" onselectstart="disablecopypaste()">
+        <div>
+          <pdf-viewer [src]="filename"
+                      [original-size]="false"></pdf-viewer>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger form-btns" data-dismiss="modal" (click)="modalRef.hide()" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  
+  </ng-template>
+</div>
+
+
+<div class="col-12">
+  <ng-template #doc1>
+    <div class="modal-header">
+      <h4 class="modal-title">View Document</h4>
+      <button type="button" class="close" (click)="modalRef.hide()" data-dismiss="modal">&times;</button>
+    </div>
+    <div class="modal-body lease-notice" (contextmenu)="onRightDocClick()" onCopy="disablecopypaste()" onmousedown="disablecopypaste()" onselectstart="disablecopypaste()">
+      <div>
+        <!--url="http://stage.solgen.com/\\src\\assets\\Uploads\\LeaseDocuments\Lease202081_637238950349694705.docx"-->
+        <!--disableContent: 'none' | 'all' | 'popout' | 'popout-hide' = 'none':-->
+        <ngx-doc-viewer  [url]="docFilename" disableContent="all"
+                        viewer="office" style="width:100%;height:100vh;">
+
+        </ngx-doc-viewer>
+        <!--<ngx-doc-viewer [url]="docFilename"  style="width:100%;height:50vh;"></ngx-doc-viewer>-->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-danger form-btns" data-dismiss="modal" (click)="modalRef.hide()" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+  </ng-template>
+</div>

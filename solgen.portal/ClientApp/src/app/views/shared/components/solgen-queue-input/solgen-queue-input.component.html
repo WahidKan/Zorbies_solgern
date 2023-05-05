@@ -1,0 +1,51 @@
+
+  <div class="form-group" *ngIf="formGroup" [formGroup]="formGroup" [ngSwitch]="InputType" [ngStyle]="disabled ? {'pointer-events': 'none'} : {}">
+    <span *ngIf="disableInput"   style="word-break: break-all;">{{formGroup.value.fieldValue}}  </span>
+     <div *ngIf="!isCalculated">
+       <p-calendar class="dt-auto" *ngSwitchCase="'date'"
+                   placeholder="Select Date" [formControlName]="controlName"
+                   [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true"
+                   [yearNavigator]="true"
+                   yearRange="1919:2030">
+       </p-calendar>
+     </div>
+ 
+     <input type="text" *ngSwitchCase="'text'" class= "form-control" [ngStyle]="disableInput  ? {'display': 'none'} : {}"    [formControlName]="controlName" [readonly]="disableInput" />
+ 
+     <input type="text" *ngSwitchCase="'int'" pKeyFilter="pint" class="form-control" [formControlName]="controlName" />
+     <input type="text" *ngSwitchCase="'bigint'" pKeyFilter="pint" class="form-control" [formControlName]="controlName" />
+     <input type="text" *ngSwitchCase="'decimal'" pKeyFilter="pnum" class="form-control" [formControlName]="controlName"/>
+     <input type="checkbox" *ngSwitchCase="'checkbox'" class="form-control" [formControlName]="controlName" />
+     <input type="radio" *ngSwitchCase="'radio'" class="form-control" [formControlName]="controlName" />
+     <textarea class="form-control" *ngSwitchCase="'textarea'" [formControlName]="controlName" rows="3" cols="4"></textarea>
+     <!--<ng-select *ngSwitchCase="'select'" [items]="formGroup.get('fieldSelectList').value" [multiple]="isMultiSelect" [closeOnSelect]="true" placeholder="Select"
+              [formControlName]="controlName" bindLabel="name">
+ 
+   </ng-select>-->
+     <ng-select *ngSwitchCase="'select'" [items]="DdlValues"
+                [multiple]="isMultiSelect" [closeOnSelect]="true" placeholder="Select"
+                [formControlName]="controlName" bindLabel="name" [appendTo]="'body'"
+                (clear)="onClearLang(DdlValues)" (scrollToEnd)="onScrollToEnd(DdlValues,i)" [virtualScroll]="true" (keyup)="onKeySelect($event,DdlValues)" [clearable]="isMultiSelect">
+ 
+     </ng-select>
+     <ng-select *ngSwitchCase="'radio'" [items]="radiodata" [closeOnSelect]="true" placeholder="Select"
+                [formControlName]="controlName" bindLabel="name" [appendTo]="'body'">
+ 
+ 
+     </ng-select>
+     <div class="form-check form-check-inline" *ngSwitchCase="'boolean'">
+       <div class="custom-control custom-checkbox pl-0">
+         <label class="switch">
+           <input type="checkbox" id="check-{{from}}-{{ID}}" [formControlName]="controlName">
+           <span class="slider round" id="check-{{from}}-{{ID}}"><span>Yes</span></span>
+         </label>
+       </div>
+     </div>
+     <ng-template [ngIf]="formGroup.get(controlName).enabled || isCalculated ">
+ 
+        <input type="text" *ngSwitchDefault class="form-control" [formControlName]="controlName" />
+ 
+     </ng-template>
+ 
+   </div>
+ 

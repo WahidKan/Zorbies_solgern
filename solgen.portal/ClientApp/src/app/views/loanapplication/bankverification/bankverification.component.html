@@ -1,0 +1,194 @@
+<div class="panel">
+  <div class="col-lg-12 mt-2" *ngIf="isdone">
+    <div class="alert alert-info">Please select the required fields * for completion of this stage </div>
+  </div>
+  <div class="col-md-12">
+    <app-bankapplicantinfo></app-bankapplicantinfo>
+  </div>
+
+  <div class="panel-content " [ngClass]="{'disabled':loadSave}">
+
+
+    <div class="row  mb-2" *ngIf="docinfo!=null && docinfo.length>0">
+      <div class="col-lg-12">
+        <div class="col-lg-12 p-0">
+          <h3 class="form-heading ng-star-inserted"> <span>Document Info </span></h3>
+          <div class="form-group m-0 selectallradio-h3">
+            <label class="align-top">Select All<span class="text-danger"></span></label>
+            <div class="form-control  d-inline-block w-50 border-0 p-0 bg-transparent">
+              <div class="form-check form-check-inline">
+                <div class="custom-control custom-checkbox">
+                  <label class="switch m-0">
+                    <input type="checkbox" [(ngModel)] ="selectAllValue" [checked]="selectAllValue" (change)="selectAllDocs($event)">
+                    <span class="slider round"><span>Yes</span></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-12 col-sm-6 col-md-4 float-left" *ngFor="let item of docinfo">
+          <div class="form-group">
+
+
+            <label>{{ item.MasterValue}}<span class="text-danger" [ngClass]="{'text-danger':item.IsRequired== true}" *ngIf="item.IsRequired==true">*</span> </label>
+            <div class="form-control pl-0 border-0 bg-transparent">
+              <div class="form-check form-check-inline">
+                <div class="custom-control custom-checkbox pl-0">
+                  <label class="switch">
+                    <input type="checkbox" [checked]="item.IsVerified" [(ngModel)]="item.IsVerified" (change)="setvalues($event,item.Id,item.Type)" id="{{item.Id}}_{{item.Type}}">
+                    <span class="slider round" id="{{item.Id}}_{{item.Type}}"><span>Yes</span></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12 p-0">
+      <form [formGroup]="ntpForm" autocomplete="off">
+
+        <ng-container *ngFor="let item of formControlList;">
+          <h3 class="form-heading" *ngIf="item.group_display_name!='Co Applicant Data' || _IsCoApplicantRequired">
+            <span>{{item.group_display_name}} </span>
+          </h3>
+          <div class="row m-0 mb-2" *ngIf="item.group_display_name!='Co Applicant Data' || _IsCoApplicantRequired">
+            <ng-container *ngFor="let inner of item.InnerData;let k=index">
+              <div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : inner.form_field_visibility == 'NO', 'col-lg-12 col-xl-12': inner.layout_type =='single', 'col-lg-6 col-xl-6': inner.layout_type =='double', 'col-lg-4 col-xl-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                             inner.layout_type =='four' }" ngShow="inner.dependent_show_type == true">
+
+                <input type="hidden" *ngIf="inner.form_field_visibility == 'NO'" />  <!--v-model="item.value" v-bind:id="item.name"     -->
+                <label *ngIf="inner.form_field_visibility == 'YES' && getVisibilityStatus(inner.display_name)">
+                  {{ inner.display_name}} <span class="text-danger"
+                                                [ngClass]="{'text-danger':inner.is_required== true}"
+                                                *ngIf="inner.is_required==true">*</span>
+                </label>
+                <div class="form-group" *ngIf="inner.form_field_visibility == 'YES'">
+
+                  <!--text  [placeholder]="inner.display_name"-->
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (ntpForm.get(inner.form_controlName)?.invalid && (ntpForm.get(inner.form_controlName)?.dirty || ntpForm.get(inner.form_controlName)?.touched) && (ntpForm.get(inner.form_controlName)?.errors?.required || ntpForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="hideReason && inner.picklist_options != 'Lookup' && inner.dt_code !='date'
+                         && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select'
+                         && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='date' && inner.dt_code !='int' && inner.dt_code !='decimal'
+                         && inner.dt_code !='bigint'" />
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (ntpForm.get(inner.form_controlName)?.invalid && (ntpForm.get(inner.form_controlName)?.dirty || ntpForm.get(inner.form_controlName)?.touched) && (ntpForm.get(inner.form_controlName)?.errors?.required || ntpForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'int'" />
+
+                  <small *ngIf="inner.dt_code == 'int' &&(ntpForm.get(inner.form_controlName).touched &&
+                       ntpForm.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (ntpForm.get(inner.form_controlName)?.invalid && (ntpForm.get(inner.form_controlName)?.dirty || ntpForm.get(inner.form_controlName)?.touched) && (ntpForm.get(inner.form_controlName)?.errors?.required || ntpForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'bigint'" />
+
+                  <small *ngIf="inner.dt_code == 'bigint' &&(ntpForm.get(inner.form_controlName).touched &&
+                       ntpForm.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+                  <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                         [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                         [ngClass]="{'is-invalid': (ntpForm.get(inner.form_controlName)?.invalid && (ntpForm.get(inner.form_controlName)?.dirty || ntpForm.get(inner.form_controlName)?.touched) && (ntpForm.get(inner.form_controlName)?.errors?.required || ntpForm.get(inner.form_controlName)?.errors?.maxlength)) }"
+                         *ngIf="inner.dt_code == 'decimal'" />
+
+                  <small *ngIf="inner.dt_code == 'decimal' &&(ntpForm.get(inner.form_controlName).touched &&
+                       ntpForm.get(inner.form_controlName).errors?.pattern)"
+                         class="text-danger">Please enter valid value</small>
+
+                  <textarea class="form-control" *ngIf="hideReason && inner.dt_code == 'textarea'" [ngClass]="{'is-invalid': (ntpForm.get(inner.form_controlName)?.invalid && (ntpForm.get(inner.form_controlName)?.dirty || ntpForm.get(inner.form_controlName)?.touched) && (ntpForm.get(inner.form_controlName).errors?.required || ntpForm.get(inner.form_controlName)?.errors?.maxlength)) }" [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+
+                  <p-calendar inputStyleClass="form-control start-date" *ngIf="inner.dt_code == 'date'" [formControlName]="inner.form_controlName"
+                              [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                    <div *ngFor="let options of inner.listoptions">
+                      <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                        <div class="custom-control custom-checkbox">
+                          <input id="chk_{{inner.form_field_id}}_{{option}}_{{i}}"
+                                 value="5555" [checked]="checkvalue(inner.value,option)" (change)="onCheckboxChange($event,item,inner)" class="dynamic custom-control-input" type="checkbox">
+                          <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="chk_{{inner.form_field_id}}_{{option}}_{{i}}">{{option}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                    <div class="form-check form-check-inline">
+                      <div class="custom-control custom-checkbox pl-0">
+                        <label class="switch">
+                          <input type="checkbox" (ngModelChange)="validator(inner.form_controlName,inner.is_required)" id="{{inner.form_controlName}}" [formControlName]="inner.form_controlName">
+                          <span class="slider round" id="{{inner.form_controlName}}"><span>Yes</span></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--Radio button-->
+                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio'">
+                    <div *ngFor="let options of inner.listoptions">
+                      <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                        <div class="custom-control custom-radio mx-2  p-0">
+                          <input id="radio-{{isformtype}}-{{inner.form_field_id}}_{{option}}" [formControlName]="inner.form_controlName"
+                                 [value]="setradioValue(option,'val')" (change)="OnNTPRadioButtonChanged(option)" type="radio">
+                          <label for="radio-{{isformtype}}-{{inner.form_field_id}}_{{option}}" class="radio-label">{{setradioValue(option,'')}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--Ng Dropdown-->
+                  <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                             *ngIf="inner.dt_code=='select' && inner.picklist_options==''" [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+                  </ng-select>
+
+                  <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                             *ngIf="inner.dt_code=='select' && inner.picklist_options=='true'" [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name" bindValue="value">
+
+                  </ng-select>
+
+                  <small *ngIf="((ntpForm.get(inner.form_controlName)?.invalid) && (ntpForm.get(inner.form_controlName).dirty) || (ntpForm.get(inner.form_controlName)?.touched)) && (ntpForm.get(inner.form_controlName)?.errors?.required)"
+                         class="text-danger">
+                    {{inner.display_name}} is required
+                  </small>
+                  <small *ngIf="ntpForm.get(inner.form_controlName)?.errors != null && (ntpForm.get(inner.form_controlName)?.errors?.maxlength?.requiredLength < ntpForm.get(inner.form_controlName)?.errors?.maxlength?.actualLength)"
+                         class="text-danger">
+                    Only {{MaxLengthForReason}} characters are allowed.
+                  </small>
+                </div>
+
+              </div>
+            </ng-container>
+
+          </div>
+        </ng-container>
+        <div class="row mb-3  text-right" *ngIf="isflag">
+          <div class="col-sm-12 col-md-12" *ngIf="!leadconvert">
+            <button [disabled]="isSubmitted" class="btn btn-success mr-2" (click)="onSubmitData()"><i class="feather-save"></i> Submit</button>
+            <a *ngIf="isModel" href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+          </div>
+          <div class="col-sm-12 col-md-12 text-right" *ngIf="leadconvert">
+
+            <a *ngIf="(wizardIndex!=0)" href="javascript:void(0);" class="btn btn-danger mr-2" (click)="backStep()"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</a>
+
+            <a href="javascript:void(0);" *ngIf="totalWizardlength!=(wizardIndex+1)" class="btn btn-secondary mr-2" (click)="skipStep()">
+              Skip <i class="fa feather-chevron-left" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" *ngIf="totalWizardlength!=(wizardIndex+1)" class="btn btn-success mr-2" (click)="onSubmitData()"> Next <i class="fa feather-chevron-left" aria-hidden="true"></i></a>
+            <a href="javascript:void(0);" *ngIf="totalWizardlength==(wizardIndex+1)" class="btn btn-success" (click)="finish()"><i class="feather-save"></i> Finish</a>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

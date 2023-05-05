@@ -1,0 +1,193 @@
+<div class="panel active rght-panel">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a href="#form{{index}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+        <span>{{title}}</span>
+      </a>
+    </h4>
+  </div>
+  <div id="form{{index}}" class="panel-collapse collapse active show" style="">
+    <a href="javascript:void(0);" (click)="ShowModal()" class="btn-in-panel"><span data-toggle="modal"><i class="fa fa-pencil mr-2"></i>Edit</span></a>
+    <div class="panel-body p-2 mt-0">
+      <div class="row my-2">
+        <div *ngFor="let item of data" class="col-md-6 col-6">
+          <label>
+            <strong>{{item.display_name | DisplayName}} : </strong>
+            <span title="" *ngIf="item.dt_code == 'select'">
+              <ng-container *ngIf="item.field_route;else elseBlock;">
+                <a href="{{item.field_route}}{{item.ref_value}}" title="{{item.field_value}}" target="_blank">{{item.field_value}}</a>
+              </ng-container>
+              <ng-template #elseBlock>
+                {{item.field_value}}
+              </ng-template>
+            </span>
+            <span title="" *ngIf="item.dt_code == 'date'">{{item.field_value}}</span>
+            <span title="" *ngIf="item.dt_code == 'datetime'">{{item.field_value | DateTimeToLocal}}</span>
+            <span title="" *ngIf="item.dt_code != 'select' && item.dt_code != 'datetime' && item.dt_code != 'date'">{{item.field_value}}</span>
+          </label>
+          <div class="form-group">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div bsModal #ManageForm="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Update {{title}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; max-height:600px;">
+        <form [formGroup]="form" *ngIf="form">
+          <ng-container *ngFor="let item of formControlList;let i=index">
+            <!--<h3 class="form-heading"> <span>{{ item.group_display_name}}</span></h3>-->
+            <div class="row mb-2">
+
+              <ng-container *ngFor="let inner of item.InnerData;let j=index">
+
+                <div class="col-md-6 col-sm-6 col-6 col-lg-6" ngShow="inner.dependent_show_type == true">
+                  <label>{{ inner.display_name}}:<span class="text-danger" [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+
+                  <div class="form-group">
+
+                    <input type="text" class="form-control" 
+                           [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                           [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                           *ngIf="inner.picklist_options != 'Lookup' && inner.dt_code !='date'  && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='date' && inner.dt_code !='time' && inner.dt_code !='int' && inner.dt_code !='decimal' && inner.dt_code !='bigint' && inner.dt_code !='datetime'" />
+
+
+
+                    <input type="text" class="form-control" 
+                           [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                           [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                           *ngIf="inner.dt_code == 'int'" />
+
+                    <small *ngIf="inner.dt_code == 'int' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)"
+                           class="text-danger">Please enter valid value</small>
+
+                    <input type="text" class="form-control" 
+                           [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                           [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                           *ngIf="inner.dt_code == 'bigint'" />
+
+                    <small *ngIf="inner.dt_code == 'bigint' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)"
+                           class="text-danger">Please enter valid value</small>
+
+                    <input type="text" class="form-control" 
+                           [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                           [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                           *ngIf="inner.dt_code == 'decimal'" />
+
+
+                    <small *ngIf="inner.dt_code == 'decimal' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)"
+                           class="text-danger">Please enter valid value</small>
+
+
+                    <textarea class="form-control" *ngIf="inner.dt_code == 'textarea'" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName).errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }" [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+
+
+
+                    <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " *ngIf="inner.dt_code == 'date'" [formControlName]="inner.form_controlName"
+                                [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+
+
+
+                    <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " *ngIf="inner.dt_code == 'datetime'" [formControlName]="inner.form_controlName"
+                                [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030" [hourFormat]="(timeFormat==24)?24:12"></p-calendar>
+
+
+                    <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+
+                      <div *ngFor="let options of inner.listoptions">
+
+                        <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+
+
+                          <div class="custom-control custom-checkbox">
+
+                            <input id="chk_{{inner.custom_field_id}}_{{option}}_{{i}}"
+                                   value="5555" [checked]="checkvalue(inner.value,option)" (change)="onCheckboxChange($event,item,inner)" class="dynamic custom-control-input" type="checkbox">
+                            <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="chk_{{inner.custom_field_id}}_{{option}}_{{i}}">{{option}}</label>
+
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                      <div class="form-check form-check-inline">
+                        <div class="custom-control custom-checkbox pl-0">
+                          <label class="switch">
+                            <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName"
+                                   class="dynamic custom-control-input">
+                            <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--Radio button-->
+                    <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio'">
+                      <div *ngFor="let options of inner.listoptions">
+
+                        <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+
+                          <div class="custom-control custom-radio mx-2  p-0">
+
+                            <input id="radio-{{inner.custom_field_id}}_{{option}}" [formControlName]="inner.form_controlName" [value]="option" type="radio" />
+                            <label for="radio-{{inner.custom_field_id}}_{{option}}" class="radio-label">{{option}}</label>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                               (clear)="onClearLang(item.InnerData,j)"
+                               (scrollToEnd)="onScrollToEnd(item.InnerData,j)" [virtualScroll]="true" (keyup)="onKey($event,item.InnerData,j)"
+                               *ngIf="inner.dt_code=='select' && inner.picklist_options=='' && inner.field_code!=null " [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+
+                    </ng-select>
+                    <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                               *ngIf="inner.dt_code=='select' && inner.picklist_options=='' && inner.field_code==null" [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+
+                    </ng-select>
+                    <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                               *ngIf="inner.dt_code=='select' && inner.picklist_options=='true'" [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name" bindValue="value">
+
+                    </ng-select>
+                    <div class="clearfix"></div>
+                    <small *ngIf="((form.get(inner.form_controlName)?.invalid) && (form.get(inner.form_controlName).dirty) || (form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required))"
+                           class="text-danger">{{inner.display_name}} is required</small>
+
+                  </div>
+
+                </div>
+              </ng-container>
+
+            </div>
+          </ng-container>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" (click)="onSubmit()" class="btn btn-success mr-2" [disabled]="loadSave"><i class="feather-save"></i> Submit</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white mr-1"></i> Close</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

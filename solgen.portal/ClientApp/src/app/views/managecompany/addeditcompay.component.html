@@ -1,0 +1,298 @@
+<div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>pageTitle</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li><a routerLink="/dashboard">Dashboard</a></li>
+      <li><a routerLink="/managecompany">Manage Company</a></li>
+      <li class="active">pageTitle</li>
+    </ol>
+  </div>
+
+</div>
+<!--<div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>{{pageTitle}}</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li>
+        <a href="dashboard.html">Home</a>
+      </li>
+      <li class="active">Add/Edit Company</li>
+    </ol>
+  </div>
+</div>-->
+<div class="clearfix"></div>
+
+
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-content">
+        <form [formGroup]="companyForm" autocomplete="off">
+          <div class="row  mb-2">
+            <div class="col-sm-12 col-md-12">
+              <h3 class="form-heading ml-0"><span>Company Details</span></h3>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>Company Name:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Please Company Name" formControlName="companyName"
+                       [ngClass]="{'is-invalid': (companyName.invalid && (companyName.dirty || companyName.touched) && (companyName.errors?.required || companyName.errors?.maxlength)) }">
+
+                <small *ngIf="companyName.invalid && (companyName.dirty || companyName.touched) && companyName.errors?.required"
+                       class="text-danger">company name is required</small>
+                <small *ngIf="companyName.invalid && (companyName.dirty || companyName.touched) && companyName.errors?.maxlength"
+                       class="text-danger">company name must be less than 50 characters.</small>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>Company Type:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstCompantType" placeholder="Select Company Type" bindValue="value" bindLabel="text" [attr.disabled]="isDisabled" formControlName="companyType"
+                           [ngClass]="{'is-invalid': (companyType.invalid && (companyType.dirty || companyType.touched) && companyType.errors?.required)}"></ng-select>
+                <small *ngIf="companyType.invalid && (companyType.dirty || companyType.touched) && companyType.errors?.required"
+                       class="text-danger">Please select Company Type</small>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <!--<label>Company Logo:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <div class="input-group mb-3">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" id="inputGroupFile02">
+          <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
+        </div>
+      </div>
+    </div>-->
+              <label>Company Logo:</label>
+              <div class="input-group">
+                <div class="input-group-prepend" *ngIf="imageLink!=''">
+                  <img src={{imageLink}} alt="img" class="upload_image_thnumb" data-toggle="modal" data-target="#myModal">
+
+                  <div id="myModal" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" style="height:450px!important;width:450px!important; ">
+                      <div class="">
+                        <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+                      </div>
+                      <div class="modal-content">
+                        <div class="text-center">
+                          <img src={{imageLink}} alt="img" style="height:450px!important;width:450px!important; " class="img-responsive">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="custom-file w-50 m-fileup">
+                  <input formControlName="companyLogo" class="custom-file-input" #file type="file" name='file' #fileInput accept="image/x-png,image/gif,image/jpeg" (change)="setFile($event)" lang="es">
+                  <label class="custom-file-label">{{fileName}}</label>
+                </div>
+                <small><i class="text-primary">Valid image format is image/x-png, image/gif, image/jpeg and limit upto 5MB.</i> </small>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-12">
+              <h3 class="form-heading ml-0"><span>Company Admin Details</span></h3>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>First Name:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Please First Name" formControlName="firstName"
+                       [ngClass]="{'is-invalid': (firstName.invalid && (firstName.dirty || firstName.touched) && (firstName.errors?.required || firstName.errors?.maxlength)) }">
+
+                <small *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors?.required"
+                       class="text-danger">First name is required</small>
+                <small *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors?.maxlength"
+                       class="text-danger">First Name must be less than 50 characters.</small>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>Last Name:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Please Last Name" formControlName="lastName"
+                       [ngClass]="{'is-invalid': (lastName.invalid && (lastName.dirty || lastName.touched) && (lastName.errors?.required || lastName.errors?.maxlength)) }">
+
+                <small *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors?.required"
+                       class="text-danger">Last name is required</small>
+                <small *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors?.maxlength"
+                       class="text-danger">Last Name must be less than 50 characters.</small>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <label>Email:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Please Last Name" formControlName="email"
+                       [ngClass]="{'is-invalid': (email.invalid && (email.dirty || email.touched) && (email.errors?.required || email.errors?.maxlength)) }">
+
+                <small *ngIf="email.invalid && (email.dirty || email.touched) && email.errors?.required"
+                       class="text-danger">Email is required</small>
+                <small *ngIf="email.invalid && (email.dirty || email.touched) && email.errors?.maxlength"
+                       class="text-danger">Email must be less than 200 characters.</small>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-12">
+              <h3 class="form-heading ml-0"><span>Module Access</span></h3>
+            </div>
+
+
+            <div class="col-md-12 pb-3 ">
+              <h3 _ngcontent-c1="" class="form-heading ng-star-inserted ml-0"><span _ngcontent-c1="">Access Level </span></h3>
+              <label>For full control select the header checkbox. If you are select Add/Update/Delete Access Level then View permission will be given automatically.</label>
+              <div class="form-group">
+                <div class="table-responsive">
+                  <table class="table table-hover table-dynamic" style="min-width:1024px;">
+                    <thead>
+                      <tr>
+                        <th scope="col">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="customCheckModuleName" class="custom-control-input" value="moduleName" formControlName="moduleNameSelect" (click)="enableSelectAll($event)" />
+                            <label class="custom-control-label" for="customCheckModuleName">Module Name</label>
+                          </div>
+                        </th>
+                        <th scope="col">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="customCheck" class="custom-control-input" value="add" formControlName="addSelect" (click)="enableSelectAll($event)" />
+                            <label class="custom-control-label" for="customCheck">Add</label>
+                          </div>
+                        </th>
+                        <th scope="col">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="viewall" class="custom-control-input" value="read" formControlName="readSelect" (click)="enableSelectAll($event)" />
+                            <label class="custom-control-label" for="viewall">View</label>
+                          </div>
+                        </th>
+                        <th scope="col">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="updateall" class="custom-control-input" value="update" formControlName="updateSelect" (click)="enableSelectAll($event)" />
+                            <label class="custom-control-label" for="updateall">Update</label>
+                          </div>
+                        </th>
+                        <th scope="col">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="deleteall" class="custom-control-input" value="delete" formControlName="deleteSelect" (click)="enableSelectAll($event)" />
+                            <label class="custom-control-label" for="deleteall">Delete</label>
+                          </div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody formArrayName="companyModules">
+                      <ng-container *ngFor="let pmodule of parentModule; let i=inde">
+                        <tr>
+                          <td colspan="5" style="background:#f1f1f1">
+                            <b>{{pmodule.roleModuleModuleName}}</b>
+                            <!--<input type="checkbox" id="module_{{i}}" class="custom-control-input" formControlName="moduleRoleModuleAddFlag" (click)="enableTopHeader('add',item,$event)">
+                            <label class="custom-control-label" for="module_{{i}}"></label>-->
+                          </td>
+                        </tr>
+                        <tr *ngFor="let item of companyModules.controls; let i=index" [formGroupName]="i">
+                          <td *ngIf="pmodule.roleModuleId ==item.get('moduleParentModuleId').value ">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" id="module_{{i}}" class="custom-control-input" formControlName="moduleRoleModuleAddFlag" (click)="enableTopHeader('modeuleName',item,$event)">
+                              <label class="custom-control-label" for="module_{{i}}">{{item.get('roleModuleModuleName').value}}</label>
+                              </div>
+                          </td>
+                          <td scope="row" *ngIf="item.get('isEnableAddPermission').value && pmodule.roleModuleId ==item.get('moduleParentModuleId').value">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" id="Add_{{i}}" class="custom-control-input" formControlName="roleModuleAddFlag" (click)="enableTopHeader('add',item,$event)">
+                              <label class="custom-control-label" for="Add_{{i}}"></label>
+                            </div>
+                          </td>
+                          <td scope="row" *ngIf="!item.get('isEnableAddPermission').value && pmodule.roleModuleId ==item.get('moduleParentModuleId').value"></td>
+                          <td scope="row" *ngIf="item.get('isEnableReadPermission').value && pmodule.roleModuleId ==item.get('moduleParentModuleId').value">
+                            <!--<input type="checkbox" formControlName="roleModuleReadFlag" (click)="enableTopHeader('read',item,$event)">-->
+                            <div  class="custom-control-inline">
+                              <div class="custom-control custom-checkbox">
+                                <input id="ViewShared_{{i}}" type="checkbox"  class="custom-control-input" formControlName="roleModuleReadFlag" (click)="enableTopHeader('read',item,$event)">
+                                <label class="custom-control-label" for="ViewShared_{{i}}"></label>
+                              </div>
+                             
+                            </div>
+                           
+                          </td>
+                          <td scope="row" *ngIf="!item.get('isEnableReadPermission').value && pmodule.roleModuleId ==item.get('moduleParentModuleId').value"></td>
+                          <td scope="row" *ngIf="item.get('isEnableEditPermission').value && pmodule.roleModuleId ==item.get('moduleParentModuleId').value">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" id="Update_{{i}}" class="custom-control-input" formControlName="roleModuleUpdateFlag" (click)="enableTopHeader('update',item,$event)">
+                              <label class="custom-control-label" for="Update_{{i}}"></label>
+                            </div>
+                          </td>
+                          <td scope="row" *ngIf="!item.get('isEnableEditPermission').value && pmodule.roleModuleId ==item.get('moduleParentModuleId').value"></td>
+                          <td scope="row" *ngIf="item.get('isEnableDeletePermission').value && pmodule.roleModuleId ==item.get('moduleParentModuleId').value">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" id="delete_{{i}}" class="custom-control-input" formControlName="roleModuleDeleteFlag" (click)="enableTopHeader('delete',item,$event)">
+                              <label class="custom-control-label" for="delete_{{i}}"></label>
+                            </div>
+                          </td>
+                          <td scope="row" *ngIf="!item.get('isEnableDeletePermission').value && pmodule.roleModuleId ==item.get('moduleParentModuleId').value"></td>
+                        </tr>
+                      </ng-container>
+
+                      <tr *ngFor="let item of companyModules.controls; let i=index" [formGroupName]="i">
+
+                        <td *ngIf="item.get('moduleParentModuleId').value =='0'">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="module_{{i}}" class="custom-control-input" formControlName="moduleRoleModuleAddFlag" (click)="enableTopHeader('modeuleName',item,$event)">
+                            <label class="custom-control-label" for="module_{{i}}">{{item.get('roleModuleModuleName').value}}</label>
+                          </div>
+                        </td>
+
+                        <td scope="row" *ngIf="item.get('isEnableAddPermission').value && item.get('moduleParentModuleId').value =='0'">
+
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="Add_{{i}}" class="custom-control-input" formControlName="roleModuleAddFlag" (click)="enableTopHeader('add',item,$event)">
+                            <label class="custom-control-label" for="Add_{{i}}"></label>
+                          </div>
+                        </td>
+                        <td scope="row" *ngIf="!item.get('isEnableAddPermission').value && item.get('moduleParentModuleId').value =='0'"></td>
+                        <td scope="row" *ngIf="item.get('isEnableReadPermission').value && item.get('moduleParentModuleId').value =='0'">
+                          <!--<input type="checkbox" formControlName="roleModuleReadFlag" (click)="enableTopHeader('read',item,$event)">-->
+                            <div class="custom-control custom-checkbox ">
+                              <input id="ViewShared_{{i}}" type="checkbox"  class="custom-control-input" formControlName="roleModuleReadFlag" (click)="enableTopHeader('read',item,$event)">
+                              <label class="custom-control-label" for="ViewShared_{{i}}"></label>
+                          </div>
+                        </td>
+                        <td scope="row" *ngIf="!item.get('isEnableReadPermission').value && item.get('moduleParentModuleId').value =='0'"></td>
+                        <td scope="row" *ngIf="item.get('isEnableEditPermission').value && item.get('moduleParentModuleId').value =='0'">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="Update_{{i}}" class="custom-control-input" formControlName="roleModuleUpdateFlag" (click)="enableTopHeader('update',item,$event)">
+                            <label class="custom-control-label" for="Update_{{i}}"></label>
+                          </div>
+                        </td>
+                        <td scope="row" *ngIf="!item.get('isEnableEditPermission').value && item.get('moduleParentModuleId').value =='0'"></td>
+                        <td scope="row" *ngIf="item.get('isEnableDeletePermission').value && item.get('moduleParentModuleId').value =='0'">
+                          <div class="custom-control custom-checkbox">
+                            <input type="checkbox" id="delete_{{i}}" class="custom-control-input" formControlName="roleModuleDeleteFlag" (click)="enableTopHeader('delete',item,$event)">
+                            <label class="custom-control-label" for="delete_{{i}}"></label>
+                          </div>
+                        </td>
+                        <td scope="row" *ngIf="!item.get('isEnableDeletePermission').value && item.get('moduleParentModuleId').value =='0'"></td>
+                      </tr>
+                      <tr *ngIf="companyModules.length==0">
+                        <td colspan="6" class="empty-row text-danger text-center">
+                          Please select User Type to view Modules
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <ng-template #loadRoleModules>
+                    <div class="card">
+                      <div class="card-body normal margin-loadr p-5">
+                        <app-loader [size]=60 [color]="'white'" class="loader"></app-loader>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+                <small *ngIf="companyModules.invalid && (companyModules.dirty || companyModules.touched) && companyModules.errors?.maxlength"
+                       class="text-danger">Please select atleast any one module.</small>
+
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-12">
+              <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="save()"><i class="feather-save"></i> Submit</a>
+              <a class="btn btn-danger" href="#"><span><i class="feather-x"></i> Cancel</span></a>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

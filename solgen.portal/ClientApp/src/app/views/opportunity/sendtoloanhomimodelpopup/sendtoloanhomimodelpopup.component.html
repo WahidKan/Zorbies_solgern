@@ -1,0 +1,2039 @@
+<div bsModal #openSendToLoanHomiPopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Generate Loan Application</h4>
+        <button type="button" class="close" (click)="closePopup()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--{{addSendTLoanHomiForm.value | json }}-->
+      <form [formGroup]="addSendTLoanHomiForm" autocomplete="off" *ngIf="showAddSendTLoanHomiForm">
+        <div class="modal-body mapping-select p-0" style="margin-bottom:10px; max-height:800px;overflow-y:auto;">
+          <div class="panel-content">
+            <div id="accordion" [ngClass]="{'disabled':loadSave}">
+              <div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#SystemInfo" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>System Info:</span>
+                    </a>
+                  </h4>
+                </div>
+
+                <div id="SystemInfo" class="panel-collapse collapse active show" style="">
+                  <div class="panel-body">
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>Loan Product:</label></div>
+                          <div class="col-md-12 col-lg-8"><input type="text" class="form-control border-0 p-0 bg-white" formControlName="loanProduct" maxlength="50" style="pointer-events:none"></div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>Term:</label></div>
+                          <div class="col-md-12 col-lg-8"><input type="text" class="form-control border-0 p-0 bg-white" formControlName="term" maxlength="50" style="pointer-events:none"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>Country:</label></div>
+                          <div class="col-md-12 col-lg-8" style="pointer-events:none">
+                            <ng-select [items]="countryLists" [loading]="loadSave" placeholder="Select Country" formControlName="country"
+                                       bindLabel="text" bindValue="value"></ng-select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>State:</label></div>
+                          <div class="col-md-12 col-lg-8 form-control border-0 p-0 bg-white" style="pointer-events:none">
+                            <ng-select [items]="states" [loading]="loadSave" placeholder="Select State" formControlName="state"
+                                       bindLabel="text" bindValue="value"></ng-select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>City:</label></div>
+                          <div class="col-md-12 col-lg-8"><input type="text" class="form-control border-0 p-0 bg-white" formControlName="city" maxlength="50" style="pointer-events:none"></div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>Street:</label></div>
+                          <div class="col-md-12 col-lg-8"><input type="text" class="form-control border-0 p-0 bg-white" formControlName="street" maxlength="50" style="pointer-events:none"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>Zip Code:</label></div>
+                          <div class="col-md-12 col-lg-8"><input type="text" class="form-control border-0 p-0 bg-white" formControlName="postalCode" maxlength="50" style="pointer-events:none"></div>
+                        </div>
+                      </div>
+                      <!-- <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>System Size KW:</label></div>
+                          <div class="col-md-12 col-lg-8"><input type="text" class="form-control border-0 p-0 bg-white" formControlName="systemSizeKW" maxlength="50" style="pointer-events:none"></div>
+                        </div>
+                      </div> -->
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>Total Amount:</label></div>
+                          <div class="col-md-12 col-lg-8">
+                            <div class="form-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" formControlName="totalSystemCost" maxlength="50" disabled>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>Downpayment Amount:</label></div>
+                          <div class="col-md-12 col-lg-8">
+                            <div class="form-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" formControlName="downpaymentAmount" (keypress)="numberOnly($event)" maxlength="50">
+                              </div>
+                              <small *ngIf="dpAmtValidation == true" class="text-danger">Amount can't be greater than Total Amount.</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>Loan Amount:</label></div>
+                          <div class="col-md-12 col-lg-8">
+                            <div class="form-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" formControlName="loanAmount" maxlength="50" disabled>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>Own the Property:</label></div>
+                          <div class="col-md-12 col-lg-8">
+                            <ng-select [items]="lstowntheProperty" [loading]="loadSave" placeholder="Select" formControlName="ownthePropertyID" [(ngModel)]="defaultOwnTheProperty"
+                                       bindLabel="text" bindValue="value">
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-4"><label>No. of Mortgages:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-8">
+                            <input type="text" class="form-control" formControlName="noOfMortgages" maxlength="2" (keypress)="keyPressNo($event)" 
+                                   [ngClass]="{'is-invalid': (noOfMortgages.invalid && (noOfMortgages.dirty || noOfMortgages.touched) && (noOfMortgages.errors?.required || noOfMortgages.errors?.maxlength)) }">
+                            <small *ngIf="noOfMortgages.invalid && (noOfMortgages.dirty || noOfMortgages.touched) && noOfMortgages.errors?.required"
+                                   class="text-danger">No.of Mortgages is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--================================================== Applicant Detail:   =====================================================================-->
+            <div id="accordion" [ngClass]="{'disabled':loadSave}">
+              <div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#ApplicantDetail" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>Applicant Detail:</span>
+                    </a>
+                  </h4>
+                </div>
+
+                <div id="ApplicantDetail" class="panel-collapse collapse active show" style="">
+                  <div class="panel-body">
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>First Name:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="firstName" maxlength="50" readonly
+                                   [ngClass]="{'is-invalid': (firstName.invalid && (firstName.dirty || firstName.touched) && (firstName.errors?.required || firstName.errors?.maxlength)) }">
+                            <small *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors?.required"
+                                   class="text-danger">First Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Last Name:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="lastName" maxlength="50" readonly
+                                   [ngClass]="{'is-invalid': (lastName.invalid && (lastName.dirty || lastName.touched) && (lastName.errors?.required || lastName.errors?.maxlength)) }">
+                            <small *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors?.required"
+                                   class="text-danger">Last Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Phone:</label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <!--<input type="text" class="form-control" formControlName="phone" maxlength="50" (keypress)="keyPressNo($event)"
+          [ngClass]="{'is-invalid': (phone.invalid && (phone.dirty || phone.touched) && (phone.errors?.required || phone.errors?.maxlength)) }">-->
+                            <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="phone" placeholder="(___) ___-____"
+                                         [ngClass]="{'is-invalid': (phone.invalid && phone.errors?.maxlength) }"></p-inputMask>
+                            <small *ngIf="phone.errors?.maxlength"
+                                   class="text-danger">Invalid Phone No.</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Mobile:</label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="mobile" placeholder="(___) ___-____"
+                                         [ngClass]="{'is-invalid': (mobile.invalid && mobile.errors?.maxlength) }"></p-inputMask>
+                            <small *ngIf="mobile.errors?.maxlength"
+                                   class="text-danger">Invalid Mobile No.</small>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Email:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="email" maxlength="100" readonly
+                                   [ngClass]="{'is-invalid': (email.invalid && (email.dirty || email.touched) && (email.errors?.required || email.errors?.maxlength)) }">
+                            <small *ngIf="email.invalid && (email.dirty || email.touched || email.errors?.required)"
+                                   class="text-danger">Email must be a valid email address</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>SSN:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="ssn" maxlength="11"
+                                   [ngClass]="{'is-invalid': (ssn.invalid && (ssn.dirty || ssn.touched) && (ssn.errors?.required || ssn.errors?.maxlength)) }">
+
+                            <small *ngIf="ssn.invalid && (ssn.dirty || ssn.touched) && ssn.errors?.required"
+                                   class="text-danger">SSN is required</small>
+                            <small *ngIf="ssn.errors?.maxlength"
+                                   class="text-danger">SSN no must be less than 11 characters.</small>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>DOB:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <div class="form-group datepickerinpop">
+
+                              <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="dateofBirth" [maxDate]="minDate"
+                                          dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030" 
+                                          [ngClass]="{'is-invalid': (dateofBirth?.invalid && (dateofBirth.dirty || dateofBirth.touched) && dateofBirth.errors?.required) }"></p-calendar>
+
+                              <small *ngIf="dateofBirth?.invalid && (dateofBirth.dirty || dateofBirth.touched) && dateofBirth.errors?.required"
+                                     style="color:red;">DOB is required</small>
+
+                              <small *ngIf="dateofBirth.errors?.lessthan18"
+                                     style="color:red;">Age should be greater than 18</small>
+
+                            </div>
+                         
+
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Years at Current Residence:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="yearsAtCurrentResidence" (keypress)="keyPressNo($event)" maxlength="3"
+                                   [ngClass]="{'is-invalid': (yearsAtCurrentResidence.invalid && (yearsAtCurrentResidence.dirty || yearsAtCurrentResidence.touched) &&
+                                   (yearsAtCurrentResidence.errors?.required || yearsAtCurrentResidence.errors?.maxlength)) }">
+                            <small *ngIf="yearsAtCurrentResidence.invalid && (yearsAtCurrentResidence.dirty || yearsAtCurrentResidence.touched) && yearsAtCurrentResidence.errors?.required"
+                                   class="text-danger">Years at Current Residence is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Months at Current Residence:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" placeholder="Enter value between 1 to 11" (keypress)="keyPressNo($event)" formControlName="monthsatCurrentResidence"
+                                   [ngClass]="{'is-invalid': (monthsatCurrentResidence.invalid && (monthsatCurrentResidence.dirty || monthsatCurrentResidence.touched) && (monthsatCurrentResidence.errors?.required || monthsatCurrentResidence.errors?.maxlength)) }">
+                            <small *ngIf="monthsatCurrentResidence.invalid && (monthsatCurrentResidence.dirty || monthsatCurrentResidence.touched) && monthsatCurrentResidence.errors?.required"
+                                   class="text-danger">Months at Current Residence is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Years at Previous Residence:</label><span class="text-danger" *ngIf="showValidationIconOnPR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="yearsAtPreviousResidence" (keypress)="keyPressNo($event)" maxlength="3"
+                                   [ngClass]="{'is-invalid': (yearsAtPreviousResidence.invalid && (yearsAtPreviousResidence.dirty || yearsAtPreviousResidence.touched) && (yearsAtPreviousResidence.errors?.required || yearsAtPreviousResidence.errors?.maxlength)) }">
+
+                            <small *ngIf="yearsAtPreviousResidence.invalid && (yearsAtPreviousResidence.dirty || yearsAtPreviousResidence.touched) && yearsAtPreviousResidence.errors?.required"
+                                   class="text-danger">Years at Previous Residence is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Months at Previous Residence:</label><span class="text-danger" *ngIf="showValidationIconOnPR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" placeholder="Enter value between 1 to 11" (keypress)="keyPressNo($event)" formControlName="monthsatPreviousResidence"
+                                   [ngClass]="{'is-invalid': (monthsatPreviousResidence.invalid && (monthsatPreviousResidence.dirty || monthsatPreviousResidence.touched) && (monthsatPreviousResidence.errors?.required || monthsatPreviousResidence.errors?.maxlength)) }">
+                            <small *ngIf="monthsatPreviousResidence.invalid && (monthsatPreviousResidence.dirty || monthsatPreviousResidence.touched) && monthsatPreviousResidence.errors?.required"
+                                   class="text-danger">Months at Previous Residence is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Country:</label><span class="text-danger" *ngIf="showValidationIconOnPR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="countryLists" [loading]="loadSave" placeholder="Select Country" formControlName="PRcountry"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (PRcountry.invalid && (PRcountry.dirty || PRcountry.touched) && (PRcountry.errors?.required || PRcountry.errors?.maxlength)) }">
+
+
+                            </ng-select>
+                            <small *ngIf="PRcountry.invalid && (PRcountry.dirty || PRcountry.touched) && PRcountry.errors?.required"
+                                   class="text-danger">Country is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous State:</label><span class="text-danger" *ngIf="showValidationIconOnPR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="states" [loading]="loadSave" placeholder="Select State" formControlName="PRstate"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (PRstate.invalid && (PRstate.dirty || PRstate.touched) && (PRstate.errors?.required || PRstate.errors?.maxlength)) }">
+
+
+                            </ng-select>
+                            <small *ngIf="PRstate.invalid && (PRstate.dirty || PRstate.touched) && PRstate.errors?.required"
+                                   class="text-danger">State is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous City:</label><span class="text-danger" *ngIf="showValidationIconOnPR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="PRCity" maxlength="50"
+                                   [ngClass]="{'is-invalid': (PRCity.invalid && (PRCity.dirty || PRCity.touched) && (PRCity.errors?.required || PRCity.errors?.maxlength)) }" >
+
+                            <small *ngIf="PRCity.invalid && (PRCity.dirty || PRCity.touched) && PRCity.errors?.required"
+                                   class="text-danger">City is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Street:</label><span class="text-danger" *ngIf="showValidationIconOnPR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="PRStreet" maxlength="50"
+                                   [ngClass]="{'is-invalid': (PRStreet.invalid && (PRStreet.dirty || PRStreet.touched) && (PRStreet.errors?.required || PRStreet.errors?.maxlength)) }">
+                            <small *ngIf="PRStreet.invalid && (PRStreet.dirty || PRStreet.touched) && PRStreet.errors?.required"
+                                   class="text-danger">Street is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Zip Code:</label><span class="text-danger" *ngIf="showValidationIconOnPR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="PRPostalCode" maxlength="50"
+                                   [ngClass]="{'is-invalid': (PRPostalCode.invalid && (PRPostalCode.dirty || PRPostalCode.touched) && (PRPostalCode.errors?.required || PRPostalCode.errors?.maxlength)) }">
+                            <small *ngIf="PRPostalCode.invalid && (PRPostalCode.dirty || PRPostalCode.touched) && PRPostalCode.errors?.required"
+                                   class="text-danger">Previous Zip Code is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Housing Status:</label><span class="text-danger" *ngIf="showValidationIconOnPR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="lstprevHousingStatus" [loading]="loadSave" placeholder="Select" formControlName="PHousingStatus"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (PHousingStatus.invalid && (PHousingStatus.dirty || PHousingStatus.touched) && (PHousingStatus.errors?.required || PHousingStatus.errors?.maxlength)) }">
+                            </ng-select>
+                            <small *ngIf="PHousingStatus.invalid && (PHousingStatus.dirty || PHousingStatus.touched) && PHousingStatus.errors?.required"
+                                   class="text-danger">Housing Status is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Employment Type:</label><span class="text-danger">*</span></div>
+                          <!--<div class="col-md-12 col-lg-12"><input type="text" class="form-control" formControlName="employementType" maxlength="50" style="pointer-events:none"></div>-->
+
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="lstemployementType" [loading]="loadSave" placeholder="Select" formControlName="employementTypeID"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (employementTypeID.invalid && (employementTypeID.dirty || employementTypeID.touched) && (employementTypeID.errors?.required || employementTypeID.errors?.maxlength)) }">
+                            </ng-select>
+                            <small *ngIf="employementTypeID.invalid && (employementTypeID.dirty || employementTypeID.touched) && employementTypeID.errors?.required"
+                                   class="text-danger">Employment Type is required</small>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Employer Name:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="employerName" maxlength="50"
+                                   [ngClass]="{'is-invalid': (employerName.invalid && (employerName.dirty || employerName.touched) && (employerName.errors?.required || employerName.errors?.maxlength)) }">
+                            <small *ngIf="employerName.invalid && (employerName.dirty || employerName.touched) && employerName.errors?.required"
+                                   class="text-danger">Employer Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Occupation:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="occupation" maxlength="50"
+                                   [ngClass]="{'is-invalid': (occupation.invalid && (occupation.dirty || occupation.touched) && (occupation.errors?.required || occupation.errors?.maxlength)) }">
+                            <small *ngIf="occupation.invalid && (occupation.dirty || occupation.touched) && occupation.errors?.required"
+                                   class="text-danger">Occupation is required</small>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Years at Current Employment:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="yearsAtCurrentEmployement" (keypress)="keyPressNo($event)" maxlength="3"
+                                   [ngClass]="{'is-invalid': (yearsAtCurrentEmployement.invalid && (yearsAtCurrentEmployement.dirty || yearsAtCurrentEmployement.touched) && (yearsAtCurrentEmployement.errors?.required || yearsAtCurrentEmployement.errors?.maxlength)) }">
+                            <small *ngIf="yearsAtCurrentEmployement.invalid && (yearsAtCurrentEmployement.dirty || yearsAtCurrentEmployement.touched) && yearsAtCurrentEmployement.errors?.required"
+                                   class="text-danger">Years at Current Employment is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Months at Current Employment:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" placeholder="Enter value between 1 to 11" formControlName="monthsAtCurrentEmployement" maxlength="50" (keypress)="keyPressNo($event)"
+                                   [ngClass]="{'is-invalid': (monthsAtCurrentEmployement.invalid && (monthsAtCurrentEmployement.dirty || monthsAtCurrentEmployement.touched) && (monthsAtCurrentEmployement.errors?.required || monthsAtCurrentEmployement.errors?.maxlength)) }">
+                            <small *ngIf="monthsAtCurrentEmployement.invalid && (monthsAtCurrentEmployement.dirty || monthsAtCurrentEmployement.touched) && monthsAtCurrentEmployement.errors?.required"
+                                   class="text-danger">Months at Current Employment is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <!--*ngIf="ShowPreviousEmployerDetails"-->
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Employer Name:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="previousEmployerName" maxlength="50"
+                                   [ngClass]="{'is-invalid': (previousEmployerName.invalid && (previousEmployerName.dirty || previousEmployerName.touched) && (previousEmployerName.errors?.required || previousEmployerName.errors?.maxlength)) }">
+                            <small *ngIf="previousEmployerName.invalid && (previousEmployerName.dirty || previousEmployerName.touched) && previousEmployerName.errors?.required"
+                                   class="text-danger">Previous Employer Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Occupation:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="previousOccupation" maxlength="50"
+                                   [ngClass]="{'is-invalid': (previousOccupation.invalid && (previousOccupation.dirty || previousOccupation.touched) && (previousOccupation.errors?.required || previousOccupation.errors?.maxlength)) }">
+                            <small *ngIf="previousOccupation.invalid && (previousOccupation.dirty || previousOccupation.touched) && previousOccupation.errors?.required"
+                                   class="text-danger">Previous Occupation Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Years at Previous Employment:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="yearsAtPreviousEmployement" (keypress)="keyPressNo($event)" maxlength="3"
+                                   [ngClass]="{'is-invalid': (yearsAtPreviousEmployement.invalid && (yearsAtPreviousEmployement.dirty || yearsAtPreviousEmployement.touched) && (yearsAtPreviousEmployement.errors?.required || yearsAtPreviousEmployement.errors?.maxlength)) }">
+                            <small *ngIf="yearsAtPreviousEmployement.invalid && (yearsAtPreviousEmployement.dirty || yearsAtPreviousEmployement.touched) && yearsAtPreviousEmployement.errors?.required"
+                                   class="text-danger">Years at Previous Employment is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Months at Previous Employment:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" placeholder="Enter value between 1 to 11" formControlName="monthsAtPreviousEmployement" (keypress)="keyPressNo($event)" maxlength="50"
+                                   [ngClass]="{'is-invalid': (monthsAtPreviousEmployement.invalid && (monthsAtPreviousEmployement.dirty || monthsAtPreviousEmployement.touched) && (monthsAtPreviousEmployement.errors?.required || monthsAtPreviousEmployement.errors?.maxlength)) }">
+                            <small *ngIf="monthsAtPreviousEmployement.invalid && (monthsAtPreviousEmployement.dirty || monthsAtPreviousEmployement.touched) && monthsAtPreviousEmployement.errors?.required"
+                                   class="text-danger">Months at Previous Employment is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Income Frequency:<span class="text-danger">*</span></label></div>
+                          <!--<div class="col-md-12 col-lg-12"><input type="text" class="form-control" formControlName="incomeFrequency" maxlength="50"></div>-->
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="lstIncomeFrequency" [loading]="loadSave" placeholder="Select" formControlName="lstIncomeFrequencyID"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (lstIncomeFrequencyID.invalid && (lstIncomeFrequencyID.dirty || lstIncomeFrequencyID.touched) && (lstIncomeFrequencyID.errors?.required || lstIncomeFrequencyID.errors?.maxlength)) }">
+                            </ng-select>
+                            <small *ngIf="lstIncomeFrequencyID.invalid && (lstIncomeFrequencyID.dirty || lstIncomeFrequencyID.touched) && lstIncomeFrequencyID.errors?.required"
+                                   class="text-danger">Income Frequency is required</small>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <!--*ngIf="ShowIncomeFrequency"-->
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Income:<span class="text-danger" *ngIf="showValidationIconOn_income">*</span></label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" formControlName="income" (keypress)="numberOnly($event)" maxlength="50"
+                                   [ngClass]="{'is-invalid': (income.invalid && (income.dirty || income.touched) && (income.errors?.required || income.errors?.maxlength)) }">
+                              </div>
+                              <small *ngIf="income.invalid && (income.dirty || income.touched) && income.errors?.required"
+                                   class="text-danger">Income is required.</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Other Income Frequency:</label></div>
+
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="lstIncomeFrequency" [loading]="loadSave" placeholder="Select" formControlName="otherIncomeFrequencyID"
+                                       bindLabel="text" bindValue="value">
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <!--*ngIf="ShowotherIncomeFrequency"-->
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Other Income:</label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" formControlName="otherIncome" (keypress)="numberOnly($event)" maxlength="50">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>	Other Income Source:</label></div>
+                          <div class="col-md-12 col-lg-12"><input type="text" class="form-control" formControlName="otherIncomeSource" maxlength="50"></div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Gross Income:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" formControlName="grossIncome" maxlength="50" disabled>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--================================================== Co-Applicant Detail: ==============================================================-->
+
+            <div id="accordion" *ngIf="IsCoApplicantRequired.value" [ngClass]="{'disabled':loadSave}">
+              <div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#Co-ApplicantDetail" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>Co-Applicant Detail:</span>
+                    </a>
+                  </h4>
+                </div>
+
+                <div id="Co-ApplicantDetail" class="panel-collapse collapse active show" style="">
+                  <div class="panel-body">
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>First Name:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_firstName" maxlength="50" readonly
+                                   [ngClass]="{'is-invalid': (coApp_firstName.invalid && (coApp_firstName.dirty || coApp_firstName.touched) && (coApp_firstName.errors?.required || coApp_firstName.errors?.maxlength)) }">
+                            <small *ngIf="coApp_firstName.invalid && (coApp_firstName.dirty || coApp_firstName.touched) && coApp_firstName.errors?.required"
+                                   class="text-danger">First Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Last Name:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_lastName" maxlength="50" readonly
+                                   [ngClass]="{'is-invalid': (coApp_lastName.invalid && (coApp_lastName.dirty || coApp_lastName.touched) && (coApp_lastName.errors?.required || coApp_lastName.errors?.maxlength)) }">
+                            <small *ngIf="coApp_lastName.invalid && (coApp_lastName.dirty || coApp_lastName.touched) && coApp_lastName.errors?.required"
+                                   class="text-danger">Last Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Phone:</label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="coApp_phone" placeholder="(___) ___-____"></p-inputMask>
+                            <!--[ngClass]="{'is-invalid': (coApp_phone.invalid && coApp_phone.errors?.maxlength) }"-->
+                            <!--<small *ngIf="coApp_phone.errors?.maxlength"
+                 class="text-danger">Invalid Phone No.</small>-->
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Mobile:</label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="coApp_mobile" placeholder="(___) ___-____"></p-inputMask>
+                            <!--[ngClass]="{'is-invalid': (coApp_mobile.invalid && coApp_mobile.errors?.maxlength) }"-->
+                            <!--<small *ngIf="coApp_mobile.errors?.maxlength"
+                 class="text-danger">Invalid Mobile No.</small>-->
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Email:</label><span class="text-danger">*</span></div>
+
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_email" maxlength="100" (keyup)="onFocusOutEmail($event)" readonly
+                                   [ngClass]="{'is-invalid': (coApp_email.invalid && (coApp_email.dirty || coApp_email.touched) && (coApp_email.errors?.required || coApp_email.errors?.maxlength)) }">
+                            <small *ngIf="coApp_email.invalid && (coApp_email.dirty || coApp_email.touched || coApp_email.errors?.required)"
+                                   class="text-danger">Email must be a valid email address</small>
+                          </div>
+
+
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>SSN:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_ssn" maxlength="11"
+                            [ngClass]="{'is-invalid': (coApp_ssn.invalid && (coApp_ssn.dirty || coApp_ssn.touched) && (coApp_ssn.errors?.required || coApp_ssn.errors?.maxlength)) }" />
+                            <small *ngIf="coApp_ssn.invalid && (coApp_ssn.dirty || coApp_ssn.touched) && coApp_ssn.errors?.required"
+                               class="text-danger">SSN is required</small>
+                                 <small *ngIf="coApp_ssn.errors?.maxlength"
+                                      class="text-danger">SSN no must be less than 11 characters.</small>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>DOB:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <div class="form-group datepickerinpop">
+
+                              <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="coApp_dateofBirth" [maxDate]="minDate"
+                                          dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                                          [ngClass]="{'is-invalid': (coApp_dateofBirth?.invalid && (coApp_dateofBirth.dirty || coApp_dateofBirth.touched) && coApp_dateofBirth.errors?.required) }"></p-calendar>
+
+                              <small *ngIf="coApp_dateofBirth?.invalid && (coApp_dateofBirth.dirty || coApp_dateofBirth.touched) && coApp_dateofBirth.errors?.required"
+                                     style="color:red;">DOB is required</small>
+
+                              <small *ngIf="coApp_dateofBirth.errors?.lessthan18"
+                                     style="color:red;">Age should be greater than 18</small>
+                            </div>
+                            
+                              </div>
+
+                              <!--<div class="form-group datepickerinpop">
+      <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date" formControlName="coApp_dateofBirth"
+                  [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                  [ngClass]="{'is-invalid': (coApp_dateofBirth.invalid && (coApp_dateofBirth.dirty || coApp_dateofBirth.touched) && (coApp_dateofBirth.errors?.required || coApp_dateofBirth.errors?.maxlength)) }">
+        <small *ngIf="coApp_dateofBirth.invalid && (coApp_dateofBirth.dirty || coApp_dateofBirth.touched) && coApp_dateofBirth.errors?.required"
+               class="text-danger">DOB is required</small>
+      </p-calendar>
+    </div>-->
+                            </div>
+                          </div>
+                      </div>
+               
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="custom-control custom-checkbox mb-2" style="font-size: 16px;">
+                          <input type="checkbox" class="custom-control-input" formControlName="sameAsapplicant" id="sameAsapplicantID">
+                          <label class="custom-control-label" for="sameAsapplicantID">Address same as applicant.</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Country:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="countryLists" [loading]="loadSave" placeholder="Select country" formControlName="coApp_country"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (coApp_country.invalid && (coApp_country.dirty || coApp_country.touched) && (coApp_country.errors?.required || coApp_country.errors?.maxlength)) }">
+
+                            </ng-select>
+                            <small *ngIf="coApp_country.invalid && (coApp_country.dirty || coApp_country.touched) && coApp_country.errors?.required"
+                                   class="text-danger">Country is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>State:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="states" [loading]="loadSave" placeholder="Select State" formControlName="coAppstate"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (coAppstate.invalid && (coAppstate.dirty || coAppstate.touched) && (coAppstate.errors?.required || coAppstate.errors?.maxlength)) }">
+
+                            </ng-select>
+                            <small *ngIf="coAppstate.invalid && (coAppstate.dirty || coAppstate.touched) && coAppstate.errors?.required"
+                                   class="text-danger">State is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>City:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_city" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_city.invalid && (coApp_city.dirty || coApp_city.touched) && (coApp_city.errors?.required || coApp_city.errors?.maxlength)) }">
+
+                            <small *ngIf="coApp_city.invalid && (coApp_city.dirty || coApp_city.touched) && coApp_city.errors?.required"
+                                   class="text-danger">City is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Street:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_street" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_street.invalid && (coApp_street.dirty || coApp_street.touched) && (coApp_street.errors?.required || coApp_street.errors?.maxlength)) }">
+                            <small *ngIf="coApp_street.invalid && (coApp_street.dirty || coApp_street.touched) && coApp_street.errors?.required"
+                                   class="text-danger">Street is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Zip Code:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_postalCode" maxlength="50"
+                            [ngClass]="{'is-invalid': (coApp_postalCode.invalid && (coApp_postalCode.dirty || coApp_postalCode.touched) && (coApp_postalCode.errors?.required || coApp_postalCode.errors?.maxlength)) }" />
+                            <small *ngIf="coApp_postalCode.invalid && (coApp_postalCode.dirty || coApp_postalCode.touched) && coApp_postalCode.errors?.required"
+                                   class="text-danger">Zip Code is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Years at Current Residence:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_yearsAtCurrentResidence" maxlength="3" (keypress)="keyPressNo($event)"
+                                   [ngClass]="{'is-invalid': (coApp_yearsAtCurrentResidence.invalid && (coApp_yearsAtCurrentResidence.dirty || coApp_yearsAtCurrentResidence.touched) && (coApp_yearsAtCurrentResidence.errors?.required || coApp_yearsAtCurrentResidence.errors?.maxlength)) }">
+                            <small *ngIf="coApp_yearsAtCurrentResidence.invalid && (coApp_yearsAtCurrentResidence.dirty || coApp_yearsAtCurrentResidence.touched) && coApp_yearsAtCurrentResidence.errors?.required"
+                                   class="text-danger">Years at Current Residence is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Months at Current Residence:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" placeholder="Enter value between 1 to 11" formControlName="coApp_monthsAtCurrentResidence" maxlength="2" (keypress)="keyPressNo($event)"
+                                   [ngClass]="{'is-invalid': (coApp_monthsAtCurrentResidence.invalid && (coApp_monthsAtCurrentResidence.dirty || coApp_monthsAtCurrentResidence.touched) && (coApp_monthsAtCurrentResidence.errors?.required || coApp_monthsAtCurrentResidence.errors?.maxlength)) }">
+                            <small *ngIf="coApp_monthsAtCurrentResidence.invalid && (coApp_monthsAtCurrentResidence.dirty || coApp_monthsAtCurrentResidence.touched) && coApp_monthsAtCurrentResidence.errors?.required"
+                                   class="text-danger">Months at Current Residence is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Years at Previous Residence:</label><span class="text-danger" *ngIf="showValidationIconOnCo_PR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_yearsAtPreviousResidence" (keypress)="keyPressNo($event)" maxlength="3"
+                                   [ngClass]="{'is-invalid': (coApp_yearsAtPreviousResidence.invalid && (coApp_yearsAtPreviousResidence.dirty || coApp_yearsAtPreviousResidence.touched) && (coApp_yearsAtPreviousResidence.errors?.required || coApp_yearsAtPreviousResidence.errors?.maxlength)) }">
+
+                            <small *ngIf="coApp_yearsAtPreviousResidence.invalid && (coApp_yearsAtPreviousResidence.dirty || coApp_yearsAtPreviousResidence.touched) && coApp_yearsAtPreviousResidence.errors?.required"
+                                   class="text-danger">Years at Previous Residence is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Months at Previous Residence:</label><span class="text-danger" *ngIf="showValidationIconOnCo_PR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" placeholder="Enter value between 1 to 11" (keypress)="keyPressNo($event)" formControlName="coApp_monthsatPreviousResidence"
+                                   [ngClass]="{'is-invalid': (coApp_monthsatPreviousResidence.invalid && (coApp_monthsatPreviousResidence.dirty || coApp_monthsatPreviousResidence.touched) && (coApp_monthsatPreviousResidence.errors?.required || coApp_monthsatPreviousResidence.errors?.maxlength)) }">
+                            <small *ngIf="coApp_monthsatPreviousResidence.invalid && (coApp_monthsatPreviousResidence.dirty || coApp_monthsatPreviousResidence.touched) && coApp_monthsatPreviousResidence.errors?.required"
+                                   class="text-danger">Months at Previous Residence is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Country:</label><span class="text-danger" *ngIf="showValidationIconOnCo_PR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="countryLists" [loading]="loadSave" placeholder="Select Country" formControlName="coApp_PRcountry"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (coApp_PRcountry.invalid && (coApp_PRcountry.dirty || coApp_PRcountry.touched) && (coApp_PRcountry.errors?.required || coApp_PRcountry.errors?.maxlength)) }">
+
+                            </ng-select>
+                            <small *ngIf="coApp_PRcountry.invalid && (coApp_PRcountry.dirty || coApp_PRcountry.touched) && coApp_PRcountry.errors?.required"
+                                   class="text-danger">Country is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous State:</label><span class="text-danger" *ngIf="showValidationIconOnCo_PR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="states" [loading]="loadSave" placeholder="Select State" formControlName="coApp_PRstate"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (coApp_PRstate.invalid && (coApp_PRstate.dirty || coApp_PRstate.touched) && (coApp_PRstate.errors?.required || coApp_PRstate.errors?.maxlength)) }">
+
+
+                            </ng-select>
+                            <small *ngIf="coApp_PRstate.invalid && (coApp_PRstate.dirty || coApp_PRstate.touched) && coApp_PRstate.errors?.required"
+                                   class="text-danger">State is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous City:</label><span class="text-danger" *ngIf="showValidationIconOnCo_PR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_PRCity" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_PRCity.invalid && (coApp_PRCity.dirty || coApp_PRCity.touched) && (coApp_PRCity.errors?.required || coApp_PRCity.errors?.maxlength)) }">
+
+                            <small *ngIf="coApp_PRCity.invalid && (coApp_PRCity.dirty || coApp_PRCity.touched) && coApp_PRCity.errors?.required"
+                                   class="text-danger">City is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Street:</label><span class="text-danger" *ngIf="showValidationIconOnCo_PR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_PRStreet" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_PRStreet.invalid && (coApp_PRStreet.dirty || coApp_PRStreet.touched) && (coApp_PRStreet.errors?.required || coApp_PRStreet.errors?.maxlength)) }">
+                            <small *ngIf="coApp_PRStreet.invalid && (coApp_PRStreet.dirty || coApp_PRStreet.touched) && coApp_PRStreet.errors?.required"
+                                   class="text-danger">Street is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Zip Code:</label><span class="text-danger" *ngIf="showValidationIconOnCo_PR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_PRPostalCode" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_PRPostalCode.invalid && (coApp_PRPostalCode.dirty || coApp_PRPostalCode.touched) && (coApp_PRPostalCode.errors?.required || coApp_PRPostalCode.errors?.maxlength)) }">
+                            <small *ngIf="coApp_PRPostalCode.invalid && (coApp_PRPostalCode.dirty || coApp_PRPostalCode.touched) && coApp_PRPostalCode.errors?.required"
+                                   class="text-danger">Previous Zip Code is required.</small>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Housing Status:</label><span class="text-danger" *ngIf="showValidationIconOnCo_PR">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="lstprevHousingStatus" [loading]="loadSave" placeholder="Select" formControlName="CoPHousingStatus"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (CoPHousingStatus.invalid && (CoPHousingStatus.dirty || CoPHousingStatus.touched) && (CoPHousingStatus.errors?.required || CoPHousingStatus.errors?.maxlength)) }">
+                            </ng-select>
+                            <small *ngIf="CoPHousingStatus.invalid && (CoPHousingStatus.dirty || CoPHousingStatus.touched) && CoPHousingStatus.errors?.required"
+                                   class="text-danger">Housing Status is required.</small>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+
+
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Employment Type:</label><span class="text-danger">*</span></div>
+                          <!--<div class="col-md-12 col-lg-12"><input type="text" class="form-control" formControlName="employementType" maxlength="50"></div>-->
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="lstemployementType" [loading]="loadSave" placeholder="Select" formControlName="coApp_employementTypeID"
+                                       bindLabel="text" bindValue="value"
+                                       [ngClass]="{'is-invalid': (coApp_employementTypeID.invalid && (coApp_employementTypeID.dirty || coApp_employementTypeID.touched) && (coApp_employementTypeID.errors?.required || coApp_employementTypeID.errors?.maxlength)) }">
+                            </ng-select>
+                            <small *ngIf="coApp_employementTypeID.invalid && (coApp_employementTypeID.dirty || coApp_employementTypeID.touched) && coApp_employementTypeID.errors?.required"
+                                   class="text-danger">Employment Type is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Employer Name:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_employerName" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_employerName.invalid && (coApp_employerName.dirty || coApp_employerName.touched) && (coApp_employerName.errors?.required || coApp_employerName.errors?.maxlength)) }">
+                            <small *ngIf="coApp_employementTypeID.invalid && (coApp_employementTypeID.dirty || coApp_employementTypeID.touched) && coApp_employementTypeID.errors?.required"
+                                   class="text-danger">Employer Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Occupation:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_occupation" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_occupation.invalid && (coApp_occupation.dirty || coApp_occupation.touched) && (coApp_occupation.errors?.required || coApp_occupation.errors?.maxlength)) }">
+                            <small *ngIf="coApp_occupation.invalid && (coApp_occupation.dirty || coApp_occupation.touched) && coApp_occupation.errors?.required"
+                                   class="text-danger">Occupation is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Years at Current Employment:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_yearsAtCurrentEmployement" (keypress)="keyPressNo($event)" maxlength="3"
+                                   [ngClass]="{'is-invalid': (coApp_yearsAtCurrentEmployement.invalid && (coApp_yearsAtCurrentEmployement.dirty || coApp_yearsAtCurrentEmployement.touched) && (coApp_yearsAtCurrentEmployement.errors?.required || coApp_yearsAtCurrentEmployement.errors?.maxlength)) }">
+                            <small *ngIf="coApp_yearsAtCurrentEmployement.invalid && (coApp_yearsAtCurrentEmployement.dirty || coApp_yearsAtCurrentEmployement.touched) && coApp_yearsAtCurrentEmployement.errors?.required"
+                                   class="text-danger">Years at Current Employment is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Months at Current Employment:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" placeholder="Enter value between 1 to 11" formControlName="coApp_monthsAtCurrentEmployement" (keypress)="keyPressNo($event)" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_monthsAtCurrentEmployement.invalid && (coApp_monthsAtCurrentEmployement.dirty || coApp_monthsAtCurrentEmployement.touched) && (coApp_monthsAtCurrentEmployement.errors?.required || coApp_monthsAtCurrentEmployement.errors?.maxlength)) }">
+                            <small *ngIf="coApp_monthsAtCurrentEmployement.invalid && (coApp_monthsAtCurrentEmployement.dirty || coApp_monthsAtCurrentEmployement.touched) && coApp_monthsAtCurrentEmployement.errors?.required"
+                                   class="text-danger">Months at Current Employment is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Employer Name:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_previousEmployerName" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_previousEmployerName.invalid && (coApp_previousEmployerName.dirty || coApp_previousEmployerName.touched) && (coApp_previousEmployerName.errors?.required || coApp_previousEmployerName.errors?.maxlength)) }">
+                            <small *ngIf="coApp_previousEmployerName.invalid && (coApp_previousEmployerName.dirty || coApp_previousEmployerName.touched) && coApp_previousEmployerName.errors?.required"
+                                   class="text-danger">Previous Employer Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Previous Occupation:</label><span class="text-danger">*</span></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_previousOccupation" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_previousOccupation.invalid && (coApp_previousOccupation.dirty || coApp_previousOccupation.touched) && (coApp_previousOccupation.errors?.required || coApp_previousOccupation.errors?.maxlength)) }">
+                            <small *ngIf="coApp_previousOccupation.invalid && (coApp_previousOccupation.dirty || coApp_previousOccupation.touched) && coApp_previousOccupation.errors?.required"
+                                   class="text-danger">Previous Occupation Name is required</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Years at Previous Employment:</label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" formControlName="coApp_yearsAtPreviousEmployement" (keypress)="keyPressNo($event)" maxlength="3"
+                                   [ngClass]="{'is-invalid': (coApp_yearsAtPreviousEmployement.invalid && (coApp_yearsAtPreviousEmployement.dirty || coApp_yearsAtPreviousEmployement.touched) && (coApp_yearsAtPreviousEmployement.errors?.required || coApp_yearsAtPreviousEmployement.errors?.maxlength)) }">
+                            <small *ngIf="coApp_yearsAtPreviousEmployement.invalid && (coApp_yearsAtPreviousEmployement.dirty || coApp_yearsAtPreviousEmployement.touched) && coApp_yearsAtPreviousEmployement.errors?.required"
+                                   class="text-danger">Years at Previous Employment is required</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Months at Previous Employment:</label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <input type="text" class="form-control" placeholder="Enter value between 1 to 11" formControlName="coApp_monthsAtPreviousEmployement" (keypress)="keyPressNo($event)" maxlength="50"
+                                   [ngClass]="{'is-invalid': (coApp_monthsAtPreviousEmployement.invalid && (coApp_monthsAtPreviousEmployement.dirty || coApp_monthsAtPreviousEmployement.touched) && (coApp_monthsAtPreviousEmployement.errors?.required || coApp_monthsAtPreviousEmployement.errors?.maxlength)) }">
+                            <small *ngIf="coApp_monthsAtPreviousEmployement.invalid && (coApp_monthsAtPreviousEmployement.dirty || coApp_monthsAtPreviousEmployement.touched) && coApp_monthsAtPreviousEmployement.errors?.required"
+                                   class="text-danger">Months at Previous Employment is required.</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Income Frequency:<span class="text-danger">*</span></label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="lstIncomeFrequency" [loading]="loadSave" placeholder="Select" formControlName="coApp_incomeFrequency"
+                                       bindLabel="text" bindValue="value">
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <!--*ngIf="show_CoApp_IncomeFrequency"-->
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Income:<span class="text-danger" *ngIf="showValidationIconOn_coApp_income">*</span></label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" formControlName="coApp_income" maxlength="50" (keypress)="numberOnly($event)"
+                                   [ngClass]="{'is-invalid': (coApp_income.invalid && (coApp_income.dirty || coApp_income.touched) && (coApp_income.errors?.required || coApp_income.errors?.maxlength)) }">
+                              </div>
+                              <small *ngIf="coApp_income.invalid && (coApp_income.dirty || coApp_income.touched) && coApp_income.errors?.required"
+                                   class="text-danger">Income is required.</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Other Income Frequency:</label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <ng-select [items]="lstIncomeFrequency" [loading]="loadSave" placeholder="Select" formControlName="coApp_otherIncomeFrequency"
+                                       bindLabel="text" bindValue="value">
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <!--*ngIf="show_CoApp_otherIncomeFrequency"-->
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Other Income:</label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" formControlName="coApp_otherIncome" (keypress)="numberOnly($event)" maxlength="50">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>	Other Income Source:</label></div>
+                          <div class="col-md-12 col-lg-12"><input type="text" class="form-control" formControlName="coApp_otherIncomeSource" maxlength="50"></div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <div class="row mb-2">
+                          <div class="col-md-12 col-lg-12"><label>Gross Income:<span class="text-danger">*</span></label></div>
+                          <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" formControlName="coApp_grossIncome" maxlength="50" disabled>
+                              </div>
+                            </div>  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--======================================================================================================================================-->
+            <!--================================================== Check Box ===========================================================-->
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" formControlName="IsCoApplicantRequired" id="forco-applicant">
+              <label class="custom-control-label" for="forco-applicant">Is Co-Applicant required.</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="checkBoxId1" formControlName="isAutoPaymentcheckBox">
+              <label class="custom-control-label" for="checkBoxId1">By checking this box, you are agreeing to the auto payment process.</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="checkId2" formControlName="isTermCheckBox" (change)="termCheck(isChecked?'A':'B')" [(ngModel)]="isChecked"
+                     [ngClass]="{'is-invalid': (isTermCheckBox.invalid && (isTermCheckBox.dirty || isTermCheckBox.touched) && (isTermCheckBox.errors?.required || isTermCheckBox.errors?.maxlength)) }">
+               <label class="custom-control-label" for="checkId2"> <span class="text-danger">*</span>By checking this box, you are agreeing to accept terms and conditions.</label>
+              
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="checkId3" formControlName="isBorrowers" (change)="borrowersCheck(isBorrowersCheck?'A':'B')" [(ngModel)]="isBorrowersCheck"
+                     [ngClass]="{'is-invalid': (isBorrowers.invalid && (isBorrowers.dirty || isBorrowers.touched) && (isBorrowers.errors?.required || isBorrowers.errors?.maxlength)) }">
+               <label class="custom-control-label" for="checkId3"><span class="text-danger">*</span>By checking this box, all borrowers individually authorize Loanhomi to generate a Soft Credit Report and each borrower
+                individually provides consent and agrees to each of the following statements above. This will not affect your credit score
+                in any way until you accept the pre-qualified loan offer and we fund your loan. If two borrowers have provided information above,
+                both understand and give express intent to apply jointly.
+              </label>
+            </div>
+            <!--===========================================================================================================================-->
+          </div>
+          <div class="modal-footer">
+            <a href="javascript:void(0);" class="btn btn-success form-btns" (click)="onSubmit()"><i class="feather-save"></i> Submit</a>
+            <button type="submit" class="btn btn-danger form-btns" (click)="closePopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+          </div>
+          <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        </div>
+      </form>
+
+      <!--//=================showPreview Page===============-->
+      <!--{{sendToLoanHomiPreviewDetail | json}}-->
+      <div *ngIf="showPreviewSendTLoanHomiForm" class="modal-body p-0" style="margin-bottom:10px; max-height:800px;overflow-y:auto;">
+        <div class="panel" style="border:0px !important">
+          <div class="panel-content">
+            <h3 class="form-heading mt-0">
+              <span>System Info:</span>
+            </h3>
+
+            <div class="row">
+
+              <div class="col-sm-12 col-md-6 ">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0">
+                    <span class="py-2 d-block"><strong>Loan Product:</strong></span>
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block"> {{sendToLoanHomiPreviewDetail.loanProduct}}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Term:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.Term}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Country:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.country}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>State:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.BillingState}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>City:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.BillingCity}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Street:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.BillingStreet}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Postal Code:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.BillingPostalCode}}</span></div>
+                </div>
+              </div>
+              <!-- <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>System Size KW:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.System_Size_kW}}</span>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Total Amount:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">${{sendToLoanHomiPreviewDetail.Total_System_Cost}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Downpayment Amount:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">${{sendToLoanHomiPreviewDetail.Downpayment_Amount}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Loan Amount:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">${{sendToLoanHomiPreviewDetail.Loan_Amount}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>No. of Mortgages:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.NoofMortgages}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Own the Property:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.Owntheproperty}}</span></div>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="form-heading mt-3">
+              <span>Applicant Detail:</span>
+            </h3>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>First Name:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.FirstName}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Last Name:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.LastName}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Phone:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.Phone}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Mobile:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.MobilePhone}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Email:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.Email}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>SSN:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.SSN}}</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>DOB:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.DOB}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Years at Current Residence:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.YearsACA}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Months at Current Residence:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.MonthsACA}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Years at Previous Residence:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PYearACR}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Months at Previous Residence:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PMonthACR}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Country:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PRcountry}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>State:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PRstate}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>City:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PRCity}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Street:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PRStreet}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Postal Code:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PRPostalCode}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Previous Housing Status:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PHousingStatus}}</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Employment Type:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.EmployerType}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Employer Name:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.Employer}}</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Occupation:</strong></span></div>
+                  <div class="col-sm-12 col-md-6">
+                    <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.Occupation}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Years at Current Employment:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.YearsACE}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Months at Current Employment:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.MonthsACE}}</span></div>
+                </div>
+              </div>
+            </div>
+            <!--===============================================Previous employeor details===========================================-->
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Previous Employer Name:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PEmployerName}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Previous Occupation:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.POccupation}}</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Years at Previous Employment:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PYearsACE}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Months at Previous Employment:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.PMonthsACE}}</span></div>
+                </div>
+              </div>
+            </div>
+            <!--=================================================================================================-->
+
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Income Frequency:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.IncomeFreq}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Income:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">${{sendToLoanHomiPreviewDetail.Income}}</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Other Income Frequency:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.OIncomeFreq}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Other Income:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">${{sendToLoanHomiPreviewDetail.OIncomeMonthly}}</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Other Income Source:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.OIncomeSource}}</span></div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-6">
+                <div class="input-group border-bottom mb-2">
+                  <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Gross Income:</strong></span></div>
+                  <div class="col-sm-12 col-md-6"><span class="py-2 d-block">${{sendToLoanHomiPreviewDetail.GrossIncome}}</span></div>
+                </div>
+              </div>
+            </div>
+
+
+            <div *ngIf="IsCoApplicantRequired.value">
+
+              <h3 class="form-heading mt-3">
+                <span>Co-Applicant Detail:</span>
+              </h3>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>First Name:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coFirstname}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Last Name:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coLastname}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Phone:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPhone}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Mobile:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coMobilePhone}}</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Email:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coEmail}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>SSN:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coSSN}}</span></div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>DOB:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coDOB}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Country:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coApp_country}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>State:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coMailingState}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>City:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coMailingCity}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Street:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coMailingStreet}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Postal Code:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coMailingPostalCode}}</span></div>
+                  </div>
+                </div>
+                <!--<div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Years at Current Employment:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coYearsACE}}</span>
+                    </div>
+                  </div>
+                </div>-->
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Years at Current Residence:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coYearsACA}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Months at Current Residence:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coMonthsACA}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Years at Previous Residence:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPYearACR}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Months at Previous Residence:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPMonthACR}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Country:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPRcountry}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>State:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPRstate}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>City:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPRCity}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Street:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPRStreet}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Postal Code:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPRPostalCode}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Previous Housing Status:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.CoPHousingStatus}}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Employment Type:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coEmployerType}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Employer Name:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coEmployer}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Occupation:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coOccupation}}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Years at Current Employment:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coYearsACE}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Months at Current Employment:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coMonthsACE}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!--===============================================Co-Applicant Previous employeor details===========================================-->
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Previous Employer Name:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPEmployerName}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Previous Occupation:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPOccupation}}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Years at Previous Employment:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPYearsACE}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Months at Previous Employment:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coPMonthsACE}}</span></div>
+                  </div>
+                </div>
+              </div>
+              <!--=================================================================================================-->
+
+              <div class="row">
+
+
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Income Frequency:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coIncomeFreq}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Income:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">${{sendToLoanHomiPreviewDetail.CoIncome}}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Other Income Frequency:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.CoOIncomeFreq}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Other Income:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">${{sendToLoanHomiPreviewDetail.coOIncome}}</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Other Income Source:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">{{sendToLoanHomiPreviewDetail.coOIncomeSource}}</span></div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <div class="input-group border-bottom mb-2">
+                    <div class="col-sm-12 col-md-6 px-0"><span class="py-2 d-block"><strong>Gross Income:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-2 d-block">${{sendToLoanHomiPreviewDetail.coGrossIncome}}</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <a href="javascript:void(0);" class="btn btn-dark form-btns" (click)="onBack()"><i class="fa fa-arrow-left"></i> Back</a>
+          <a href="javascript:void(0);" class="btn btn-success form-btns" (click)="onPrevSubmit()"><i class="feather-save"></i> Submit</a>
+          <button type="submit" class="btn btn-danger form-btns" (click)="closePopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+        </div>
+      </div>
+      <!--===========================================-->
+    </div>
+
+  </div>
+</div>
+<!--=================================================== ResponsePopup ==================================================================-->
+<div class="modal fade in show" bsModal #ResponsePopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Congratulations!</h4>
+        <button type="button" class="close" (click)="closeResponsePopup()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12 col-lg-12 p-0">
+          <!--<div class="w-100 text-center pb-2"><img src="https://app.loanhomi.com/src/assets/Uploads/UserProfilePick/companyLogo_637382572055515780.png" alt="Solgenone" class="img-fluid" style="max-width:180px"/></div>-->
+          <div class="alert alert-success" role="alert">
+            <i class="feather-check mr-2"></i> <strong>Success:</strong> Loan Application Successfully added.
+          </div>
+          <div class="w-100">
+            <p><strong>Dear {{rUserName}}</strong></p>
+            <p> Thanks you for applying. Your application number is <strong>{{rDataLoanAppId}}</strong> for future reference.</p>
+            <p> Your credit score category is <strong>{{creditScoreCategory}}</strong></p>
+            <p> Congratulations! You have been approved. Please look for an email from your installer with your solar financing options. Installers, to Initiate eSignatures or edit the application.</p>
+
+            <div *ngIf="mandatoryDocuments!=null">
+              <p><strong>Mandatory Documents:</strong></p>
+              <ol class="pl-2">
+                <li *ngFor="let item of mandatoryDocuments;">{{item.masterValue}}</li>
+              </ol>
+            </div>
+
+            <p class="mt-4">Is verification of income required for this loan? <strong>{{IncomeVerificationValue}}</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeResponsePopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!--<form [formGroup]="addAssignedResourcesForm" [ngClass]="{'disabled':loadSave}">
+</form>-->
+<!--====================================================================================================================================-->
+<!--=================================================== WaringPopup ==================================================================-->
+
+<div class="modal fade in show" bsModal #WaringPopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Warning!</h4>
+        <button type="button" class="close" (click)="closeWaringPopup()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12 col-lg-12 p-0">
+          <!--<div class="w-100 text-center pb-2"><img src="https://app.loanhomi.com/src/assets/Uploads/UserProfilePick/companyLogo_637382572055515780.png" alt="Solgenone" class="img-fluid" style="max-width:180px"/></div>-->
+          <div class="w-100">
+            <p><strong>Dear {{rUserName}}</strong></p>
+            <p> Thanks you for applying. Your application number is <strong>{{rDataLoanAppId}}</strong> for future reference.</p>
+            <p> Unfortunately at this time we can not find any solar loan options that match your application profile. Please check with your installer to find additional financing sources.</p>
+            <p> Installers, if you feel this decision was caused by an error during the application process, please log into LoanHomi.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeWaringPopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!--====================================================================================================================================-->
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

@@ -1,0 +1,635 @@
+<!-- Breadcrumb-->
+
+<style>
+
+</style>
+<app-breadcrumb *ngIf="!loadSave" [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100">
+      <strong>Manage Leads</strong>
+      <p class="d-inline-block pl-1 pl-md-3 mb-1"><i class="feather-list p-0 pr-1"></i>{{ViewModel}}</p>
+    </h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Manage Leads</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-lg-12 portlets">
+        <div class="panel">
+            <!--
+    <div id="dashboardtabs" class="col-12 mb-3 wrapperwidget" >
+      <div class="tabs tabs-linetriangle cursor-pointer scrollswidget" >
+
+
+
+
+        <ul class="nav nav-tabs group2 row "  style="overflow-y:auto !important">
+          <li class="col-2 cols-2 " style="width: 250px !important;" *ngFor="let c of tilewidget">
+            <a href="javascript:void(0);" (click)="SetManageViewValueWidgets(c)" title="Click to view {{c.view_name}} records" [ngStyle]="{'background-color':'#F5F5F5'}" class="border hoverscrolls">
+              <span class="headingtext" [ngStyle]="{'color':'#000000'}">{{c.view_name}}</span>
+              <span class="numbers" [ngStyle]="{'color':'#d88c49'}"> {{c.currentTotal }}</span>
+              <span class="block-icon"><i class="{{c.widgetIconClass}}"></i></span>
+            </a>
+          </li>
+        </ul>
+
+      </div>
+    </div> -->
+            <carousel data-interval="false" [noPause]="true" *ngIf="companyId==1003" style="display:none">
+                <slide *ngFor="let c of tilewidgetSlider ;let i=index">
+                    <div id="dashboardtabs" class=" wrapperwidget">
+                        <div style="max-width:90% !important;" class="tabs tabs-linetriangle cursor-pointer scrollswidget container">
+                            <ul *ngIf="(i*4)+4<=tilewidget.length" class="nav nav-tabs group2 row ">
+                                <li class="col" *ngFor="let c1 of  tilewidgetSliderInner;let j=index">
+                                    <div *ngIf="(i*4)+j<tilewidget.length">
+                                        <a style="text-align: center;" href="javascript:void(0);" (click)="SetManageViewValueWidgets(GetPageData(i,j))" title="Click to view {{GetPageData(i,j).view_name}} records" [ngStyle]="GetPageData(i,j).view_name == ViewModel ? {'background-color':'#CCCCCC'} : {'background-color':'#F5F5F5'}"
+                                            class="border hoverscrolls">
+                                            <span class="headingtext" [ngStyle]="{'color':'#000000'}">{{GetPageData(i,j).view_name}}</span>
+                                            <span class="numbers" [ngStyle]="{'color':'#d88c49'}"> {{GetPageData(i,j).currentTotal }}</span>
+                                            <span class="block-icon"><i class="{{GetPageData(i,j).widgetIconClass}}"></i></span>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul *ngIf="(i*4)+4>tilewidget.length" class="nav nav-tabs group2 row ">
+                                <li class="col" *ngFor="let c1 of  tilewidgetSliderInnerDi;let j=index">
+                                    <div *ngIf="(i*4)+j<tilewidget.length">
+                                        <a style="text-align: center;" href="javascript:void(0);" (click)="SetManageViewValueWidgets(GetPageData(i,j))" title="Click to view {{GetPageData(i,j).view_name}} records" [ngStyle]="GetPageData(i,j).view_name == ViewModel ? {'background-color':'#CCCCCC'} : {'background-color':'#F5F5F5'}"
+                                            class="border hoverscrolls">
+                                            <span class="headingtext" [ngStyle]="{'color':'#000000'}">{{GetPageData(i,j).view_name}}</span>
+                                            <span class="numbers" [ngStyle]="{'color':'#d88c49'}"> {{GetPageData(i,j).currentTotal }}</span>
+                                            <span class="block-icon"><i class="{{GetPageData(i,j).widgetIconClass}}"></i></span>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </slide>
+            </carousel>
+
+
+            <!--<ul class="nav nav-tabs nav-cust list-filter" id="myTab" role="tablist">
+        <li class="nav-item ">
+          <a class="nav-link active" id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>123,071</span> <span>All Leads</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>5,391</span> <span> AZ Leads</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>591</span> <span>Company Default</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>0</span> <span> facebook leads</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>125,325</span> <span> LeadShrt</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>125</span> <span> Q-Washington - Unassigned </span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>5,258</span> <span> Queue State Wise</span></a>
+        </li>
+        <li class="nav-item">
+    <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>5,258</span> <span> Sandy Queue</span></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>15,258</span> <span> SF View</span></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>15,258</span> <span> WA Leads</span></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " id="selcolumn-tab" data-toggle="tab" href="#selcolumn" role="tab"><span>5</span> <span> Washington Queue- New</span></a>
+  </li>
+      </ul>-->
+
+
+
+            <lib-dynamic-list *ngIf="load" [jsoninput]="jsonDatapack" [currentPage]="currentPage" [pageSizeValue]="pageSizeValue" [lstPageSize]="lstPageSize" (MainMethod)="MainMethod($event)" (curPageemit)="curPageemit($event)" [sortDir]="sortDir" [sortColumn]="sortColumn"
+                primaryid="Id" (selectdata)="selectdata($event)" [companytype]="companyType" (goToPage)="goToPage($event)" [jsoncondition]="jsoncondition" [actionarray]="actionarray" [listFilter]="listFilter" [myCheckboxemit]="myCheckbox" [vewId]="vewId"
+                [manageviewList]="pagedData.data" (updateFilter)="updateFilter($event)" (displayDetailDetail)="displayDetailDetail($event)" (search)="search()" (reset)="reset()" (add)="add()" (deleteAll)="deleteAll()" (switchClicked)="switchClicked($event)"
+                (filterpopup)="filterpopup()" [placeholder]="placeholder" [searchlabelName]="searchlabelName" [listLabelName]="listLabelName" (SetManageViewValue)="SetManageViewValue($event)" [isAdd]="isAdd" [isUpdate]="isUpdate" [isDelete]="isDelete" Showheader="true"
+                isSearchPannel="true" isManageView="true" [userinfodata]="userinfodata">
+
+            </lib-dynamic-list>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div bsModal #makeappointment="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Lead Convert</h4>
+                <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style=" margin-bottom:10px; height:100%;">
+
+                <form [formGroup]="addForm" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <!--<div class="col-12 col-md-6 col-lg-6">
+                <div class="radio">
+                  <input id="createnewaccount" (change)="OnAccountSelected($event)" type="radio" value="createnewaccount" formControlName="Account">
+                  <label for="createnewaccount" class="radio-label">Create New</label>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="radio">
+                  <input id="chooseexistingaccount"  (change)="OnAccountExistingSelected($event)" type="radio" value="chooseexistingaccount" formControlName="Account">
+                  <label for="chooseexistingaccount" class="radio-label">Choose Existing</label>
+                </div>
+              </div>-->
+
+
+                            <h3 class="form-heading "><span>Create New Account:</span></h3>
+                            <!--<div class="col-md-12" *ngIf="isAccountExisting;else elsecase">-->
+                            <div class="row">
+                                <div class="col-12 col-md-6 col-lg-6">
+                                    <label>Account Name:<span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Enter Account Name" formControlName="accountName" [ngClass]="{'is-invalid': (accountName.invalid && (accountName.dirty || accountName.touched) && (accountName.errors?.required || accountName.errors?.maxlength)) }">
+                                        <small *ngIf="accountName.invalid && (accountName.dirty || accountName.touched) && accountName.errors?.required" class="text-danger">Account Name is required</small>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-6">
+                                    <label>Account Type:<span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <ng-select #clearDrop [items]="lstaccounttype" class="disabledddl" placeholder="Select Record Type" bindValue="value" bindLabel="text" formControlName="accounttypeid" [closeOnSelect]="true" [ngClass]="{'is-invalid': (accounttypeid.invalid && (accounttypeid.dirty || accounttypeid.touched) && accounttypeid.errors?.required) }"></ng-select>
+                                        <small *ngIf="accounttypeid.invalid && (accounttypeid.dirty || accounttypeid.touched) && accounttypeid.errors?.required" style="color:red;">Please select Account Type</small>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--</div>-->
+                            <!--<ng-template #elsecase>
+                <div class="col-12">
+                  <div class="col-12 col-md-6 col-lg-6">
+                    <label>Account Search:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <ng-select #clearDrop [items]="accountSearch"
+                                 placeholder="Search For Matching Account" bindValue="value" bindLabel="text"
+                                 [closeOnSelect]="true">
+
+
+                      </ng-select>
+
+                    </div>
+                  </div>
+                </div>
+
+              </ng-template>-->
+                            <!--<div class="col-12 col-md-6 col-lg-6">
+                <div class="radio">
+                  <input id="createnewcontact" type="radio" value="createnewcontact" formControlName="contact">
+                  <label for="createnewcontact" class="radio-label">Create New</label>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-6">
+                <div class="radio">
+                  <input id="chooseexistingcontact" type="radio" value="chooseexistingcontact" formControlName="contact">
+                  <label for="chooseexistingcontact" class="radio-label">Choose Existing</label>
+                </div>
+              </div>-->
+
+
+                            <h3 class="form-heading "><span>Associate Contacts:</span></h3>
+                            <div class="col-12 col-md-12 col-lg-12">
+                                <div class="table-responsive">
+                                    <div class="table table-striped w-check-radio">
+                                        <ngx-datatable #table34 class="bootstrap" [rows]="pagedDataLeadconvert.data" [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                                            [messages]="{emptyMessage:'No Record Found.'}" [count]="pagedDataLeadconvert.pager.totalItems" [offset]="pagedDataLeadconvert.pager.currentPage" [limit]="pagedDataLeadconvert.pager.pageSize" (page)='setPageLeadconvert($event)'
+                                            (sort)="onSortLeadconvert($event)" [selected]="selectedleadconvert" [selectionType]="'checkbox'" [selectAllRowsOnPage]="false" [displayCheck]="displayCheck12" (select)="onSelectLeadconvert($event)">
+
+                                            <ngx-datatable-column [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="false" [checkboxable]="true">
+                                            </ngx-datatable-column>
+
+
+                                            <ngx-datatable-column name="Name" [sortable]="true" prop="Name" [minWidth]="150">
+
+
+                                            </ngx-datatable-column>
+
+                                            <ngx-datatable-column name="Email" sortable="true" prop="Email" [minWidth]="150"></ngx-datatable-column>
+                                            <ngx-datatable-column name="Phone No" sortable="true" prop="MobilePhone"></ngx-datatable-column>
+                                            <!--<ngx-datatable-column name="Primary" sortable="true" prop="IsPrimary">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <label class="switch">
+                            <input type="checkbox" disabled [checked]="row.IsPrimary">
+                            <span class="slider round"><span>Yes</span></span>
+                          </label>
+                        </ng-template>
+                      </ngx-datatable-column>-->
+                                            <ngx-datatable-footer>
+                                                <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset" let-isVisible="isVisible">
+                                                    <div class="page-count" style="max-width:170px;">
+                                                        Total Records: {{rowCount}}
+                                                    </div>
+                                                    <div>
+                                                        <div style="color:black; margin-right:10px;" class="page-size-record">
+                                                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                                                              <ng-select [searchable]="false" [items]="lstPageSizeLeadconvert" appendTo="body" [(ngModel)]='pageSizeValueLeadconvert' dropzone="fixed" [clearable]="false" (change)="onChangeLeadconvert($event)" draggable="false" [closeOnSelect]="true"
+                                                                        bindLabel="text" bindValue="text">
+                                                              </ng-select>
+                                                            </span> 
+                                                            <!-- <span style="text-align:right; width:80px;vertical-align: middle;">
+                                                              <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                                                         bindLabel="text" bindValue="text"></ng-select>
+                                                            </span> -->
+                                                        </div>
+                                                    </div>
+                                                    <datatable-pager [pagerLeftArrowIcon]="'feather-chevrons-left'" [pagerRightArrowIcon]="'feather-chevrons-right'" [pagerPreviousIcon]="'feather-chevron-left'" [pagerNextIcon]="'feather-chevron-right'" [page]="pagedDataLeadconvert.pager.currentPage+1" [size]="pageSizeValue"
+                                                        [count]="pagedDataLeadconvert.pager.totalItems" [hidden]="!((rowCount / pageSize) > 1)" (change)="setPageLeadconvert($event)">
+                                                    </datatable-pager>
+                                                </ng-template>
+                                            </ngx-datatable-footer>
+                                        </ngx-datatable>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 p-0" *ngIf="isloanapp != true">
+                                <h3 class="form-heading "><span>Create New Opportunity:</span></h3>
+                                <div class="col-12 col-md-6 col-lg-6">
+                                    <label>Opportunity Name:<span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Enter last Name" formControlName="opportunityname" [ngClass]="{'is-invalid': (opportunityname.invalid && (opportunityname.dirty || opportunityname.touched) && (opportunityname.errors?.required || opportunityname.errors?.maxlength)) }">
+                                        <small *ngIf="opportunityname.invalid && (opportunityname.dirty || opportunityname.touched) && opportunityname.errors?.required" class="text-danger">Opportunity Name is required</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 p-0" *ngIf="isopportuinity != true">
+                                <h3 class="form-heading"><span>Associate Products:</span><a href="javascript:void(0);" (click)="associateproduct()"><i class="feather-plus mr-2"></i>Associate Product</a></h3>
+                                <div class="col-12 col-md-12 col-lg-12">
+                                    <div class="table-responsive">
+                                        <div class="table table-striped w-check-radio">
+                                            <ngx-datatable #table12 class="bootstrap" [rows]="AssociatedproductpagedData.data" [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                                                [messages]="{emptyMessage:'No Record Found.'}" [count]="AssociatedproductpagedData.pager.totalItems" [offset]="AssociatedproductpagedData.pager.currentPage" [limit]="AssociatedproductpagedData.pager.pageSize"
+                                                (page)='setPageAssociateProduct($event)' (sort)="onSort($event)" [selected]="selectedassociateprouct" [selectionType]="'checkbox'" [selectAllRowsOnPage]="false" [displayCheck]="displayCheck" (select)="onSelectproductconvert($event)">
+
+                                                <ngx-datatable-column [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="false" [checkboxable]="true">
+                                                </ngx-datatable-column>
+
+
+                                                <ngx-datatable-column name="Product Name" [sortable]="false" prop="ProductName" [minWidth]="200"></ngx-datatable-column>
+
+                                                <ngx-datatable-column name="Bank Name" sortable="false" prop="BankName" [minWidth]="200"></ngx-datatable-column>
+
+                                                <ngx-datatable-footer>
+                                                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset" let-isVisible="isVisible">
+                                                        <div class="page-count" style="max-width:170px;">
+                                                            Total Records: {{rowCount}}
+                                                        </div>
+                                                        <div>
+                                                            <div style="color:black; margin-right:10px;" class="page-size-record">
+                                                                <span style="text-align:right; width:80px;vertical-align: middle;">
+                                  <!-- <ng-select [searchable]="false" [items]="lstPageSizeAssociateProduct" appendTo="body" [(ngModel)]='pageSizeValueAssociateProduct' dropzone="fixed" [clearable]="false" (change)="onChangeAssociateProduct($event)" draggable="false" [closeOnSelect]="true"
+                                             bindLabel="text" bindValue="text"></ng-select> -->
+                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <datatable-pager [pagerLeftArrowIcon]="'feather-chevrons-left'" [pagerRightArrowIcon]="'feather-chevrons-right'" [pagerPreviousIcon]="'feather-chevron-left'" [pagerNextIcon]="'feather-chevron-right'" [page]="AssociatedproductpagedData.pager.currentPage+1"
+                                                            [size]="pageSizeValueAssociateProduct" [count]="AssociatedproductpagedData.pager.totalItems" [hidden]="!((rowCount / pageSize) > 1)" (change)="setPageAssociateProduct($event)">
+                                                        </datatable-pager>
+                                                    </ng-template>
+                                                </ngx-datatable-footer>
+                                            </ngx-datatable>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!--loan Application start-->
+                            <!--loan app end-->
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button *ngIf="isloanapp != true" type="submit" class="btn btn-success form-btns" (click)="saveLeadConvert()"><i class="feather-repeat text-white"></i> Convert</button>
+                <button *ngIf="isopportuinity != true" type="submit" class="btn btn-success form-btns" (click)="saveLeadConvertproduct()"><i class="feather-repeat text-white"></i> Convert</button>
+                <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div bsModal #loanApplicationModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Loan Application</h4>
+                <button type="button" class="close" (click)="closeLoanApplicationModal()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style=" margin-bottom:10px;height:600px; overflow-y:auto" *ngIf="loanid!=0">
+
+                <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+                    <li class="nav-item" *ngFor="let item of pagenames;let i=index">
+                        <a class="nav-link" [ngClass]="{'active':(i==activeWizard),'disabled':(i!=activeWizard)}" id="{{item.formmasterid}}-tab" data-toggle="pill" role="tab" aria-selected="true">
+                            <span class="circle">{{i+1}}</span> {{item.sub_module_name}}
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div *ngFor="let item of pagenames;let i=index" class="tab-pane fade show" [ngClass]="{'active':(i==activeWizard)}" id="{{(item.formmasterid==null ? item.module_name_code:item.formmasterid)}}" role="tabpanel">
+                        <app-forminfo *ngIf='item.formmasterid !=null' submoduleName={{item.formmasterid}} moduleName="form" (finishWizard)="finishStep($event)" [wizardIndex]="i" [totalWizard]="pagenames.length" (wizardOutput)="nexStep($event)" [leadconvert]="true" [leadid]="leadid"
+                            [loanid]="loanid"></app-forminfo>
+
+                        <app-applicant *ngIf="item.module_name_code == 'LoanApplicationInstallationProperty'" (finishWizard)="finishStep($event)" [leadconvert]="true" [totalWizard]="pagenames.length" [wizardIndex]="i" (wizardOutput)="nexStep($event)" [itemdata12]="item" [leadid]="leadid"
+                            [loanid]="loanid" submoduleName="LoanApplicationInstallationProperty"></app-applicant>
+                        <app-applicant *ngIf=" item.module_name_code == 'LoanApplicationApplicant'" (finishWizard)="finishStep($event)" [leadconvert]="true" [wizardIndex]="i" [totalWizard]="pagenames.length" (wizardOutput)="nexStep($event)" [itemdata12]="item" [leadid]="leadid"
+                            [loanid]="loanid" submoduleName="LoanApplicationApplicant"></app-applicant>
+                        <app-applicant *ngIf="item.module_name_code == 'LoanApplicationCoapplicant'" (finishWizard)="finishStep($event)" [leadconvert]="true" [wizardIndex]="i" [totalWizard]="pagenames.length" (wizardOutput)="nexStep($event)" [itemdata12]="item" [leadid]="leadid"
+                            [loanid]="loanid" submoduleName="LoanApplicationCoapplicant"></app-applicant>
+                        <app-applicant *ngIf=" item.module_name_code == 'Loan ApplicationPaymentInfo'" (finishWizard)="finishStep($event)" [leadconvert]="true" [wizardIndex]="i" [totalWizard]="pagenames.length" (wizardOutput)="nexStep($event)" [itemdata12]="item" [leadid]="leadid"
+                            [loanid]="loanid" submoduleName="Loan ApplicationPaymentInfo"></app-applicant>
+                        <app-applicant *ngIf=" item.module_name_code == 'LoanApplicationProductInfo'" (finishWizard)="finishStep($event)" [leadconvert]="true" [wizardIndex]="i" [totalWizard]="pagenames.length" (wizardOutput)="nexStep($event)" [itemdata12]="item" [leadid]="leadid"
+                            [loanid]="loanid" submoduleName="LoanApplicationProductInfo"></app-applicant>
+
+                        <app-applicant *ngIf="item.module_name_code == 'LoanApplicationInfo'" (finishWizard)="finishStep($event)" [leadconvert]="true" [itemdata12]="item" (wizardOutput)="nexStep($event)" [wizardIndex]="i" [totalWizard]="pagenames.length" submoduleName="LoanApplicationInfo"
+                            [leadid]="leadid" [loanid]="loanid"></app-applicant>
+
+                        <app-ntp *ngIf="item.module_name_code == 'LoanApplicationNTP'" (finishWizard)="finishStep($event)" [totalWizard]="pagenames.length" [leadconvert]="true" [wizardIndex]="i" (wizardOutput)="nexStep($event)" [itemdata12]="item" submoduleName="LoanApplicationNTP"
+                            [leadid]="leadid" [loanid]="loanid"></app-ntp>
+                        <app-releasefunds *ngIf="item.module_name_code == 'LoanApplicationReleaseFunds'" (finishWizard)="finishStep($event)" [totalWizard]="pagenames.length" [leadconvert]="true" [wizardIndex]="i" (wizardOutput)="nexStep($event)" submoduleName="LoanApplicationReleaseFunds"
+                            [itemdata12]="item" [leadid]="leadid" [loanid]="loanid"></app-releasefunds>
+                        <!--<hr />
+            <button value="Next" (click)="nextStep()">
+              Next
+            </button>
+            <button value="Back" (click)="backStep()">
+              Back
+            </button>-->
+                    </div>
+                </div>
+
+
+                <!--<div class="panel" *ngIf='item.formmasterid !=null'>
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyOne{{item.formmasterid}}" (click)="change()" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyOne{{item.formmasterid}}"> <span>   {{item.sub_module_name}}</span> <span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodyOne{{item.formmasterid}}" class=" collapse" data-parent="#accordion">
+            <app-forminfo submoduleName={{item.formmasterid}} moduleName="form" [leadconvert]="true" [leadid]="leadid" [loanid]="loanid"></app-forminfo>
+          </div>
+        </div>
+
+        <div class="panel" *ngIf="item.sub_module_name == 'Loan Information'">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyOne" (click)="change()" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyOne"> <span>{{item.sub_module_name}}</span> <span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodyOne" class=" collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <app-applicant [leadconvert]="true" [itemdata12]="item" [leadid]="leadid" [loanid]="loanid"
+                           submoduleName="LoanApplicationInfo"></app-applicant>
+          </div>
+        </div>
+        <div class="panel" *ngIf="item.module_name_code == 'LoanApplicationInstallationProperty' ">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyTwo" (click)="change()" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyTwo"> <span>{{item.sub_module_name}}</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodyTwo" class="panel-collapse collapse" data-parent="#accordion">
+            <app-applicant [leadconvert]="true" [itemdata12]="item" [leadid]="leadid" [loanid]="loanid" submoduleName="LoanApplicationInstallationProperty"></app-applicant>
+          </div>
+        </div>
+
+        <div class="panel" *ngIf="item.sub_module_name == 'Applicant Information' ">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyThree" (click)="change()" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyThree"><span> {{item.sub_module_name}}</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodyThree" class="panel-collapse collapse" data-parent="#accordion">
+            <app-applicant [leadconvert]="true" submoduleName="LoanApplicationApplicant" [leadid]="leadid" [loanid]="loanid" [itemdata12]="item"></app-applicant>
+          </div>
+        </div>
+        <div class="panel" *ngIf="item.sub_module_name == 'Co-Applicant Information' ">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodySix" (click)="change()" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodySix"><span> {{item.sub_module_name}}</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodySix" class="panel-collapse collapse" data-parent="#accordion">
+            <app-applicant [leadconvert]="true" submoduleName="LoanApplicationCoapplicant" [itemdata12]="item" [leadid]="leadid" [loanid]="loanid"></app-applicant>
+          </div>
+        </div>
+        <div class="panel" *ngIf="item.sub_module_name == 'Payment Information' ">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyfourteen" (click)="change()" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyfourteen"><span> {{item.sub_module_name}}</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodyfourteen" class="panel-collapse collapse" data-parent="#accordion">
+            <app-applicant [leadconvert]="true" submoduleName="Loan ApplicationPaymentInfo" [itemdata12]="item" [leadid]="leadid" [loanid]="loanid"></app-applicant>
+          </div>
+        </div>
+        <div class="panel" *ngIf="item.module_name_code == 'LoanApplicationProductInfo' ">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyfourteen34" (click)="change()" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyfourteen34"><span> {{item.sub_module_name}}</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodyfourteen34" class="panel-collapse collapse" data-parent="#accordion">
+            <app-applicant [leadconvert]="true" submoduleName="LoanApplicationProductInfo" [leadid]="leadid" [loanid]="loanid" [itemdata12]="item"></app-applicant>
+          </div>
+        </div>
+
+        <div class="panel" *ngIf="item.module_name_code == 'LoanApplicationNTP'">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBody91" (click)="change()" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBody91"><span>  {{item.sub_module_name}}</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBody91" class="panel-collapse collapse" data-parent="#accordion">
+            <app-ntp [leadconvert]="true" [itemdata12]="item" submoduleName="LoanApplicationNTP" [leadid]="leadid" [loanid]="loanid"></app-ntp>
+          </div>
+        </div>
+        <div class="panel" *ngIf="item.module_name_code == 'LoanApplicationReleaseFunds' ">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBody81" (click)="change()" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBody81"><span>  {{item.sub_module_name}}</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBody81" class="panel-collapse collapse" data-parent="#accordion">
+            <app-releasefunds [leadconvert]="true" submoduleName="LoanApplicationReleaseFunds" [itemdata12]="item" [leadid]="leadid" [loanid]="loanid"></app-releasefunds>
+          </div>
+        </div>-->
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade in show" bsModal #product="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-xl modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Associate Product</h4>
+                <button type="button" class="close" (click)="closeassociatepopup()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+
+            <div class="modal-body" style="overflow:auto; margin-bottom:10px; height:700px;">
+
+                <div class="row" [ngClass]="{'disabled':loadSave}">
+                    <div class="table-responsive">
+                        <div class="table table-striped">
+                            <ngx-datatable #table class="bootstrap" [rows]="pagedData.data" [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave" [messages]="{emptyMessage:'No Record Found.'}"
+                                [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage" [limit]="pagedData.pager.pageSize" (page)='setPageAssociateProductList($event)' (sort)="onSortAssociateProductList($event)" [selected]="selected" [selectionType]="SelectionType.checkbox"
+                                [selectAllRowsOnPage]="false" [displayCheck]="displayCheck" (select)="onSelectassociate($event)">
+
+                                <ngx-datatable-column [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="true">
+                                </ngx-datatable-column>
+
+
+
+                                <ngx-datatable-column name="Product Name" [sortable]="true" prop="ProductName" [minWidth]="150">
+
+
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column *ngIf="isloanapp != true" name="Product Family" sortable="true" prop="ProductFamily" [minWidth]="150"></ngx-datatable-column>
+                                <ngx-datatable-column *ngIf="isloanapp != true" name="Product Description" sortable="true" prop="ProductDescription"></ngx-datatable-column>
+                                <ngx-datatable-column *ngIf="isopportuinity != true" name="Bank Name" sortable="true" prop="BankName"></ngx-datatable-column>
+
+                                <ngx-datatable-footer>
+                                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-selectedCount="selectedCount" let-currentPage="curPageAssoProdList" let-offset="offsetAssociateProductList" let-isVisible="isVisible">
+                                        <div class="page-count" style="max-width:170px;">
+                                            Total Records: {{rowCount}}
+                                        </div>
+                                        <div>
+                                            <div style="color:black; margin-right:10px;" class="page-size-record">
+                                                <span style="text-align:right; width:80px;vertical-align: middle;">
+                          <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValueAssoProdList' dropzone="fixed" [clearable]="false" (change)="onChangeAssoProdList($event)" draggable="false" [closeOnSelect]="true"
+                                     bindLabel="text" bindValue="text"></ng-select>
+                        </span>
+                                            </div>
+                                        </div>
+                                        <datatable-pager [pagerLeftArrowIcon]="'feather-chevrons-left'" [pagerRightArrowIcon]="'feather-chevrons-right'" [pagerPreviousIcon]="'feather-chevron-left'" [pagerNextIcon]="'feather-chevron-right'" [page]="curPageAssoProdList+1" [size]="pageSizeValueAssoProdList"
+                                            [count]="pagedData.pager.totalItems" [hidden]="!((rowCount / pageSize) > 1)" (change)="setPageAssociateProductList($event)">
+                                        </datatable-pager>
+                                    </ng-template>
+                                </ngx-datatable-footer>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success form-btns" (click)="saveProduct()"><i class="feather-save text-white"></i> Save</button>
+                <button type="submit" class="btn btn-danger form-btns" (click)="closeassociatepopup()"><i class="feather-x text-white"></i> Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="modal fade show" bsModal #creditscore="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-sm modal-info ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Application Info</h4>
+                <!--<button type="button" class="close" (click)="closecreditscore()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>-->
+            </div>
+            <div class="modal-body" style="overflow:auto; margin-bottom:10px; max-height:238px; line-height: 24px; font-size: 13px;">
+                <div *ngIf="creditScoreData[0].data.applicationStatus != 'Failed'">
+                    <p>
+                        <strong>Dear {{leadDetails.FirstName}} {{leadDetails.LastName}},</strong><br /><br /> Thank you for applying. Your application number is <strong style="color: #1784d0;">{{loanApplicationNumber}}</strong> for future reference.
+                        <br /><br /> Your credit score category is <strong style="color: #1784d0;">{{creditScoreData[0].data.creditScoreCategory}}</strong>
+                        <br /><br /> Congratulations! You have been approved. Please look for an e-mail from your installer with your solar financing options. Installers, to initiate eSignatures or edit the application, login at LoanHomi.
+                        <br />
+                    </p>
+
+                    <div class="w-100 req-doc-lead" *ngIf="mandatoryDocuments.length > 0">
+                        <h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>Mandatory Documents:</span></h3>
+                        <ul>
+                            <li *ngFor="let document of mandatoryDocuments"><span>{{document}}</span></li>
+                        </ul>
+                    </div>
+                    <br />
+                    <p>Is verification of income required for this loan? <strong>{{incomeVerification}}</strong></p>
+                </div>
+                <div *ngIf="creditScoreData[0].data.applicationStatus == 'Failed'">
+                    <p>
+                        <strong>Dear {{leadDetails.FirstName}} {{leadDetails.LastName}},</strong><br /><br /> Thank you for applying. Your application number is <strong style="color: #1784d0;">{{loanApplicationNumber}}</strong> for future reference.
+                        <br /><br /> Unfortunately at this time we can not find any solar loan options that match your application profile. Please check with your installer to find additional financing sources.
+                        <br /> Installers, if you feel this decision was caused by an error during the application process, please log into LoanHomi.
+                        <br />
+
+                    </p>
+                    <!--<div class="w-100 req-doc-lead">
+            <h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>Reasons the application could not be approved were the following:</span></h3>
+            <ul>
+              <li><span>Credit Score must be at least 650</span></li>
+            </ul>
+          </div>-->
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+
+                <!--<button type="submit" class="btn btn-success form-btns" (click)="proceed()"><i class="feather-repeat text-white"></i> Proceed</button>-->
+                <!--<button type="submit" class="btn btn-danger form-btns" (click)="closecreditscore()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>-->
+
+                <button type="submit" class="btn btn-danger form-btns" (click)="closeCreditScoreModel()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<app-searchfilteradd (searchFilterCondition)="ApplyAdvanceFilter($event)" #templateFilterView moduleName="crm" subModuleName="lead"></app-searchfilteradd>
+<app-manageviewnew (customViewid)="GetcustomViewid($event)" #templateManageView moduleName="crm" subModuleName="lead"></app-manageviewnew>
+
+<app-leadconvertpopup #leadconvert></app-leadconvertpopup>
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

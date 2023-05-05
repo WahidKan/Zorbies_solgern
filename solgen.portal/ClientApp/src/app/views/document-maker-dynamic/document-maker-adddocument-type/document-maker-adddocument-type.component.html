@@ -1,0 +1,281 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li><a routerLink="/document-maker-list">Documents</a></li>
+
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="panel   clearfix">
+  <div class="panel-content clearfix mb-4 p-0">
+    <div class="tab-content">
+      <div class="tab-pane fade active show" id="RouteRule" role="tabpanel">
+
+        <div [formGroup]="documentMaker">
+          <div class="">
+            <div class="">
+              <div class="row " [ngStyle]="DocumentId!=null ? {'pointer-events': 'none' } : {}">
+                <div class="form-check">
+
+                  <input class="form-check-input" type="radio" name="docMaker" formControlName="docMakerUpdate" id="docMakerNew" value="docMakerNew"
+                         (click)="ShowHidFields($event)">
+                  <label class="form-check-label" for="docMakerNew">
+                    HTML Template
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="docMaker" formControlName="docMakerUpdate" id="docMakerUpdate" value="docMakerUpdate"
+                         (click)="ShowHidFields($event)">
+                  <label class="form-check-label" for="docMakerUpdate">
+                    Upload Pdf
+                  </label>
+                </div>
+
+              </div>
+              <div style=" padding-top:2%;">
+                <div class="row">
+                  <div class="col-6">
+                    <label class="required">Name</label>
+                    <input class="form-control" type="text" placeholder="Enter document name" formControlName="name" maxlength="100">
+                  </div>
+
+                  <div class="col-6">
+                    <label>Description</label>
+                    <textarea class="form-control" maxlength="500" placeholder="Enter document description"
+                              formControlName="description"></textarea>
+                  </div>
+
+                </div>
+              </div>
+              <div style=" padding-top:2%;">
+                <div class="row">
+                  <div class="col-6">
+                    <label class="required">Status</label>
+                    <div class="form-group" *ngIf="workStatus">
+                      <ng-select [items]="workStatus" formControlName="statusId" placeholder="---Select Status---"
+                                 bindLabel="text">
+                      </ng-select>
+
+                    </div>
+                  </div>
+                  <!-- <div class="col-6">
+                    <label>Sub Module</label>
+                    <div class="form-group">
+                      <ng-select [items]="SubModuleList" formControlName="subModuleId" placeholder="---Select Sub Module---"
+                        bindLabel="sub_module_name">
+                      </ng-select>
+
+                    </div>F
+                  </div> -->
+                  <div *ngIf="isUpdateDoc" class="col-6">
+                    <label class="required">Document File:</label>
+                    <div class="custom-file w-100">
+                      <input [ngStyle]="DocumentId!=null ? {'cursor':'not-allowed','color': 'gray','pointer-events': 'none' } : {}" class="custom-file-input" #file type="file" name='file' #fileInput accept=".pdf"
+                             (change)="setFile($event)" lang="es">
+                      <label class="custom-file-label">{{fileName}}</label>
+                    </div>
+                    <small>Valid file format are .pdf</small>
+                  </div>
+                  <div class="col-6" *ngIf="!isUpdateDoc">
+                    <label>Templates List<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <ng-select [items]="htmlContentList" (change)="onHtmlChange($event)" formControlName="HtmlContentTemplate" placeholder="---Select Template---"
+                                 bindLabel="Name">
+                      </ng-select>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="clearfix"></div>
+              <div class="panel cntainerwithoutbg clearfix">
+                <div class="panel-content clearfix mb-4 p-0">
+                  <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+                    <li class="nav-item">
+                      <a [ngClass]="!isEdit ? 'nav-link active show' : ''" class="nav-link active show" id="lead-tab"
+                         data-toggle="tab" href="#Fields" role="tab" aria-selected="true">Fields</a>
+                    </li>
+                    <li class="nav-item" *ngIf="isEdit && isUpdateDoc">
+                      <a class="nav-link" id="delivery-options"
+                         data-toggle="tab" href="#EmbedImages" role="tab" aria-selected="true">Embed Images</a>
+                    </li>
+                  </ul>
+                  <div class="tab-content" id="myTabContent">
+                    <div [ngClass]="!isEdit ? 'tab-pane fade' : ''" class="tab-pane fade active show" id="Fields" role="tabpanel">
+                      <div class="overflowy-checklist p-0">
+                        <div class="col-md-12 py-1" *ngFor="let field of previewFieldsList; index as i;">
+                          <label class="ng-star-inserted">
+                            {{field.FieldKey}} - <strong>{{field.FieldName}}</strong>
+                          </label>
+                          <label class="ng-star-inserted" *ngIf="!isUpdateDoc">
+                            (<strong>{{field.FieldType}}</strong>)
+                          </label>
+                          <div *ngIf="isEdit">
+                            <input class="form-control" [(ngModel)]="field.FieldValue" id="{{field.FieldKey}}" [ngModelOptions]="{standalone: true}" type="text">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" *ngIf="isEdit" id="EmbedImages" role="tabpanel">
+                      <div class="row mb-2">
+                        <div class="col-md-12">
+                          <a id="addTimeslotBtn"
+                             (click)="onAddPdfContols()"
+                             href="javascript:void(0);"
+                             class="btn btn-success float-right form-btns mr-1"
+                             tooltip="Add Image">
+                            <i class="feather-plus"></i>
+                          </a>
+                        </div>
+                        <div class="col-md-12 ">
+                          <h3 class="form-heading"><span>Embed Images in the PDF </span></h3>
+                        </div>
+                        <div class="col-md-12 ">
+                          <h6><span>This feature allows you to map your field(s) to embed an image into your pdf.</span></h6>
+                        </div>
+
+                      </div>
+                      <div *ngIf="embedImagesHeader" class="row  pt-3 pb-2">
+                        <div class="col-md-3 font-weight-bold">
+                          Place Holder Name
+                        </div>
+                        <div class="col-md-3 font-weight-bold">
+                          Image URL
+                        </div>
+                        <div class="col-md-1 font-weight-bold">
+                          Page
+                        </div>
+                        <div class="col-md-1 font-weight-bold">
+                          Width
+                        </div>
+                        <div class="col-md-1 font-weight-bold">
+                          Height
+                        </div>
+                        <div class="col-md-1 font-weight-bold">
+                          Top
+                        </div>
+                        <div class="col-md-1 font-weight-bold">
+                          Left
+                        </div>
+                        <div class="col-md-1 font-weight-bold">
+                          Delete
+                        </div>
+
+                      </div>
+                      <div class="row">
+                        <hr style="border-top: 2px solid #8c8b8b">
+                      </div>
+
+                      <div formArrayName="EmbedImage">
+                        <div *ngFor="let row of EmbedImages; let i = index" [formGroupName]="i">
+                          <div class="row">
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <input class="form-control" (change)="onNameValueChange($event,row,i)" formControlName="ImageUrl" type="text" maxlength="1000" placeholder="Enter Placeholder"
+                                       [ngClass]="{'is-invalid':(((row.get('page').value!=null && row.get('page').value!=null)
+                                    || (row.get('Width').value!=null && row.get('Width').value!=null)
+                                    || (row.get('Height').value!=null && row.get('Height').value!=null)
+                                    || (row.get('Top').value!=null && row.get('Top').value!=null)
+                                    || (row.get('Left').value!=null && row.get('Left').value!=null)
+                                    )
+                                    && (row.get('ImageUrl').invalid && (row.get('ImageUrl').dirty || row.get('ImageUrl')?.touched)
+                                    && row.get('ImageUrl')).errors?.required) }">
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <input class="form-control" formControlName="PreviewImageUrl" type="text" maxlength="1000" placeholder="Enter Url">
+                              </div>
+                            </div>
+                            <div class="col-md-1">
+                              <div class="form-group">
+
+                                <!-- {{pageSize && pageSize.length > 0 && pageSize[0].value}} -->
+                                <ng-select (change)="onPageWidthHeightValueChange($event,row,i)" *ngIf="pageSize.length > 0" [items]="pageSize" formControlName="page"
+                                           bindLabel="value" placeholder="Select page"
+                                           [ngClass]="{'is-invalid':((row.get('ImageUrl').value!=null && row.get('ImageUrl').value!=null) && (row.get('page').invalid && (row.get('page').dirty || row.get('page')?.touched) && row.get('page')).errors?.required) }">
+                                </ng-select>
+                              </div>
+                            </div>
+                            <div class="col-md-1">
+                              <div class="form-group">
+                                <input min="0" (change)="onPageWidthHeightValueChange($event,row,i)" class="form-control" formControlName="Width" type="number" maxlength="1000"
+                                       [ngClass]="{'is-invalid':((row.get('ImageUrl').value!=null && row.get('ImageUrl').value!=null) && ((row.get('Width').dirty || row.get('Width')?.touched) && row.get('Width')).errors?.required) }" />
+
+                              </div>
+                            </div>
+                            <div class="col-md-1">
+                              <div class="form-group">
+                                <input min="0" (change)="onPageWidthHeightValueChange($event,row,i)" class="form-control" formControlName="Height" type="number" maxlength="5"
+                                       [ngClass]="{'is-invalid':((row.get('ImageUrl').value!=null && row.get('ImageUrl').value!=null) && (row.get('Height').invalid && (row.get('Height').dirty || row.get('Height')?.touched) && row.get('Height')).errors?.required) }" />
+
+                              </div>
+                            </div>
+                            <div class="col-md-1">
+                              <div class="form-group">
+                                <input min="0" (change)="onPageWidthHeightValueChange($event,row,i)" class="form-control" formControlName="Top" type="number" maxlength="5"
+                                       [ngClass]="{'is-invalid':((row.get('ImageUrl').value!=null && row.get('ImageUrl').value!=null) && (row.get('Top').invalid && (row.get('Top').dirty || row.get('Top')?.touched) && row.get('Top')).errors?.required) }" />
+
+                              </div>
+                            </div>
+                            <div class="col-md-1">
+                              <div class="form-group">
+                                <input min="0" (change)="onPageWidthHeightValueChange($event,row,i)" class="form-control" formControlName="Left" type="number" maxlength="5"
+                                       [ngClass]="{'is-invalid':((row.get('ImageUrl').value!=null && row.get('ImageUrl').value!=null) && (row.get('Left').invalid && (row.get('Left').dirty || row.get('Left')?.touched) && row.get('Left')).errors?.required) }" />
+                              </div>
+                            </div>
+                            <div class="col-md-1">
+                              <a class="btn btn-danger form-btns"
+                                 (click)="onDeletePdfContols(row.get('id').value, i)"
+                                 tooltip="Delete"
+                                 href="javascript:void(0);">
+                                <span><i class="feather-trash-2"></i> </span>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <button class="btn btn-success mr-1" [disabled]="DocumentId == null || DocumentId == 0" (click)="PreviewFields()"><i
+                class="feather-save text-white pr-2"></i>Preview</button> -->
+              <button class="btn btn-dark mr-2" *ngIf="isEdit" (click)="PreviewFields()">
+                <i class="feather-eye text-white pr-2"></i>Preview
+              </button>
+
+              <button class="btn btn-success mr-2" (click)="save()" [disabled]="(!documentMaker.valid || (fileName == '' && isUpdateDoc)  )">
+                <i class="feather-save text-white pr-2"></i>Save
+              </button>
+              <!-- <button class="btn btn-danger" (click)="close()">
+                <i class="fa fa-times text-white"></i> Cancel
+              </button> -->
+              <a routerLink="/document-maker-list" class="btn btn-danger" tooltip="Cancel"> <i class="feather-x text-white"></i> Cancel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>

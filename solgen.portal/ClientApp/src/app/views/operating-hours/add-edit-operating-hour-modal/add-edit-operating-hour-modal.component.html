@@ -1,0 +1,191 @@
+<app-loader [size]="60" [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<div bsModal #modal="bs-modal" [config]="{ backdrop: 'static' }" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-info" [ngClass]="{ disabled: loadSave }">
+    <div class="modal-content">
+      <div class="modal-header" *ngIf="isAddForm">
+        <h4 *ngIf="isAddForm" class="modal-title">Add Operating Hours</h4>
+        <h4 *ngIf="!isAddForm" class="modal-title">Edit Operating Hours</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-header" *ngIf="!isAddForm">
+        <h4 class="modal-title">Edit Operating Hours</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body" style="margin-bottom: 10px; height: auto; overflow: inherit">
+        <form id="myform" [formGroup]="addOperatingHoursForm" *ngIf="addOperatingHoursForm" autocomplete="off">
+          <div class="d-flex">
+            <div class="col-12 col-md-4 col-lg-4">
+              <label>Name:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Form Name"
+                  maxlength="50"
+                  formControlName="name"
+                  [ngClass]="{ 'is-invalid': name?.invalid && (name.dirty || name.touched) && (name.errors?.required || name.errors?.nameExist) }"
+                />
+
+                <small *ngIf="name?.invalid && (name.dirty || name.touched) && name.errors?.nameExist" class="text-danger">Name Already Exist!</small>
+                <small *ngIf="name?.invalid && (name.dirty || name.touched) && name.errors?.required" class="text-danger">Name is required</small>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-4 col-lg-4">
+              <label>Description:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Description"
+                  maxlength="201"
+                  formControlName="description"
+                  [ngClass]="{
+                    'is-invalid':
+                      description.invalid &&
+                      (description.dirty || description.touched) &&
+                      (description.errors?.required || description.errors?.maxlength)
+                  }"
+                />
+                <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.required" class="text-danger"
+                  >Description is required</small
+                >
+                <br />
+                <small
+                  *ngIf="
+                    description.invalid &&
+                    (description.dirty || description.touched) &&
+                    (description.errors?.required || description.errors?.maxlength)
+                  "
+                  class="text-danger"
+                  >Description must be less than 200 characters.</small
+                >
+              </div>
+            </div>
+
+            <div class="col-12 col-md-4 col-lg-4">
+              <label>Select Time Zone:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select
+                  [items]="timezoneList"
+                  formControlName="timeZone"
+                  placeholder="Select Time Zone"
+                  bindValue="value"
+                  bindLabel="text"
+                  (change)="handleTimeZoneChange($event)"
+                >
+                </ng-select>
+                <small *ngIf="timeZone.invalid && (timeZone.dirty || timeZone.touched) && timeZone.errors?.required" class="text-danger"
+                  >Time Zone is required</small
+                >
+              </div>
+            </div>
+          </div>
+          <h3 *ngIf="isAddForm" class="form-heading ng-star-inserted"><span>Time Slots:</span></h3>
+          <!-- <h3 *ngIf="!isAddForm" class="form-heading ng-star-inserted"><span>Edit Form:</span></h3> -->
+          
+            <div class="px-3 pagination2">
+              <div class="table-responsive border">
+                <!--Table-->
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th *ngFor="let column of timeSlotColumns">
+                        {{ column.name }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="timeSlots" *ngIf="this.addOperatingHoursForm.get('timeSlots')">
+                    <tr *ngFor="let row of TimeSlots; let i = index" [formGroupName]="i">
+                      <td>
+                        <!-- <input type="text" formControlName="dayOfWeek"> -->
+                        <div class="form-group">
+                          <ng-select
+                            [items]="dayOfWeek"
+                            (change)="onDayChange($event)"
+                            formControlName="dayOfWeek"
+                            placeholder="Select Day"
+                            bindValue="value"
+                            bindLabel="text"
+                            [ngClass]="{ 'is-invalid': getValidation(TimeSlots[i].get('dayOfWeek')) }"
+                          >
+                          </ng-select>
+
+                          <small *ngIf="getValidation(TimeSlots[i].get('dayOfWeek'))" class="text-danger">Start Time is required</small>
+                          <!-- <small *ngIf="timeZone.invalid && (timeZone.dirty || timeZone.touched) && timeZone.errors?.required" class="text-danger">Time Zone is required</small> -->
+                        </div>
+                      </td>
+                      <td>
+                        <!-- <input type="text" formControlName="startTime"> -->
+                        <input
+                          #startTime
+                          type="time"
+                          id="inputMDEx1"
+                          class="form-control"
+                          formControlName="startTime"
+                          [ngClass]="{
+                            'is-invalid': getValidation(TimeSlots[i].get('startTime'))
+                          }"
+                        />
+                        <small *ngIf="getValidation(TimeSlots[i].get('startTime'))" class="text-danger">Start Time is required</small>
+                      </td>
+                      <td>
+                        <!-- <input type="text" formControlName="endTime"> -->
+                        <input
+                          type="time"
+                          id="inputMDEx2"
+                          class="form-control"
+                          formControlName="endTime"
+                          [ngClass]="{
+                            'is-invalid': getValidation(TimeSlots[i].get('endTime'))
+                          }"
+                        />
+                        <small *ngIf="getValidation(TimeSlots[i].get('endTime'))" class="text-danger">End Time is required</small>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <ng-select [items]="workTypes" formControlName="workType" placeholder="Select WorkType" bindValue="value" bindLabel="text">
+                          </ng-select>
+                        </div>
+                        <!-- <input type="text" formControlName="workType"> -->
+                      </td>
+                      <td>
+                        <a
+                          class="btn btn-danger form-btns"
+                          (click)="onDeleteTimeslot(row.get('id').value, i)"
+                          tooltip="Delete"
+                          href="javascript:void(0);"
+                        >
+                          <span><i class="feather-trash-2"></i> </span>  
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <a
+                (click)="onAddTimeslot()"
+                id="addTimeslotBtn"
+                href="javascript:void(0);"
+                class="btn btn-success form-btns mt-1"
+                tooltip="Add TimeSlot"
+              >
+                <i class="feather-plus"></i>
+              </a>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="saveNewForm()"><i class="feather-save text-white pr-2"></i>Submit</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close">
+          <i class="feather-x text-white"></i> Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

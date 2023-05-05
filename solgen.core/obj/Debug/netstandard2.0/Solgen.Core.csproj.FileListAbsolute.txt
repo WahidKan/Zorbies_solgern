@@ -1,0 +1,9 @@
+D:\ZolarWorkSpace\Solgen\solgen.core\bin\Debug\netstandard2.0\Solgen.Core.deps.json
+D:\ZolarWorkSpace\Solgen\solgen.core\bin\Debug\netstandard2.0\Solgen.Core.dll
+D:\ZolarWorkSpace\Solgen\solgen.core\bin\Debug\netstandard2.0\Solgen.Core.pdb
+D:\ZolarWorkSpace\Solgen\solgen.core\obj\Debug\netstandard2.0\Solgen.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\ZolarWorkSpace\Solgen\solgen.core\obj\Debug\netstandard2.0\Solgen.Core.AssemblyInfoInputs.cache
+D:\ZolarWorkSpace\Solgen\solgen.core\obj\Debug\netstandard2.0\Solgen.Core.AssemblyInfo.cs
+D:\ZolarWorkSpace\Solgen\solgen.core\obj\Debug\netstandard2.0\Solgen.Core.csproj.CoreCompileInputs.cache
+D:\ZolarWorkSpace\Solgen\solgen.core\obj\Debug\netstandard2.0\Solgen.Core.dll
+D:\ZolarWorkSpace\Solgen\solgen.core\obj\Debug\netstandard2.0\Solgen.Core.pdb

@@ -1,0 +1,118 @@
+<div class="modal fade" bsModal #resultCalculationModal="bs-modal" id="condition" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Calculated Value</h5>
+        <button type="button" class="close" (click)="hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" [formGroup]="resultConditionForm">
+        <div class="col-md-12 px-0">
+          <div class="panel-content pagination2 table-responsive no-padding">
+            <table class="table table-hover table-dynamic" *ngIf="!isDate; else forDate" style="min-width: 300px;">
+              <thead>
+                <tr>
+                  <th width="50">Formula </th>
+                  <th width="50"></th>
+                  <th width="180">Section</th>
+                  <th width="150">Value</th>
+                  <th width="50"></th>
+                  <th width="30">Operator</th>
+                  <th width="30"></th>
+                </tr>
+              </thead>
+              <tbody formArrayName="resultCalculation">
+                <tr *ngFor="let resultCalculate of resultCalculation.controls;let i = index" [formGroupName]="i">
+                  <td>
+                    <ng-select [items]="sqlFunctionList" [ngStyle]="{'width':50}" formControlName="formulaId"
+                               placeholder="Select..." bindLabel="DisplayName" [closeOnSelect]="true">
+                    </ng-select>
+                  </td>
+                  <td>
+                    <input class="form-control px-0 text-center" formControlName="openingBrackets" type="text" name="name" value="(" />
+                  </td>
+                  <td>
+                    <ng-select [items]="sectionList" formControlName="firstFieldSectionId" [ngStyle]="{'width':150}"
+                               placeholder="Manual" bindLabel="sub_module_name" (change)="onFirstSectionChange($event,resultCalculate)" [closeOnSelect]="true">
+                    </ng-select>
+                  </td>
+                  <td>
+                    <ng-select *ngIf="resultCalculate.get('firstFieldSectionId').value" [items]="resultCalculate.get('firstFields')?.value" formControlName="firstFieldId" [ngStyle]="{'width':150}"
+                               placeholder="Select..." bindLabel="name" [closeOnSelect]="true">
+
+                    </ng-select>
+                    <input class="form-control" *ngIf="!resultCalculate.get('firstFieldSectionId').value" pKeyFilter="pnum" formControlName="firstFieldValue" name="name" />
+
+                  </td>
+                  <td>
+                    <input class="form-control px-0 text-center" formControlName="closingBrackets" name="name" value=")" />
+                  </td>
+                  <td>
+                    <ng-select [items]="operators" formControlName="operatorId" [ngStyle]="{'width':50}"
+                               placeholder="Select..." bindLabel="operator_expression" [closeOnSelect]="true">
+                    </ng-select>
+                  </td>
+                  <td>
+                    <a href="javascript:void(0);" class="btn btn-danger" *ngIf="i!=0" (click)="deleteField(i)"><i class="feather-trash-2"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <ng-template #forDate>
+              <table class="table table-hover table-dynamic" style="min-width: 300px;">
+                <thead>
+                  <tr>
+                    <th width="50">Formula </th>
+                    <th width="140">Value Type</th>
+                    <th width="70">Value</th>
+                    <th width="180">Section</th>
+
+                    <th width="150">On Date</th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="resultCalculation">
+                  <tr *ngFor="let resultCalculate of resultCalculation.controls;let i = index" [formGroupName]="i">
+                    <td>
+                      <ng-select [items]="sqlFunctionList" [ngStyle]="{'width':50}" formControlName="formulaId"
+                                 placeholder="Select..." bindLabel="DisplayName" [closeOnSelect]="true">
+                      </ng-select>
+                    </td>
+                    <td>
+                      <ng-select [items]="dateParts" formControlName="datePart" [ngStyle]="{'width':50}"
+                                 [closeOnSelect]="true">
+                      </ng-select>
+                    </td>
+                    <td>
+                      <input class="form-control" pKeyFilter="pnum" formControlName="firstFieldValue" name="name" />
+                    </td>
+                    <td>
+                      <ng-select [items]="sectionList" formControlName="secondFieldSectionId" [ngStyle]="{'width':150}"
+                                 placeholder="Default" bindLabel="sub_module_name" (change)="onSecondSectionChange($event,resultCalculate)" [closeOnSelect]="true">
+                      </ng-select>
+                    </td>
+                    <td>
+                      <ng-select *ngIf="resultCalculate.get('secondFieldSectionId').value" [items]="resultCalculate.get('secondFields')?.value" formControlName="secondFieldId" [ngStyle]="{'width':150}"
+                                 placeholder="Select..." bindLabel="name" [closeOnSelect]="true">
+
+                      </ng-select>
+                      <input class="form-control" *ngIf="!resultCalculate.get('secondFieldSectionId').value" pKeyFilter="pnum" readonly value="Today" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+            <div class="p-3 text-center" *ngIf="!isDate">
+              <a href="javascript:void(0);" class="btn btn-primary" (click)="addField()"><i class="feather-plus"></i> Add</a>
+            </div>
+          </div>
+          <div class="step-default p-3 border mt-2 rounded"><b>Value:</b> {{displayValue}} </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-success" (click)="save()"><i class="feather-save"></i> Submit</a>
+        <a href="javascript:void(0);" class="btn btn-danger" (click)="hide()"><i class="feather-x"></i> Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>

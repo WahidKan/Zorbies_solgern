@@ -1,0 +1,811 @@
+
+<div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+        <li><a class="smview" routerLink="/questionnairechecklist">Manage Questionnaire</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="feather-repeat mr-1"></i>Switch Company</a>
+  </div>
+</div>
+
+<div class="clearfix"></div>
+<div class="panel">
+  <div class="panel-content p-4" [ngClass]="{'disabled':loadSave}">
+
+    <form autocomplete="off" #questionnairForm="ngForm" ngNativeValidate (ngSubmit)="onSubmit()">
+      <h3 class="form-heading"><span>{{displayCode}} Questionnaire</span></h3>
+      <div class="row  mb-2">
+        <div class="col-sm-6 col-md-6">
+          <label>Check List Name:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input class="form-control" type="text" [(ngModel)]="questionnaire.checkListName" #checkListName="ngModel" required="required" name="questionnaire.checkListName"
+                   [ngClass]="{'is-invalid': (checkListName.invalid && (checkListName.dirty || checkListName.touched) && (checkListName.errors?.required || checkListName?.errors?.maxlength)) }">
+
+            <small *ngIf="checkListName.invalid && (checkListName.dirty || checkListName.touched) && (checkListName.errors?.required || checkListName?.errors?.maxlength)"
+                   class="text-danger">check List Name is required.</small>
+          </div>
+        </div>
+        <!-- getVisibleFieldsList() -->
+        <div class="col-sm-6 col-md-6">
+          <label>Checklist Type:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <ng-select [items]="questionTypeList" [disabled]="isEdit" id="ddlQuestionType" [(ngModel)]="questionnaire.questionType" #questionType="ngModel"
+                       name="questionnaire.questionType" (change)="onQuestionTypeChange($event)"
+                       placeholder="Select" bindLabel="text" bindValue="value" required="required"
+                       [ngClass]="{'is-invalid': (questionType.invalid && (questionType.dirty || questionType.touched) && (questionType.errors?.required || questionType?.errors?.maxlength)) }">
+            </ng-select>
+            <small *ngIf="questionType.invalid && (questionType.dirty || questionType.touched) && (questionType.errors?.required || questionType?.errors?.maxlength)"
+                   class="text-danger">Checklist Type is required.</small>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+          <label>Work Type:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <ng-select [items]="WorkTypeList" id="ddlWorkTypes" placeholder="Select"
+                       (clear)="onClearWorkType(WorkTypeList)" [(ngModel)]="questionnaire.workTypeId"
+                       #workTypeId="ngModel" name="questionnaire.workTypeId" required="required"
+                       (keyup)="onKeyWorkType($event,WorkTypeList)" (scrollToEnd)="onScrollToEndWorkType(WorkTypeList)" required="required"
+                       [virtualScroll]="true" bindLabel="text" bindValue="value"
+                       [ngClass]="{'is-invalid': (workTypeId.invalid && (workTypeId.dirty || workTypeId.touched) && (workTypeId.errors?.required || workTypeId?.errors?.maxlength)) }">
+            </ng-select>
+            <small *ngIf="workTypeId.invalid && (workTypeId.dirty || workTypeId.touched) && (workTypeId.errors?.required || workTypeId?.errors?.maxlength)"
+                   class="text-danger">Work Type is required.</small>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+          <label>Status:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <ng-select [items]="statusList" id="ddlStatus" [(ngModel)]="questionnaire.statusId" #statusId="ngModel" name="questionnaire.statusId" placeholder="Select"
+                       bindLabel="text" bindValue="value" required="required"
+                       [ngClass]="{'is-invalid': (statusId.invalid && (statusId.dirty || statusId.touched) && (statusId.errors?.required || statusId?.errors?.maxlength)) }">
+            </ng-select>
+            <small *ngIf="statusId.invalid && (statusId.dirty || statusId.touched) && (statusId.errors?.required || statusId?.errors?.maxlength)"
+                   class="text-danger">Status is required.</small>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-sm-7 col-md-7">
+          <h3 class="form-heading"><span>Resource View</span></h3>
+          <div class="row">
+            <div class="col-md-4">
+              <button type="button" href="javascript:;void(0);" [disabled]="questionType.invalid" (click)="addSection()" class="btn btn-success mb-2">
+                <i class="feather-file-text pl-2"></i> Add Section
+              </button>
+              <div class="w-100">
+                <!--<h3 class="side_panel-heading"> Select New Field</h3>-->
+                <div class="bordered-content ques-checklist" *ngIf="!questionType.invalid">
+                  <ul class="types columnlist list-group custom-field-layout custom-field-layout-left-panel mb-3">
+                    <li class="list-group-item selected" id="1" code="string" maxlength="100" *ngFor="let row of colors"
+                        pDraggable="row" (onDragStart)="dragStart($event,row)" (onDragEnd)="dragEnd($event)">
+                      <a href="javascript:void(0);">
+                        <i class="{{row.class_name}}"></i>
+                        <span>
+                          {{row.name}}
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="bordered-content ques-checklist" *ngIf="questionType.invalid">
+                  <p>Select Checklist Type first to see the question types.</p>
+                </div>
+              </div>
+            </div>
+            <div class="questionaire-box overflowy-checklist col-md-8">
+              <div class="q-no-data text-center align-middle"
+                   *ngIf="questionnaire.mainSection == null || questionnaire.mainSection.length < 1">
+                <i class="feather-file-text fs-70"></i>
+                <p>Add Questionnaire</p>
+              </div>
+              <div *ngFor="let main of questionnaire.mainSection; let ix=index">
+                <div class="sectionmain mb-3" *ngIf="main.statusId != '1003'">
+                  <div class="sectionnumber">{{main.sectionIndex}}</div>
+                  <div class="Xs">
+                    <label>Section Name: <span class="text-danger">*</span></label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" (ngModelChange)="valuechange($event,main)" required="required" [(ngModel)]="main.SectionName" name="main.SectionName_{{ix}}" #SectionName="ngModel">
+                      <div class="input-group-append">
+                        <span class="input-group-text bg-danger border-0">
+                          <a (click)="removeSection(ix)" class="text-white p-0 cursor-pointer">
+                            <i class="feather-trash-2 p-0" title="Delete"></i>
+                          </a>
+                        </span>
+                      </div>
+                    </div>
+                    <!-- <p class="text-danger" style="color:red;">{{ formErrors.mainSection[ix].SectionName }}</p> -->
+                    <p class="text-danger" style="color:red;"></p>
+                    <div class="" dnd-sortable-container [sortableData]="main.mainSubSection" [dropZones]="['container-dropZone']">
+                      <div *ngFor="let qAndSub of main.mainSubSection; let iy=index; " [dragEnabled]="sectionDrag" (mouseover)="changeDragSatus($event,'Section')"
+                           dnd-sortable [sortableIndex]="iy" (onDropSuccess)="onDropSuccess($event,qAndSub.question,iy,'Question')">
+                        <div *ngIf="qAndSub.sectionType == 'subSection' && qAndSub.statusId != '1003'" class="Ys mb-2 pb-2 sub-section">
+                          <label>Sub Section Name: <span class="text-danger">*</span> </label>
+                          <div class="float-right d-flex">
+                            <a class="fw-600" [class.disabled]="subSectionName.invalid" href="javascript:void(0);" (click)="!subSectionName.invalid && addSubSectionQuestion(ix,iy)">
+                              <i class="feather-plus align-middle fw-600"></i>Question
+                            </a>
+                            <div class="clr-gray ml-2 mt-1" dnd-sortable-container [dropZones]="['container-dropZone']" [sortableData]="main.mainSubSection">
+                              <i class="feather-grid" aria-hidden="true" tooltip="Grab to drag"></i>
+                            </div>
+                          </div>
+                          <div class="input-group mb-3">
+                            <input type="text" class="form-control" required="required" (ngModelChange)="valuechange($event,qAndSub)" #subSectionName="ngModel" [(ngModel)]="qAndSub.subSectionName" name="qAndSub.subSectionName_{{iy}}" />
+                            <div class="input-group-append">
+                              <span class="input-group-text bg-danger border-0">
+                                <a (click)="removeSubSection(ix,iy)" class="text-white p-0 cursor-pointer">
+                                  <i class="feather-trash-2 p-0" title="Delete"></i>
+                                </a>
+                              </span>
+                            </div>
+
+                          </div>
+                          <!-- <p class="text-danger" style="color:red;">{{
+                            formErrors.mainSection[ix].mainSubSection[iy].Subsection }}</p> -->
+                          <p class="text-danger" style="color:red;"></p>
+                          <div class="qans" dnd-sortable-container [sortableData]="qAndSub.SubSectionQuestionAns" [dropZones]="['sub-dropZone']">
+                            <div *ngFor="let question of qAndSub.SubSectionQuestionAns; let iz=index" dnd-sortable [sortableIndex]="iz" [dragEnabled]="subSectionDrag" (mouseover)="changeDragSatus($event,'SubSection')" (onDropSuccess)="onDropSuccess($event,question,iz,'SubQuestion')" class="qansmain" style="display:flow-root;">
+                              es
+                              <div class="Zs" *ngIf="question.statusId != '1003'">
+                                <div class="drop" pDroppable="row" (onDrop)="drop($event,ix,iy,iz,'notquestion')" style="min-height:40px;">
+                                  <div class="w-100 qst-panel">
+                                    <label class="text-capitalize w-100">
+                                      {{question.display_name}} <span *ngIf="question.is_required"
+                                                                      class="text-danger">*</span><span class="d-inline-block float-right"
+                                                                                                        *ngIf="question.field_type!='' && question.field_type!=null">
+                                        <a href="javascript:void(0);" (click)="show(question,ix,iy,iz,'1011')">
+                                          <i class="feather-more-horizontal text-secondary float-right"></i>
+                                        </a>
+                                      </span>
+                                      <!-- {{ix}} {{iy}} {{iz}} -->
+                                    </label>
+                                    <div class="input-group mb-3">
+
+                                      <ng-container *ngIf="question.isDirty;else elseblock;">
+                                        <!--for input value and field type text-->
+                                        <input *ngIf="question.field_type=='textbox'" id="input_{{iz}}"
+                                               name="input_{{iz}}" class="form-control" type="text"
+                                               placeholder="{{question.is_system_generated ==false ? question.name : question.display_name}}" />
+                                        <input *ngIf="question.field_type=='text'" id="input_{{iz}}" name="input_{{iz}}"
+                                               class="form-control" type="text"
+                                               placeholder="{{question.is_system_generated ==false ? question.name : question.display_name}}" />
+
+                                        <!--for input value and field type textarea-->
+                                        <textarea *ngIf="question.field_type=='textarea'" class="form-control" rows="4"
+                                                  id="textarea_{{iz}}" name="textarea_{{iz}}"
+                                                  placeholder="{{question.is_system_generated ==false ? question.name : question.display_name}}"></textarea>
+
+
+                                        <!--for input value and field type date-->
+                                        <p-calendar [showIcon]="true" class="calendarwidth"
+                                                    inputStyleClass="form-control start-date " *ngIf="question.field_type=='date'"
+                                                    hideOnDateTimeSelect="true" inputId="cald_{{iz}}" dateFormat="mm/dd/yy"
+                                                    showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                                                    yearRange="1919:2030"></p-calendar>
+
+                                        <!--for input value and field type datetime-->
+                                        <p-calendar [showIcon]="true" class="calendarwidth"
+                                                    inputStyleClass="form-control start-date "
+                                                    *ngIf="question.field_type=='datetime'"
+                                                    [hourFormat]="(timeFormat==24)?'24':'12'" hideOnDateTimeSelect="true"
+                                                    [showTime]="true" inputId="caldt_{{iz}}" dateFormat="mm/dd/yy"
+                                                    showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                                                    yearRange="1919:2030"></p-calendar>
+
+                                        <!--for input value and field type number-->
+                                        <input *ngIf="question.field_type=='number' " min="0" value="0" step="0.01"
+                                               id="input_1{{iz}}" name="input_1{{iz}}" class="form-control" type="number"
+                                               placeholder="{{question.is_system_generated ==false ? question.name : question.display_name}}" />
+
+                                        <input *ngIf="question.field_type=='int' " min="0" value="0" step="0.01"
+                                               id="input_{{iz}}" name="input_{{iz}}" class="form-control" type="number"
+                                               placeholder="{{question.is_system_generated ==false ? question.name : question.display_name}}" />
+
+                                        <input *ngIf="question.field_type=='bigint' " min="0" value="0" step="1"
+                                               id="input_{{iz}}" name="input_{{iz}}" class="form-control" type="number"
+                                               placeholder="{{question.is_system_generated ==false ? question.name : question.display_name}}" />
+
+
+                                        <!--for input value and field type number-->
+                                        <input *ngIf="question.field_type=='decimal'" pattern="^\d*(\.\d{0,2})?$" min="0"
+                                               value="0" step="0.01" id="input_{{iz}}" name="input_{{iz}}" class="form-control"
+                                               type="number"
+                                               placeholder="{{question.is_system_generated ==false ? question.name : question.display_name}}" />
+
+
+                                        <!--for input value and field type dropdown-->
+                                        <ng-container *ngIf="question.field_type=='dropdown'">
+
+                                          <div class="clearfix"></div>
+                                          <ng-select id="ddl_{{iz}}" [items]="question.selectlistvalues" bindLabel="value"
+                                                     bindValue="id"
+                                                     placeholder="{{question.is_system_generated ==false ? question.name : question.display_name}}">
+                                            <ng-template ng-option-tmp let-item="item" let-index="index">
+                                              <span>
+                                                {{item.value}} <span *ngIf="item.color!=''">
+                                                  <span [style.background-color]="item.color"></span>
+                                                  {{item.color}}
+                                                </span>
+                                              </span>
+                                            </ng-template>
+                                          </ng-select>
+                                        </ng-container>
+                                        <ng-container *ngIf="question.field_type=='select'">
+
+                                          <div class="clearfix"></div>
+                                          <ng-select id="ddl_{{iz}}" [items]="question.selectlistvalues" bindLabel="value"
+                                                     bindValue="id"
+                                                     placeholder="{{question.is_system_generated ==false ? question.name : question.display_name}}">
+                                            <ng-template ng-option-tmp let-item="item" let-index="index">
+                                              <span>
+                                                {{item.value}}
+                                                <span *ngIf="item.color!=''">
+                                                  <span [style.background-color]="item.color"></span>
+                                                  {{item.color}}
+                                                </span>
+                                              </span>
+                                            </ng-template>
+                                          </ng-select>
+                                        </ng-container>
+
+                                        <!--for input value and field type radio-->
+                                        <ng-container *ngIf="question.field_type=='radioButton'">
+                                          <div class="clearfix"></div>
+                                          <ng-container *ngIf="question.picklist_options">
+                                            <ng-container *ngFor="let item of question.picklist_options.split(',');let radioIndex=index;">
+                                              <span class="mr-3">
+                                                <input id="radio-{{iz}}_{{iz}}_{{radioIndex}}" name="radio-{{iz}}_{{iz}}"
+                                                       [value]="" type="radio" class="mr-15">
+                                                <label for="radio-{{iz}}_{{iz}}_{{radioIndex}}"
+                                                       class="radio-label mr-15">{{item}}</label>
+                                              </span>
+                                            </ng-container>
+                                          </ng-container>
+                                        </ng-container>
+                                        <ng-container *ngIf="question.field_type=='radio'">
+                                          <div class="clearfix"></div>
+                                          <ng-container *ngIf="question.picklist_options">
+                                            <ng-container *ngFor="let item of question.picklist_options.split(',');let radioIndex=index;">
+                                              <span class="mr-3">
+                                                <input id="radio-{{iz}}_{{iz}}_{{radioIndex}}" name="radio-{{iz}}_{{iz}}"
+                                                       [value]="" type="radio" class="mr-15">
+                                                <label for="radio-{{iz}}_{{iz}}_{{radioIndex}}"
+                                                       class="radio-label mr-15">{{item}}</label>
+                                              </span>
+                                            </ng-container>
+                                          </ng-container>
+                                        </ng-container>
+
+                                        <!--for input value and field type checkbox-->
+                                        <ng-container *ngIf="question.field_type=='checkbox'">
+                                          <!-- <div class="clearfix">{{question.picklist_options | json}}</div> -->
+                                          <ng-container *ngIf="question.picklist_options">
+                                            <ng-container *ngFor="let item of question.picklist_options.split(',');let checkIndex=index;">
+                                              <span class="mr-3">
+                                                <input id="chk-{{iz}}_{{iz}}_{{checkIndex}}" [value]="" type="checkbox"
+                                                       class="mr-15">
+                                                <label for="chk-{{iz}}_{{iz}}_{{checkIndex}}"
+                                                       class="radio-label">{{item}}</label>
+                                              </span>
+                                            </ng-container>
+                                          </ng-container>
+                                        </ng-container>
+
+                                        <!--for input value and field type boolean-->
+                                        <ng-container *ngIf="question.field_type=='boolean'">
+                                          <div class="clearfix"></div>
+                                          <label class="switch  mb-0">
+                                            <input type="checkbox" id="bool{{iz}}">
+                                            <span class="slider round" id="bool{{iz}}"><span>Yes</span></span>
+                                          </label>
+                                        </ng-container>
+
+                                        <!--for input value and field type image-->
+                                        <ng-container *ngIf="question.field_type=='image'">
+                                          <div class="custom-file" style="max-width:91%">
+                                            <input type="file" class="custom-file-input" id="validatedCustomFile{{iz}}">
+                                            <label class="custom-file-label" for="validatedCustomFile{{iz}}">
+                                              Choose
+                                              file...
+                                            </label>
+                                          </div>
+                                          <span *ngIf="question.picklist_options">
+                                            Only
+                                            <strong>{{question.picklist_options}}</strong> extention's are
+                                            allowed
+                                          </span>
+                                        </ng-container>
+
+
+                                      </ng-container>
+                                      <ng-template #elseblock>
+                                        <div class="input-group mb-3">
+                                          <span>{{question.name}}</span>
+                                          <span>
+                                            <a href="javascript:void(0);"
+                                               (click)="show(question,ix,iz,iz,'questionOnly','1011')">
+                                              <i class="feather-more-horizontal text-secondary float-right"></i>
+                                            </a>
+                                          </span>
+
+                                        </div>
+                                      </ng-template>
+                                      <div class="input-group-append p-2"
+                                           *ngIf="question.field_type!='' && question.field_type!=null">
+                                        <span class="input-group-text bg-danger border-0">
+                                          <a (click)="removeQuestionsAndAnswer(ix,iy,iz)"
+                                             class="text-white p-0 cursor-pointer">
+                                            <i class="feather-trash-2 p-0" title="Delete"></i>
+                                          </a>
+                                        </span>
+                                      </div>
+                                    </div>
+
+                                    <div *ngIf="question.field_type=='image'" class="float-right">
+                                      <label>Sync To Loanhomi</label>
+                                      <div>
+                                        <label class="switch">
+                                          <input class="custom-control-input" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="question.SyncToLoanHomi">
+                                          <span class="slider round"><span>Yes</span></span>
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <!--<label class="switch">
+                                      <input class="custom-control-input" type="checkbox" [checked]="false">
+                                      <span class="slider round"><span>Yes</span></span>
+                                    </label>-->
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div *ngIf="qAndSub.sectionType == 'question' && qAndSub.statusId != '1003'" class="Ys mb-2 pb-2 sub-section">
+                          <div class="sectionqtn" style="display:flow-root;">
+                            <div class="drop" pDroppable="row" (onDrop)="drop($event,ix,iy,iz,'questionOnly')"
+                                 style="min-height:40px;">
+                              <label class="text-capitalize w-100" *ngIf="qAndSub.question.isDirty">
+                                {{qAndSub.question.display_name}} <span *ngIf="qAndSub.question.is_required"
+                                                                        class="text-danger">*</span><span class="d-inline-block float-right"
+                                                                                                          *ngIf="qAndSub.question.field_type!='' && qAndSub.question.field_type!=null">
+                                  <a href="javascript:void(0);" (click)="show(qAndSub.question,ix,iy,iz,'questionOnly','1011')">
+                                    <i class="feather-more-horizontal text-secondary float-right"></i>
+                                  </a>
+                                </span>
+                              </label>
+                              <div class="input-group mb-3">
+
+                                <ng-container *ngIf="qAndSub.question.isDirty;else elseblock;">
+                                  <!--for input value and field type text-->
+                                  <input *ngIf="qAndSub.question.field_type=='textbox'" id="input_{{iy}}"
+                                         name="input_{{iy}}" class="form-control" type="text"
+                                         placeholder="{{qAndSub.question.is_system_generated ==false ? qAndSub.question.name : qAndSub.question.display_name}}" />
+                                  <input *ngIf="qAndSub.question.field_type=='text'" id="input_{{iy}}" name="input_{{iy}}"
+                                         class="form-control" type="text"
+                                         placeholder="{{qAndSub.question.is_system_generated ==false ? qAndSub.question.name : qAndSub.question.display_name}}" />
+
+                                  <!--for input value and field type textarea-->
+                                  <textarea *ngIf="qAndSub.question.field_type=='textarea'" class="form-control" rows="4"
+                                            id="textarea_{{iy}}" name="textarea_{{iy}}"
+                                            placeholder="{{qAndSub.question.is_system_generated ==false ? qAndSub.question.name : qAndSub.question.display_name}}"></textarea>
+
+
+                                  <!--for input value and field type date-->
+                                  <p-calendar [showIcon]="true" class="calendarwidth"
+                                              inputStyleClass="form-control start-date " *ngIf="qAndSub.question.field_type=='date'"
+                                              hideOnDateTimeSelect="true" inputId="cald_{{iy}}" dateFormat="mm/dd/yy"
+                                              showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                                              yearRange="1919:2030"></p-calendar>
+
+                                  <!--for input value and field type datetime-->
+                                  <p-calendar [showIcon]="true" class="calendarwidth"
+                                              inputStyleClass="form-control start-date "
+                                              *ngIf="qAndSub.question.field_type=='datetime'"
+                                              [hourFormat]="(timeFormat==24)?'24':'12'" hideOnDateTimeSelect="true"
+                                              [showTime]="true" inputId="caldt_{{iy}}" dateFormat="mm/dd/yy" showButtonBar="true"
+                                              [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                                  <!--for input value and field type number-->
+                                  <input *ngIf="qAndSub.question.field_type=='number' " min="0" value="0" step="0.01"
+                                         id="input_1{{iy}}" name="input_1{{iy}}" class="form-control" type="number"
+                                         placeholder="{{qAndSub.question.is_system_generated ==false ? qAndSub.question.name : qAndSub.question.display_name}}" />
+
+                                  <input *ngIf="qAndSub.question.field_type=='int' " min="0" value="0" step="0.01"
+                                         id="input_{{iy}}" name="input_{{iy}}" class="form-control" type="number"
+                                         placeholder="{{qAndSub.question.is_system_generated ==false ? qAndSub.question.name : qAndSub.question.display_name}}" />
+
+                                  <input *ngIf="qAndSub.question.field_type=='bigint' " min="0" value="0" step="1"
+                                         id="input_{{iy}}" name="input_{{iy}}" class="form-control" type="number"
+                                         placeholder="{{qAndSub.question.is_system_generated ==false ? qAndSub.question.name : qAndSub.question.display_name}}" />
+                                  <!--for input value and field type number-->
+                                  <input *ngIf="qAndSub.question.field_type=='decimal'" pattern="^\d*(\.\d{0,2})?$"
+                                         min="0" value="0" step="0.01" id="input_{{iy}}" name="input_{{iy}}"
+                                         class="form-control" type="number"
+                                         placeholder="{{qAndSub.question.is_system_generated ==false ? qAndSub.question.name : qAndSub.question.display_name}}" />
+
+
+                                  <!--for input value and field type dropdown-->
+                                  <ng-container *ngIf="qAndSub.question.field_type=='dropdown'">
+                                    <div class="clearfix"></div>
+                                    <ng-select id="ddl_{{iy}}" [items]="qAndSub.question.selectlistvalues"
+                                               bindLabel="value" bindValue="id"
+                                               placeholder="{{qAndSub.question.is_system_generated ==false ? qAndSub.question.name : qAndSub.question.display_name}}">
+                                      <ng-template ng-option-tmp let-item="item" let-index="index">
+                                        <span>
+                                          {{item.value}} <span *ngIf="item.color!=''">
+                                            <span [style.background-color]="item.color"></span>
+                                            {{item.color}}
+                                          </span>
+                                        </span>
+                                      </ng-template>
+                                    </ng-select>
+                                  </ng-container>
+
+                                  <ng-container *ngIf="qAndSub.question.field_type=='select'">
+
+                                    <div class="clearfix"></div>
+                                    <ng-select id="ddl_{{iy}}" [items]="qAndSub.question.selectlistvalues"
+                                               bindLabel="value" bindValue="id"
+                                               placeholder="{{qAndSub.question.is_system_generated ==false ? qAndSub.question.name : qAndSub.question.display_name}}">
+                                      <ng-template ng-option-tmp let-item="item" let-index="index">
+                                        <span>
+                                          {{item.value}} <span *ngIf="item.color!=''">
+                                            <span [style.background-color]="item.color"></span>
+                                            {{item.color}}
+                                          </span>
+                                        </span>
+                                      </ng-template>
+                                    </ng-select>
+                                  </ng-container>
+
+                                  <!--for input value and field type radio-->
+                                  <ng-container *ngIf="qAndSub.question.field_type=='radioButton'">
+                                    <div class="clearfix"></div>
+                                    <ng-container *ngIf="qAndSub.question.picklist_options">
+                                      <ng-container *ngFor="let item of qAndSub.question.picklist_options.split(',');let radioIndex=index;">
+                                        <span class="mr-3">
+                                          <input id="radio-{{iy}}_{{iy}}_{{radioIndex}}" name="radio-{{iz}}_{{iy}}"
+                                                 [value]="" type="radio" class="mr-15">
+                                          <label for="radio-{{iy}}_{{iy}}_{{radioIndex}}"
+                                                 class="radio-label mr-15">{{item}}</label>
+                                        </span>
+                                      </ng-container>
+                                    </ng-container>
+                                  </ng-container>
+                                  <ng-container *ngIf="qAndSub.question.field_type=='radio'">
+                                    <div class="clearfix"></div>
+                                    <ng-container *ngIf="qAndSub.question.picklist_options">
+                                      <ng-container *ngFor="let item of qAndSub.question.picklist_options.split(',');let radioIndex=index;">
+                                        <span class="mr-3">
+                                          <input id="radio-{{iy}}_{{iy}}_{{radioIndex}}" name="radio-{{iz}}_{{iy}}"
+                                                 [value]="" type="radio" class="mr-15">
+                                          <label for="radio-{{iy}}_{{iy}}_{{radioIndex}}"
+                                                 class="radio-label mr-15">{{item}}</label>
+                                        </span>
+                                      </ng-container>
+                                    </ng-container>
+                                  </ng-container>
+
+                                  <!--for input value and field type checkbox-->
+                                  <ng-container *ngIf="qAndSub.question.field_type=='checkbox'">
+                                    <!-- <div class="clearfix">{{qAndSub.question.picklist_options | json}}</div> -->
+                                    <ng-container *ngIf="qAndSub.question.picklist_options">
+                                      <ng-container *ngFor="let item of qAndSub.question.picklist_options.split(',');let checkIndex=index;">
+                                        <span class="mr-3">
+                                          <input id="chk-{{iz}}_{{iy}}_{{checkIndex}}" [value]="" type="checkbox"
+                                                 class="mr-15">
+                                          <label for="chk-{{iz}}_{{iy}}_{{checkIndex}}"
+                                                 class="radio-label">{{item}}</label>
+                                        </span>
+                                      </ng-container>
+                                    </ng-container>
+                                  </ng-container>
+
+                                  <!--for input value and field type boolean-->
+                                  <ng-container *ngIf="qAndSub.question.field_type=='boolean'">
+                                    <div class="clearfix"></div>
+                                    <label class="switch  mb-0">
+                                      <input type="checkbox" id="bool{{iy}}">
+                                      <span class="slider round" id="bool{{iy}}"><span>Yes</span></span>
+                                    </label>
+                                  </ng-container>
+
+                                  <!--for input value and field type image-->
+                                  <ng-container *ngIf="qAndSub.question.field_type=='image'">
+                                    <div class="custom-file" style="max-width:91%;">
+                                      <input type="file" class="custom-file-input" id="validatedCustomFile{{iy}}">
+                                      <label class="custom-file-label" for="validatedCustomFile{{iy}}">
+                                        Choose
+                                        file...
+                                      </label>
+                                    </div>
+                                    <span *ngIf="qAndSub.question.picklist_options">
+                                      Only
+                                      <strong>{{qAndSub.question.picklist_options}}</strong> extention's are
+                                      allowed
+                                    </span>
+                                  </ng-container>
+
+
+                                </ng-container>
+                                <ng-template #elseblock>
+                                  <div class="input-group mb-3">
+                                    <span>{{qAndSub.question.name}}</span>
+                                    <span>
+                                      <a href="javascript:void(0);"
+                                         (click)="show(qAndSub.question,ix,iy,iz,'questionOnly','1011')">
+                                        <i class="feather-more-horizontal text-secondary float-right"></i>
+                                      </a>
+                                    </span>
+
+                                  </div>
+                                </ng-template>
+                                <div class="input-group-append p-2"
+                                     *ngIf="qAndSub.question.field_type!='' && qAndSub.question.field_type!=null">
+                                  <span class="input-group-text bg-danger border-0">
+                                    <a (click)="removeSubSection(ix,iy)" class="text-white p-0 cursor-pointer">
+                                      <i class="feather-trash-2 p-0" title="Delete"></i>
+                                    </a>
+                                  </span>
+                                </div>
+
+                              </div>
+                              <div *ngIf="qAndSub.question.field_type=='image'" class="float-right">
+                                <label>Sync To Loanhomi</label>
+                                <div>
+                                  <label class="switch">
+                                    <input class="custom-control-input" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="qAndSub.question.SyncToLoanHomi">
+                                    <span class="slider round"><span>Yes</span></span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="text-right">
+                        <div class="btn-group">
+                          <a class="btn btn-dark btn-subsection-question border-0 text-white ml-2 mt-2" [class.disabled]="SectionName.invalid"
+                             href="javascript:void(0);" (click)="!SectionName.invalid && addSubSection(ix,'subSection')">
+                            <i class="feather-plus align-middle fw-600"></i> Sub Section
+                          </a>
+                          <!--*ngIf='isAdd'-->
+                          <a class="btn btn-primary btn-subsection-question border-0 text-white mt-2 ml-2" [class.disabled]="SectionName.invalid"
+                             href="javascript:void(0);" (click)="!SectionName.invalid && addSubSection(ix,'question')">
+                            <span>
+                              <i class="feather-plus align-middle fw-600"></i> Question
+                            </span>
+                          </a>
+                          <!--*ngIf='isDelete'-->
+                          <!-- <input type="button" (click)="addY(ix)" value="&#x2B; Sub Section" class="btn-dark btn-subsection-question border-0 text-white mt-2 p-2">
+                          <input type="button" (click)="QuestionOnly(ix)" value="&#x2B; Question" class="btn-primary btn-subsection-question border-0 text-white mt-2 p-2 ml-2"> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- X End -->
+          </div>
+        </div>
+
+        <div class="col-sm-5 col-md-5">
+          <h3 class="form-heading"><span>Auditor View</span></h3>
+          <div class="modal-body overflowy-checklist p-0">
+            <div class="manage-color mb-3" *ngFor="let preview of questionnaire.mainSection; let prwIndex=index">
+              <div class="row mng-number border align-items-stretch mx-0 mb-1" *ngIf="preview.statusId != '1003'">
+                <div class="col-lg-2 bg-numbr1 p-3 text-center d-flex align-items-center" style="background: #dcf1ff;">
+                  <h2 class="w-100">{{preview.sectionIndex}} </h2>
+                </div>
+                <div class="col-lg-10 p-3 d-flex align-items-center">
+                  <div class="w-100">
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <label style="font-size: 17px;"><b>Section Name:</b> {{preview.SectionName}} </label>
+                        <div class="w-100 d-flex flex-wrap">
+
+                        </div>
+                      </div>
+                      <div class="col-lg-12" *ngFor="let subSection of preview.mainSubSection; let c=index">
+                        <div class="ml-2" *ngIf="subSection.sectionType == 'subSection' && subSection.statusId != '1003'">
+                          <label><b>Sub Section: </b> {{subSection.subSectionName}} </label>
+                          <div class="fulwith-radio-n-check  mt-2"
+                               *ngFor="let previewques of subSection.SubSectionQuestionAns; let b=index">
+                            <div *ngIf="previewques.statusId != '1003'">
+                              <div class="w-100 d-flex align-content-center align-items-center" *ngIf="!isEdit"
+                                   style="border-left: 5px solid #41b2f9; padding-left: 5px;">
+                                <!--<div class="clearfix">{{previewques | json}}</div>-->
+                                <div class="clearfix"></div>
+                                <label class="text-capitalize mr-auto">
+                                  <b style="font-weight:700">Question:</b>
+                                  {{previewques.display_name}}
+                                </label>
+                              </div>
+                              <div class="w-100 mb-2 d-flex flex-wrap align-content-center align-items-center pl-1"
+                                   *ngIf="!isEdit" style="border-left: 5px solid #41b2f9; padding-left: 5px;">
+                                <div class="w-100">
+                                  w-
+                                  <div class="w-100 mb-2">
+                                    <span>
+                                      <b style="font-weight:700">Answer Type:</b>
+                                      {{previewques.dt_code}}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div *ngIf="isEdit" style="border-left: 5px solid #41b2f9; padding-left: 5px;">
+                                <div class="w-100 d-flex align-content-center align-items-center"
+                                     *ngIf="previewques.display_name!=null && previewques.display_name!=''">
+                                  <div class="clearfix"></div>
+                                  <label class="text-capitalize mr-auto">
+                                    <b style="font-weight:700">Question:</b>
+                                    {{previewques.display_name}}
+                                  </label>
+                                </div>
+                                <div class="w-100 mb-2 d-flex flex-wrap align-content-center align-items-center pl-1"
+                                     *ngIf="previewques.display_name!=null && previewques.display_name!=''">
+                                  <div class="w-100">
+                                    <div class="w-100 mb-2">
+                                      <span>
+                                        <b style="font-weight:700">Answer Type:</b>
+                                        {{previewques.dt_code}}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row mb-4" *ngIf="previewques.display_name!=null && previewques.display_name!=''">
+                                <div class="col-lg-12" style="pointer-events:none;">
+                                  <div class="w-100 mb-0 mt-2 p-2" style="background:#f1f1f1">
+                                    <div class="w-100">
+                                      <label class="d-block"><b>Is provided information correct?</b></label>
+                                      <div class="col-12">
+                                        <div class="row">
+                                          <div class="form-check form-check-inline">
+                                            <input class="form-check-input" id="auditorRadiosYes_{{c+b}}" name="auditorRadios" type="radio" value="Yes">
+                                            <label class="form-check-label" for="auditorRadiosYes_{{c+b}}">Yes</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                            <input class="form-check-input" id="auditorRadiosNo_{{c+b}}" name="auditorRadios" type="radio" value="No">
+                                            <label class="form-check-label" for="auditorRadiosNo_{{c+b}}">No</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                            <input class="form-check-input" id="auditorRadiosNoScore_{{c+b}}" name="auditorRadios" type="radio" value="NoScore">
+                                            <label class="form-check-label" for="auditorRadiosNoScore_{{c+b}}">No score</label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="w-100 mt-2">
+                                      <label><b>Auditor Comment:</b></label>
+                                      <div class="form-group mb-0">
+                                        <textarea class="form-control audit-textarea mb-1"
+                                                  style="height:50px;"></textarea>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                        <div *ngIf="subSection.sectionType == 'question' && subSection.statusId != '1003'">
+                          <div class="fulwith-radio-n-check mt-2">
+                            <div class="w-100 d-flex align-content-center align-items-center" *ngIf="!isEdit"
+                                 style="border-left: 5px solid #41b2f9; padding-left: 5px;">
+                              <!--<div class="clearfix">{{previewques | json}}</div>-->
+                              <div class="clearfix"></div>
+                              <label class="text-capitalize mr-auto">
+                                <b style="font-weight:700">Question:</b>
+                                {{subSection.question.display_name}}
+                              </label>
+                            </div>
+                            <div class="w-100 mb-2 d-flex flex-wrap align-content-center align-items-center pl-1"
+                                 *ngIf="!isEdit" style="border-left: 5px solid #41b2f9; padding-left: 5px;">
+                              <div class="w-100">
+                                 c
+                                <div class="w-100 mb-2">
+                                  <span>
+                                    <b style="font-weight:700">Answer Type:</b>
+                                    {{subSection.question.dt_code}}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div *ngIf="isEdit" style="border-left: 5px solid #41b2f9; padding-left: 5px;">
+                              <div class="w-100 d-flex align-content-center align-items-center"
+                                   *ngIf="subSection.question.display_name!=null && subSection.question.display_name!=''">
+                                <div class="clearfix"></div>
+                                <label class="text-capitalize mr-auto">
+                                  <b style="font-weight:700">Question:</b>
+                                  {{subSection.question.display_name}}
+                                </label>
+                              </div>
+                              <div class="w-100 mb-2 d-flex flex-wrap align-content-center align-items-center pl-1"
+                                   *ngIf="subSection.question.display_name!=null && subSection.question.display_name!=''">
+                                <div class="w-100">
+                                  <div class="w-100 mb-2">
+                                    <span>
+                                      <b style="font-weight:700">Answer Type:</b>
+                                      {{subSection.question.dt_code}}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row" *ngIf="subSection.question.display_name!=null && subSection.question.display_name!=''">
+                              <div class="col-lg-12" style="pointer-events:none;">
+                                <div class="w-100 mb-0 mt-4 p-2" style="background:#f1f1f1">
+                                  <div class="w-100">
+                                    <label class="d-block"><b>Is provided information correct?</b></label>
+                                    <div class="col-12">
+                                      <div class="row">
+                                        <div class="form-check form-check-inline">
+                                          <input class="form-check-input" id="auditorRadiosYes{{c}}" name="auditorRadios" type="radio" value="Yes">
+                                          <label class="form-check-label" for="auditorRadiosYes">Yes</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                          <input class="form-check-input" id="auditorRadiosNo{{c}}" name="auditorRadios" type="radio" value="No">
+                                          <label class="form-check-label" for="auditorRadiosNo">No</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                          <input class="form-check-input" id="auditorRadiosNoScore{{c}}" name="auditorRadios" type="radio" value="NoScore">
+                                          <label class="form-check-label" for="auditorRadiosNoScore">No score</label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="w-100">
+                                    <label><b>Auditor Comment:</b></label>
+                                    <div class="form-group mb-0">
+                                      <textarea class="form-control audit-textarea mb-1"
+                                                style="height:50px;"></textarea>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="col-sm-12 col-md-12 mt-3  ">
+          <button type="submit" class="btn btn-success mr-2" [disabled]="!questionnairForm.form.valid">
+            <i class="feather-save"></i>
+            Submit
+          </button>
+          <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="feather-x"></i> Cancel</a>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>
+<app-propertiespopupform #propertiesPopupform (customFieldLayOut)="refreshJson()"></app-propertiespopupform>

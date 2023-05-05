@@ -1,0 +1,127 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<div class="clearfix"></div>
+<div class="panel" style="background:none;">
+  <div class="panel-content p-3"> 
+    <!--<ng-container *ngFor="let wgroup of widgetGroup">
+    <h3 class="form-heading mt-0">{{wgroup.widgetGroupName}}</h3>
+    <div [dragEnabled]="true" [dropZones]="[wgroup.widgetGroupID ]"   dnd-sortable-container [sortableData]="widgetdata" class="row mb-2">
+      <div  id="dashboardtabs" class="col-12 mb-3">
+        <div class="tabs tabs-linetriangle edit-dash">
+          <ul class="nav nav-tabs group2">
+
+              <li *ngFor="let widget of widgetdata; let i=index" dnd-sortable [sortableIndex]="i" (onDropSuccess)="onDropSuccess()" [ngClass]="{'graph-widget':widget.widgetGroupCode == 'Graph_Widget' , 'table-widget':widget.widgetGroupCode == 'List_Widget', 'mb-2':widget.widgetGroupCode =='Tile_Widget','graph-widget':widget.widgetGroupCode == 'List_Count_widget'}" [ngStyle]="{'display':widget.widgetGroupID == wgroup.widgetGroupID?'block':'none'}">
+                <span class="d-block main-c py-0" *ngIf="widget.widgetGroupID == wgroup.widgetGroupID">
+                  <span class="custom-control custom-checkbox mb-4">
+                    <input class="custom-control-input" [id]="widget.widgetID" type="checkbox" [checked]="widget.isSelected" (change)="onChange(widget.widgetID,$event)">
+                    <label class="custom-control-label" [for]="widget.widgetID">&nbsp;</label>
+                  </span>
+                  <a href="javascript:void(0);" [ngStyle]="{'background-color':widget.widgetBoxClass}">
+                    <span class="headingtext" [ngStyle]="{'color':widget.widgetTextClass}">
+                      {{widget.widgetName}}
+                    </span>
+                    <span class="numbers" [ngStyle]="{'color':widget.widgetTextClass}" *ngIf="widget.widgetGroupCode =='Tile_Widget'">##</span>
+                    <span class="description" [ngStyle]="{'color':widget.widgetTextClass}" *ngIf="widget.widgetGroupCode =='Tile_Widget'">View Report</span>
+                    <span class="text-center pt-3" *ngIf="widget.widgetGroupCode !='Tile_Widget'"><img src="{{widget.widgetimage
+                      }}" class="img-fluid" />
+                    </span>
+                  </a>
+                </span>
+              </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </ng-container>-->
+
+    <ng-container *ngIf='tilewidget'>
+      <h3 class="form-heading mt-0">Count Widgets</h3>
+      <div class="row mb-2">
+        <div id="dashboardtabs" class="col-12 mb-3">
+          <div class="tabs tabs-linetriangle edit-dash">
+            <ul class="nav nav-tabs group2  ">
+              <li *ngFor="let widget of tilewidget" class="my-2">
+                <span class="d-block main-c py-0">
+                  <span class="custom-control custom-checkbox mb-4">
+                    <input class="custom-control-input" [id]="widget.widgetID" type="checkbox" [checked]="widget.isSelected" (change)="onChange(widget.widgetID,widget.widgetGroupCode,$event)">
+                    <label class="custom-control-label" [for]="widget.widgetID">&nbsp;</label>
+                  </span>
+                  <a href="javascript:void(0);" [ngStyle]="{'background-color':widget.widgetBoxClass}">
+                    <span class="headingtext" [ngStyle]="{'color':widget.widgetTextClass}">
+                      {{widget.widgetName}}
+                    </span>
+                    <span class="numbers" [ngStyle]="{'color':widget.widgetTextClass}" *ngIf="widget.widgetGroupCode =='Tile_Widget'">##</span>
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+
+    <ng-container *ngIf='widgetGraphData'>
+      <h3 class="form-heading mt-0">Graph Widgets</h3>
+      <div class="row mb-2">
+        <div id="dashboardtabs" class="col-12 mb-3">
+          <div class="tabs tabs-linetriangle edit-dash">
+            <ul class="nav nav-tabs group2  ">
+              <li *ngFor="let widget of widgetGraphData" class="my-2">
+                <span class="d-block main-c py-0">
+                  <span class="custom-control custom-checkbox mb-4">
+                    <input class="custom-control-input" [id]="widget.widgetID  + widget.widgetGroupCode" type="checkbox" [checked]="widget.isSelected" (change)="onGraphChange(widget.widgetID,widget.widgetGroupCode,$event)">
+                    <label class="custom-control-label" [for]="widget.widgetID + widget.widgetGroupCode">&nbsp;</label>
+                  </span>
+                  <a href="javascript:void(0);" [ngStyle]="{'background-color':widget.widgetBoxClass}">
+                    <span class="headingtext" [ngStyle]="{'color':widget.widgetTextClass}">
+                      <strong>{{widget.widgetName}}</strong>
+                    </span>
+                    <span style="text-align:center; margin-top:5px;">
+                      <img src="../../../assets/default-theme/imagesNew/g-1.jpg" style="height: auto; width: 100%" />
+                    </span>
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf='widgetTableData'>
+      <h3 class="form-heading mt-0">List Widgets</h3>
+      <div class="row mb-2">
+        <div id="dashboardtabs" class="col-12 mb-3">
+          <div class="tabs tabs-linetriangle edit-dash">
+            <ul class="nav nav-tabs group2  ">
+              <li *ngFor="let widget of widgetTableData" class="my-2">
+                <span class="d-block main-c py-0">
+                  <span class="custom-control custom-checkbox mb-4">
+                    <input class="custom-control-input" [id]="widget.widgetID  + widget.widgetGroupCode" type="checkbox" [checked]="widget.isSelected" (change)="onGraphChange(widget.widgetID,widget.widgetGroupCode,$event)">
+                    <label class="custom-control-label" [for]="widget.widgetID + widget.widgetGroupCode">&nbsp;</label>
+                  </span>
+                  <a href="javascript:void(0);" [ngStyle]="{'background-color':widget.widgetBoxClass}">
+                    <span class="headingtext" [ngStyle]="{'color':widget.widgetTextClass}" style="padding-right:5px;">
+                      <strong>{{widget.widgetName}}</strong>
+                    </span>
+                    <span style="text-align: center; margin-top: 5px;">
+                      <img src="../../../assets/default-theme/imagesNew/table.png" style="height:auto;width:100%" />
+                    </span>
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="row mb-3">
+      <div class="col-sm-12 col-md-12 text-right">
+        <a href="javascript:void(0);" class="btn btn-success mr-1" (click)="save()"><i class="feather-save"></i> Submit</a>
+        <a href="javascript:void(0);" class="btn btn-danger" (click)="Cancel()"><i class="fa fa-times"></i> Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>

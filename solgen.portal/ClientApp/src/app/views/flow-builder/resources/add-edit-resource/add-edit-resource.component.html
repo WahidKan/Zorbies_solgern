@@ -1,0 +1,61 @@
+<div bsModal #addEditResourceModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-border">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Resource</h5>
+                <button type="button" (click)="closeAddEditResourceModal()" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div *ngIf="resourceForm" [formGroup]="resourceForm">
+                    <div class="row justify-content-center">
+                        <div class="col-6">
+                            <label for="Action" class="form-label">Resource Type</label>
+                            <ng-select formControlName="resourceTypeId" appendTo="body" placeholder="Select object" [items]="resourceTypeList" bindLabel="text" bindValue="value"></ng-select>
+                        </div>
+                    </div>
+                    <div *ngIf="this.resourceTypeId.value">
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-12">
+                                <label class="form-label"><span style="color: red;">*</span>Name</label>
+                                <input type="text" class="form-control" formControlName="name" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-12">
+                                <label class="form-label"> Description</label>
+                                <textarea class="form-control" formControlName="description"></textarea>
+                            </div>
+                        </div>
+                        <div class="row  mb-3">
+                            <div class="col-12">
+                                <label for="Action" class="form-label"><span style="color: red;">*</span>&nbsp;Data Type</label>
+                                <ng-select formControlName="dataTypeId" placeholder="Select object" [items]="dataTypeList" bindLabel="text" bindValue="value"></ng-select>
+                            </div>
+                            <div class="col-6 allowedMultiple">
+                                <!-- form.get("resources") as FormArray).controlsk -->
+                                <div class="custom-control custom-checkbox">
+                                    <input formControlName="isAllowMultiple" type="checkbox" class="custom-control-input" id="allowMultiple">
+                                    <label class="custom-control-label" for="allowMultiple">Allow multiple values (collection)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="this.dataTypeId.value" class="row justify-content-center mb-3">
+                            <div class="col-6">
+                                <label for="Action" class="form-label"><span style="color: red;">*</span>&nbsp;Object</label>
+                                <ng-select formControlName="subModuleId" appendTo="body" placeholder="Select object" [items]="subModuleList" bindLabel="text" bindValue="value" (change)="onChangeSubModule($event)"></ng-select>
+                            </div>
+                            <div class="col-6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="saveResourceForm()"><i class="feather-save"></i> Submit</a>
+                <a href="javascript:void(0);" class="btn btn-danger" (click)="closeAddEditResourceModal()"><i class="feather-x"></i> Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>

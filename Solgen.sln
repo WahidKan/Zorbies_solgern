@@ -1,0 +1,105 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solgen.WebApi", "solgen.webapi\Solgen.WebApi.csproj", "{FE007953-99B0-488D-8FB0-EB53CABD6624}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solgen.portal", "solgen.portal\Solgen.portal.csproj", "{7089E12A-929C-4939-8E09-7B8A8DDAF870}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solgen.Core", "solgen.core\Solgen.Core.csproj", "{2C2EAB1A-195C-4862-BA25-4C5BB283BF16}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solgen.Repository", "solgen.Repository\Solgen.Repository.csproj", "{39DDEDAA-E232-4153-B3F1-BB13BD781EB6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2C2EAB1A-195C-4862-BA25-4C5BB283BF16} = {2C2EAB1A-195C-4862-BA25-4C5BB283BF16}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solgen.Service", "solgen.Service\Solgen.Service.csproj", "{4BA982DC-3ABA-462B-97B5-5EF0DA13B4FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solgen.Formstack", "Solgen.Formstack\Solgen.Formstack.csproj", "{337C19ED-E65C-479D-96B0-BF70180DC853}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{938E437E-EAD5-46CF-A091-3B316F956E8A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FacebookCampaignService", "FacebookCampaignService\FacebookCampaignService.csproj", "{C5E6EBC8-20E1-4361-AC47-E1D5C1AC0195}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zolar.StoreFront", "Zolar.StoreFront\Zolar.StoreFront.csproj", "{39D432FA-6B8A-48F7-8960-5820E0A596EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE007953-99B0-488D-8FB0-EB53CABD6624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE007953-99B0-488D-8FB0-EB53CABD6624}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE007953-99B0-488D-8FB0-EB53CABD6624}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE007953-99B0-488D-8FB0-EB53CABD6624}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7089E12A-929C-4939-8E09-7B8A8DDAF870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7089E12A-929C-4939-8E09-7B8A8DDAF870}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7089E12A-929C-4939-8E09-7B8A8DDAF870}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7089E12A-929C-4939-8E09-7B8A8DDAF870}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C2EAB1A-195C-4862-BA25-4C5BB283BF16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C2EAB1A-195C-4862-BA25-4C5BB283BF16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C2EAB1A-195C-4862-BA25-4C5BB283BF16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C2EAB1A-195C-4862-BA25-4C5BB283BF16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39DDEDAA-E232-4153-B3F1-BB13BD781EB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39DDEDAA-E232-4153-B3F1-BB13BD781EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39DDEDAA-E232-4153-B3F1-BB13BD781EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39DDEDAA-E232-4153-B3F1-BB13BD781EB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BA982DC-3ABA-462B-97B5-5EF0DA13B4FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BA982DC-3ABA-462B-97B5-5EF0DA13B4FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BA982DC-3ABA-462B-97B5-5EF0DA13B4FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BA982DC-3ABA-462B-97B5-5EF0DA13B4FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{337C19ED-E65C-479D-96B0-BF70180DC853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{337C19ED-E65C-479D-96B0-BF70180DC853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{337C19ED-E65C-479D-96B0-BF70180DC853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{337C19ED-E65C-479D-96B0-BF70180DC853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5E6EBC8-20E1-4361-AC47-E1D5C1AC0195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5E6EBC8-20E1-4361-AC47-E1D5C1AC0195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5E6EBC8-20E1-4361-AC47-E1D5C1AC0195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5E6EBC8-20E1-4361-AC47-E1D5C1AC0195}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39D432FA-6B8A-48F7-8960-5820E0A596EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39D432FA-6B8A-48F7-8960-5820E0A596EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39D432FA-6B8A-48F7-8960-5820E0A596EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39D432FA-6B8A-48F7-8960-5820E0A596EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {003617C6-5890-48A4-BD0E-C7F9670D3220}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 9
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://202.164.57.200:8080/tfs/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = solgen.core\\Solgen.Core.csproj
+		SccProjectName1 = solgen.core
+		SccLocalPath1 = solgen.core
+		SccProjectUniqueName2 = solgen.portal\\Solgen.portal.csproj
+		SccProjectName2 = solgen.portal
+		SccLocalPath2 = solgen.portal
+		SccProjectUniqueName3 = solgen.Repository\\Solgen.Repository.csproj
+		SccProjectName3 = solgen.Repository
+		SccLocalPath3 = solgen.Repository
+		SccProjectUniqueName4 = solgen.Service\\Solgen.Service.csproj
+		SccProjectName4 = solgen.Service
+		SccLocalPath4 = solgen.Service
+		SccProjectUniqueName5 = solgen.webapi\\Solgen.WebApi.csproj
+		SccProjectName5 = solgen.webapi
+		SccLocalPath5 = solgen.webapi
+		SccProjectUniqueName6 = Solgen.Formstack\\Solgen.Formstack.csproj
+		SccProjectName6 = Solgen.Formstack
+		SccLocalPath6 = Solgen.Formstack
+		SccProjectUniqueName7 = FacebookCampaignService\\FacebookCampaignService.csproj
+		SccProjectName7 = FacebookCampaignService
+		SccLocalPath7 = FacebookCampaignService
+		SccProjectUniqueName8 = Zolar.StoreFront\\Zolar.StoreFront.csproj
+		SccProjectName8 = Zolar.StoreFront
+		SccLocalPath8 = Zolar.StoreFront
+	EndGlobalSection
+EndGlobal

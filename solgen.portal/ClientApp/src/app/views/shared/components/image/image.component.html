@@ -1,0 +1,16 @@
+<div [formGroup]="Img" (mouseleave)="hideToolTip()" (mouseenter)="showToolTip()">
+  <div class="row">
+    <div [ngStyle]="Img.get('style').value" class="col-12">
+      <div class="image-box mb-0 d-flex align-items-center justify-content-center p-3">
+        <input *ngIf="!Img.get('imageSrc').value" type="file" id="file" accept=".png, .jpg, .jpeg" (change)="onFileChange($event)"/>
+        <img *ngIf="Img.get('imageSrc').value" [src]="Img.get('imageSrc').value" alt="img" />
+        <i
+        *ngIf="!Img.get('isPreview').value && Img.get('imageSrc').value"
+        style="color: red;cursor: pointer;"
+        class="position-absolute material-icons uploaded-image-cross"
+        (click)="deleteImage()"
+        >X</i>
+      </div>
+    </div>
+  </div>
+</div>

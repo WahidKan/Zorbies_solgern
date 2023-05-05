@@ -1,0 +1,121 @@
+ 
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Files Configuration</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Files Configuration</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+<div class="clearfix"></div>
+<div class="panel   clearfix">
+    <div class="panel-content clearfix mb-4 p-0">
+      <!-- *ngIf="id != null && id > 0" -->
+      <ul class="nav nav-tabs nav-cust p-4" id="myTab"  role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active show" id="lead-tab"
+              data-toggle="tab" href="#FileConfiguration" role="tab" aria-selected="true">Files Configuration</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade active show" id="File Configuration" role="tabpanel">
+          <div class="row">
+            <div class="col-lg-12 portlets">
+               <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h3 class="form-heading"><span>Files Configuration List</span><span class="text-danger float-right" style="border-bottom: unset !important;font-size: 15px !important;">NOTE: Default file size will be 5MB.</span></h3>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 py-1">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">
+                              <div class="row">
+                                <div class="col-10">
+                                  <div class="row">
+                                    <div class="col-2">File Types</div>
+                                    <div class="col-10">Extension</div>
+                                  </div>
+                                </div>
+                                <div class="col-1">Edit</div>
+                            </div> 
+                            </th>
+                            <th scope="col">File Size(MB)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let file of fileConfigurationList; index as i;">
+                            <td>{{file.Name}}</td>
+                            <td>
+                              <div class="row">
+                                <div class="col-10" *ngFor="let group of file.FileTypesGroup; index as ti;">
+                                  <div class="row">
+                                    <div class="col-2">{{group.Name}}</div>
+                                    <div class="col-10">{{showFiletypesMapping(group.FileTypes,file)}}</div>
+                                  </div>
+                                </div>
+                                <div class="col-2">
+                                  <a title="Edit" href="javascript:void(0);" (click)="AddEditFileTypes($event,file.FileTypesGroup,i)" class="btn-edit"><i class="feather-edit-2 text-success pr-2"></i></a>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" step="1" min="1" [max]="max" (keypress)="keyPress($event)" [(ngModel)]="file.FileSize" #FileSize ="ngModel" >
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="row mt-3" >
+                      <div class="col-sm-12 col-md-12">
+                          <button class="btn btn-success mr-2" href="javascript:void(0);" (click)="submit()"><span><i class="feather-save"></i> Submit</span></button>
+                      </div>
+                  </div>
+                  </div>
+                  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h2>Test</h2>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-treeviewfileconfiguration #treeviewpopup (refreshData)="refreshData($event)"></app-treeviewfileconfiguration>
+
+

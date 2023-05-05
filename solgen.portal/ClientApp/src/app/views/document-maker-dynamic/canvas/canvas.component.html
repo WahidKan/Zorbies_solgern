@@ -1,0 +1,34 @@
+<!-- <div #advancedPropertiesModal></div>
+<div *ngIf="document" [formGroup]="document" #containerElm style="overflow-y: auto; overflow-x: hidden; height: 700px;"
+  pDroppable="controls" (onDrop)="dropRow($event)">
+  <div formArrayName="rows" class="box-container drop h-100 bg-white">
+    <div *ngFor="let row of getRows.controls; let i = index"
+      style="position: relative !important; border: 1px solid #eb1717 !important;">
+      <div [formGroup]="row" class = "col">
+        <div formArrayName="columns"  pDroppable="controls" (onDrop)="dropColumn($event, i)">
+          <app-drag-drop-dynamic class="component col" style="border: 10px solid rgb(157, 158, 158);width: 100%;left: 0px;"
+            [style.top.px]="column.get('marginTop').value" [style.left.px]="column.get('marginLeft').value"
+            [style.width.px]="column.get('width').value" *ngFor="let column of getColumns(row).controls"
+            [component]="column"></app-drag-drop-dynamic>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div #advancedPropertiesModal></div>
+<div *ngIf="document" [formGroup]="document" #containerElm style="min-height: 700px;"
+  pDroppable="controls" (onDrop)="dropRow($event)">
+  <div formArrayName="rows" class="box-container drop h-100 bg-white col-xs-12">
+    <div [formGroup]="row" *ngFor="let row of getRows.controls; let i = index" class="row  align-items-start"
+      style="position: relative !important; border: 1px solid #eb1717 !important;">
+        <div  formArrayName="columns" class="col" *ngFor="let column of getColumns(row).controls"  pDroppable="controls" (onDrop)="dropColumn($event, i)">
+          <app-drag-drop-dynamic class="row" style="border: 10px solid rgb(157, 158, 158);width: 100%;left: 0px;"
+            [component]="column"></app-drag-drop-dynamic>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+  </div>
+</div>
+
+<app-advanced-properties-modal-dynamic #propertiesModal></app-advanced-properties-modal-dynamic>

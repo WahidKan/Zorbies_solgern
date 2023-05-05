@@ -1,0 +1,311 @@
+<app-breadcrumb *ngIf="!loadSave" [data]="contentHeader">
+</app-breadcrumb>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+        <li><a class="smview" routerLink="/user">Manage Users</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+
+<div class="panel">
+    <div class="panel-content p-4">
+        <form [formGroup]="addUserForm" autocomplete="off">
+            <!--<h3 class="form-heading">User Preferred Employee/Contact:</h3>
+  <div class="row mx-auto mb-2" *ngIf="!isEdit">
+    <div class="col-12 col-md-6 col-lg-6">
+      <label>User Preferred:</label>
+      <div class="form-group">
+        <div class="form-check-inline">
+          <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="customRadio" name="employeeContactPreferredBy" (click)="userForSaleForce('Employee')"
+                   value="Employee" formControlName="employeeContactPreferredBy" >
+            <label class="custom-control-label" for="customRadio">Employee</label>
+          </div>
+        </div>
+        <div class="form-check-inline">
+          <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="customRadio1" name="employeeContactPreferredBy" (click)="userForSaleForce('Contact')"
+                   value="Contact" formControlName="employeeContactPreferredBy">
+            <label class="custom-control-label" for="customRadio1">Contact</label>
+          </div>
+        </div>
+        <div class="form-check-inline">
+          <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="customRadio2" name="employeeContactPreferredBy"  (click)="userForSaleForce('NormalUser')" value="NormalUser" formControlName="employeeContactPreferredBy" checked>
+            <label class="custom-control-label" for="customRadio2">Normal User</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-6" *ngIf="isNormalUser">
+      <label>Select User:</label>
+      <div class="form-group">
+        <ng-select [items]="lstSalesforceEmployee"
+                   placeholder="Select Employee Type" bindValue="value" (change)="FillDataForEmployeOrContact($event)" bindLabel="text" formControlName="salesForceEmployeOrContact">
+        </ng-select>
+      </div>
+    </div>
+      <hr />
+    </div>-->
+            <div class="row  mb-2">
+                <div class="col-md-12 col-lg-4">
+                    <label>First Name:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="firstName" maxlength="50" placeholder="Enter First Name" [ngClass]="{'is-invalid': (firstName.invalid && (firstName.dirty || firstName.touched) && (firstName.errors?.required || firstName.errors?.maxlength)) }">
+                        <small *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors?.required" class="text-danger">First Name is required</small>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Last Name:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="lastName" maxlength="50" placeholder="Enter Last Name" [ngClass]="{'is-invalid': (lastName.invalid && (lastName.dirty || lastName.touched) && (lastName.errors?.required || lastName.errors?.maxlength)) }">
+                        <small *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors?.required" class="text-danger">Last Name is required</small>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-4">
+                    <label>Email:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="email" maxlength="50" placeholder="Enter Email" [ngClass]="{'is-invalid': (email.invalid && (email.dirty || email.touched) && (email.errors?.required || email.errors?.email)) }">
+                        <small *ngIf="email.invalid && (email.dirty || email.touched) && email.errors?.required" class="text-danger">Email is required</small>
+                        <small *ngIf="email.invalid && (email.dirty || email.touched) && email.errors?.email" class="text-danger">Please enter valid email address</small>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-4">
+                    <label>Phone:</label>
+                    <div class="form-group">
+                        <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="phone" placeholder="(___) ___-____"></p-inputMask>
+                    </div>
+                </div>
+
+                <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Position:</label>
+    <div class="form-group">
+      <ng-select [items]="lstUserPosition"
+                 placeholder="Select Position" bindValue="value" bindLabel="text" formControlName="position">
+      </ng-select>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <label>Employee Type:</label>
+    <div class="form-group">
+      <ng-select [items]="lstEmployeeType"
+                 placeholder="Select Employee Type" bindValue="value" bindLabel="text" formControlName="empType">
+      </ng-select>
+    </div>
+  </div>-->
+                <div class="col-md-12 col-lg-4" *ngIf="isEmployee">
+                    <label>User Type:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <ng-select [items]="lstUserType" placeholder="Select User Type" (change)="userTypeChange($event.text,$event.value,$event)" bindValue="value" bindLabel="text" formControlName="userType" [ngClass]="{'is-invalid': (userType.invalid && (userType.dirty || userType.touched) && userType.errors?.required)}"></ng-select>
+                        <small *ngIf="userType.invalid && (userType.dirty || userType.touched) && userType.errors?.required" class="text-danger">Please select User Type</small>
+
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4" *ngIf="isEmployee">
+                    <label>Roles:</label>
+                    <div class="form-group">
+                        <ng-select [items]="rolesnames" [loading]="loadSave" placeholder="Select Roles" formControlName="roleId" bindLabel="roleName" bindValue="id"></ng-select>
+
+                    </div>
+                </div>
+                <!-- <div class="col-md-12 col-lg-4" *ngIf="isEmployee">
+          <label>Consolidated User:</label>
+          <div class="form-group">
+            <ng-select [items]="ConsolidatedUser" [loading]="loadSave" placeholder="Select Consolidated User" formControlName="consolidateduserid"
+                       bindLabel="text" bindValue="value"></ng-select>
+
+          </div>
+        </div> -->
+                <div class="col-md-12 col-lg-4">
+                    <label>Department:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <ng-select [items]="lstdepartment" [loading]="loadSave" placeholder="Select Department" formControlName="departmentID" bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (departmentID.invalid && (departmentID.dirty || departmentID.touched) && departmentID.errors?.required) }"></ng-select>
+                        <small *ngIf="departmentID.invalid && (departmentID.dirty || departmentID.touched) && departmentID.errors?.required" class="text-danger">Please select Department</small>
+
+                    </div>
+                </div>
+                <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Select Company:</label>
+    <div class="form-group">
+      <ng-select [items]="lstcompany" [loading]="loadSave" placeholder="Select Company" formControlName="companyid"
+                 bindLabel="text" bindValue="value"></ng-select>
+
+    </div>
+  </div>-->
+
+                <div class="col-md-12 col-lg-4" *ngIf="assignedBankId.enabled">
+                    <label>Lender:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <ng-select [items]="banknames" [loading]="loadSave" placeholder="Select Bank" formControlName="assignedBankId" bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (assignedBankId.invalid && (assignedBankId.dirty || assignedBankId.touched) && assignedBankId.errors?.required) }"></ng-select>
+                        <small *ngIf="assignedBankId.invalid && (assignedBankId.dirty || assignedBankId.touched) && assignedBankId.errors?.required" class="text-danger">Please select Lender</small>
+                    </div>
+                </div>
+
+                <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Executive Commission:</label>
+    <div class="form-group">
+      <ng-select [items]="executiveCommission"
+                 bindLabel="name"
+                 placeholder="Select Executive Commission"
+                 formControlName="executiveCommisionFormula">
+      </ng-select>
+    </div>
+  </div>-->
+                <div class="col-md-12 col-lg-4" *ngIf="comptype.companyType!='companytypeFinancialInstitute'">
+                    <label>Service Territory:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <ng-select [ngClass]="{'is-invalid': (locationID.invalid && (locationID.dirty || locationID.touched) && locationID.errors?.required) }" [items]="lstLocation" placeholder="Select Service Territory" bindValue="value" bindLabel="text" formControlName="locationID"></ng-select>
+                        <small *ngIf="locationID.invalid && (locationID.dirty || locationID.touched) && locationID.errors?.required" class="text-danger">Service Territory is required</small>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-12">
+                    <label>Notes:</label>
+                    <div class="form-group">
+                        <textarea type="text" class="form-control" formControlName="notes" placeholder="Enter Notes" maxlength="500"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-4">
+                    <label>Is Active:</label>
+                    <div class="form-group">
+                        <label class="switch">
+              <input type="checkbox" id="customCheck1" formControlName="isActive">
+              <span class="slider round"><span>Yes</span></span>
+            </label>
+                    </div>
+                </div>
+
+                <!-- <div class="col-md-12 col-lg-4">
+          <label>Is Manager:</label>
+          <div class="form-group">
+            <label class="switch">
+              <input type="checkbox" id="customCheck2" formControlName="isHOD">
+              <span class="slider round"><span>Yes</span></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-lg-4">
+          <label>Email Notification:</label>
+          <div class="form-group">
+            <label class="switch">
+              <input type="checkbox" id="customCheck3" formControlName="emailNotification">
+              <span class="slider round"><span>Yes</span></span>
+            </label>
+          </div>
+        </div> -->
+
+
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>Address:</span></h3>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Address:</label>
+                    <div class="form-group">
+                        <textarea type="text" class="form-control" formControlName="address" placeholder="Enter Address" [ngClass]="{'is-invalid': (address.invalid && (address.dirty || address.touched) && (address.errors?.required || address.errors?.maxlength)) }"></textarea>
+                        <small *ngIf="address.invalid && (address.dirty || address.touched) && address.errors?.required" class="text-danger">Address is required</small>
+                        <small *ngIf="address.invalid && (address.dirty || address.touched) && address.errors?.maxlength" class="text-danger">Address must be less than 500 characters.</small>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Country:</label>
+                    <div class="form-group">
+                        <ng-select [items]="countryLists" [loading]="loadSave" (change)="onCountryChange(county.value, $event.text)" placeholder="Select country" formControlName="county" bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (county.invalid && (county.dirty || county.touched) && county.errors?.required) }"></ng-select>
+                        <small *ngIf="county.invalid && (county.dirty || county.touched) && county.errors?.required" class="text-danger">Please select country</small>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>State:</label>
+                    <div class="form-group">
+                        <ng-select [items]="states" [loading]="loadSave" placeholder="Select State" formControlName="state" bindLabel="text" bindValue="stateGuidValues" [ngClass]="{'is-invalid': (state.invalid && (state.dirty || state.touched) && state.errors?.required) }"></ng-select>
+                        <small *ngIf="state.invalid && (state.dirty || state.touched) && state.errors?.required" class="text-danger">Please select State</small>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>City:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter City" formControlName="city" [ngClass]="{'is-invalid': (city.invalid && (city.dirty || city.touched) && (city.errors?.required || city.errors?.maxlength)) }">
+                        <small *ngIf="city.invalid && (city.dirty || city.touched) && city.errors?.required" class="text-danger">City is required</small>
+                        <small *ngIf="city.invalid && (city.dirty || city.touched) && city.errors?.maxlength" class="text-danger">City name must be less than 100 characters.</small>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Zip Code:</label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter Zip Code" formControlName="zipCode" [ngClass]="{'is-invalid': (zipCode.invalid && (zipCode.dirty || zipCode.touched) && (zipCode.errors?.required || zipCode.errors?.maxlength)) }">
+                        <!--<small *ngIf="zipCode.invalid && (zipCode.dirty || zipCode.touched)" class="text-danger">
+        <ng-container *ngIf="zipCode.errors.required">Zip Code is required</ng-container>
+        <ng-container *ngIf="zipCode.errors.maxlength">Zip Code can not be greater than 5 characters.</ng-container>
+      </small>-->
+
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Time Format:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <ng-select [items]="lstTimeFormat" placeholder="Select Time Format" formControlName="timeFormat" bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (timeFormat.invalid && (timeFormat.dirty || timeFormat.touched) && timeFormat.errors?.required) }"></ng-select>
+                        <small *ngIf="timeFormat.invalid && (timeFormat.dirty || timeFormat.touched) && timeFormat.errors?.required" class="text-danger">Please select Time Format</small>
+
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label>Time Zone:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                        <ng-select [items]="lstTimeZone" [loading]="loadSave" placeholder="Select Time Zone" formControlName="timeZoneId" bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (timeZoneId.invalid && (timeZoneId.dirty || timeZoneId.touched) && timeZoneId.errors?.required) }"></ng-select>
+                        <small *ngIf="timeZoneId.invalid && (timeZoneId.dirty || timeZoneId.touched) && timeZoneId.errors?.required" class="text-danger">Please select Time Zone</small>
+
+                    </div>
+                </div>
+
+                <!-- <div class="col-md-12 col-lg-4">
+          <label>Report To:</label>
+          <div class="form-group">
+            <ng-select [items]="lstReportTo" [loading]="loadSave" placeholder="Select Report To" formControlName="reportToId"
+                       bindLabel="text" bindValue="value"></ng-select>
+
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>SalesForce Id:</label>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Enter SalesForce Id" formControlName="sfid" />
+
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+          <label>Solgen Id:</label>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Enter Solgen Id" formControlName="sid"   >
+
+          </div>
+        </div> -->
+
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12 col-md-12">
+                    <a href="javascript:void(0);" *ngIf="addOrUpdatePermission" class="btn btn-success mr-2" (click)="addeditUser()"><i class="feather-save"></i> Submit</a>
+                    <a href="javascript:void(0);" class="btn btn-danger" (click)="Cancel()"><i class="feather-x"></i> Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

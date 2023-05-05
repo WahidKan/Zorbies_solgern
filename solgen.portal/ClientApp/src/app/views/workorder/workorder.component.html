@@ -1,0 +1,169 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<!-- Breadcrumb-->
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100">
+      <strong>Manage Work Order</strong>
+      <p class="d-inline-block pl-1 pl-md-3 mb-1"><i class="fa fa-list-alt p-0 pr-1"></i>{{ViewModel}}</p>
+    </h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Manage Work Order</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+       <!--<carousel data-interval="false" [noPause]="true">-->
+        <!-- [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : inner.form_field_visibility == 'NO', 'col-12': inner.layout_type =='single', 'col-md-6': inner.layout_type =='double', 'col-lg-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3': -->
+
+
+                             <!-- inner.layout_type =='four' }" {i==2? 'active item carousel-item':'item carousel-item']" -->
+          <!--<slide *ngFor="let c of tilewidgetSlider ;let i=index"   >
+            <div id="dashboardtabs" class=" wrapperwidget"  >
+              <div style="max-width:90% !important;" class="tabs tabs-linetriangle cursor-pointer scrollswidget container"  >
+              <ul *ngIf="(i*4)+4<=tilewidget.length" class="nav nav-tabs group2 row ">
+                <li  class="col"   *ngFor="let c1 of  tilewidgetSliderInner;let j=index">
+                  <div   *ngIf="(i*4)+j<tilewidget.length">
+                  <a style="text-align: center;" href="javascript:void(0);"  (click)="SetManageViewValueWidgets(GetPageData(i,j))" title="Click to view {{GetPageData(i,j).view_name}} records" [ngStyle]="GetPageData(i,j).view_name == ViewModel ? {'background-color':'#CCCCCC'} : {'background-color':'#F5F5F5'}"   class="border hoverscrolls">
+                    <span class="headingtext" [ngStyle]="{'color':'#000000'}">{{GetPageData(i,j).view_name}}</span>
+                    <span class="numbers" [ngStyle]="{'color':'#d88c49'}"> {{GetPageData(i,j).currentTotal }}</span>
+                    <span class="block-icon"><i class="{{GetPageData(i,j).widgetIconClass}}"></i></span>
+                  </a>
+                </div>
+                </li>
+              </ul>
+              <ul *ngIf="(i*4)+4>tilewidget.length" class="nav nav-tabs group2 row ">
+                <li  class="col"   *ngFor="let c1 of  tilewidgetSliderInnerDi;let j=index">
+                  <div  *ngIf="(i*4)+j<tilewidget.length">
+                  <a style="text-align: center;" href="javascript:void(0);"  (click)="SetManageViewValueWidgets(GetPageData(i,j))" title="Click to view {{GetPageData(i,j).view_name}} records" [ngStyle]="GetPageData(i,j).view_name == ViewModel ? {'background-color':'#CCCCCC'} : {'background-color':'#F5F5F5'}" class="border hoverscrolls">
+                    <span class="headingtext" [ngStyle]="{'color':'#000000'}">{{GetPageData(i,j).view_name}}</span>
+                    <span class="numbers" [ngStyle]="{'color':'#d88c49'}"> {{GetPageData(i,j).currentTotal }}</span>
+                    <span class="block-icon"><i class="{{GetPageData(i,j).widgetIconClass}}"></i></span>
+                  </a>
+                </div>
+                </li>
+              </ul>
+              </div>
+            </div>
+            
+          </slide>
+      </carousel>-->
+
+      <lib-dynamic-list *ngIf="load" [jsoninput]="jsonData" [currentPage]="currentPage" [pageSizeValue]="pageSizeValue" [lstPageSize]="lstPageSize"
+                        (MainMethod)="MainMethod($event)" (curPageemit)="curPageemit($event)" [sortDir]="sortDir" [sortColumn]="sortColumn"
+                        primaryid="Id" (selectdata)="selectdata($event)" [companytype]="companyType" (goToPage)="goToPage($event)" [jsoncondition]="jsoncondition"
+                        [actionarray]="actionarray" [listFilter]="listFilter"[userinfodata] = "userinfodata"
+                        [myCheckboxemit]="myCheckbox" [vewId]="vewId" [manageviewList]="pagedData.data" (updateFilter)="updateFilter($event)"
+                        (displayDetailDetail)="displayDetailDetail($event)" [placeholder]="placeholder"
+                        (search)="search()" (reset)="reset()" (add)="add()" (deleteAll)="deleteAll()" (switchClicked)="switchClicked($event)" (filterpopup)="filterpopup()"
+                        (SetManageViewValue)="SetManageViewValue($event)" [isAdd]="isAdd" [isUpdate]="isUpdate" [isDelete]="isDelete" Showheader="true"
+                        isSearchPannel="true" isManageView="true" [searchlabelName]="searchlabelName" [listLabelName]="listLabelName">
+
+      </lib-dynamic-list>
+
+    </div>
+  </div>
+</div>
+
+<!--==================================================== Audit popup ==============================================================-->
+
+<div bsModal #audit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Audit Review</h4>
+        <button type="button" class="close" (click)="closeAudit()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px;">
+        <div class="table-responsive no-padding mb-0" style="max-height: 320px; overflow:auto !important;">
+          <table class="table table-hover table-dynamic mb-0" style="min-width:300px;">
+            <thead>
+              <tr>
+                <th width="100">Sr.No.</th>
+                <th>Name</th>
+                <th width="200">Final Score</th>
+                <th width="150">Is Excluded?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of auditData; let auditIndex=index;">
+                <td>{{item.RowNum}}</td>
+                <td>
+                  <a *ngIf="item.isExclude!=true" href="javascript:void(0);" (click)="auditChecklistDetail(item.id,item.ServiceAppointmentId,this.isDisabled)">{{item.Name}}</a>
+                  <a *ngIf="item.isExclude==true">{{item.Name}}</a>
+                </td>
+                <td>{{item.FinalScoreCount}}/{{item.QuestionCount}}</td>
+                <td>
+                  <div class="d-inline-block align-middle m-0 ml-2">
+                    <label class="switch m-0">
+                      <input type="checkbox" id={{item.id}} [checked]="item.isExclude" [attr.disabled]="isDisabled ? true : null" (click)="auditSwitchClicked($event,item.id,item.ServiceAppointmentId)">
+                      <span class="slider round">
+                        <span>Yes</span>
+                      </span>
+                    </label>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="auditData == null">
+                <td colspan="3" class="text-center"><span class="text-center text-danger">No data to display</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <!--<div *ngFor="let item of auditData; let auditIndex=index;">
+            <div class="col-md-12 step-default border p-2 mb-2 rounded" *ngIf="auditIndex==0">
+              <h6 class="m-0">{{item.OverallScore}} <b>({{item.OverallScoreText}})</b></h6>
+            </div>
+          </div>-->
+        </div>
+        <div class="table-responsive no-padding mb-0">
+          <table class="table table-hover table-dynamic mb-0" style="min-width:300px;">
+            <tr>
+              <td width="100" class="border-0"></td>
+              <td class="border-0"></td>
+              <td width="200" class="border-0">
+                <span *ngFor="let items of auditData; let auditIndex=index;">
+                  <span *ngIf="auditIndex==0 && items.OverallScoreText=='Pending'" style="max-width:150px !important;" class="status-box bg-warning text-dark p-2">{{items.OverallScore}} <strong>({{items.OverallScoreText}})</strong></span>
+
+                  <span *ngIf="auditIndex==0 && items.OverallScoreText=='Fail'" style="max-width:150px !important;"
+                        class="status-box bg-danger p-2">
+                    {{items.OverallScore}} <strong>({{items.OverallScoreText}})</strong>
+                  </span>
+
+                  <span *ngIf="auditIndex==0 && items.OverallScoreText=='Pass'" style="max-width:150px !important;"
+                        class="status-box bg-success p-2">
+                    {{items.OverallScore}} <strong>({{items.OverallScoreText}})</strong>
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeAudit()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--==============================================================================================================================-->
+
+<app-searchfilteradd (searchFilterCondition)="ApplyAdvanceFilter($event)" #templateFilterView moduleName="crm" subModuleName="workorder"></app-searchfilteradd>
+<app-manageviewnew (customViewid)="GetcustomViewid($event)" #templateManageView moduleName="crm" subModuleName="workorder"></app-manageviewnew>
+

@@ -1,0 +1,51 @@
+<div bsModal #documentModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content" style="z-index:1">
+      <div class="modal-header">
+        <h4 class="modal-title">Generate Loan Documents</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body mapping-select" style="max-height:600px; ">
+        
+        <div class="clearfix"></div>
+        <div class="panel">
+          <div class="panel-content " [ngClass]="{'disabled':loadSave}">
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                           [rows]="formstackDocuments"
+                           [columnMode]="'force'"
+                              [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                           [headerHeight]="40"
+                           [footerHeight]="40"
+                           
+                           [loadingIndicator]="loadSave">
+              <ngx-datatable-column name="Document Name" prop="name"></ngx-datatable-column>
+              <ngx-datatable-column name="Document Id" prop="id"></ngx-datatable-column>
+              <ngx-datatable-column name="Path" prop="DateOpened">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.folder}}/{{row.name}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Edit">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="downloadMergedDocument(row)"><i class="feather-save"></i> Generate</a>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+          <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>-->
+        </div>
+        
+      </div>
+
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

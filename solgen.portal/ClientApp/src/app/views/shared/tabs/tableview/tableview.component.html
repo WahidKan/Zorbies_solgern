@@ -1,0 +1,194 @@
+<div class="panel active">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a href="#tableView{{index}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion"
+        aria-expanded="true">
+        <span>{{title}} ({{totalRecords}})</span>
+      </a>
+    </h4>
+  </div>
+  <div id="tableView{{index}}" class="panel-collapse collapse active show" style="">
+    <app-copy-link-modal #CopyLinkModal></app-copy-link-modal>
+    <a *ngIf="showAddButton" href="javascript:void(0);" class="btn-in-panel" data-dismiss="modal"
+      (click)="openAddPopup(title)" data-toggle="modal"><i class="feather-plus mr-2"></i> Add</a>
+    <div class="panel-body p-2 mt-0">
+      <div class="table-responsive ngxtbl">
+        <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="Dataset" [columnMode]="'force'"
+          [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true"
+          [externalSorting]="true" [loadingIndicator]="loadSave" [count]="totalRecords" [offset]="offset"
+          [limit]="pageSize" (page)='setPageNo($event)' (sort)="onSort($event)">
+          <ngx-datatable-column *ngFor="let col of Schema" [name]="col.display_name" [prop]="col.prop" [sortable]="true"
+            [maxWidth]="2000" [cellClass]="">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div [ngClass]="{'text-success':PrimaryFunc(row)}">
+                <div [title]="row[col.prop]" *ngIf="col.dt_code == 'bit'">
+                  <i *ngIf="row[col.prop] == false" class="fa fa-times text-danger icon_tick"></i>
+                  <i *ngIf="row[col.prop] == true" class="feather-check text-success icon_tick"></i>
+                </div>
+                <div [title]="row[col.prop]"
+                *ngIf="(col.dt_code=='bigint') && (title.includes('Proposal') ) && col.prop=='QuoteNumber'">
+                <ng-container>
+                  <!-- <a [ngClass]="{'text-success':PrimaryFunc(row)}" href="javascript:void(0);"
+                  (click)="openDailer(row[col.prop])">{{row[col.prop]}}</a> -->
+
+                  <a [ngClass]="{'text-success':PrimaryFunc(row)}" [target]="_blank"
+                  href="{{row | GenerateRoute:col}}">{{row[col.prop]}}</a>
+                  
+                </ng-container>
+              </div>
+                <div [title]="row[col.prop] | DateTimeToLocal:'Date'" *ngIf="col.dt_code=='date'">
+                  {{ (row[col.prop] !== null) ? (row[col.prop] | date: 'MM-dd-yyyy') : "" }}
+                </div>
+                <div [title]="row[col.prop] | DateTimeToLocal" *ngIf="col.dt_code=='datetime'">
+                  {{ (row[col.prop] !== null) ? (row[col.prop] | DateTimeToLocal) : "" }}
+                </div>
+                <div *ngIf="col.dt_code == 'select'">
+                  <div [title]="row[col.prop]">
+                    <ng-container *ngIf="row[col.prop] | Contains:'::';else elseBlock">
+                      <span class="text-white p-2"
+                        [ngStyle]="{'background-color':row[col.prop] | split:'::':1}">{{(row[col.prop] | split:'::':0) |
+                        DisplayName}}</span>
+                    </ng-container>
+                    <ng-template #elseBlock>
+                      <span>
+                        <ng-container *ngIf="col.field_route;else elseBlock">
+                          <a [ngClass]="{'text-success':PrimaryFunc(row)}"
+                            href="{{row | GenerateRoute:col}}">{{row[col.prop]}}</a>
+                        </ng-container>
+                        <ng-template #elseBlock>
+                          {{row[col.prop]}} 
+                        </ng-template>
+                      </span>
+                    </ng-template>
+                  </div>
+                </div>
+                <div [title]="row[col.prop]"
+                  *ngIf="col.dt_code!='date' && col.dt_code!='text' && col.dt_code!='datetime' && col.dt_code!='bit' && col.dt_code != 'select' && col.prop!='Phone' && col.prop!='QuoteNumber' ">
+                  <ng-container *ngIf="col.field_route;else elseBlock">
+                    <a [ngClass]="{'text-success':PrimaryFunc(row)}"
+                      href="{{row | GenerateRoute:col}}">{{row[col.prop]}}</a>
+                  </ng-container>
+                  <ng-template #elseBlock>
+                    <div *ngIf="col.prop=='Update__c' && col.dt_code=='boolean'  && title =='Jurisdiction'">
+                      <div *ngIf="row[col.prop]==true">
+                        Yes
+                      </div>
+                      <div *ngIf="row[col.prop]!=true">
+                        No
+                      </div>
+                    </div>
+                    <div *ngIf="col.prop!=='Update__c' && col.dt_code!=='boolean'">
+                      {{row[col.prop]}}
+                    </div>
+                  </ng-template>
+                </div>
+                <div [title]="row[col.prop]"
+                  *ngIf="col.dt_code=='text' && col.prop.includes('OpportunityName') ">
+
+                  
+                  <ng-container>
+
+                   {{row[col.prop]}}
+
+                  </ng-container>
+                </div>
+                <div [title]="row[col.prop]"
+                  *ngIf="col.dt_code=='text' && title.includes('Contact')  && row.Id==primaryContactId">
+                  <ng-container>
+
+                    <a style="color:rgb(148, 148, 37) !important"  [routerLink]="[col.field_route, row.Id]"
+                      (click)="openDailer(row[col.prop])">{{row[col.prop]}}</a>
+
+                  </ng-container>
+                </div>
+                <div [title]="row[col.prop]"
+                  *ngIf="col.dt_code=='text' && title.includes('Contract')  && row.Id==primaryContractId">
+                  <ng-container>
+                    <a style="color:rgb(148, 148, 37) !important"  [routerLink]="[col.field_route, row.Id]"
+                      (click)="openDailer(row[col.prop])">{{row[col.prop]}}</a>
+
+                  </ng-container>
+                </div>
+                <div [title]="row[col.prop]"
+                  *ngIf=" col.dt_code=='text' && title.includes('Proposal')  && row.ProposalId == primaryProposalId">
+                  <ng-container>
+                    <a style="color:rgb(148, 148, 37) !important"  [routerLink]="[col.field_route, row.Id]"
+                      (click)="openDailer(row[col.prop])">{{row[col.prop]}}</a>
+
+                  </ng-container>
+                </div>
+                
+                <div [title]="row[col.prop]"
+                  *ngIf="(col.dt_code=='text') && ((title.includes('Contact') &&  row.Id != primaryContactId ) ||  ((title.includes('Proposal') && row.ProposalId != primaryProposalId)) ||  ((title.includes('Contract') && row.Id != primaryContractId))) && col.prop!='TotalPrice'">
+                  <ng-container>
+                    <a [ngClass]="{'text-success':PrimaryFunc(row)}" href="javascript:void(0);"  [routerLink]="[col.field_route, row.Id]"
+                      (click)="openDailer(row[col.prop])">{{row[col.prop]}}</a>
+                  </ng-container>
+                </div>
+                <div [title]="row[col.prop]"
+                *ngIf="(col.dt_code=='text') && (title.includes('Proposal') ) && col.prop=='TotalPrice'">
+                <ng-container>
+                 $ {{row[col.prop]}}
+                </ng-container>
+              </div>
+                <div [title]="row[col.prop]"
+                  *ngIf="(col.dt_code=='text') && (title.includes('Work'))">
+                  <ng-container>
+                   {{row[col.prop]}}
+                  </ng-container>
+                </div>
+               
+                <div [title]="row[col.prop]"
+                  *ngIf="col.dt_code!='date'&& col.dt_code!='text' && col.dt_code!='datetime' && col.dt_code!='bit' && col.dt_code != 'select' && field.compact_view_name == 'Account Contacts' && col.prop=='Phone' ">
+                  <ng-container>
+                    <a [ngClass]="{'text-success':PrimaryFunc(row)}" href="javascript:void(0);"  [routerLink]="[col.field_route, row.Id]"
+                      (click)="openDailer(row[col.prop])">{{row[col.prop]}}</a>
+                    <!-- <a href="{{row | GenerateRoute:col}}">{{row[col.prop]}}</a> -->
+                  </ng-container>
+                </div>
+
+                <div [title]="row[col.prop]"
+                  *ngIf="col.dt_code!='date' && col.dt_code!='text' && col.dt_code!='datetime' && col.dt_code!='bit' && col.dt_code != 'select' && field.compact_view_name == 'Account Proposal' && col.prop=='QuoteNumber' ">
+                  <ng-container>
+                    <!-- <a [ngClass]="{'text-success':PrimaryFunc(row)}" href="javascript:void(0);" (click)="openDailer(row[col.prop])">{{row[col.prop]}}</a> -->
+                    <a [ngClass]="{'text-success':PrimaryFunc(row)}"  [routerLink]="[col.field_route, row.Id]"
+                      href="{{row | GenerateRoute:col}}">{{row[col.prop]}}</a>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="text-center">
+                <a href="javascript:void(0);" *ngIf='showEditDeleteBtn == true' (click)="EditRecords(row)"
+                  title="Edit"><i class="fa fa-pencil text-success pr-2"></i></a>
+                <a href="javascript:void(0);" *ngIf="showDeleteBtn == true  " (click)="deleteRecords(row)"><i
+                    title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                <!-- <a href="javascript:void(0);" *ngIf='showCopyButtonBtn == true' (click)="goToPage(row)"><i
+                    title="CopyLink" class=" feather-copy"></i></a> -->
+                <!-- { "name": "CopyLink", "click": "goToPage(row)", "title": "CopyLink", "iclass": " feather-copy", "condition": "1==1" } -->
+
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template let-rowCount="totalRecords" let-pageSize="pageSize"
+              let-currentPage="curPage" let-offset="offset" let-isVisible="true">
+              <div class="page-count" *ngIf='(totalRecords  > 0)'>
+              </div>
+              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                [pagerRightArrowIcon]="'fa feather-chevron-left'" [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                [pagerNextIcon]="'fa fa-angle-double-right'" [page]="pageNo" [size]="pageSize" [count]="totalRecords"
+                [hidden]="!((totalRecords / pageSize) > 1)" (change)="setPageNo($event)">
+              </datatable-pager>
+            </ng-template>
+          </ngx-datatable-footer>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>

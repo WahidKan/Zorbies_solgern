@@ -1,0 +1,13 @@
+
+<p-gmap [options]="options" [overlays]="overlays" [style]="{'width':'100%','height':'250px'}"></p-gmap>
+
+<div class="form-group searchonmap">
+
+  <input type="text" class="form-control" [(ngModel)]='address' (keydown.enter)="findLocation('')" placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" #search>
+  <button (click)="findLocation('')" type="submit" class="btn btn-success">Search</button>
+</div>
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+
+
+

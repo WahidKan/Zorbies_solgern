@@ -1,0 +1,62 @@
+
+<div class="panel-header border-bottom pb-3">
+  <div class="row mt-2">
+    <div class="col-md-12 col-xl-8 p-0">
+      <div class="row searchfield mr-1 w-100">
+        <div class="col-lg-4 float-left mb-lg-0 mb-4">
+          <input class="form-control input-sm" type="text" [(ngModel)]='listFilter' placeholder="Search By Service Appointment" (keyup)='updateFilter($event)'>
+        </div>
+        <div class="col-lg-6 float-left">
+          <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="searchServiceAppointment()"><span><i class="feather-search"></i> Search</span></a>
+          <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="reset()"><span><i class="fa fa-refresh"></i> Reset</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 col-xl-4 p-0">
+      <div class="dt-buttons">
+        <a class="btn btn-success form-btns" href="javascript:void(0);" [routerLink]="['/serviceappointment']"><span><i class="fa fa-list mr-1"></i> List View</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<p-gmap [options]="options" (onOverlayClick)="handleOverlayClick($event)" [overlays]="overlays" [style]="{'width':'100%','height':'calc(100vh - 210px)'}"></p-gmap>
+
+
+
+<!--=================================================== AddAssignedResourcesPopup ==================================================================-->
+
+<div class="modal fade in show" bsModal #DetailPopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info location-detailm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{AppointmentNumber}}/WO-{{WorkOrderNumber}}</h4>
+        <button type="button" class="close" (click)="closeDetailPopupPopup()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; max-height:290px;">
+        <div class="location-detail">
+          <ul>
+            <li><i class="fa fa-calendar"> </i>{{SchedStartTime}}</li>
+            <li><i class="fa fa-user"> </i>{{name}}</li>
+            <li><i class="fa fa-map-marker"> </i>{{address}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-info actions-onclick view-list text-white" (click)="AddAssignedResources(id)" href="javascript:void(0);" title="Scheduled Appointment">
+          <i class="fa fa-clock-o text-white mr-2"> </i> Schedule Appointment
+        </a>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+</div>
+
+
+<app-addassignedresourcepopup #addAssignedResourcesPopup (AssignedResourceEmitter)="refreshList()" ></app-addassignedresourcepopup>
+

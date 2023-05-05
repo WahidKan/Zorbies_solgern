@@ -1,0 +1,147 @@
+<div class="panel-body">
+
+  <div class="row  mb-2" *ngIf="loanapplicantdata.length>0">
+
+    <h3 class="form-heading ng-star-inserted"><span>Applicant Information </span></h3>
+    <div class="clearfix"></div>
+    <div class="row" *ngFor="let item of loanapplicantdata">
+
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Name</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.FirstName}} {{item.LastName}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Address</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.StreetName}}, {{item.City}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Phone</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.HomePhone}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">State</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.StateName}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Zip</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.Zip}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex" *ngIf="showSSNandDOB">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">DOB</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.DOB|DateTimeToLocal:'Date'}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex" *ngIf="showSSNandDOB">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">SSN</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.SSN}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Employer</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.EmployerName}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Years at current address</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.YearsAtCurrentAddr}}</b></div>
+      </div>
+
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Monthly Income</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.MonthlyGrossIncome| MyCurrencyPipe}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Last Month Debt</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.LastMonthDebt| MyCurrencyPipe}}</b></div>
+      </div>
+
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">DTI(%)</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.DTI}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Cost per watt</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.CostPerWatt| MyCurrencyPipe}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Number of mortgages</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.NoofMortgage}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Housing status</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.HousingStatusVal}}</b></div>
+      </div>
+      <div class="col-md-12 d-flex" *ngIf="item.OverrideReason!='' && item.OverrideReason!=null">
+        <div class="col-3 mb-2 pb-2 border-bottom float-left">Override Reason</div>
+        <div class="col-9 mb-2 pb-2 border-bottom float-left"><b>{{item.OverrideReason}}</b></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row  mb-2" *ngIf="coloanapplicantdata.length>0 && IsCoApplicantRequired">
+
+    <h3 class="form-heading ng-star-inserted"><span>Co-Applicant Information </span></h3>
+    <div class="clearfix"></div>
+    <div class="row" *ngFor="let item of coloanapplicantdata">
+
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Name</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.FirstName}} {{item.LastName}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Address</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.StreetName}}, {{item.City}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Phone</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.HomePhone}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">State</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.StateName}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Zip</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.Zip}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex" *ngIf="showSSNandDOB">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">DOB</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.DOB|DateTimeToLocal:'Date'}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex" *ngIf="showSSNandDOB">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">SSN</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.SSN}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Employer</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.EmployerName}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Years at current address</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.YearsAtCurrentAddr}}</b></div>
+      </div>
+
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Monthly Income</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.MonthlyGrossIncome| MyCurrencyPipe}}</b></div>
+      </div>
+
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">DTI(%)</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.DTI}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Cost per watt</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.CostPerWatt| MyCurrencyPipe}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Number of mortgages</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.NoofMortgage}}</b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Housing status</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b>{{item.HousingStatusVal}}</b></div>
+      </div>
+
+
+    </div>
+  </div>
+</div>

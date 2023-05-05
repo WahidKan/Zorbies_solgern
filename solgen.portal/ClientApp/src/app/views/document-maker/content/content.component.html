@@ -1,0 +1,27 @@
+<div class="w-100 p-3">
+  <h5 id="contentTitle">Content</h5>
+  <div class="component-container">
+    <h6>Blocks</h6>
+    <div class="buttonGroup">
+      <div *ngFor="let controls of blockContents" pDraggable="controls" (onDragStart)="dragStart(controls)" (onDragEnd)="dragEnd($event)" class="btn-cntnr">
+        <button class="contentItemBlock">
+          <span class="drag-icon"><i class="fa fa-th"></i></span>
+          <span class="btn-text">{{ controls.name }}</span>
+          <i [class]="controls.icon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="component-container">
+    <h6>Fields</h6>
+    <div class="buttonGroup">
+      <div pDraggable="controls" (onDragStart)="dragStart(controls)" (onDragEnd)="dragEnd($event)" *ngFor="let controls of fieldContents" class="btn-cntnr">
+        <button class="contentItemField">
+          <span class="drag-icon"><i class="fa fa-th"></i></span>
+          <span class="btn-text"> {{ controls.name }}</span>
+          <i [class]="controls.icon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

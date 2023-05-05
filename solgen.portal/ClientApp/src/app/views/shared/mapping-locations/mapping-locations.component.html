@@ -1,0 +1,94 @@
+<div class="panel-body row px-3">
+    <div class="table-responsive">
+      <div class="table table-striped">
+        <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                       [rows]="mappingLocationPagedData.data"
+                       [columnMode]="'force'"
+                       [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                       [headerHeight]="40"
+                       [footerHeight]="40"
+                       [externalPaging]="true"
+                       [externalSorting]="true"
+                       [loadingIndicator]="loadSave"
+                       [count]="mappingLocationPagedData.pager.totalItems"
+                       [offset]="currentPageAssignedRes"
+                       [limit]="pageSizeValueAssignedResList"
+                       (page)='setPageMappingLocation($event)'
+                       (sort)="onSortMappingLocations($event)">
+          <ngx-datatable-column name="Name" prop="locationName" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.locationName|truncate}}
+            </ng-template>
+  
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Address" prop="address" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.address|truncate}}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="text-center">
+                <a href="javascript:;" (click)="deleteMappingLocation(row.id)"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template
+                         let-rowCount="rowCount"
+                         let-pageSize="mappingLocationPagedData.pager.pageSize"
+                         let-selectedCount="selectedCount"
+                         let-currentPage="mappingLocationPagedData.pager.currentPage"
+                         let-offset="offset"
+                         let-isVisible="isVisible">
+              <div class="page-count" *ngIf='(rowCount  > 0)'>
+                {{commonService.PageString(mappingLocationPagedData.pager.currentPage,mappingLocationPagedData.pager.pageSize,rowCount)}}
+              </div>
+              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                               [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                               [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                               [pagerNextIcon]="'fa fa-angle-double-right'"
+                               [page]="mappingLocationPagedData.pager.currentPage"
+                               [size]="mappingLocationPagedData.pager.pageSize"
+                               [count]="mappingLocationPagedData.pager.totalItems"
+                               [hidden]="!((rowCount / mappingLocationPagedData.pager.pageSize) > 1)"
+                               (change)="setPageNoMappingLocations($event)">
+              </datatable-pager>
+  
+            </ng-template>
+          </ngx-datatable-footer>
+        </ngx-datatable>
+      </div>
+    </div>
+</div>
+
+<div bsModal #mappingLocationModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{modeltitle}}</h4>
+          <button type="button" class="close" (click)="close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;" *ngIf="addMappingLocationForm">
+          <form [formGroup]="addMappingLocationForm" [ngClass]="{'disabled':loadSave}">
+            <div class="form-group row">
+              <div class="col-md-12 col-lg-6">
+                <label>Location:</label>
+                <div class="form-group">
+                  <ng-select [items]="locationList" placeholder="Select Location" formControlName="mappingLocation" [multiple] = "true"
+                             bindLabel="text" bindValue="value"></ng-select>
+                </div>
+              </div>
+              </div>
+          </form>
+        <div class="modal-footer">
+          <button type="submit" (click)="save()" class="btn btn-success mr-2" [disabled]="loadSave"><i class="feather-save"></i> Submit</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white mr-1"></i> Close</button>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+      </div>
+    </div>
+  </div>

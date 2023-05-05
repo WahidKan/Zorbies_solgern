@@ -1,0 +1,167 @@
+<div bsModal #quotePreview="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Preview - Payment Quote</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow:auto; margin-bottom:10px;">
+        <div class="px-3 cus-dis" style="border:1px solid #f1f1f1;">
+          <div class="row" style="background:#f2f2f2;">
+
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Business Name:</label>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group mb-0"> <input type="text" [(ngModel)]="businessName" class="form-control" disabled="disabled" /></div>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Contact Email:</label>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group mb-0 "><input type="text" [(ngModel)]="contactEmail" class="form-control" disabled="disabled" /></div>
+            </div>
+          </div>
+
+          <div class="row" style="background:#f2f2f2;">
+
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Use Type:</label>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group mb-0"><input type="text" [(ngModel)]="userType" class="form-control" disabled="disabled" /></div>
+            </div>
+          </div>
+
+          <div class="row ">
+
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Lease Type:</label>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group mb-0"><input type="text" [(ngModel)]="leaseType" class="form-control" disabled="disabled" /></div>
+            </div>
+          </div>
+          <div class="row" style="background:#f2f2f2;">
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Collateral Information:</label>
+            </div>
+            <div class="col-md-6" *ngIf="leaseOtherDescription != ''">
+              <div class="form-group form-group mb-0 ml-3">
+                <span>{{leaseOtherDescription}}</span>
+              </div>
+            </div>
+            <div class="col-md-6" *ngIf="leaseOtherDescription == ''">
+              <div class="form-group form-group mb-0"><input style="background:#f2f2f2 !important; border:0px;" type="text" class="form-control" value="-" disabled="disabled" /></div>
+            </div>
+          </div>
+          <div class="row" >
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Collateral Description:</label>
+            </div>
+            <div class="col-md-6" *ngIf="leaseDescription != ''">
+              <div class="form-group form-group mb-0 ml-3">
+                <span>{{leaseDescription}}</span>
+              </div>
+            </div>
+            <div class="col-md-6" *ngIf="leaseDescription == ''">
+              <div class="form-group form-group mb-0"><input style="background:#ffffff !important; border:0px;" type="text" class="form-control" value="-" disabled="disabled" /></div>
+            </div>
+          </div>
+
+          <div class="row" style="background:#f2f2f2;">
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Lease Rate(%):</label>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group mb-0"><input type="text" [(ngModel)]="leaseRate" class="form-control" disabled="disabled" /></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Lease Term:</label>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group mb-0"><input type="text" [(ngModel)]="leaseTerm" class="form-control" disabled="disabled" /></div>
+            </div>
+          </div>
+
+          <div class="row" style="background:#f2f2f2;">
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Total Equipment MSRP($):</label>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group mb-0"><input type="text" [value]="calculteTotalEquipMSRP()" [(ngModel)]="leaseTotalEquipmentMSRP" class="form-control " disabled="disabled" /></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Residual Amount($):</label>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group form-group mb-0"><input type="text" [(ngModel)]="leaseResidualAmount" class="form-control" disabled="disabled" /></div>
+            </div>
+          </div>
+
+          <div class="row" style="background:#f2f2f2;">
+            <div class="col-md-6 border-right">
+              <label class="font-weight-bold pt-2">Monthly Rental Payment($):</label>
+            </div>
+            <div class="col-md-6 ">
+              <div class="form-group form-group mb-0"><input type="text" [(ngModel)]="leaseMonthlyRentalPayment" class="form-control" disabled="disabled" /></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 border-right ">
+              <label class="font-weight-bold pt-2">Placement Fee($):</label>
+            </div>
+            <div class="col-md-6 ">
+              <div class="form-group form-group mb-0 ">
+                <input type="text" [(ngModel)]="leasePlacementFee" class="form-control" disabled="disabled" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row" style="background:#f2f2f2;">
+            <div class="col-md-6 border-right ">
+              <label class="font-weight-bold pt-2">Amount Due at Signing($):</label>
+            </div>
+            <div class="col-md-6 ">
+              <div class="form-group form-group mb-0">
+                <input type="text" [(ngModel)]="leaseAmountDueAtSigining" class="form-control" disabled="disabled" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 border-right ">
+              <label class="font-weight-bold pt-2">Total Lease Amount($):</label>
+            </div>
+            <div class="col-md-6 ">
+              <div class="form-group form-group mb-0">
+                <input type="text" [(ngModel)]="leaseTotalAmount" class="form-control" disabled="disabled" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary form-btns" (click)="saveQuote()"><i class="fas fa-paper-plane"></i> Send Quote</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div> 
+  </div>
+</div>
+
+

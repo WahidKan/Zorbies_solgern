@@ -1,0 +1,199 @@
+<!--------------------------------------Mobile View--------------------------------------------->
+
+
+<div id="wrapper">
+    <!-- Sidebar -->
+    <nav class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
+        <ul class="nav sidebar-nav">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <div class="radius-circle">
+                        <img [src]="imageLink" (error)="onUserError($event)" class="user-image rounded-circle"
+                            alt="User" />
+                        <!-- <img src="assets\images/user.jpg" alt="user" /> -->
+                    </div>
+                    <h3>{{username}}</h3>
+
+                </div>
+            </div>
+
+
+            <li><a routerLink="/dashboard" [routerLinkActive]="'active'"><i class="fa fa-dashboard"></i>Dashboard</a>
+            </li>
+            <li><a routerLink="/dashboard/mobile/service-request" [routerLinkActive]="'active'"><i
+                        class="zmdi zmdi-headset"></i> Service Request</a></li>
+            <li><a routerLink="/dashboard/mobile/total-contracts" [routerLinkActive]="'active'"><i
+                        class="zmdi zmdi-format-align-justify"></i> Contracts</a></li>
+            <li><a routerLink="/dashboard/mobile/document-upload" [routerLinkActive]="'active'"><i
+                        class="zmdi zmdi-upload"></i> Document Upload</a></li>
+            <li><a routerLink="/dashboard/mobile/signed-loan-document" [routerLinkActive]="'active'"><i
+                        class="zmdi zmdi-border-color"></i> Signed Loan Document </a></li>
+            <li><a style="cursor: pointer; color: white;"><i class="zmdi zmdi-settings"></i> Settings</a></li>
+            <li><a style="cursor: pointer; color: white;" (click)="logout()"><i class="zmdi zmdi-power"></i> Logout</a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /#sidebar-wrapper -->
+
+    <div id="page-content-wrapper" class="main">
+
+
+        <div class="header">
+            <div class="container">
+                <div class="header-row">
+                    <!-- <a class="toggle hamburger animated fadeInLeft is-closed" data-toggle="offcanvas"><img
+                            src="assets/images/menu.png" alt="menu" /></a> -->
+                    <h2 class="text-white">Dashboard</h2>
+                    <a class="notify-toggler custom-dropdown-toggler">
+                        <!-- <i class="zmdi zmdi-notifications-none"></i> -->
+                        <!-- <span class="badge badge-xs rounded-circle"></span> -->
+                    </a>
+                </div>
+
+                
+                    <ng-select [items]="opportunityList" [clearable]="false" [loading]="loadSave"  class="input-box mt-3 form-control"
+                    placeholder="Select Project" [(ngModel)]="defaultopportunity"
+                        (change)="onOpportunityChange($event)" bindLabel="text" bindValue="value"></ng-select>
+               
+
+
+            </div>
+        </div>
+
+
+        <div class="container mt-3 widget">
+            <div class="row m-0">
+                <div class="card rounded">
+                    <div class="card-header text-center text-black bg-white" id="card-details">
+                        <div class="card-primary rounded-top align-items-center">
+                            <img src="assets/images/service-request-icon.png" alt="service-request-icon" />
+                        </div>
+                        <div class="cd-1">
+                            <h2>{{proposalContarctStatus?.length ? proposalContarctStatus?.length : 0}}</h2>
+                        </div>
+                        <div class="signed-text">
+                            <p>Signed Proposal</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded">
+                    <div class="card-header  text-center text-black bg-white" id="card-details">
+                        <div class="card-success rounded-top align-items-center">
+                            <img src="assets/images/total-contracts-icon.png" alt="total-contracts-icon" />
+                        </div>
+                        <div class="cd-2">
+                            <h2>{{ContarctStatus?.length ? ContarctStatus?.length : 0}}</h2>
+                        </div>
+                        <div class="signed-text">
+                            <p>Signed Contract</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded">
+                    <div class="card-header  text-center text-black bg-white rounded mb-2" id="card-details">
+                        <div class="card-secondary rounded-top align-items-center">
+                            <img src="assets/images/document-upload-icon.png" alt="document-upload-icon" />
+                        </div>
+                        <div class="cd-3">
+                            <h2>{{documentList?.ReceivedDocs ? documentList?.ReceivedDocs : 0}}</h2>
+                        </div>
+                        <div class="signed-text">
+                            <p>Document Uploads</p>
+                        </div>
+                        <span class="pen-color">{{documentList?.pendingDocs ? documentList?.pendingDocs : 0}}
+                            Pending</span>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="uploadDocumentData?.ReceivedDocs > 0" class="card w-100 card-dark mt-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="card-info">
+                        <h2>{{uploadDocumentData?.ReceivedDocs ? uploadDocumentData?.ReceivedDocs : 0 }}</h2>
+                        <p class="mb-0 text-white">Signed Loan Documents</p>
+
+                    </div>
+                    <div class="cardimg">
+                        <img src="assets/images/signed-loan-icon.png" alt="signed-loan-icon" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="container">
+            <div class="card card-default mt-4">
+                <div class="card-header ">
+                    <h2>Project</h2>
+
+                </div>
+                <div class="card-body">
+                    <div *ngIf="opportunityList?.length > 0">
+                        <p><b>Project Name:</b> {{projectName}} </p>
+                        <div class="row">
+                            <div class="col-12">
+                                <app-mobile-views-statemangement #stageManagement></app-mobile-views-statemangement>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="opportunityList?.length == 0">
+                        <div class="list-underline">
+                            <div class="detail-con px-3 py-2">
+                                <div class="row cust-list">
+                                    <div class="col-12 mb-2">
+                                        <div class="py-2">
+                                            <span class="d-block text-center text-danger">
+                                                No project is available to show.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="card card-default mt-4">
+                <div>
+                    <div>
+                        <div class="card-header">
+                            <h2 class="text-white">
+                                <h4>Announcement(<span style="font-size: 14px; font-weight: bold;">s</span>)</h4>
+                            </h2>
+                            <!-- <img class="img-fluid" src="assets/images/refferal_img.png" alt="refferal_img"/> -->
+                        </div>
+                        <div class="card-body p-0" style="overflow: auto;" *ngIf='announcement?.length > 0'>
+                            <carousel data-interval="true" [noPause]="true">
+                                <slide *ngFor="let announce of announcement ;let i=index">
+                                    <div>
+                                        <div class="card-header card_bg">
+                                            <h2 class="text-white">{{announce?.title}} </h2>
+                                            <img class="img-fluid" src="{{announce?.url}}" alt="refferal_img" />
+                                        </div>
+                                        <div class="card-body">
+                                            <p>{{announce?.description}}<a href="#"> zolarsolarpower.com</a></p>
+                                            <a class="btn btn-primary" style="color: white;">{{announce?.text}}</a>
+                                        </div>
+                                    </div>
+                                </slide>
+                            </carousel>
+                        </div>
+                        <div class="detail-con px-3 py-2" *ngIf='announcement?.length == 0'>
+                            <div class="row cust-list">
+                                <div class="col-12 mb-2">
+                                    <div class="noti-details py-2">
+                                        <span class="d-block text-center text-danger">No announcement available
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

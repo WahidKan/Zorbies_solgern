@@ -1,0 +1,133 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<div class="clearfix"></div>
+
+<div class="card border-0" >
+  
+  <div class="panel">
+    
+  <div class="row">
+      <div class="col-lg-12 border-bottom">
+        <app-view-filter-bar-manager [submoduleName]="'Productrequireddetail'" [titleName]="productName" [logoClass]="'feather-list'"></app-view-filter-bar-manager>  
+      </div>
+      <div class="col-lg-12">
+        <div class="panel-content w-100 bg-white  border-0 p-3 scroll-in-content">
+          <!--<ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active show" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false">Details</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#related" role="tab" aria-controls="related" aria-selected="true">Related</a>
+            </li>
+          </ul>-->
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade active show p-0 border-top-0" id="details" role="tabpanel" aria-labelledby="profile-tab">
+              <div id="accordion">
+                <form>
+                  <ng-container>
+                    <div class="panel active">
+                      <div class="panel-heading">
+                        <h4 class="panel-title">
+                          <a href="#item.group_display_name" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                            <span> Product Required Details</span>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="item.group_display_name" class="panel-collapse collapse active show" style="">
+                        <div class="panel-body row px-0 mt-0">
+                          <div class="col-sm-12 col-md-6 col-lg-4">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>Product Required Number:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6" *ngIf="ProductRequiredNumber!=null && ProductRequiredNumber!='' ">
+                                <span class="py-2 d-block">{{ProductRequiredNumber}}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-sm-12 col-md-6 col-lg-4">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>Product Name:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6" *ngIf="productName!=null && productName!=''">
+                                <a [routerLink]="['/product/viewproducts',ProductId]"> <span class="py-2 d-block">{{productName}}</span></a>
+
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-12 col-md-6 col-lg-4">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>Parent Record Type:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6" *ngIf="parentRecordType!=null && parentRecordType!='' ">
+                                <span class="py-2 d-block">{{parentRecordType}}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-sm-12 col-md-6 col-lg-4">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>Update Required Products:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6" *ngIf="Update_Required_Products_for__c!=null && Update_Required_Products_for__c!='' ">
+                                <span class="py-2 d-block">{{Update_Required_Products_for__c}}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-sm-12 col-md-6 col-lg-4">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>Quantity Unit Of Measure:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6" *ngIf="QuantityUnitOfMeasure!=null && QuantityUnitOfMeasure!='' ">
+                                <span class="py-2 d-block">{{QuantityUnitOfMeasure}}</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div class="col-sm-12 col-md-6 col-lg-4">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>Quantity Required:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6" *ngIf="QuantityRequired!=null && QuantityRequired!='' ">
+                                <span class="py-2 d-block">{{QuantityRequired}}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-sm-12 col-md-6 col-lg-4">
+                            <div class="input-group border-bottom">
+                              <div class="col-sm-12 col-md-6 px-0">
+                                <span class="py-2 d-block"><strong>Description:</strong></span>
+                              </div>
+                              <div class="col-sm-12 col-md-6" *ngIf="Description__c!=null && Description__c!='' ">
+                                <span class="py-2 d-block">{{Description__c}}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </form>
+              </div>
+            </div>
+            <div class="tab-pane fade p-0 border-0" id="related" role="tabpanel" aria-labelledby="home-tab">
+              <div id="accordion" [ngClass]="{'disabled':loadSave}">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+    <div class="clearfix"></div>
+
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

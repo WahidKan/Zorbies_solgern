@@ -1,0 +1,205 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li><a routerLink="/document-maker-routerule">Document Route/Rule</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="panel   clearfix">
+    <div class="panel-content clearfix mb-4 p-0">
+      <ul class="nav nav-tabs nav-cust p-3" id="myTab" *ngIf="id != null && id > 0" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active show" id="lead-tab"
+              data-toggle="tab" href="#RouteRule" role="tab" aria-selected="true">ROUTE/RULE</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade active show" id="RouteRule" role="tabpanel">
+          <div class="row">
+            <div class="col-lg-12 portlets">
+              <form autocomplete="off" #routeRuleForm="ngForm" ngNativeValidate (ngSubmit)="save()">
+                <div>
+                    <div class="row">
+                      <div class="col-md-6 col-lg-6">
+                        <label>Route Name:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <input type="text" [(ngModel)]="dataRouteRequestModel.name" class="form-control"  #routeRuleName ="ngModel" maxlength="100" required="required" name="dataRouteRequestModel.name"
+                          [ngClass]="{'is-invalid': (routeRuleName.invalid && (routeRuleName.dirty || routeRuleName.touched) && (routeRuleName.errors?.required || routeRuleName?.errors?.maxlength)) }">
+
+                          <small
+                            *ngIf="routeRuleName.invalid && (routeRuleName.dirty || routeRuleName.touched) && (routeRuleName.errors?.required || routeRuleName?.errors?.maxlength)"
+                            class="text-danger">Route/Rule Name is required.</small>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-lg-6">
+                        <label>Status<span class="text-danger">*</span></label>
+                        <div class="form-group" *ngIf="workStatus">
+                          <ng-select  [items]="workStatus" [(ngModel)]="dataRouteRequestModel.statusid" #status ="ngModel"  placeholder="---Select Status---" required="required" name="dataRouteRequestModel.statusida"
+                           bindLabel="text" [disabled]="disabledCondtion" [ngClass]="{'is-invalid': (status.invalid && (status.dirty || status.touched) && (status.errors?.required || status?.errors?.maxlength)) }">
+                          </ng-select>
+                          <small *ngIf="status.invalid && (status.dirty || status.touched) && (status.errors?.required || status?.errors?.maxlength)"
+                          class="text-danger">Status Type is required.</small>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div *ngFor="let rule of dataRouteRequestModel.rules; index as i;" class="col-md-12 mrules mb-3">
+                        <div *ngIf="rule.deleted == false">
+                          <div class="border">
+                            <div class="rule-header step-default border mb-2 col-md-12">
+                              <span class="rule-name">Rule <input type="text" [(ngModel)]="rule.sort" name="rule.sort_{{i}}"/></span>
+                              <button type="button" *ngIf="checkRuleLength()"  class="btn btn-danger float-right" (click)="deleteRule(rule)">
+                                <i class="feather-trash-2"></i> Delete
+                              </button>
+                            </div>
+                            <!-- <ng-option *ngFor="let document of documentList" bindLabel="text" [value]="document.value">{{document.text}}</ng-option> -->
+                            <div class="row px-3">
+                              <div class="Sent-datato col-md-6">
+                                <label>Send Data to Document:<span class="text-danger">*</span></label>
+                                <ng-select [ngStyle]="id!=null && rule.id > 0 ? {'pointer-events': 'none'} : {}" [(ngModel)]="rule.document_id" name="rule.document_id_{{i}}"
+                                  #document = "ngModel" placeholder="Select Document" [closeOnSelect]="true" [items]="documentList" bindLabel="text" required="required"
+                                (change)="getDocumentFields(rule)" [ngClass]="{'is-invalid': (document.invalid && (document.dirty || document.touched) && (document.errors?.required || document?.errors?.maxlength)) }">
+                                </ng-select>
+                                <small *ngIf="document.invalid && (document.dirty || document.touched) && (document.errors?.required || document?.errors?.maxlength)"
+                                class="text-danger">Rule Document is required.</small>
+                              </div>
+
+                              <div class="col-md-3">
+                                <label>Include in combined PDF</label>
+                                <div class="form-group">
+                                  <label class="switch">
+                                    <input type="checkbox" disabled checked (change)="onCombineChanged(rule)" />
+                                    <span class="slider round">
+                                      <span>Yes</span>
+                                    </span>
+                                  </label>
+                                </div>
+                              </div>
+                              <div *ngIf="rule.document_id !=null" class="col-md-3">
+                                <!-- <label>Add New Field</label>                             -->
+                                <div class="form-group">
+                                    <button type="button"  class="btn btn-success mr-1" (click)="AddNewFieldpopup(rule)"><i class="feather-plus"></i>Add New Field </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-12">
+                              <div class="list-group" style="min-height: 210px;">
+                                <h3 class="form-heading">This rule if:</h3>
+                                <ul class="form-header">
+                                  <li class="pl-3">Field<span class="text-danger">*</span></li>
+                                  <li class="pl-3">Expression<span class="text-danger">*</span></li>
+                                  <li class="pl-3">Value</li>
+                                </ul>
+                                <div *ngFor="let condition of rule.conditions; index as j;">
+                                  <div *ngIf="condition.deleted == false">
+                                    <ul *ngIf="j > 0" class="from-rules text-center">
+                                      <li class="text-center">
+                                        <span class="or-and rounded-circle">{{condition.operator}}</span>
+                                      </li>
+                                    </ul>
+                                    <ul class="from-rules">
+                                      <li class="form-group align-middle px-2">
+                                        <ng-select [items]="rule.fieldList" [(ngModel)]="condition.field" name="condition.field_{{i}}_{{j}}" placeholder="Select field" bindLabel="text"
+                                        [closeOnSelect]="true" [searchable]="true" #conditionField="ngModel" required="required"
+                                        [ngClass]="{'is-invalid': (conditionField.invalid && (conditionField.dirty || conditionField.touched) && (conditionField.errors?.required || conditionField?.errors?.maxlength)) }">
+                                        </ng-select>
+                                        <small *ngIf="conditionField.invalid && (conditionField.dirty || conditionField.touched) && (conditionField.errors?.required || conditionField?.errors?.maxlength)"
+                                        class="text-danger">Field is required.</small>
+                                      </li>
+                                      <li class="form-group align-middle px-2">
+                                        <ng-select class="form-control" [(ngModel)]="condition.exp" name="condition.exp_{{i}}_{{j}}" [closeOnSelect]="true" placeholder="Select Expression" #exp="ngModel" required="required"
+                                        [ngClass]="{'is-invalid': (exp.invalid && (exp.dirty || exp.touched) && (exp.errors?.required || exp?.errors?.maxlength)) }">
+                                          <ng-option *ngFor="let expression of expressions" [value]="expression.value">{{expression.name}}</ng-option>
+                                        </ng-select>
+                                        <small *ngIf="exp.invalid && (exp.dirty || exp.touched) && (exp.errors?.required || exp?.errors?.maxlength)"
+                                        class="text-danger">Exp is required.</small>
+                                      </li>
+                                      <li class="form-group align-middle px-2">
+                                        <input class="form-control" type="text" [(ngModel)]="condition.value" name="condition.value_{{i}}_{{j}}" placeholder="Field" #value ="ngModel"
+                                        [ngClass]="{'is-invalid': (value.invalid && (value.dirty || value.touched) && (value.errors?.required || value?.errors?.maxlength)) }">
+
+                                        <small
+                                          *ngIf="value.invalid && (value.dirty || value.touched) && (value.errors?.required || value?.errors?.maxlength)"
+                                          class="text-danger">Value is required.</small>
+                                      </li>
+                                      <li class="text-center" *ngIf="j > 0">
+                                        <a href="javscript:;" (click)="deleteCondition(rule, condition)" class="text-red font-16"><i class="feather-trash-2"></i></a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="p-3 text-center">
+                              <div class="cstm-drop-btn text-center">
+                                <select #currentCondition1 class="btn ddlupdatestatus btn-success"  (change)="onChange(currentCondition1, $event, rule)">
+                                  <option selected="selected"> Add</option>
+                                  <option>Or</option>
+                                  <option>And</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+          <!--====================================================================aDD FIELD POPUP sTART=========================================================-->
+                    <div  class="modal fade"  id="ppdeliveryoptionId" tabindex="-1" bsModal #AddnewFieldModal="bs-modal" name="bs-modal" [config]="{ backdrop: 'static' }" role="dialog" aria-hidden="true" >
+                      <div class="modal-dialog modal-xl modal-info">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Add New Field</h4>
+                            <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body" style="margin-bottom: 10px; height: auto; overflow: inherit">
+                            <div class="row" style="width: 100%;margin-left: 0%;">
+                             <label>Field Name</label>
+                              <input class="form-control" [(ngModel)]="AddNewFielddataRouteModel.name" name="AddNewFielddataRouteModel.name" type="text"  placeholder="Enter New Field " />
+
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-success form-btns" (click)="saveNewField()"><i
+                                class="feather-save text-white pr-2"></i>Add</button>
+                            <button type="button" class="btn btn-danger form-btns" (click)="close()">
+                              <i class="feather-x text-white"></i> Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--====================================================================aDD FIELD POPUP END=========================================================-->
+
+                    <div class="row mt-3" >
+                        <div class="col-sm-12 col-md-12">
+                            <button type="button" class="btn btn-primary mr-1" (click)="addNewRule()"><i class="feather-plus"></i> Add New Rule</button>
+                            <button type="submit" class="btn btn-success mr-2" [disabled]="!routeRuleForm.form.valid"><i class="feather-save"></i>
+                              Submit</button>
+                            <a routerLink="/document-maker-routerule" class="btn btn-danger" href="javascript:void(0);"><span><i class="feather-x"></i> Cancel</span></a>
+                        </div>
+                    </div>
+                </div>
+              </form>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="clearfix"></div>

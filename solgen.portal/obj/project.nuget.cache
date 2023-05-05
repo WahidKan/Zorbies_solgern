@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "LJA0cNG5E83Hk/3nv8pj6Gq++nNPazJcXmYBmNfSpZbIA4zFzsChj6QWVhWYlRrzwXJ6oROeM6+zCKaEootfXA==",
+  "success": true,
+  "projectFilePath": "D:\\ZolarWorkSpace\\Solgen\\solgen.portal\\Solgen.portal.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\amcs\\.nuget\\packages\\microsoft.netcore.app\\2.0.0\\microsoft.netcore.app.2.0.0.nupkg.sha512",
+    "C:\\Users\\amcs\\.nuget\\packages\\microsoft.netcore.dotnetapphost\\2.0.0\\microsoft.netcore.dotnetapphost.2.0.0.nupkg.sha512",
+    "C:\\Users\\amcs\\.nuget\\packages\\microsoft.netcore.dotnethostpolicy\\2.0.0\\microsoft.netcore.dotnethostpolicy.2.0.0.nupkg.sha512",
+    "C:\\Users\\amcs\\.nuget\\packages\\microsoft.netcore.dotnethostresolver\\2.0.0\\microsoft.netcore.dotnethostresolver.2.0.0.nupkg.sha512",
+    "C:\\Users\\amcs\\.nuget\\packages\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",
+    "C:\\Users\\amcs\\.nuget\\packages\\netstandard.library\\2.0.0\\netstandard.library.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

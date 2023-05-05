@@ -1,0 +1,22 @@
+<div class="login-container">
+  <div class="login-main">
+    <a href="javascript:void(0);"><img src="assets/default-theme/imagesNew/logo.png" /></a>
+    <div class="login-box">
+      <h2>Associated Companies</h2>
+      <div class="login-box-fields" [ngClass]="{'disabled':loadSave}">
+        <div class="card border-0">
+          <ul class="list-group list-group-flush multicompanylogin">
+            <li class="list-group-item" *ngFor="let comp of lstheadercompany">
+              <a href="javascript:void(0);" title="Switch Company" (click)="LoginUserForCompany(comp.CompanyId,comp.Email,comp.CompanyName)">
+                <img src="{{comp.CompanyLogo}}" style="height:50px;width:60px;" />
+                <span>{{comp.CompanyName}}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-login"></app-loader>
+</div>
+

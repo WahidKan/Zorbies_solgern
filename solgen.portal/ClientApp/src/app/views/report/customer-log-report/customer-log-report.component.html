@@ -1,0 +1,216 @@
+<div class="page">
+  <!-- Breadcrumb-->
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Customer Log Report</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active">Customer Log Report</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>         <!-- Header Section-->
+  <div class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <div class="col-md-12 bg-light py-3">
+              <div class="row">
+                <div class="col-md-12 col-lg-12 col-xl-12">
+                  <div class="row">
+
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <ng-select #leseStatusSelect [items]="lstBusinessContact"
+                                   placeholder="Select Business Contact" bindValue="value" bindLabel="text"
+                                   [closeOnSelect]="true" [(ngModel)]="contactStatus"
+                                   (change)="SetContactStatus($event.value)">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-12 col-lg-12 col-xl-4">
+                      <div class="form-group mb-xl-0">
+                        <input class="form-control" type="text" [(ngModel)]='listFilter' placeholder="Proposal Number" (keyup)='updateFilter($event)'>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <ng-select #bankStatus [items]="lstBanks"
+                                   placeholder="Select Bank" bindValue="value" bindLabel="text"
+                                   [closeOnSelect]="true" [(ngModel)]="bankName"
+                                   (change)="SetBankName($event.value)">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <p-calendar inputStyleClass="form-control start-date" placeholder="Date From" [(ngModel)]="expFrom" [maxDate]="expTo" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-12 col-lg-6 col-xl-4">
+                      <div class="form-group">
+                        <p-calendar inputStyleClass="form-control start-date" placeholder="Date To" [(ngModel)]="expTo" [minDate]="expFrom" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-5 col-lg-6 col-xl-2 mr-auto">
+                      <div class="form-group mb-xl-0">
+                        <input type="button" class="btn btn-primary src-icon" (click)="search()" value="Search">
+                        <input type="button" class="btn btn-danger reset-icon" value="Reset" (click)="reset()" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mt-4 mb-2">
+              <h3 class="heading float-left w-100" *ngIf="pagedData.data.length>0">
+                <div class="text-right float-md-right mt-2 mt-md-0">
+                  <div class="mb-0">
+                    <div class="input-group">
+                      <small class="pt-1 pr-1 h6 font-weight-normal">Download As: </small>
+                      <a href="javascript:void(0);" (click)="ExportTOExcel()" class=" text-success mb-3 mb-xl-0 px-1"><i class="fa fa-file-excel" style="font-size:22px;"></i></a>
+                      <a href="javascript:void(0);" (click)="generatePdf()" class=" text-danger mb-3 mb-xl-0 px-1"><i class="fas fa-file-pdf" style="font-size:22px;"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </h3>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <div class="table table-striped">
+                  <ngx-datatable #table class="bootstrap custom-big-table-width"
+                                 [rows]="pagedData.data"
+                                 [columnMode]="'force'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="50"
+                                 [rowHeight]="'auto'"
+                                 
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="pagedData.pager.totalItems"
+                                 [offset]="pagedData.pager.currentPage"
+                                 [limit]="pagedData.pager.pageSize"
+                                 (page)='setPage($event)'
+                                 (sort)="onSort($event)">
+                    <ngx-datatable-column name="Proposal#" prop="LeaseNumber" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Business Name" prop="BusinessName" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Contact Name" prop="ContactName" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Collateral Information" prop="CollateralInfo" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div title="{{row.CollateralInfo}}">
+                          {{row.CollateralInfo | truncate}}
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Collateral Description" prop="LeaseDescription" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div title="{{row.LeaseDescription}}">
+                          {{row.LeaseDescription | truncate}}
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Insurance Expiration Date" prop="InsuranceExpirationDate" [width]="250" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.InsuranceExpirationDate==null">N/A</span>
+                        <span *ngIf="row.InsuranceExpirationDate!=null">{{row.InsuranceExpirationDate}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Term" prop="LeaseTerm" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Proposal Rate" prop="LeaseRate" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span>{{row.LeaseRate/100 | percent}}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Salesman" prop="LeaseCreatedBy" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Bank" prop="BankName" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Total Proposal Amount" prop="LeaseTotalAmount" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span>{{row.LeaseTotalAmount | currency :'GBP':'$':'1.2-2' }}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Placement Fee" prop="LeasePlacementFee" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span>{{row.LeasePlacementFee | currency :'GBP':'$':'1.2-2' }}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Ist Payment" prop="FirstPayment" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span>{{row.FirstPayment | currency :'GBP':'$':'1.2-2' }}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="License Fee" prop="LicenseFee" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span>{{row.LicenseFee | currency :'GBP':'$':'1.2-2' }}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Total Income" prop="TotalIncome" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span>{{row.TotalIncome | currency :'GBP':'$':'1.2-2' }}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Exec Commission" prop="ExecCommission" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span>{{row.ExecCommission | currency :'GBP':'$':'1.2-2' }}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Net Revenue Solgen" prop="NetRevenueSolgen" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span>{{row.NetRevenueSolgen | currency :'GBP':'$':'1.2-2' }}</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Margin" prop="Margin" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span>{{row.Margin}}%</span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="currentPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count">
+                          {{rowCount}} total
+                        </div>
+                        <div>
+                          <div class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                         [pagerPreviousIcon]="'fa fa-angle-left'"
+                                         [pagerNextIcon]="'fa feather-chevron-left'"
+                                         [page]="pagedData.pager.currentPage+1"
+                                         [size]="pageSizeValue"
+                                         [count]="pagedData.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPage($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

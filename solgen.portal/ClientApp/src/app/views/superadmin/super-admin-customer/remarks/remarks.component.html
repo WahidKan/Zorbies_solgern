@@ -1,0 +1,122 @@
+<div bsModal #modalRemark="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Remark</h4>
+                <button type="button" class="close" (click)="close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;">
+                <form [formGroup]="addForm" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                              
+                                <div class="col-12">
+                                    <label>Description</label>
+                                    <div class="form-group">
+                                        <textarea type="text" class="form-control" formControlName="description" ></textarea>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success form-btns"
+                    [disabled]="!addForm.valid" (click)="Save()"><i class="feather-save text-white"></i> Save</button>
+                <button type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal"
+                    aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+            </div>
+            <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+            <div class="header-chart mb-1">
+                <span>Remarks</span>
+                <button class="btn btn-primary feather-plus float-right" (click)="AddRemark()"></button>
+            </div>
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data"
+                [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40"
+                [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage"
+                [limit]="pagedData.pager.pageSize" (page)='setPage($event)' (sort)="onSort($event)"
+                [selectionType]="SelectionType.checkbox" [selectAllRowsOnPage]="false" [selected]="selected"
+                (select)="onSelect($event)">
+                <ngx-datatable-column [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                    [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="true">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Created By" prop="createdBy" [sortable]="true">
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Created On" prop="createdOn" [sortable]="true">
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Description" sortable="true" prop="description">
+                    <!-- <ng-template let-row="row" ngx-datatable-cell-template>
+                        <a href="javascript:void(0);"
+                            (click)="ShowUsersListPopup(row)">{{row.emailAddress}}</a>
+                    </ng-template> -->
+                </ngx-datatable-column>
+               
+                <!-- <ngx-datatable-column name="receivable" prop="receivable"
+                    [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span *ngIf="row.receivable">$</span> {{ row.receivable }}
+                    </ng-template>
+                </ngx-datatable-column> -->
+                <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="text-center">
+                            <!-- <a class="smview" [routerLink]="['/', row.id]"
+                                title="View"><i class="feather-eye pr-2"></i></a> -->
+                            <a class="smview" [routerLink]="['/',row.id]" title="Edit"><i
+                                    class="fa fa-pencil text-success pr-2"></i></a>
+                            <a href="javascript:void(0);" (click)="DeleteCustomer(row)" class="text-danger mx-1">
+                                <i title="Delete" class="feather-trash-2"></i>
+                            </a>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-footer>
+                    <ng-template class="selected-count" ngx-datatable-footer-template let-rowCount="rowCount"
+                        let-pageSize="pageSize" let-selectedCount="selectedCount" let-currentPage="currentPage"
+                        let-offset="offset" let-isVisible="isVisible">
+                        <div>
+                            <div style="color:black; margin-right:10px;" class="page-size-record"
+                                *ngIf='(rowCount  > 0)'>
+                                <span style="text-align:right; width:80px;vertical-align: middle;">
+                                    <!-- <ng-select [searchable]="false"
+                                        [items]="lstPageSize" appendTo="body"
+                                        [(ngModel)]='pageSizeValue' dropzone="fixed"
+                                        [clearable]="false" (change)="onChange($event)"
+                                        draggable="false" [closeOnSelect]="true"
+                                        bindLabel="text" bindValue="text"></ng-select> -->
+                                </span>
+                            </div>
+                        </div>
+                        <div class="page-count" *ngIf='(rowCount  > 0)'>
+                            {{commonService.PageString(pagedData.pager.currentPage,pagedData.pager.pageSize,pagedData.pager.totalItems)}}
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                            [pagerRightArrowIcon]="'fa feather-chevron-left'" [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                            [pagerNextIcon]="'fa fa-angle-double-right'" [page]="pageNumber" [size]="pageSizeValue"
+                            [count]="pagedData.pager.totalItems" [hidden]="!((rowCount / pageSize) > 1)"
+                            (change)="setPage($event)">
+                        </datatable-pager>
+
+                    </ng-template>
+                </ngx-datatable-footer>
+            </ngx-datatable>
+        </div>
+    </div>
+</div>

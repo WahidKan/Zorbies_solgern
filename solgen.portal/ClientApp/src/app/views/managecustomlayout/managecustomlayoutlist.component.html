@@ -1,0 +1,332 @@
+<!-- Breadcrumb-->
+<div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+        <h2 class="float-left pr-2 w-100"><strong>Manage layout</strong></h2>
+        <div class="breadcrumb-wrapper w-100">
+            <ol class="breadcrumb">
+                <li><a routerLink="/dashboard">Dashboard</a></li>
+                <li class="active">Manage layout</li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+        <a *ngIf="isSuperAdmin=='true'" href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-lg-12 portlets">
+        <div class="panel">
+            <div class="panel-header border-bottom">
+                <div class="row mt-2">
+                    <div class="col-md-10 col-xl-10">
+                        <div class="row searchfield ">
+                            <div class="col-md-3 col-lg-2 float-left mb-lg-0 mb-2 pr-md-0">
+                                <input class="form-control" title="Search by Layout Name" [(ngModel)]="txtFilter" placeholder="Search by Layout Name" (keyup)='searchLayoutName($event)' />
+                            </div>
+
+                            <div class="col-md-9 col-lg-10 float-left mb-lg-0 mb-2 pr-md-0">
+                                <ng-select [items]="modulelist" #Select placeholder="Select Module" bindValue="module_id" [(ngModel)]="selectedValue" bindLabel="module_name" (change)="selectmodule($event)">
+                                </ng-select>
+
+                                <ng-select [items]="subModulelist" placeholder="Select SubModule" bindValue="sub_module_id" [(ngModel)]="subModuleSelectedValue" bindLabel="sub_module_name" (change)="onSubModuleSelect($event)">
+                                </ng-select>
+
+                                <ng-select [items]="deviceList" placeholder="Select Device Type" bindValue="value" [(ngModel)]="deviceTypeId" bindLabel="text" (change)="onDeviceTypeSelect($event)">
+                                </ng-select>
+
+                                <ng-select [items]="layoutlist" placeholder="Select Layout Type" bindValue="value" [(ngModel)]="layoutTypeId" bindLabel="text" (change)="onlayoutTypeSelect($event)">
+                                </ng-select>
+
+                                <a href="javascript:void(0);" (click)="OnSearch()" class="btn btn-dark form-btns smview mr-2" tooltip="Search"><i class="feather-search"></i> Search</a>
+                                <a href="javascript:void(0);" (click)="resetFilter()" class="btn btn-white form-btns smview mr-2" tooltip="Reset Filters"><i class="feather-repeat"></i> Reset</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-xl-2">
+                        <div class="dt-buttons">
+                            <a href="javascript:void(0);" (click)="showpopup()" class="btn btn-success form-btns smview" tooltip="Add Layout"><i class="feather-plus"></i> Add</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-content px-3 pagination2 table-responsive no-padding">
+                <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data" [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                    [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage" [limit]="pagedData.pager.pageSize" (page)='setPage($event)' Add Custom Layout (sort)="onSort($event)">
+                    <ngx-datatable-column name="Layout Name" [sortable]="true" prop="view_name">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <a (click)="edit(row.custom_view_id)" title="Edit Layout" href="javascript:void(0);" class="icon-text-center">{{row.view_name | titlecase}}  </a>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <!-- <ngx-datatable-column name="Display Name" [sortable]="true" prop="DisplayName">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a (click)="edit(row.custom_view_id)" title="Edit Layout" href="javascript:void(0);" class="icon-text-center">{{row.DisplayName | titlecase}}  </a>
+            </ng-template>
+          </ngx-datatable-column> -->
+                    <ngx-datatable-column name="Module Name" [sortable]="true" prop="module_name"></ngx-datatable-column>
+                    <ngx-datatable-column name="Sub Module Name" [sortable]="true" prop="sub_module_name"></ngx-datatable-column>
+                    <ngx-datatable-column name="Layout Type" [sortable]="true" prop="Screen_Type"></ngx-datatable-column>
+                    <ngx-datatable-column name="Device Type" [sortable]="true" prop="device_type"></ngx-datatable-column>
+                    <ngx-datatable-column name="Layout Description" [sortable]="false" prop="description"></ngx-datatable-column>
+                    <ngx-datatable-column name="No Of Roles" [sortable]="false" prop="rolec_count">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span class="text-center" *ngIf="row.Screen_Type != 'CompactView'">
+                <a (click)="getRoleListData(row.custom_view_id)" href="javascript:void(0);">{{row.rolec_count}}</a>
+              </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Default" [sortable]="false" prop="is_default">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <label class="switch m-0" *ngIf="row.Screen_Type != 'CompactView'">
+                <input type="checkbox" id={{row.custom_view_id}}  (change)="isCustomLayoutStatusChanged(row)"  [checked]="row.is_default" [disabled]="(row.is_default)?true:false" (click)="switchClicked(row, $event.target.checked)">
+                <span class="slider round">
+                  <span>Yes</span>
+                </span>
+              </label>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Action" [sortable]="false" [maxWidth]="200" headerClass="text-center">
+
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="text-center">
+                                <!-- <a (click)="edit(row.custom_view_id)" title="Add/Edit Layout Fields" href="javascript:void(0);" class="btn-edit"><i class="feather-edit-2" aria-hidden="true"></i>  </a>
+                                <div class="wrapper" [class.wrapper]="row.is_default" title="{{(row.is_default)?'You can not assign roles to default layout.':'Assign User Role'}}">
+                                    <a *ngIf="row.Screen_Type != 'CompactView'" [class.disabled]="row.is_default" (click)="addRole(row.custom_view_id)" href="javascript:void(0);" class="btn-edit"><i class="feather-user-plus" aria-hidden="true"></i> </a>
+                                </div>
+                                <div class="wrapper" [class.wrapper]="row.is_default" title="{{(row.is_default)?'You can not delete default layout.':'Delete Layout'}}">
+                                    <a *ngIf="row.Screen_Type != 'CompactView'" [class.disabled]="row.is_default" (click)="delete(row)" href="javascript:void(0);" class="btn-edit">
+                                        <i class="feather-trash-2 text-danger" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+
+                                <a *ngIf="row.Screen_Type == 'CompactView'" (click)="delete(row)" title="Delete Layout" href="javascript:void(0);" class="btn-edit">
+                                    <i class="feather-trash-2 text-danger" aria-hidden="true"></i>
+                                </a> -->
+
+
+                                <a (click)="edit(row.custom_view_id)" title="Add/Edit Layout Fields" href="javascript:void(0);" class="btn-edit"><i class="feather-edit-2" aria-hidden="true"></i>  </a>
+                                <a title="{{(row.is_default)?'You can not assign roles to default layout.':'Assign User Role'}}" *ngIf="row.Screen_Type != 'CompactView'" [attr.aria-disabled]="row.is_default? true: false" (click)="addRole(row.custom_view_id)" href="javascript:void(0);"
+                                    class="btn-edit"><i class="feather-user-plus" aria-hidden="true"></i> </a>
+
+                                <a title="{{(row.is_default)?'You can not delete default layout.':'Delete Layout'}}" *ngIf="row.Screen_Type != 'CompactView'" [attr.aria-disabled]="row.is_default? true: false" (click)="delete(row)" href="javascript:void(0);" class="btn-edit">
+                                    <i class="feather-trash-2 text-danger" aria-hidden="true"></i>
+                                </a>
+
+                                <a *ngIf="row.Screen_Type == 'CompactView'" aria-disabled="true" (click)="delete(row)" title="Delete Layout" href="javascript:void(0);" class="btn-edit">
+                                    <i class="feather-trash-2 text-danger" aria-hidden="true"></i>
+                                </a>
+
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-footer>
+                        <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset" let-isVisible="isVisible">
+                            <div>
+                                <div style="color:black; margin-right:10px;" class="page-size-record">
+                                    <span style="text-align:right; width:80px;vertical-align: middle;">
+                    <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                               bindLabel="text" bindValue="text"></ng-select>
+                  </span>
+                                </div>
+                            </div>
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>
+                                {{commonService.PageString(pagedData.pager.currentPage+1,pageSizeValue,rowCount)}}
+                            </div>
+
+                            <datatable-pager [pagerLeftArrowIcon]="'feather-chevron-left'" [pagerRightArrowIcon]="'feather-chevron-right'" [pagerPreviousIcon]="'feather-chevrons-left'" [pagerNextIcon]="'feather-chevrons-right'" [page]="pagedData.pager.currentPage+1" [size]="pageSizeValue"
+                                [count]="pagedData.pager.totalItems" [hidden]="!((rowCount / pageSize) > 1)" (change)="setPage($event)">
+                            </datatable-pager>
+                        </ng-template>
+                    </ngx-datatable-footer>
+                </ngx-datatable>
+            </div>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+    </div>
+</div>
+
+
+
+
+<div bsModal #makeForm="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Layout</h4>
+                <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style="margin-bottom:10px; height:auto;overflow:visible;">
+
+                <form [formGroup]="addForm" autocomplete="off">
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <label>Layout Name:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="text" maxlength="100" class="form-control" placeholder="Enter Layout Name" formControlName="layoutName" [ngClass]="{'is-invalid': (layoutName.invalid && (layoutName.dirty || layoutName.touched) && (layoutName.errors?.required)) }">
+                                <small *ngIf="layoutName.invalid && (layoutName.dirty || layoutName.touched) && layoutName.errors?.required" class="text-danger">Layout Name is required</small>
+                            </div>
+                        </div>
+                        <!-- <div class="col-6 col-md-6 col-lg-6">
+              <label>Display Name:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" maxlength="100" class="form-control" placeholder="Enter Display Name" formControlName="displayName"
+                       [ngClass]="{'is-invalid': (displayName.invalid && (displayName.dirty || displayName.touched) && (displayName.errors?.required)) }">
+                <small *ngIf="displayName.invalid && (displayName.dirty || displayName.touched) && displayName.errors?.required" class="text-danger">Display Name is required</small>
+              </div>
+            </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-md-6 col-lg-6">
+                            <label>Module Name:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="modulelistPopUP" formControlName="moduleid" placeholder="Select Module" bindValue="module_id" [(ngModel)]="moduleSelectedValue" bindLabel="module_name" (change)="selectmodulePop($event)" (clear)="resetModule()">
+                                </ng-select>
+                                <small *ngIf="moduleid.invalid && (moduleid.dirty || moduleid.touched) && moduleid.errors?.required" class="text-danger">Module is required</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-6">
+                            <label>Sub Module Name:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="submodulelistPopUP" formControlName="submoduleid" placeholder="Select Sub Module" bindValue="sub_module_id" [(ngModel)]="subModuleSelectedValue" bindLabel="sub_module_name" (clear)="resetSubModule()">
+                                </ng-select>
+                                <small *ngIf="submoduleid.invalid && (submoduleid.dirty || submoduleid.touched) && submoduleid.errors?.required" class="text-danger">Sub Module is required</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-md-6 col-lg-6">
+                            <label>Device Type:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="deviceList" formControlName="deviceid" placeholder="Select Device" bindValue="value" bindLabel="text" [(ngModel)]="deviceSelectedValue">
+                                </ng-select>
+                                <small *ngIf="deviceid.invalid && (deviceid.dirty || deviceid.touched) && deviceid.errors?.required" class="text-danger">Device is required</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 col-lg-6">
+                            <label>Layout Type:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="layoutlist" formControlName="layoutTypeid" placeholder="Select Layout" bindValue="value" bindLabel="text" [(ngModel)]="layoutTypeSelectedValue">
+                                </ng-select>
+                                <small *ngIf="layoutTypeid.invalid && (layoutTypeid.dirty || layoutTypeid.touched) && layoutTypeid.errors?.required" class="text-danger">Layout Type is required</small>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <label>Layout Description:</label>
+                            <div class="form-group">
+                                <textarea class="form-control" maxlength="500" placeholder="Enter Layout Description" formControlName="layoutNameDesc"></textarea>
+                                <!--<input type="text" class="form-control" placeholder="Enter Layout Description" formControlName="layoutNameDesc">-->
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success form-btns" (click)="saveNewLayout()"><i class="feather-save text-white pr-2"></i>Submit</button>
+                <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+            </div>
+            <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        </div>
+    </div>
+</div>
+
+<div bsModal #makeLayoutRole="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Assign Role</h4>
+                <button type="button" class="close" (click)="closeLayoutRole()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style=" margin-bottom:10px; height:auto;overflow:inherit">
+
+                <form [formGroup]="addFormLayout" autocomplete="off">
+
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <label>Role Name:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="rolelist" formControlName="roleid" placeholder="Select Role" bindValue="value" bindLabel="text" [multiple]="true" (clear)="resetModule()" appendTo="body">
+                                </ng-select>
+                                <small *ngIf="roleid.invalid && (roleid.dirty || roleid.touched) && roleid.errors?.required" class="text-danger">Role is required</small>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success form-btns" (click)="saveLayoutRole()"><i class="feather-save text-white pr-2"></i>Submit</button>
+                <button type="submit" class="btn btn-danger form-btns" (click)="closeLayoutRole()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+            </div>
+            <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal #makeRolePopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="text-transform: none;">Assigned Role(s) List</h4>
+                <button type="button" class="close" (click)="closeRoleModel()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12  mb-4">
+                        <div class="table-responsive">
+
+                            <div class="table-responsive mt-1">
+                                <table class="table table-hover table-dynamic">
+                                    <thead>
+                                        <tr>
+
+                                            <th>Role Name</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngIf="isRoleAssigned">
+                                            <tr *ngFor="let r of roleListPopup">
+
+                                                <td>
+                                                    {{r.value}}
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                        <ng-container *ngIf="!isRoleAssigned && roleListPopup.length <= 0">
+                                            <tr>
+                                                <td style="color: red;">
+                                                    No role(s) assigned.
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="submit" class="btn btn-danger form-btns" (click)="closeRoleModel()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+            </div>
+            <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        </div>
+    </div>
+</div>

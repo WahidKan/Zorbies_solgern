@@ -1,0 +1,498 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Work Type Detail</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a class="smview" routerLink="/dashboard">Home</a></li>
+        <li><a class="smview" routerLink="/worktype">Manage Work Type</a></li>
+        <li class="active">Work Type Detail</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+<div class="clearfix"></div>
+
+<div class="card mb-3 mt-3 mb-4 border-0" style="background:none">
+  <div class="clearfix"></div>
+
+  <div class="card mb-4 border item-view">
+    <span class="text-capitalize p-3 font-weight-bold border-bottom heading-above-subhead">
+      <i class="fa fa-cogs text-dark float-left p-1 mr-2" style="font-size: 27px;"></i>
+      <span class="float-left w-85-res" *ngIf="workTypeModel !=null"> {{workTypeModel.workTypeName}}</span>
+      <span class="cntnt-right-btn multibtns mr15 btn-iconres">
+        <a [routerLink]="['/worktype/editworktype/',workTypeId]" class="btn btn-success text-white mr-2 mb-0 mb-md-2 smview"><i class="fa fa-pencil mr-1"></i> Edit</a>
+        <a href="javascript:void(0);" class="btn btn-dark text-white mb-0 mb-md-2 smview" (click)="OnBackToListClick()"><i class="fa fa-arrow-left mr-1"></i> Back to list</a>
+      </span>
+    </span>
+  </div>
+
+
+
+  <div class="col-lg-12 p-0">
+    <div class="panel-content w-100 bg-white p-3 scroll-in-content">
+      <div class="row">
+        <div class="col-sm-12 col-lg-8">
+          <h3 class="form-heading mt-0"><span>Details</span></h3>
+          <div id="accordion" [ngClass]="{'disabled':loadSave}">
+            <div class="panel active">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <!--<a href="#panelBodyOne" class="accordion-toggle show" data-toggle="collapse" data-parent="#panelBodyOne">-->
+                  <a href="#panelBodyOne" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                    <span> Description</span>
+                  </a>
+                </h4>
+              </div>
+
+              <div id="panelBodyOne" class="panel-collapse collapse active show" >
+                <div class="panel-body row">
+                  <div class="col-sm-12 col-md-4" *ngIf="workTypePreviewDetail !='null'">
+                    <div class="input-group border-bottom mb-2">
+                      <div class="col-sm-12 col-md-4 px-0">
+                        <span class="py-2 d-block"><strong>Work Type Name:</strong></span>
+                      </div>
+                      <div class="col-sm-12 col-md-4">
+
+                        <span class="py-2 d-block"> {{workTypeModel.workTypeName}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-4 ">
+                    <div class="input-group border-bottom mb-2">
+                      <div class="col-sm-12 col-md-4 px-0">
+                        <span class="py-2 d-block"><strong>Duration(HH:MM)</strong></span>
+                      </div>
+                      <div class="col-sm-12 col-md-4">
+                        <span class="py-2 d-block"> {{workTypeModel.duration}}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 col-lg-4">
+                    <div class="input-group border-bottom mb-2">
+                      <div class="col-sm-12 col-md-4 px-0"><span class="py-2 d-block"><strong>Description:</strong></span></div>
+                      <div class="col-sm-12 col-md-4">
+                        <span class="py-2 d-block">{{workTypeModel.description}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 col-md-4">
+                    <div class="col-sm-12 col-md-4 px-0"><span class="py-2 d-block"><strong>Is Active:</strong></span></div>
+                    <label class="switch m-0"> 
+
+                      <input type="checkbox"  [checked]="workTypeModel.isActive" disabled>
+                      <span class="slider round">
+                        <span>Yes</span>
+                      </span>
+                    </label>
+
+                  </div>
+                  <div class="col-md-12 col-lg-4">
+                    <div class="input-group border-bottom mb-2">
+                      <div class="col-sm-12 col-md-4 px-0"><span class="py-2 d-block"><strong>Color:</strong></span></div>
+                      <div class="col-sm-12 col-md-4">
+                        <span class="py-2 d-block">{{workTypeModel.colorCode}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+
+            <div class="panel active">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <!--<a href="#panelBodyOne" class="accordion-toggle show" data-toggle="collapse" data-parent="#panelBodyOne">-->
+                  <a href="#panelBodyFour" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                    <span>System Information</span>
+                  </a>
+                </h4>
+              </div>
+
+              <div id="panelBodyFour" class="panel-collapse collapse active show" style="" *ngIf="isWorkTypePreviewDetail">
+                <div class="panel-body row">
+
+                  <div class="col-md-12 col-lg-4">
+                    <div class="input-group border-bottom mb-2">
+                      <div class="col-sm-12 col-md-4 px-0"><span class="py-2 d-block"><strong>Created By:</strong></span></div>
+                      <div class="col-sm-12 col-md-4">
+                        <span class="py-2 d-block">{{workTypeModel.createdby}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--<div class="col-sm-12 col-md-4">
+                    <div class="input-group border-bottom mb-2">
+                      <div class="col-sm-12 col-md-4 px-0">
+                        <span class="py-2 d-block"><strong>Last Modified By:</strong></span>
+                      </div>
+                      <div class="col-sm-12 col-md-4">
+                        <span class="py-2 d-block"> {{workTypePreviewDetail.loanProduct}}</span>
+                      </div>
+                    </div>
+                  </div>-->
+                  <div class="col-md-12 col-lg-4">
+                    <div class="input-group border-bottom mb-2">
+                      <div class="col-sm-12 col-md-4 px-0"><span class="py-2 d-block"><strong>Created On:</strong></span></div>
+                      <div class="col-sm-12 col-md-4">
+                        <span class="py-2 d-block">{{workTypeModel.createdon}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-4">
+                    <div class="input-group border-bottom mb-2">
+                      <div class="col-sm-12 col-md-4 px-0"><span class="py-2 d-block"><strong>Modified By:</strong></span></div>
+                      <div class="col-sm-12 col-md-4">
+                        <span class="py-2 d-block">{{workTypeModel.modifiedby}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-4">
+                    <div class="input-group border-bottom mb-2">
+                      <div class="col-sm-12 col-md-4 px-0"><span class="py-2 d-block"><strong>Modified On:</strong></span></div>
+                      <div class="col-sm-12 col-md-4">
+                        <span class="py-2 d-block">{{workTypeModel.modifiedon}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-sm-12 col-lg-4 relatedtab">
+          <h3 class="form-heading mt-0"><span>Related</span></h3>
+          <div id="accordion">
+
+            <!--====================================Product Required ===========================================================-->
+            <!-- <div class="panel active">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a href="#productRequired" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                    <span>Product Required ({{productRequiredCount}})</span>
+                  </a>
+                </h4>
+              </div>
+              <div id="productRequired" class="panel-collapse collapse active show" style="">
+                <a href="javascript:void(0);" class="btn-in-panel"
+                   (click)="AddProductRequired()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add</a>
+
+                <div class="panel-body row mt-0  px-3">
+                  <div class="table-responsive">
+                    <div class="table table-striped">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                     [rows]="productRequiredListingData.data"
+                                     [columnMode]="'force'"
+                                     [headerHeight]="40"
+                                     [footerHeight]="40"
+                                     [scrollbarH]="true"
+                                     [rowHeight]="'40'"
+                                     [externalPaging]="true"
+                                     [externalSorting]="true"
+                                     [loadingIndicator]="loadSave"
+                                     [count]="productRequiredListingData.pager.totalItems"
+                                     [offset]="productRequiredListingData.pager.currentPage"
+                                     [limit]="productRequiredListingData.pager.pageSize"
+                                     (page)='setProductRequiredPage($event)'
+                                     (sort)="onProductRequiredSort($event)"
+                                     [selectAllRowsOnPage]="false">
+
+
+                        <ngx-datatable-column name="Product Required" prop="ProductRequiredNumber" [sortable]="true" ></ngx-datatable-column>
+                        <ngx-datatable-column name="Quantity Required" prop="QuantityRequired" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="DateDelivered" prop="DateDelivered" [sortable]="true" *ngIf="isColumnShow"></ngx-datatable-column>
+                        <ngx-datatable-column name="QuantityUnitOfMeasure" prop="QuantityUnitOfMeasure" [sortable]="true" *ngIf="isColumnShow"></ngx-datatable-column>
+                        <ngx-datatable-column name="WorkType" prop="WorkType" [sortable]="true" ></ngx-datatable-column>
+                        <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="text-center">
+                              <a href="javascript:void(0);" (click)="EditProductRequired(row)" title="Edit Note"><i class="fa fa-pencil text-success pr-2"></i></a>
+                              <a href="javascript:void(0);" (click)="DeleteProductRequired(row,'AssignedResource')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                            </div>
+
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-footer>
+                          <ng-template ngx-datatable-footer-template
+                                       let-rowCount="rowCount"
+                                       let-pageSize="pageSizeValueProductRequired"
+                                       let-selectedCount="selectedCount"
+                                       let-currentPage="currentPageProductRequired"
+                                       let-offset="offset"
+                                       let-isVisible="isVisible">
+
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                              {{commonService.PageString(currentPageProductRequired,pageSizeValueProductRequired,rowCount)}}
+                            </div>
+
+                            <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                             [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                             [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                             [pagerNextIcon]="'fa fa-angle-double-right'"
+                                             [page]="currentPageProductRequired"
+                                             [size]="pageSizeValueProductRequired"
+                                             [count]="productRequiredListingData.pager.totalItems"
+                                             [hidden]="!((rowCount / pageSizeValueProductRequired) > 1)"
+                                             (change)="setProductRequiredPage($event)">
+                            </datatable-pager>
+                          </ng-template>
+
+                        </ngx-datatable-footer>
+                      </ngx-datatable>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+            <!--==============================================================================================================================-->
+            <!--====================================Skill Requirements ===========================================================-->
+            <div class="panel active">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a href="#skillRequirement" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                    <span>Skills Requirements ({{skillRequirementsCount}})</span>
+                  </a>
+                </h4>
+              </div>
+              <div id="skillRequirement" class="panel-collapse collapse active show" style="">
+                <a href="javascript:void(0);" class="btn-in-panel"
+                   (click)="AddSkillRequirements()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add</a>
+
+                <div class="panel-body row mt-0  px-3">
+                  <div class="table-responsive">
+                    <div class="table table-striped">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                     [rows]="skillRequirementsListingData.data"
+                                     [columnMode]="'force'"
+                                     [headerHeight]="40"
+                                     [footerHeight]="40"
+                                     [scrollbarH]="true"
+                                     [rowHeight]="'40'"
+                                     [externalPaging]="true"
+                                     [externalSorting]="true"
+                                     [loadingIndicator]="loadSave"
+                                     [count]="skillRequirementsListingData.pager.totalItems"
+                                     [offset]="skillRequirementsListingData.pager.currentPage"
+                                     [limit]="skillRequirementsListingData.pager.pageSize"
+                                     (page)='setSkillRequirementsPage($event)'
+                                     (sort)="onSkillRequirementsSort($event)"
+                                     [selectAllRowsOnPage]="false">
+                        <!--[selectionType]="SelectionType.checkbox"-->
+                        <!--[selected]="selected"
+                        (select)="onSelect($event)"-->
+
+
+                        <ngx-datatable-column name="Required For" prop="RequiredFor" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Skill Required" prop="SkillRequired" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Skill Level" prop="SkillLevel" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="text-center">
+                              <!--<a href="javascript:;" (click)="ViewNotes(row)" title="View Note"><i class="feather-eye pr-2"></i></a>-->
+                              <a href="javascript:void(0);" (click)="EditSkillRequirements(row)" title="Edit Note"><i class="fa fa-pencil text-success pr-2"></i></a>
+                              <a href="javascript:void(0);" (click)="DeleteSkillRequirements(row)"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                            </div>
+
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-footer>
+                          <ng-template ngx-datatable-footer-template
+                                       let-rowCount="rowCount"
+                                       let-pageSize="pageSizeValueSkillRequirements"
+                                       let-selectedCount="selectedCount"
+                                       let-currentPage="currentPagesetSkillRequirementsPage"
+                                       let-offset="offset"
+                                       let-isVisible="isVisible">
+
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                              {{commonService.PageString(currentPagesetSkillRequirementsPage,pageSizeValueSkillRequirements,rowCount)}}
+                            </div>
+
+                            <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                             [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                             [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                             [pagerNextIcon]="'fa fa-angle-double-right'"
+                                             [page]="currentPagesetSkillRequirementsPage"
+                                             [size]="pageSizeValueSkillRequirements"
+                                             [count]="skillRequirementsListingData.pager.totalItems"
+                                             [hidden]="!((rowCount / pageSizeValueSkillRequirements) > 1)"
+                                             (change)="setSkillRequirementsPage($event)">
+                            </datatable-pager>
+                          </ng-template>
+
+                        </ngx-datatable-footer>
+                      </ngx-datatable>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--==============================================================================================================================-->
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--===================================================== ProductRequiredPopupModel ========================================================-->
+  <div class="modal fade in show" bsModal #addProductRequiredPopupModel="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!--*ngIf="!isViewNote"-->
+          <h4 class="modal-title">{{title}}</h4>
+          <button type="button" class="close" (click)="closeProductRequiredPopup()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--<div class="modal-header" *ngIf="isViewNote">
+          <h4 class="modal-title">VIEW NOTE</h4>
+          <button type="button" class="close" (click)="closeProductRequiredPopup()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>-->
+        <div class="modal-body" style="margin-bottom:10px; max-height:310px; overflow:visible;">
+          <form [formGroup]="addProductRequiredForm" [ngClass]="{'disabled':loadSave}">
+
+            <div class="row">
+              <div class="col-md-6">
+                <label>Parent Record:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="parentRecordList" placeholder="Select Work Type" formControlName="parentRecordId"
+                             bindLabel="text" bindValue="value" 
+                             [ngClass]="{'is-invalid': (parentRecordId.invalid && (parentRecordId.dirty || parentRecordId.touched) && (parentRecordId.errors?.required || parentRecordId.errors?.maxlength)) }">
+
+                  </ng-select>
+                  <small *ngIf="parentRecordId.invalid && (parentRecordId.dirty || parentRecordId.touched) && parentRecordId.errors?.required"
+                         class="text-danger">Parent Record is required</small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label>Product Required:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Enter Product" formControlName="productRequired"
+                         [ngClass]="{'is-invalid': (productRequired.invalid && (productRequired.dirty || productRequired.touched) && (productRequired.errors?.required || productRequired.errors?.maxlength)) }" maxlength="50" />
+                  <small *ngIf="productRequired.invalid && (productRequired.dirty || productRequired.touched) && productRequired.errors?.required"
+                         class="text-danger">Product Required is required</small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label>Quantity Required:</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Enter Quantity Required" formControlName="quantityRequired" (keypress)="allowTwoDecimalOnly($event)" />
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label>Date Delivered:</label>
+                <div class="form-group">
+                  <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="dateDelivered"
+                              inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label>Quantity Unit Of Measure:</label>
+                <div class="form-group">
+                  <ng-select [items]="quantityUnitOfMeasureList" placeholder="Select Quantity Unit Of Measure" formControlName="quantityUnitOfMeasureId"
+                             bindLabel="text" bindValue="value"></ng-select>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button *ngIf="!isViewNote" type="submit" class="btn btn-success form-btns" (click)="saveProductRequiredPopup()"><i class="feather-save text-white"></i> Save</button>
+
+          <button type="submit" class="btn btn-danger form-btns" (click)="closeProductRequiredPopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--===============================================================================================================================-->
+  <!--===================================================== SkillRequirementsModel ========================================================-->
+  <div class="modal fade in show" bsModal #addSkillRequirementsPopupModel="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!--*ngIf="!isViewNote"-->
+          <h4 class="modal-title">{{title}}</h4>
+          <button type="button" class="close" (click)="closeSkillRequirementsPopup()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--<div class="modal-header" *ngIf="isViewNote">
+          <h4 class="modal-title">VIEW NOTE</h4>
+          <button type="button" class="close" (click)="closeProductRequiredPopup()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>-->
+        <div class="modal-body" style="margin-bottom:10px; max-height:310px; overflow:visible;">
+          <form [formGroup]="addSkillRequirementsForm" [ngClass]="{'disabled':loadSave}">
+
+            <div class="row">
+              <div class="col-md-6">
+                <label>Required   For:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="parentRecordList"  placeholder="Select Work Type" formControlName="requiredFor"
+                             bindLabel="text" bindValue="value"
+                             [ngClass]="{'is-invalid': (requiredFor.invalid && (requiredFor.dirty || requiredFor.touched) && (requiredFor.errors?.required || requiredFor.errors?.maxlength)) }">
+
+                  </ng-select>
+                  <small *ngIf="requiredFor.invalid && (requiredFor.dirty || requiredFor.touched) && requiredFor.errors?.required"
+                         class="text-danger">Work Type is required</small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label>Skill Requirement:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <ng-select [items]="skillRequirementList" placeholder="Select Skills" formControlName="skillRequirement"
+                             bindLabel="text" bindValue="value"
+                             [ngClass]="{'is-invalid': (skillRequirement.invalid && (skillRequirement.dirty || skillRequirement.touched) && (skillRequirement.errors?.required || skillRequirement.errors?.maxlength)) }">
+
+                  </ng-select>
+                  <small *ngIf="skillRequirement.invalid && (skillRequirement.dirty || skillRequirement.touched) && skillRequirement.errors?.required"
+                         class="text-danger">Skill is required</small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label>Skill Level:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Enter Skill Level" formControlName="skillLevel" (keypress)="allowTwoDecimalOnly($event)"
+                         [ngClass]="{'is-invalid': (skillLevel.invalid && (skillLevel.dirty || skillLevel.touched) && (skillLevel.errors?.required || skillLevel.errors?.maxlength)) }" maxlength="50" />
+                  <small *ngIf="skillLevel.invalid && (skillLevel.dirty || skillLevel.touched) && skillLevel.errors?.required"
+                         class="text-danger">Product Required is required</small>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button *ngIf="!isViewNote" type="submit" class="btn btn-success form-btns" (click)="saveSkillRequirementsPopup()"><i class="feather-save text-white"></i> Save</button>
+
+          <button type="submit" class="btn btn-danger form-btns" (click)="closeSkillRequirementsPopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--===============================================================================================================================-->
+
+
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>

@@ -1,0 +1,164 @@
+<form [formGroup]="coApplicantForm" autocomplete="off">
+  <div class="panel-body">
+    <div class="row">
+
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">First Name:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="firstName"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Last Name:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="lastName"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">DOB:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <p-calendar formControlName="dob" dateFormat="mm/dd/yy" placeholder="Select DOB"></p-calendar>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Suffix:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="suffix"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">SSN:</div> 
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="ssn"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Relationship Status:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="relationshipStatus"></b></div>
+      </div>
+
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Street Name:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="streetName"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Street Type:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="streetType"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Apt/St #:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="aptSt"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">P.O. Box:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="poBox"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Rural Route:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="ruralRoute"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">City:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="city"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">State:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <ng-select [items]="states" placeholder="Select State" formControlName="stateId"
+                     bindLabel="text" bindValue="value"></ng-select>
+        </div>
+
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Zip:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="zip"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Years at Current Address:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="yearsAtCurrentAddr"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Months at Current Address:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="monthsAtCurrentAddr"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Home Phone:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="homePhone"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Business Phone:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="businessPhone"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Email Address:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="email"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">DL State:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="dlState"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Dl Number:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="dINumber"></b></div>
+      </div><div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Housing Status:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="housingStatus"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Rent/Mortage Payment:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <b><input type="text" class="form-control" formControlName="rentAmount"></b>
+          <small *ngIf="rentAmount.invalid && (rentAmount.dirty || rentAmount.touched) && rentAmount.errors?.pattern"
+                 style="color:red;">Please enter valid value.</small>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Employement Type:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="employerType"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Employer:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="employerName"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Occupation:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="occupation"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Years at Current Employement:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="yearAtEmp"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Months at Current Employement:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="monthsAtEmp"></b></div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Gross Income:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <b><input type="text" class="form-control" formControlName="grossIncome"></b>
+          <small *ngIf="grossIncome.invalid && (grossIncome.dirty || grossIncome.touched) && grossIncome.errors?.pattern"
+                 style="color:red;">Please enter valid value.</small>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Income Frequency:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <b><input type="text" class="form-control" formControlName="incomeFreq"></b>
+
+          <small *ngIf="incomeFreq.invalid && (incomeFreq.dirty || incomeFreq.touched) && incomeFreq.errors?.pattern"
+                 style="color:red;">Please enter valid value.</small>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Other Income (Monthly):</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">
+          <b><input type="text" class="form-control" formControlName="otherMonthlyIncome"></b>
+          <small *ngIf="otherMonthlyIncome.invalid && (otherMonthlyIncome.dirty || otherMonthlyIncome.touched) && otherMonthlyIncome.errors?.pattern"
+                 style="color:red;">Please enter valid value.</small>
+        </div>
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="col-6 mb-2 pb-2 border-bottom float-left">Other Income Source:</div>
+        <div class="col-6 mb-2 pb-2 border-bottom float-left"><b><input type="text" class="form-control"  formControlName="otherIncomeSource"></b></div>
+      </div>
+
+
+    </div>
+    <div class="col-12 p-0"  *ngIf="isflag">
+      <button type="submit" [disabled]="isSubmitted" class="btn btn-success form-btns mr-2" (click)="addUpdateApplicant()"><i class="feather-save text-white"></i> Save</button>
+      <button type="submit" class="btn btn-danger form-btns" (click)="close()"><i class="fa fa-times text-white"></i> Cancel</button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,86 @@
+:host,
+#preview,
+video {
+    width: 100% !important;
+    height: 100% !important;
+}
+.mute-buttons{
+    position: absolute;
+    bottom: 10px;
+    width: 90%;
+    text-align: center;
+}
+#mutevideo{
+    position: relative;
+}
+.fa.fa-video-camera1:after {
+    position: absolute;
+    content: "/";
+    color: white;
+    font-weight: bold;
+    font-size: 1.5em;
+    text-shadow: 3px 0px 0px rgb(0 0 0);
+    line-height: 53px;
+    left: 111px;
+    top: 9px;
+    font-family: Arial;
+}
+.fa.fa-video-camera2:after {
+    position: absolute;
+    content: "/";
+    color: white;
+    font-weight: bold;
+    font-size: 1.5em;
+    text-shadow: 3px 0px 0px rgb(0 0 0);
+    line-height: 53px;
+    left: 90px;
+    top: 9px;
+    font-family: Arial;
+}
+.mute-buttons button{ border-radius:100%;}
+.caller-name{
+    position: absolute;
+    left: 11px;
+    bottom: 64px;
+    z-index: 100000;
+    background: #2f40509e;
+    padding: 10px;
+    width: 194px;
+    color: #fff;
+}
+
+
+.leave-button button{ border-radius:100%;}
+.my-preview{
+    position:relative;
+    left: 0;
+    bottom: 0;
+}
+#preview {
+    border: solid 6px rgb(34, 34, 34);
+    background-color: rgb(38, 38, 38);
+}
+#nocamera{
+    border: solid 6px rgb(34, 34, 34);
+    background-color: rgb(38, 38, 38);
+    min-height: 400px;
+}
+#nocamera {
+    height: 100%;
+}
+
+#nocamera.table {
+    display: table;
+}
+div > p {
+    vertical-align: middle;
+    display: table-cell;
+    padding: 0 10%;
+}
+/* #preview {    border:none;    background-color:none; margin:0;} */
+#preview .table {  margin-bottom: 0;}
+.part-list .app-camera .table video{ border: 1px solid #fff}
+#preview{  position: absolute;     width: 218px !important;  height: 225px !important;   border: 1px solid #a1a1a1;
+       padding: 10px;   display: block;   top: -22px;   z-index: 0;   left: 50%;   background: #ffffff;   margin-left: -109px;
+    padding-bottom: 60px;}
+.part-list { display: flex; justify-content: space-between; }

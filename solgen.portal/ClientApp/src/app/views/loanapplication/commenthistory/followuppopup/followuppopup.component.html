@@ -1,0 +1,93 @@
+<div bsModal #followuppopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Send Follow Up</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow:auto; margin-bottom:10px; height:100%">
+        <form [formGroup]="addForm" autocomplete="off">
+          <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Choose a Template :</label>
+              <div class="form-group">
+                <ng-select [items]="lstTemplate"
+                           placeholder="Choose a Template" bindValue="value" bindLabel="text"
+                           formControlName="templateId" (change)="gettemplatelist($event)"
+                           [closeOnSelect]="true" [ngClass]="{'is-invalid': (templateId.invalid && (templateId.dirty || templateId.touched) && templateId.errors?.required) }">
+                </ng-select>
+                <small *ngIf="templateId.invalid && (templateId.dirty || templateId.touched) && templateId.errors?.required"
+                       style="color:red;">Please select Template</small>
+              </div>
+
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>From:<span class="text-danger"></span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" id="sendName" formControlName="fromName" maxlength="200">
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>To:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="contactlist"
+                           placeholder="Select To" bindValue="value" bindLabel="text"
+                           formControlName="toUser"
+                           [closeOnSelect]="true" [ngClass]="{'is-invalid': (toUser.invalid && (toUser.dirty || toUser.touched) && toUser.errors?.required) }">
+                </ng-select>
+                <small *ngIf="toUser.invalid && (toUser.dirty || toUser.touched) && toUser.errors?.required"
+                       style="color:red;">Please select TO</small>
+              </div>
+            </div>
+            <!--<div class="col-12 col-md-12 col-lg-12">
+              <label>CC:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstCC" [multiple]="true"
+                           placeholder="Select CC" bindValue="value" bindLabel="text"
+                           formControlName="ccUser"
+                           [closeOnSelect]="true"
+                           [ngClass]="{'is-invalid': (ccUser.invalid && (ccUser.dirty || ccUser.touched) && ccUser.errors?.required) }">
+                </ng-select>
+                <small *ngIf="ccUser.invalid && (ccUser.dirty || ccUser.touched) && ccUser.errors?.required"
+                       style="color:red;">Please select CC</small>
+              </div>
+            </div>-->
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Subject:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter Subject" formControlName="subject" [ngClass]="{'is-invalid': (subject.invalid && (subject.dirty || subject.touched) && (subject.errors?.required || subject.errors?.maxlength)) }">
+                <small *ngIf="subject.invalid && (subject.dirty || subject.touched) && subject.errors?.required"
+                       class="text-danger">subject is required</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Message:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ckeditor #myckeditor name="myckeditor"
+                          formControlName="subjectBody"
+                          required
+                          [config]="ckeConfig"
+                          debounce="500"
+                          (paste)="onPaste($event)"
+                          (change)="onChangetemp($event)">
+                </ckeditor>
+                <small *ngIf="subjectBody.invalid && (subjectBody.dirty || subjectBody.touched) && subjectBody.errors?.required"
+                       style="color:red;">Subject Body  is required</small>
+              </div>
+
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="Save()"><i class="feather-save text-white"></i> Send</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

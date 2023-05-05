@@ -1,0 +1,29 @@
+<!--<p class="shape_polygan">
+  <span>Target</span>
+  <span class="delete" (click)="deleteTarget()" title="Click here to delete this Target"></span>
+</p>-->
+  <div [formGroup]="targetForm">
+    <div class="flow-container last-child " *ngIf="!targetForm.get('addButton').value">
+      <div class="add-flow">
+        <i class="feather-plus"></i>
+        <div class="add-action">
+          <a href="javascript:;" (click)="AddScreen()" class="border-right"><span class="text-info"><i class="fa fa-clone text-info"></i></span>Add Screen</a>
+          <a  href="javascript:;" (click)="AddDecision()" class="border-right"><span class="text-warning"><i class="fa fa-file-text-o text-warning"></i></span>Add Decision</a>
+          <!--<a href="javascript:;" (click)="AddCondition()"> <span class="text-success"><i class="fa fa-code text-success"></i></span>Add Condition</a>-->
+        </div>
+
+      </div>
+    </div>
+  </div>
+ <!--<app-work-flow-delete (deleteTargetEvent)="deleteTarget(i)"></app-work-flow-delete>-->
+
+  <!--<app-work-flow-condition  #conditioncomponent [ruleEngineForm]="ruleEngineForm" [target]="target" [typecondition]="true"  [rowNo]="rowNo"
+    (buttonState)="buttonState($event)" (getIndexNo)="getIndexNo($event)"></app-work-flow-condition>-->
+
+
+  <app-work-flow-descision  #decisioncomponent [ruleEngineForm]="ruleEngineForm" [target]="target" [rowNo]="rowNo"
+                           (buttonState)="buttonState($event)" (getIndexNo)="getIndexNo($event)" ></app-work-flow-descision>
+  <app-screen #screencomponent [ruleEngineForm]="ruleEngineForm" [target]="target" [rowNo]="rowNo" (getIndexNo)="getIndexNo($event)" (buttonState)="buttonState($event)" (stepdll)="stepdll($event)" [typescreen]="true"></app-screen>
+
+
+  <!--<app-work-flow-result  [ruleEngineForm]="ruleEngineForm" [target]="target"></app-work-flow-result>-->

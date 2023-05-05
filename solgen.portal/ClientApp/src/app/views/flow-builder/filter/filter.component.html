@@ -1,0 +1,101 @@
+<div bsModal #filterModal="bs-modal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" *ngIf="filterForm && nodeId">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter Records</h5>
+                <button type="button" (click)="closeFilterModal()" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" style="max-height: 800px ; overflow-y: auto;">
+                <div *ngIf="filterForm && nodeId" [formGroup]="filterForm">
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Label (Max Char Limit 50)<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input id="nameInput" class="form-control" maxlength="50" formControlName="name" [ngClass]="{'is-invalid': (filterName.invalid && (filterName.dirty || filterName.touched) && (filterName.errors?.required || filterName.errors?.maxlength)) }">
+                                <small *ngIf="(filterName.invalid && (filterName.dirty || filterName.touched)) && filterName.errors?.required" class="text-danger">label is required</small>
+                                <small *ngIf="(filterName.invalid && (filterName.dirty || filterName.touched)) && filterName.errors?.maxlength" class="text-danger">label should be less then 50</small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label>Description (Max Char Limit 200)</label>
+                            <div class="form-group">
+                                <textarea class="form-control" maxlength="200" formControlName="description" [ngClass]="{'is-invalid': (filterDescription.invalid && (filterDescription.dirty || filterDescription.touched) && filterDescription.errors?.maxlength) }"></textarea>
+                                <small *ngIf="(filterDescription.invalid && (filterDescription.dirty || filterDescription.touched)) && filterDescription.errors?.maxlength" class="text-danger">Description should be less then 200</small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <h6>Without changing the original collection, remove items based on a set of conditions.
+                            </h6>
+                            <p>Select a source collection. This element creates a target collection that contains only
+                                the source items that meet the conditions.</p>
+                        </div>
+                        <div class="col-6">
+                            <label for="Action" class="form-label">
+                                Collection<span class="text-danger">*</span>
+                            </label>
+                            <ng-select (change)="ChangeColletion($event)" formControlName="collection"
+                                [items]="collectionVariables" placeholder="Enter min. 3 characters to search..."
+                                [closeOnSelect]="true" [virtualScroll]="true" bindLabel="name" bindValue="value">
+                            </ng-select>
+                            <!-- <input id="nameInput" class="form-control" formControlName="collection"> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div formArrayName="filterCollectionConditions">
+                                <div class="row mb-2 align-items-end justify-content-between"
+                                    *ngFor="let condition of conditions.controls;let i=index" [formGroupName]="i">
+                                    <div class="col-md-1 col-lg-1">
+                                        <strong class="d-block pb-2" *ngIf="conditions.length > 1">And</strong>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <label>Field</label>
+                                        <ng-select [items]="variableList" formControlName="field"
+                                            placeholder="Select Variable" bindLabel="customfieldName" bindValue="primaryTableColumn"
+                                            appendTo="body">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <label>Operator</label>
+                                        <ng-select [items]="operatorList" placeholder="Select Operator"
+                                            formControlName="operator" bindLabel="text" bindValue="value"
+                                            appendTo="body">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <label>Value</label>
+                                        <input type="text" name="value{{i}}" class="form-control"
+                                            formControlName="value" placeholder="Enter Value">
+                                    </div>
+                                    <div class="col-md-1 col-lg-1">
+                                        <button [disabled]="conditions.length < 2" (click)="deleteCondition(i)"
+                                            class="btn btn-danger form-btns" tooltip="Delete">
+                                            <span><i class="feather-trash-2"></i></span>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3 col-lg-3">
+                                    <button class="btn btn-success  float-left" (click)="addNewCondition()"><i
+                                            class="feather-plus"></i>Add Condition</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success form-btns" (click)="saveFilterForm()"><i
+                        class="feather-save text-white pr-2"></i>Submit</button>
+                <button type="button" class="btn btn-danger form-btns" (click)="closeFilterModal()" data-dismiss="modal"
+                    aria-label="Close">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

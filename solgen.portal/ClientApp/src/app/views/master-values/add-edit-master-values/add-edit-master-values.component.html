@@ -1,0 +1,117 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<div class="clearfix"></div>
+<div class="panel">
+    <div class="panel-content p-4"  style="overflow:visible;" [ngClass]="{'disabled':loadSave}">
+      <form [formGroup]="form" *ngIf="form">
+        <div class="row">
+          <div class="col-lg-12 p-0 portlets">
+            <div class="panel cntainerwithoutbg mb-0">
+              <div class="row">
+                <div class="col-md-12 text-right right">
+                  <button class="btn btn-primary mr-3" href="javascript:void(0);" [disabled]="controlId.value == null" (click)="addMoreFieldValue()"><i class="feather-plus"></i> Add Value</button>
+                </div>
+              </div>
+              <div class="panel-header">
+                <div class="row mt-2">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Module:<span class="text-danger">*</span></label>
+                      <ng-select [items]="lstModule" placeholder="Select Module" formControlName="moduleId" bindValue="value" bindLabel="text" 
+                                 [closeOnSelect]="true" (change)="onModuleChange($event)"
+                                 [ngClass]="{'is-invalid': (moduleId.invalid && (moduleId.dirty || moduleId.touched) && (moduleId.errors?.required || moduleId.errors?.maxlength)) }">
+                      </ng-select>
+                      <small *ngIf="(moduleId.invalid && (moduleId.dirty || moduleId.touched)) && moduleId.errors?.required" class="text-danger">Module is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Sub Module:<span class="text-danger">*</span></label>
+                      <ng-select [items]="lstSubModule" placeholder="Select Sub Module" formControlName="subModuleId" bindValue="value" bindLabel="text"
+                                 [closeOnSelect]="true" (change)="onSubModuleChange($event)"
+                                 [ngClass]="{'is-invalid': (subModuleId.invalid && (subModuleId.dirty || subModuleId.touched) && (subModuleId.errors?.required || subModuleId.errors?.maxlength)) }">
+                      </ng-select>
+                      <small *ngIf="(subModuleId.invalid && (subModuleId.dirty || subModuleId.touched)) && subModuleId.errors?.required" class="text-danger">Sub Module is required</small>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Controls:<span class="text-danger">*</span></label>
+                      <ng-select [items]="lstCustomField" placeholder="Select Controls" formControlName="controlId" bindValue="custom_field_id" bindLabel="display_name"
+                                 [closeOnSelect]="true" (change)="onCustomFieldChange($event)"
+                                 [ngClass]="{'is-invalid': (controlId.invalid && (controlId.dirty || controlId.touched) && (controlId.errors?.required || controlId.errors?.maxlength)) }">
+                      </ng-select>
+                      <small *ngIf="(controlId.invalid && (controlId.dirty || controlId.touched)) && controlId.errors?.required" class="text-danger">Control is required</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-content p-0" style="min-height:130px;">
+                <div class="col-md-12 mt-2">
+                  <div class="pagination2 table-responsive grey_bg status-panel">
+                    <table class="table table-hover table-dynamic mb-0">
+                      <thead>
+                        <tr>
+                          <th class="text-center"> </th>
+                          <th>Value<span class="text-danger">*</span></th>
+                          <th>Description</th>
+                          <th>Choose Color</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody dnd-sortable-container [sortableData]="fieldValues.controls" [dropZones]="['container-dropZone']">
+                        <ng-container formArrayName="fieldValues" *ngFor="let item of fieldValues.controls; let i=index" >
+                              
+                          <tr [formGroupName]="i" >
+                            <td class="text-center" [dragEnabled]="sectionDrag" dnd-sortable [sortableIndex]="i">{{i+1}}</td>
+                            <td>
+                              <input [readonly]="item.get('isSystemGenerated').value" (blur)="checkFormArray(i)" type="text" class="form-control" formControlName="value" maxlength="100" placeholder="Enter Value" 
+                              [ngClass]="{'is-invalid': (item.get('value').invalid && (item.get('value').dirty || item.get('value').touched) && (item.get('value').errors?.required || item.get('value').errors?.maxlength))}"   (change)="checkDuplicateName($event,i)"  />
+                              <small *ngIf="(item.get('value').invalid && (item.get('value').dirty || item.get('value').touched)) && item.get('value').errors?.required" class="text-danger"  >Value is required</small>
+                              <small *ngIf="item.get('value').invalid && item.get('value').errors?.isdublicated" class="text-danger"  >Entered value already exists.</small>
+
+                            </td>
+                            <td>
+                              <textarea [readonly]="item.get('isSystemGenerated').value" formControlName="description" class="form-control cust-height" placeholder="Enter Description" 
+                              [ngClass]="{'is-invalid': (item.get('description').invalid && (item.get('description').dirty || item.get('description').touched) && (item.get('description').errors?.required || item.get('description').errors?.maxlength)) }"></textarea>
+                              <small *ngIf="(item.get('description').invalid && (item.get('description').dirty || item.get('description').touched)) && item.get('description').errors?.required" class="text-danger">Description is required</small>
+                            </td>
+                            <td>
+                              <div class="dropdown bootstrap-select form-control my-select">
+                                <p-colorPicker formControlName="choosenColor" (click)="onColorPickerClick(i,$event)">
+                                </p-colorPicker>
+                                <!-- <span>{{colorCode[i]}}</span> -->
+                                <span>{{item.value.choosenColor}}</span>
+                              </div>
+
+                            </td>
+                            <td>
+                              <a href="javascript:void(0);" (click)="removeFieldValue(i)"
+                                 *ngIf="i > 0 && !item.get('isSystemGenerated').value"
+                                 class="text-red arrow_col font-16 mt-2">
+                                <i class="feather-trash-2" title="Delete"></i>
+                              </a>
+                            </td>
+                          </tr>
+                        </ng-container>
+                           
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-footer border-0 py-4">
+                <div class="row">
+                  <div class="col-md-12">
+                    <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="onSubmit()"><i class="feather-save"></i> Submit</a>
+                    <!-- <button class="btn btn-primary mr-3" href="javascript:void(0);" [disabled]="controlId.value == null" (click)="addMoreFieldValue()"><i class="feather-plus"></i> Add Value</button> -->
+                    <!-- <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="feather-x"></i> Cancel</a> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+</div>

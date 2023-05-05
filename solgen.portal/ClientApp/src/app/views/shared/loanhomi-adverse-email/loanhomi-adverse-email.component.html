@@ -1,0 +1,144 @@
+<div class="col-md-12 d-flex">
+  <p-calendar inputStyleClass="form-control start-date" [baseZIndex]="9999"
+              [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2020:2050" (onSelect)="onSelectMethod($event)"></p-calendar>
+  <button type="submit" class="btn btn-success form-btns" (click)="filter()"> Filter</button>
+</div>
+
+<div class="col-md-12 d-flex">
+  <h3 class="form-heading w-100">Adverse Emails</h3>
+</div>
+<div class="col-md-12">
+  <div class="table-responsive">
+    <div class="table table-striped">
+      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                     [rows]="pagedData.data"
+                     [scrollbarH]="true"
+                     [rowHeight]="'40'"
+                     [columnMode]="'force'"
+                     [headerHeight]="40"
+                     [footerHeight]="40"
+                     [externalPaging]="true"
+                     [externalSorting]="true"
+                     [loadingIndicator]="loadSave"
+                     [count]="pagedData.pager.totalItems"
+                     [offset]="pagedData.pager.currentPage"
+                     [limit]="pagedData.pager.pageSize"
+                     (page)='setPage($event)'
+                     (sort)="onSort($event)">
+
+        <ngx-datatable-column name="Loan Application Number" prop="LoanApplicationNumber" [minWidth]="150"></ngx-datatable-column>
+        <ngx-datatable-column name="Loan Application Dated" [minWidth]="130">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.LoanApplicationDated | date}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Sent To" prop="SentTo" [minWidth]="150"></ngx-datatable-column>
+        <ngx-datatable-column name="Message" prop="Message" [minWidth]="150"></ngx-datatable-column>
+        <ngx-datatable-column name="Created On" [minWidth]="130">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.CreatedOn | pstdatetimetolocal}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Sent On" [minWidth]="130">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.SentOn | pstdatetimetolocal}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Details" [sortable]="false" headerClass="text-center">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <a class="icon-text-center" href="javscript:;" (click)="viewDetails(row)"> View Details</a>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-footer>
+          <ng-template ngx-datatable-footer-template
+                       let-rowCount="rowCount"
+                       let-pageSize="pageSize"
+                       let-selectedCount="selectedCount"
+                       let-currentPage="currentPage"
+                       let-offset="offset"
+                       let-isVisible="isVisible">
+            <div class="page-count" style="max-width:170px;">
+              Total Records: {{rowCount}}
+            </div>
+            <div>
+              <div style="color:black; margin-right:10px;" class="page-size-record" *ngIf='(rowCount  > 0)'>
+                <span style="text-align:right; width:80px;vertical-align: middle;">
+                  <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                             bindLabel="text" bindValue="text"></ng-select>
+                </span>
+              </div>
+            </div>
+
+            <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                             [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                             [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                             [pagerNextIcon]="'fa fa-angle-double-right'"
+                             [page]="curPage"
+                             [size]="pageSizeValue"
+                             [count]="pagedData.pager.totalItems"
+                             [hidden]="!((rowCount / pageSize) > 1)"
+                             (change)="setPage($event)">
+            </datatable-pager>
+
+
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+    </div>
+
+  </div>
+</div>
+
+<div bsModal #adverseDetail="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content" style="z-index:1">
+      <div class="modal-header">
+        <h4 class="modal-title">Adverse Email Detail</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body mapping-select" style="max-height:600px; ">
+        <div class="table-responsive">
+          <table class="table table-bordered" style="min-width:600px;">
+            <tbody>
+              <tr>
+                <th scope="row">Loan Application Number</th>
+                <td>{{detailRow.LoanApplicationNumber}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Loan Application Dated</th>
+                <td>{{detailRow.LoanApplicationDated | date}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Sent To</th>
+                <td>{{detailRow.SentTo}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Message</th>
+                <td class="adversecontnt">
+                  <div [innerHTML]="detailRow.Message">
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Created On</th>
+                <td>{{detailRow.CreatedOn | pstdatetimetolocal}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Sent On</th>
+                <td>{{detailRow.SentOn | pstdatetimetolocal}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="resend()" data-dismiss="modal" aria-label="Resend"><i class="fa fa-undo"></i> Resend</button>
+        <button type="button" class="btn btn-danger" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x"></i> Close</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

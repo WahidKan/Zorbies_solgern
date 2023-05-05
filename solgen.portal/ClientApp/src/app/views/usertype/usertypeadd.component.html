@@ -1,0 +1,138 @@
+<div class="page">
+  <!--<div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9 mt-3">
+          <span class="dash">Manage User Type</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a routerLink="/userTypelist">Manage User Type</a></li>
+            <li class="breadcrumb-item active">{{pageTitle}}</li>
+          </ul>
+        </div>
+        <div class="col-md-3 mt-4 text-right">
+          <button class="w-auto sw-100 btn btn-dark" (click)="close()"><i class="fa fa-arrow-left"></i>&nbsp;Back</button>
+        </div>
+      </div>
+    </div>
+  </div>-->
+  <div class="header float-left w-100 mb-2">
+    <h2 class="float-left pr-2"><strong>Manage User Type</strong></h2>
+    <div class="breadcrumb-wrapper">
+      <ol class="breadcrumb">
+        <li><a routerLink="/dashboard">Dashboard</a></li>
+        <li><a routerLink="/userTypelist">Manage User Type</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+
+  </div>
+  <div class="clearfix"></div>
+
+  <div class="panel">
+    <div class="panel-content">
+      <form [formGroup]="userTypeForm" autocomplete="off">
+        <div class="userType-box" [ngClass]="{'disabled':loadSave}">
+          <div class="row">
+            <div class="col-md-12 col-lg-4">
+              <label>User Type:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Please enter User Type"
+                       formControlName="userType" [ngClass]="{'is-invalid': (userType.invalid && (userType.dirty || userType.touched) && (userType.errors?.required || userType.errors?.maxlength)) }">
+
+
+                <small *ngIf="userType.invalid && (userType.dirty || userType.touched) && userType.errors?.required"
+                       class="text-danger">User Type is required</small>
+                <small *ngIf="userType.invalid && (userType.dirty || userType.touched) && userType.errors?.maxlength"
+                       class="text-danger">User Type must be less than 50 characters.</small>
+              </div>
+            </div>
+            <!--<div class="col-md-12 col-lg-4">
+              <label>Status:<span style="color:red">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="statuses" [loading]="loadSave" [closeOnSelect]="true" placeholder="Select status" formControlName="userTypeStatusId"
+                           bindLabel="text" bindValue="valueGuid"
+                           [ngClass]="{'is-invalid': (userTypeStatusId.invalid && (userTypeStatusId.dirty || userTypeStatusId.touched) && userTypeStatusId.errors?.required) }"></ng-select>
+                <small *ngIf="userTypeStatusId.invalid && (userTypeStatusId.dirty || userTypeStatusId.touched) && userTypeStatusId.errors?.required"
+                       style="color:red;">Please select Status</small>
+              </div>
+            </div>-->
+            <div class="col-md-12 col-lg-4">
+              <label>Description:</label>
+              <div class="form-group">
+                <textarea type="text" style="height:38px;" class="form-control" formControlName="userTypeDescription" [ngClass]="{'is-invalid': (userTypeDescription.invalid && (userTypeDescription.dirty || userTypeDescription.touched) && (userTypeDescription.errors?.required || userTypeDescription.errors?.maxlength)) }"></textarea>
+                <small *ngIf="userTypeDescription.invalid && (userTypeDescription.dirty || userTypeDescription.touched) && userTypeDescription.errors?.required"
+                       class="text-danger">Description is required</small>
+                <small *ngIf="userTypeDescription.invalid && (userTypeDescription.dirty || userTypeDescription.touched) && userTypeDescription.errors?.maxlength"
+                       class="text-danger">Description must be less than 1000 characters</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group usert-nottf">
+          <h3 _ngcontent-c1="" class="form-heading ng-star-inserted ml-0"><span _ngcontent-c1="">Access Level </span></h3>
+          <!--<ng-container *ngFor="let m of modulelist">
+            <h3 class="form-heading mt-0" style="background:#f1f1f1">{{m.module_name}}</h3>
+            <div class="col-md-12 col-lg-8" *ngFor="let s of m.listoptions">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" formControlName="checkboxdata" class="custom-control-input" [id]="s.sub_module_id" [checked]="s.HasModule" (change)="onChange(s.sub_module_id,$event)" name="example1">
+                <label class="custom-control-label" [for]="s.sub_module_id">{{s.sub_module_name}}</label>
+
+
+
+
+
+              </div>
+
+
+
+            </div>
+          </ng-container>-->
+          <div class="table-responsive">
+            <table class="table">
+              <ng-container *ngFor="let m of modulelist">
+                <thead>
+                  <tr style="background:#f1f1f1">
+                    <th>
+                      {{m.module_name}}
+                    </th>
+                    <th>
+                      <!--<div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="customCheck" class="custom-control-input" value="add"  (click)="enableSelectAll($event)" />
+                        <label class="custom-control-label" for="customCheck"></label>
+                      </div>-->
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let s of m.listoptions">
+                    <td>
+                      {{s.sub_module_name}}
+                    </td>
+                    <td class="text-center">
+                      <div class="custom-control custom-checkbox custom-control-inline">
+                        <input type="checkbox" formControlName="checkboxdata" class="custom-control-input" [id]="s.sub_module_id" [checked]="s.HasModule" (change)="onChange(s.sub_module_id,$event)" name="example1">
+                        <label class="custom-control-label" [for]="s.sub_module_id"></label>
+                      </div>
+                    </td>
+
+                  </tr>
+
+                </tbody>
+              </ng-container>
+            </table>
+          </div>
+
+
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-12 col-md-12">
+            <a href="javascript:void(0);" class="btn btn-success mr-1" (click)="save()"><i class="feather-save"></i> Submit</a>
+            <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

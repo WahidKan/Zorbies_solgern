@@ -1,0 +1,17 @@
+/*.card-body ul:last-child li:last-child::after { background:transparent !important; }*/
+.doc-not-received { width: 20px; height: 20px;  color: #000; text-align: center; }
+.doc-received { width: 20px; height: 20px;  color: #000; text-align: center; }
+.doc-not-received i, .doc-received i{ font-size:20px;}
+.rule-heading{ font-size:17px; padding-top:5px; }
+.loan-progress-parent { border-radius: 0; }
+.loan-progress-parent  > .card-header{ background-color:unset; padding:.5rem .75rem; }
+.list-item2::before { border:none; border-bottom: 1px solid #dcdcdc;}
+.child-in-same-row { display: inline-block !important; width: 120px  !important; }
+.child-in-same-row::before{ border-radius:0px;}
+.child-in-same-row:first-child{ border-bottom-left-radius: 11px; }
+.child-in-same-row:first-child::before{ border-right: 0px; border-bottom-left-radius: 11px; border-left: 1px solid #dcdcdc;}
+.child-in-same-row:nth-child(2)::before{ border-left: 0px; border-right: 0px; }
+.child-in-same-row:last-child{ border-bottom-right-radius: 11px; }
+.child-in-same-row:last-child::before{ border-left: 0px; border-bottom-right-radius: 11px; border-right: 1px solid #dcdcdc !important;}
+.child-in-same-row:only-child::before { border-right: 1px solid #dcdcdc; border-left: 1px solid #dcdcdc; }
+

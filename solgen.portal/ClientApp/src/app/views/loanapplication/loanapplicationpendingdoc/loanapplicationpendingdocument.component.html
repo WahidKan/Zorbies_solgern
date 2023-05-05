@@ -1,0 +1,40 @@
+<div bsModal #pendingDoc="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}} (#{{loanapnum}})</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" max-height:600px; overflow-y:auto;">        
+       <div class="table-responsive border">
+            <table class="table mb-0" style="min-width:300px;">
+              <thead class="thead-bg">
+                <tr>
+                  <th>Document Name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody >
+                <tr  *ngFor="let item of documents; let i=index">
+                  <td>
+                    <span>{{item.DocumentName}}</span>
+
+                  </td>
+                  <td>
+                    <span>Pending</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info form-btns" (click)="GoToApplications()"><i class="fa fa-external-link text-white mr-1" ></i> Go To Application</button>
+        <button type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="feather-x mr-1 text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

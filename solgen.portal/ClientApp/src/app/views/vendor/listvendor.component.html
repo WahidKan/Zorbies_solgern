@@ -1,0 +1,140 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Manage Vendors</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active">Manage Vendors</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white border rounded pb-4">
+            <div class="col-md-12 bg-light py-3">
+              <div class="row">
+                <div class="col-md-12 col-lg-12 col-xl-12">
+                  <div class="row">
+                    <div class="col-12 col-md-12 col-lg-12 col-xl-4">
+                      <div class="form-group mb-xl-0">
+                        <input class="form-control" type="text" [(ngModel)]='SearhName' placeholder="Search By Name/Email/BusinessName" (keyup)='updateFilter($event)'>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-2 mr-auto">
+                      <div class="form-group mb-xl-0">
+                        <input type="button" class="btn btn-primary src-icon" (click)="SearchVendor()" value="Search">
+                        <input type="button" class="btn btn-danger reset-icon" value="Reset" (click)="ResetSearch()" />
+                      </div>
+                    </div>
+                    <div *ngIf='modulePermission!==null && modulePermission.roleModuleAddFlag' class="col-12 col-md-6 col-lg-6 col-xl-3 text-md-right float-right"><a routerLink="/vendor/addvendor" class="btn btn-orange form-btns"><i class="feather-plus"></i> Add Vendor</a></div>
+                  </div>
+                </div>
+               
+              </div>
+            </div>
+            <div class="col-md-12 mt-4">
+              <div class="table-responsive">
+                <div class="table table-striped">
+                  <ngx-datatable  #table class="bootstrap table table-hover table-dynamic"
+                                 [rows]="pagedData.data"
+                                 [columnMode]="'force'"
+                                 [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                                 [headerHeight]="40"
+                                 [footerHeight]="40"
+                                 
+                                 [externalPaging]="true"
+                                 [externalSorting]="true"
+                                 [loadingIndicator]="loadSave"
+                                 [count]="pagedData.pager.totalItems"
+                                 [offset]="pagedData.pager.currentPage"
+                                 [limit]="pagedData.pager.pageSize"
+                                 (page)='setPage($event)'
+                                 (sort)="onSort($event)">
+                    <ngx-datatable-column name="BusinessName" prop="BusinessName" [sortable]="true"
+                                          *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <a [routerLink]="['/vendor/editvendor',row.Id]">{{row.BusinessName}} </a>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="BusinessName" prop="BusinessName" [sortable]="true" *ngIf='modulePermission!==null && !modulePermission.roleModuleReadFlag'></ngx-datatable-column>
+
+                    <ngx-datatable-column name="Name" prop="Name" [sortable]="true"></ngx-datatable-column>
+
+                    <ngx-datatable-column name="Email" prop="Email" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div title="{{row.Email}}">
+                          {{row.Email | truncate}}
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Phone" prop="Phone" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Address" prop="Address" [sortable]="true"></ngx-datatable-column>
+
+                    <ngx-datatable-column name="IsActive" prop="IsActive" sortable="false" headerClass="text-center" *ngIf='modulePermission!==null &&  modulePermission.roleModuleUpdateFlag'>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center" *ngIf="row.IsActive == 0 && row.AssociateUser==null">
+                          <a href="javascript:void(0);" (click)="enable(row)"><i title="Click to enable." class="fa fa-times text-danger icon_tick"></i></a>
+                        </div>
+                        <div class="icon-text-center" *ngIf="row.IsActive == 1 && row.AssociateUser==null">
+                          <a href="javascript:void(0);" (click)="disable(row)"><i title="Click to disable." class="fas fa-check text-success icon_tick"></i></a>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Delete" [sortable]="false" headerClass="text-center"
+                                          *ngIf='modulePermission!==null &&  modulePermission.roleModuleDeleteFlag'>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="icon-text-center" *ngIf="row.AssociateUser==null"><a href="javascript:void(0);" (click)="DeleteVendor(row)" class="btn-delete"><i title="Click to delete." class="feather-trash-2"></i></a></div>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-footer>
+                      <ng-template ngx-datatable-footer-template
+                                   let-rowCount="rowCount"
+                                   let-pageSize="pageSize"
+                                   let-selectedCount="selectedCount"
+                                   let-currentPage="currentPage"
+                                   let-offset="offset"
+                                   let-isVisible="isVisible">
+                        <div class="page-count" style="max-width:170px;">
+                          {{rowCount}} total
+                        </div>
+                        <div>
+                          <div style="color:black; margin-right:10px;" class="page-size-record">
+                            <span style="text-align:right; width:80px;vertical-align: middle;">
+                              <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                         bindLabel="text" bindValue="text"></ng-select>
+                            </span>
+                          </div>
+                        </div>
+                        <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                         [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                         [pagerPreviousIcon]="'fa fa-angle-left'"
+                                         [pagerNextIcon]="'fa feather-chevron-left'"
+                                         [page]="pagedData.pager.currentPage+1"
+                                         [size]="pageSizeValue"
+                                         [count]="pagedData.pager.totalItems"
+                                         [hidden]="!((rowCount / pageSize) > 1)"
+                                         (change)="setPage($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

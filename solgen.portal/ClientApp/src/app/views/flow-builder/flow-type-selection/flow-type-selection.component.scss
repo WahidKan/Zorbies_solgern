@@ -1,0 +1,22 @@
+.type-selection{
+    border:0.001em solid gray; 
+    border-radius: 5px;
+    padding: 0.5rem;
+    cursor: pointer;
+    text-align: left;
+    height: var(--lwc-sizeXxSmall,6rem);
+    font-size: var(--lwc-fontSize3,0.8125rem);
+    
+}
+
+.active{
+
+    border: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorderSelectionHover,rgb(27, 150, 255));
+    box-shadow: 0 0 0 1px var(--lwc-colorBorderSelectionHover,rgb(27, 150, 255)) inset;
+    --slds-c-icon-color-foreground: currentColor;
+}
+
+  .modal-body
+  {
+    box-sizing: border-box;
+  }

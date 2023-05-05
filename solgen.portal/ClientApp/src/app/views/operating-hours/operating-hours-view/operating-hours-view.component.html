@@ -1,0 +1,187 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Manage Operating Hours</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li><a routerLink="/dashboard">Dashboard</a></li>
+        <li><a routerLink="/operating-hours">Manage Operating Hours</a></li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+<div class="clearfix"></div>
+
+<!-- <div *ngIf="operatingHours" class="card mb-3 mb-4 border item-view">
+  <span class="text-capitalize p-3 font-weight-bold border-bottom heading-above-subhead">
+    <i class="fa fa-clock-o fa-2x float-left p-1 mr-2"></i>
+    <span class="float-left"><span>Operating Hours</span> {{ operatingHours.name }} - {{ timeZoneName }}</span>
+    <span class="cntnt-right-btn mr15 btn-iconres">
+      <a href="javascript:;" [routerLink]="" (click)="showpopup(id)" class="btn btn-success text-white mr-2">
+        <i class="fa fa-pencil mr-1"></i> Edit
+      </a>
+      <a href="javascript:;" class="btn btn-dark text-white" (click)="onBack()"> <i class="fa fa-arrow-left mr-1"></i> Back </a>
+    </span>
+  </span>
+</div> -->
+
+
+
+
+
+
+<div *ngIf="operatingHours" class="card border-0">
+  <div class="panel">
+    <div class="row">
+      <div class="col-lg-12 border-bottom">
+        <div class="panel-content w-100 bg-white p-2 px-3 border-0">
+          <app-view-filter-bar-manager [adViewStatus]="operatingHours"  (callToViewFilterBarFunction)="showpopup(id)"  [submoduleName]="'operating-hours'" [titleName]="operatingHours.name + ' ' + timeZoneName"  
+          [customCompnentValuesTop]="''" [logoClass]="'feather-clock'"    ></app-view-filter-bar-manager>        
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="panel-content w-100 border-0 bg-white scroll-in-content">
+          <div class="row m-0">
+            <div class="col-sm-12 pt-3">
+              <h3 class="form-heading mt-0"><span>Details</span></h3>
+            </div>
+          </div>
+        </div>
+        <div id="accordion" class="col-lg-12" [ngClass]="{ disabled: loadSave }">
+          <div class="panel active">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#campaignManagers" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                  <span>Information</span>
+                </a>
+              </h4>
+            </div>
+            <div id="campaignManagers" class="panel-collapse collapse active show" style="">
+              <div class="panel-body row px-3">
+                <div class="col-12 col-sm-6">
+                  <div class="input-group border-bottom">
+                    <div class="col-md-3 col-6 px-0">
+                      <span class="py-2 d-block"><strong>Name:</strong></span>
+                    </div>
+                    <div class="col-md-9 col-6 px-0">
+                      <span class="py-2 d-block">{{ operatingHours.name }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <div class="input-group border-bottom">
+                    <div class="col-md-3 col-6 px-0">
+                      <span class="py-2 d-block"><strong>Description:</strong></span>
+                    </div>
+                    <div class="col-md-9 col-6 px-0">
+                      <span class="py-2 d-block">{{ operatingHours.description }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <div class="input-group border-bottom">
+                    <div class="col-md-3 col-6 px-0">
+                      <span class="py-2 d-block"><strong>Time Zone:</strong></span>
+                    </div>
+                    <div class="col-md-9 col-6 px-0">
+                      <span class="py-2 d-block">{{ timeZoneName }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel active">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#campaignManagers1" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                  <span>Time Slots ({{ operatingHours && operatingHours.timeSlots ? operatingHours.timeSlots.length : 0 }})</span>
+                </a>
+              </h4>
+            </div>
+            <div id="campaignManagers1" class="panel-collapse collapse active show" style="">
+              <div class="panel-body row px-3">
+                <div class="table-responsive ngxtbl" *ngIf="operatingHours.timeSlots">
+                  <ngx-datatable
+                    #table
+                    class="bootstrap table table-hover table-dynamic"
+                    [rows]="operatingHours.timeSlots"
+                    [scrollbarH]="true"
+                    [rowHeight]="'40'"
+                    [columnMode]="'force'"
+                    [headerHeight]="40"
+                  >
+                    <ngx-datatable-column name="Day Of Week" prop="dayOfWeek" [sortable]="true"> </ngx-datatable-column>
+                    <ngx-datatable-column name="Start Time" prop="startTime" [sortable]="true"> </ngx-datatable-column>
+                    <ngx-datatable-column name="End Time" prop="endTime" [sortable]="true"> </ngx-datatable-column>
+                    <ngx-datatable-column name="Type" prop="workType" [sortable]="true"> </ngx-datatable-column>
+                    <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="text-center">
+                          <a href="javascript:void(0);" (click)="deleteTimeSlot(row.id)"
+                            ><i title="Click to delete." class="feather-trash-2 text-danger"></i
+                          ></a>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel active">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#campaignManagers2" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                  <span>System Information</span>
+                </a>
+              </h4>
+            </div>
+            <div id="campaignManagers2" class="panel-collapse collapse active show" style="">
+              <div class="panel-body row px-3">
+                <div class="col-12 col-sm-6">
+                  <div class="input-group border-bottom">
+                    <div class="col-md-3 col-6 px-0">
+                      <span class="py-2 d-block"><strong>Created By:</strong></span>
+                    </div>
+                    <div class="col-md-9 col-6 px-0">
+                      <span class="py-2 d-block">
+                        <a href="javascript:void(0);" [routerLink]="['/user/edituser/' + operatingHours.createdById]"
+                          ><strong>{{ operatingHours.createdBy }}</strong></a
+                        >,{{ getTransformedDate(operatingHours.createdDate) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <div class="input-group border-bottom">
+                    <div class="col-md-3 col-6 px-0">
+                      <span class="py-2 d-block"><strong>Modified By:</strong></span>
+                    </div>
+                    <div class="col-md-9 col-6 px-0">
+                      <span class="py-2 d-block">
+                        <a href="javascript:void(0);" [routerLink]="['/user/edituser/' + operatingHours.lastModifiedById]"
+                          ><strong>{{ operatingHours.lastModifiedBy }}</strong></a
+                        >,{{ getTransformedDate(operatingHours.lastModifiedDate) }}
+                      </span>
+                      <!-- <span
+                                              class="py-2 d-block"><strong>{{operatingHours.lastModifiedBy}}</strong>,{{operatingHours.lastModifiedDate}}</span> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<app-add-edit-operating-hour-modal #addEditModal></app-add-edit-operating-hour-modal>

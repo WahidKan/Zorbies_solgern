@@ -1,0 +1,119 @@
+<!-- Breadcrumb-->
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Manage Roles</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Manage Roles</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-lg-12 portlets">
+        <div class="panel">
+            <div class="panel-header border-bottom pb-3  btn-iconres">
+                <div class="row my-2 searchfield">
+                    <div class="col-md-12 col-xl-8">
+                        <div class="row  report-calendar">
+                            <div class="col-lg-3 float-left mb-lg-0 mb-2">
+                                <input class="form-control input-sm" type="text" [(ngModel)]='listFilter' placeholder="Search by role name" (keyup)='updateFilter($event)'>
+                            </div>
+                            <div class="col-lg-3 float-left mb-lg-0 mb-2 pl-3 pl-lg-0">
+                                <ng-select #clearDrp [items]="roledata" placeholder="Select User Type" bindValue="value" bindLabel="text" [closeOnSelect]="true" (change)="SetUserTypeValue($event.value)" (clear)="restUserTypeddl()">
+                                </ng-select>
+                            </div>
+                            <div class="col-lg-6 float-left pl-3 pl-lg-0">
+                                <a class="btn btn-dark form-btns mr-2" href="javascript:void(0);" (click)="search()" tooltip="Search"><span><i class="feather-search mr-1"></i> Search</span></a>
+                                <a class="btn btn-white form-btns" href="javascript:void(0);" (click)="reset()" tooltip="Reset"><span><i class="feather-repeat mr-1"></i> Reset</span></a>
+                                <!--<a class="btn btn-white form-btns" href="javascript:void(0);" (click)="popUpOpen()"><span><i class="fa fa-filter"></i> Filter</span></a>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-xl-4">
+                        <div class="dt-buttons">
+                            <!--<a class="btn btn-primary form-btns mr-1" href="javascript:void(0);" (click)="displayDetailDetail($event)"><span><i class="fa fa-list-alt"></i> Manage View</span></a>-->
+                            <a class="btn btn-success mr-2 smview" routerLink="/role/addrole" *ngIf='isAdd' tooltip="Add Role"><span><i class="feather-plus mr-1"></i> Add</span></a>
+                            <a class="btn btn-danger form-btns" href="javascript:void(0);" (click)="deleteAll()" tooltip="Delete"><span><i class="feather-trash-2 mr-1"></i> Delete</span></a>
+                            <!--<a class="btn btn-success form-btns" routerLink="/role/editrole123" *ngIf='modulePermission!==null && modulePermission.roleModuleAddFlag'><span><i class="feather-plus"></i>Add Role21</span></a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-content px-3 pagination2 table-responsive no-padding">
+                <div class="header-chart mb-1"> Roles</div>
+                <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data" [scrollbarH]="true" [rowHeight]="'40'" [columnMode]="'force'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                    [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage" [limit]="pagedData.pager.pageSize" (page)='setPage($event)' (sort)="onSort($event)" [selectionType]="SelectionType.checkbox" [selectAllRowsOnPage]="false" [selected]="selected"
+                    (select)="onSelect($event)">
+                    <ngx-datatable-column [cellClass]="getIsShowColName" [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="true">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column *ngIf="isUpdate" name="Role Name" [sortable]="true">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <a [ngStyle]="row.RoleName  ==='Default Company Admin Role' ? {'pointer-events': 'none'} : {}" [class.disabled]="row.RoleName ==='Default Company Admin Role' ? true : false" href="javascript:void(0);" [routerLink]="['/role/editrole',row.RoleId]">{{row.RoleName}}</a>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column *ngIf="!isUpdate" name="Role Name" prop="RoleName" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="User Type" sortable="true" prop="UserType"></ngx-datatable-column>
+                    <ngx-datatable-column name="Number of Users" sortable="true" prop="RoleCount">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <a href="javascript:void(0);" (click)="ShowUsersListPopup(row)" class="text-dark">
+                                <i class="feather-users" aria-hidden="true"></i><span class="noti-circle bg-primary">{{row.RoleCount}}</span></a>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center" [maxWidth]="150">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="text-center">
+                                <a *ngIf="isUpdate && row.RoleName !=='Default Company Admin Role'" class="smview btn-edit" [routerLink]="['/role/editrole',row.RoleId]" title="Edit"><i class="feather-edit-2 text-success pr-2"></i></a>
+                                <!--<a [routerLink]="['/role/editrole123',row.RoleId]" title="Edit"><i class="fa fa-pencil text-secondary pr-2"></i></a>-->
+                                <a href="javascript:void(0);" *ngIf="(row.asociatedUser==null ||row.asociatedUser==0) && isDelete && row.RoleName !=='Default Company Admin Role' " (click)="DeleteRole(row)" class="btn-edit">
+                                    <i title="Click to delete." class="feather-trash-2"></i>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-footer>
+                        <ng-template class="selected-count" ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset" let-isVisible="isVisible">
+                            <div>
+                                <div style="color:black; margin-right:10px;" class="page-size-record" *ngIf='(rowCount  > 0)'>
+                                    <span style="text-align:right; width:80px;vertical-align: middle;">
+                    <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                               bindLabel="text" bindValue="text"></ng-select>
+                  </span>
+                                </div>
+
+
+                            </div>
+
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>
+                                <!--Showing {{(curPage - 1 )* pageSizeValue + 1}}  to {{curPage * pageSizeValue}} out of {{rowCount}}  enteries-->
+                                {{commonService.PageString(pageNumber,pageSizeValue,rowCount)}}
+
+                            </div>
+                            <datatable-pager [pagerLeftArrowIcon]="'feather-chevron-left'" [pagerRightArrowIcon]="'feather-chevron-right'" [pagerPreviousIcon]="'feather-chevrons-left'" [pagerNextIcon]="'feather-chevrons-right'" [page]="pageNumber" [size]="pageSizeValue" [count]="pagedData.pager.totalItems"
+                                [hidden]="!((rowCount / pageSize) > 1)" (change)="setPage($event)">
+                            </datatable-pager>
+
+                        </ng-template>
+                    </ngx-datatable-footer>
+                </ngx-datatable>
+
+            </div>
+        </div>
+    </div>
+</div>
+<app-searchfilteradd (searchFilterCondition)="ApplyAdvanceFilter($event)" #templateFilterView moduleName="crm" subModuleName="lead"></app-searchfilteradd>
+<app-manageview (customViewid)="GetcustomViewid($event)" #templateManageView moduleName="crm" subModuleName="lead"></app-manageview>
+<app-userlistingpopup #ServiceUsersListPopUp></app-userlistingpopup>
+
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

@@ -1,0 +1,11 @@
+<angular-editor-toolbar #editorToolbar
+  [id]="'1'"
+  [uploadUrl]="config.uploadUrl"
+  [showToolbar]="config.showToolbar !== undefined ? config.showToolbar : true"
+  [fonts]="getFonts()"
+  [customClasses]="config.customClasses"
+  [defaultFontName]="config.defaultFontName"
+  [defaultFontSize]="config.defaultFontSize"
+  [hiddenButtons]="config.toolbarHiddenButtons"
+  (execute)="executeCommand($event)"
+></angular-editor-toolbar>

@@ -1,0 +1,134 @@
+
+<div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Manage Users</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li>
+        <a routerLink="/dashboard">Dashboard</a>
+      </li>
+      <li class="active">Manage Users</li>
+    </ol>
+  </div>
+
+</div>
+<div class="clearfix"></div>
+
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-header border-bottom pb-3 btn-iconres">
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <div class="row searchfield">
+              <div class="col-md-4 float-left">
+                <input type="text" class="form-control input-sm" [(ngModel)]="SearhName" placeholder="Search By Name" (keyup)='updateFilter($event)' />
+              </div>
+              <div class="col-md-8 float-left pl-3 pl-lg-0">
+                <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="SearchBank()" tooltip="Search"><span><i class="feather-search"></i> </span></a>
+                <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="ResetSearch()" tooltip="Reset"><span><i class="fa fa-refresh"></i> </span></a>
+                <!--<a class="btn btn-white mr-1" href="javascript:void(0);"><span><i class="fa fa-filter"></i> Filter</span></a>-->
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="dt-buttons">
+              <!--<a class="btn btn-primary form-btns mr-1" href="javascript:void(0);" (click)="displayDetailDetail($event)"><span><i class="fa fa-list-alt"></i> Manage View</span></a>-->
+              <a *ngIf='modulePermission!==null && modulePermission.roleModuleAddFlag' class="btn btn-success" routerLink="/bank/addbank" tooltip="Add Bank"><i class="feather-plus"></i> </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="panel-content px-3 pagination2 table-responsive no-padding">
+        <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                       [rows]="pagedData.data"
+                          [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                       [columnMode]="'force'"
+                       [headerHeight]="40"
+                       [footerHeight]="40"
+                      
+                       
+                       [externalPaging]="true"
+                       [externalSorting]="true"
+                       [loadingIndicator]="loadSave"
+                       [count]="pagedData.pager.totalItems"
+                       [offset]="pagedData.pager.currentPage"
+                       [limit]="pagedData.pager.pageSize"
+                       (page)='setPage($event)'
+                       (sort)="onSort($event)">
+          <ngx-datatable-column name="Name" prop="BankName" [sortable]="true" *ngIf='modulePermission!==null && modulePermission.roleModuleReadFlag'>
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a [routerLink]="['/bank/editbank',row.Id]">{{row.BankName}} </a>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Name" prop="BankName" [sortable]="true" *ngIf='modulePermission!==null && !modulePermission.roleModuleReadFlag'></ngx-datatable-column>
+          <ngx-datatable-column name="City" prop="City" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="County" prop="County" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="State" prop="StateName" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="IsActive" prop="IsActive" sortable="false" headerClass="text-center" *ngIf='modulePermission!==null && modulePermission.roleModuleUpdateFlag'>
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="icon-text-center" *ngIf="row.IsActive == 0 && row.AssociateUser==null">
+                <a href="javascript:void(0);" (click)="enable(row)"><i title="Click to enable." class="fa fa-times text-danger icon_tick"></i></a>
+              </div>
+              <div class="icon-text-center" *ngIf="row.IsActive == 1 && row.AssociateUser==null">
+                <a href="javascript:void(0);" (click)="disable(row)"><i title="Click to disable." class="feather-check text-success icon_tick"></i></a>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="IsActive" prop="IsActive" sortable="false" headerClass="text-center" *ngIf='modulePermission!==null && !modulePermission.roleModuleUpdateFlag'>
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="icon-text-center" *ngIf="row.IsActive == 0 && row.AssociateUser==null">
+                <span><i class="fa fa-times text-danger icon_tick"></i></span>
+              </div>
+              <div class="icon-text-center" *ngIf="row.IsActive == 1 && row.AssociateUser==null">
+                <span><i class="feather-check text-success icon_tick"></i></span>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Delete" [sortable]="false" headerClass="text-center" *ngIf='modulePermission!==null && modulePermission.roleModuleDeleteFlag'>
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="icon-text-center" *ngIf="row.AssociateUser==null">
+                <div class="icon-text-center"><a href="javascript:void(0);" (click)="DeleteBank(row)" class="text-danger icon_tick mx-1"><i title="Click to delete." class="feather-trash-2"></i></a></div>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template
+                         let-rowCount="rowCount"
+                         let-pageSize="pageSize"
+                         let-selectedCount="selectedCount"
+                         let-currentPage="currentPage"
+                         let-offset="offset"
+                         let-isVisible="isVisible">
+              <div class="page-count" style="max-width:170px;">
+                {{rowCount}} total
+              </div>
+              <div>
+                <div style="color:black; margin-right:10px;" class="page-size-record">
+                  <span style="text-align:right; width:80px;vertical-align: middle;">
+                    <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                               bindLabel="text" bindValue="text"></ng-select>
+                  </span>
+                </div>
+              </div>
+              <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                               [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                               [pagerPreviousIcon]="'fa fa-angle-left'"
+                               [pagerNextIcon]="'fa feather-chevron-left'"
+                               [page]="pagedData.pager.currentPage+1"
+                               [size]="pageSizeValue"
+                               [count]="pagedData.pager.totalItems"
+                               [hidden]="!((rowCount / pageSize) > 1)"
+                               (change)="setPage($event)">
+              </datatable-pager>
+            </ng-template>
+          </ngx-datatable-footer>
+        </ngx-datatable>
+      </div>
+
+    </div>
+  </div>
+</div>
+

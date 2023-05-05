@@ -1,0 +1,347 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li ><a routerLink="/marketing/ads-list">Manage Ads</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<!-- <div class="row ">
+    <div class="col-sm-12 col-md-12 text-right">
+      <div class="card  mb-4 border ">
+      <span class="text-capitalize p-3 float-right font-weight-bold border-bottom heading-above-subhead">
+        <a href="javascript:void(0);" class="btn btn-dark text-white smview" routerLink="/marketing/ads-list"><i
+            class="fa fa-arrow-left mr-1"></i> Back To List</a>
+      </span>
+    </div>
+  </div>
+  </div> -->
+<div class="panel clearfix">
+
+    <div class="panel-content clearfix mb-4 p-0">
+        <!-- <ul *ngIf="id != null && id > 0" class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#FacebookAds" role="tab"
+                    aria-selected="true">Facebook Ads</a>
+            </li>
+        </ul> -->
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade active show" id="FacebookAds" role="tabpanel">
+                <form [formGroup]="adsForm" *ngIf="adsForm">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4">
+                            <label>Ad Name:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="text" formControlName="name" class="form-control" maxlength="100"
+                                    required="required" name="name"
+                                    [ngClass]="{'is-invalid': (name.invalid && (name.dirty || name.touched) && name.errors?.required)}">
+                                <small *ngIf="name.invalid && (name.dirty || name.touched) && name.errors?.required"
+                                    class="text-danger">Ad Name is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Ad Id:</label>
+                            <div class="form-group">
+                                <input type="text" disabled class="form-control" formControlName="id">
+        
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 col-lg-4">
+                            <label>Campaign:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="campaignsList" formControlName="campaign_id"
+                                    placeholder="Select Campaign" bindValue="id" bindLabel="name"
+                                    (change)="handleCampaignChangeddl($event)">
+                                </ng-select>
+                                <small
+                                    *ngIf="campaign_id.invalid && (campaign_id.dirty || campaign_id.touched) && campaign_id.errors?.required"
+                                    class="text-danger">Select Campaign</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Ad Set:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="selectedAdsetsList" formControlName="adset_id" placeholder="Select Ad Set"
+                                    bindValue="id" bindLabel="name">
+                                </ng-select>
+                                <small
+                                    *ngIf="adset_id.invalid && (adset_id.dirty || adset_id.touched) && adset_id.errors?.required"
+                                    class="text-danger">Select Ad Set</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Delivery:</label>
+                            <div class="form-group">
+                                <input type="text" formControlName="delivery" class="form-control" maxlength="100"
+                                    name="name">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <label>Amount Spent:</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" (keypress)="numberOnly($event)" class="form-control"
+                                    formControlName="amount_spent">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-lg-4">
+                            <label>Bid Strategy:</label>
+                            <div class="form-group">
+                                <input type="text" formControlName="bid_strategy" class="form-control" maxlength="100">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Budget:<span class="text-danger">*</span></label>
+                            <div class="input-group mb-3 ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" (keypress)="numberOnly($event)" formControlName="bid_amount"
+                                    class="form-control" maxlength="100" required="required" name="bid_amount"
+                                    [ngClass]="{'is-invalid': (bid_amount.invalid && (bid_amount.dirty || bid_amount.touched) && bid_amount.errors?.required)}">
+
+                            </div>
+                            <div>
+                                <small
+                                    *ngIf="bid_amount.invalid && (bid_amount.dirty || bid_amount.touched) && bid_amount.errors?.required"
+                                    class="text-danger">Budget is required</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Conversion Rate Ranking:</label>
+                            <div class="form-group">
+                                <ng-select [items]="conversionRateRanckingList"
+                                    formControlName="conversion_rate_ranking" placeholder="Select Conversion Rate Ranking"
+                                    bindValue="value" bindLabel="text">
+                                </ng-select>
+
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <label>Cost per Result:</label>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" (keypress)="numberOnly($event)" class="form-control"
+                                    formControlName="cost_per_result">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <label>Ends:</label>
+                            <div class="form-group">
+                                <input type="text" (keypress)="numberOnly($event)" class="form-control"
+                                    formControlName="ends">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <label>Frequency:</label>
+                            <div class="form-group">
+                                <input type="text" (keypress)="numberOnlyWithOutDecimal($event)" class="form-control"
+                                    formControlName="frequency">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <label>Impressions:</label>
+                            <div class="form-group">
+                                <input type="text" (keypress)="numberOnlyWithOutDecimal($event)" class="form-control"
+                                    formControlName="impressions">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <div class="row">
+                                <div class="col-6 col-md-6 col-lg-6">
+                                    <label>Last Significant Edit:</label>
+
+                                    <div class="form-group datepickerinpop">
+                                        <p-calendar class="calendarwidth" inputStyleClass="form-control significantdate"
+                                            placeholder="Select Date" [showIcon]="true" [showTime]="false"
+                                            dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true"
+                                            [yearNavigator]="true" yearRange="1919:2030"
+                                            formControlName="significantdate">
+                                        </p-calendar>
+
+                                    </div>
+                                   
+                                </div>
+                                <div class="col-6 col-md-6 col-lg-6 mt-4">
+                                    <div class="form-group mt-1">
+                                        <p-calendar inputStyleClass="form-control time" [defaultDate]="defaultminTime"
+                                            formControlName="time" placeholder="Select Time" hourFormat="12"
+                                            [timeOnly]="true" [showIcon]="false" (onFocus)="InitialFromTime($event)"
+                                            inputId="timeonly" [(ngModel)]="FromTimemodel"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- <div class="col-12 col-md-4 col-lg-4">
+                            <label>Time:</label>
+
+                        </div> -->
+
+
+
+
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <label>Reach:</label>
+                            <div class="form-group">
+                                <input type="text" (keypress)="numberOnlyWithOutDecimal($event)" class="form-control"
+                                    formControlName="reach">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Result:</label>
+                            <div class="form-group">
+                                <input type="text" formControlName="result" class="form-control" maxlength="100" (keypress)="numberOnlyWithOutDecimal($event)">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Source:</label>
+                            <div class="form-group">
+                                <input type="text" formControlName="source" class="form-control" maxlength="100">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Unique Links Clicks:</label>
+                            <div class="form-group">
+                                <input type="text" (keypress)="numberOnlyWithOutDecimal($event)" formControlName="unique_links_clicks" class="form-control"
+                                    maxlength="100">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>External Id:</label>
+                            <div class="form-group">
+                                <input type="text" formControlName="external_id" class="form-control" maxlength="100">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <div class="row">
+                                <div class="col-6 col-md-6 col-lg-6">
+                                    <label>Last Edit Date Time:</label>
+
+                                    <div class="form-group datepickerinpop">
+                                        <p-calendar class="calendarwidth" inputStyleClass="form-control last_edit"
+                                            placeholder="Select Date" [showIcon]="true" [showTime]="false"
+                                            dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true"
+                                            [yearNavigator]="true" yearRange="1919:2030"
+                                            formControlName="last_edit">
+                                        </p-calendar>
+
+                                    </div>
+                                   
+                                </div>
+                                <div class="col-6 col-md-6 col-lg-6 mt-4">
+                                    <div class="form-group mt-1">
+                                        <p-calendar inputStyleClass="form-control last_edit_time" [defaultDate]="defaultminTimedd"
+                                            formControlName="last_edit_time" placeholder="Select Time" hourFormat="12"
+                                            [timeOnly]="true" [showIcon]="false" (onFocus)="InitialFromTime($event)"
+                                            inputId="timeonly" [(ngModel)]="FromTimemodelEditTime"></p-calendar>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Ad Status:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <ng-select [items]="statusList" formControlName="status" placeholder="Status"
+                                    bindValue="value" bindLabel="text">
+                                </ng-select>
+                                <small
+                                    *ngIf="status.invalid && (status.dirty || status.touched) && status.errors?.required"
+                                    class="text-danger">Select Ad Status</small>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <label>Ad Start Date:</label>
+                            <div class="form-group datepickerinpop">
+                                <p-calendar class="calendarwidth" inputStyleClass="form-control ad_start_date"
+                                    placeholder="Select Date" [showIcon]="true" [showTime]="false" dateFormat="mm/dd/yy"
+                                    showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                                    yearRange="1919:2030" formControlName="ad_start_date">
+                                </p-calendar>
+
+
+
+
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-4">
+                            <label>Daily Budget:</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" (keypress)="numberOnly($event)" class="form-control"
+                                    formControlName="daily_budget">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Ad Objective:</label>
+                            <div class="form-group">
+                                <input type="text" formControlName="ad_objective" class="form-control" maxlength="100">
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-4 col-lg-4">
+                            <label>Link To Data:<span class="text-danger">*</span></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" formControlName="link_url" maxlength="50"
+                                    placeholder="Enter Link To Data"
+                                    [ngClass]="{'is-invalid': (link_url.invalid && (link_url.dirty || link_url.touched) && link_url.errors?.required)}">
+                                <small
+                                    *ngIf="link_url.invalid && (link_url.dirty || link_url.touched) && link_url.errors?.required"
+                                    class="text-danger">Link To Data is required</small>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-12 col-md-12 ">
+                            <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="onSubmit()"><i
+                                    class="feather-save"></i> Submit</a>
+                            <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i
+                                    class="feather-x"></i>
+                                Cancel</a>
+                        </div>
+                    </div>
+                    <!-- <div class="row mb-3">
+                        <div class="float-right">
+                            <div class="col-sm-12 col-md-12 float-right">
+                                <a href="javascript:void(0);" class="btn btn-success mr-1" (click)="onSubmit()"><i
+                                        class="feather-save "></i> Submit</a>
+                                <a href="javascript:void(0);" class="btn btn-danger" (click)="close()"><i
+                                        class="fa fa-times"></i> Cancel</a>
+                            </div>
+                        </div>
+                    </div> -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

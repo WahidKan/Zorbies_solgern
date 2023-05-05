@@ -1,0 +1,1 @@
+D:\ZolarWorkSpace\Solgen\solgen.portal\obj\Debug\netcoreapp2.0\Solgen.portal.csproj.AssemblyReference.cache

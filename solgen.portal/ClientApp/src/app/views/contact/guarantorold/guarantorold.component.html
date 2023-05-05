@@ -1,0 +1,173 @@
+  <div [formGroup]="guarantorForm" class="row">
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Guarantor First Name:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorFirstName" maxlength="100">
+        <small *ngIf="guarantorForm.get('guarantorFirstName').touched && guarantorForm.get('guarantorFirstName').errors?.required" class="text-danger">
+          Guarantor First Name is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Guarantor Last Name:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorLastName" maxlength="100">
+        <small *ngIf="guarantorForm.get('guarantorLastName').touched && guarantorForm.get('guarantorLastName').errors?.required" class="text-danger">
+          Guarantor Last Name is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Guarantor Title:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorTitle" maxlength="500">
+        <small *ngIf="guarantorForm.get('guarantorTitle').touched && guarantorForm.get('guarantorTitle').errors?.required" class="text-danger">
+          Guarantor Title is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Ownership%:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorOwnership" maxlength="5">
+        <small *ngIf="guarantorForm.get('guarantorOwnership').touched && guarantorForm.get('guarantorOwnership').errors?.required" class="text-danger">
+          Guarantor Ownership is required
+        </small>
+        <small *ngIf="guarantorForm.get('guarantorOwnership').touched && guarantorForm.get('guarantorOwnership').errors?.pattern"
+               class="text-danger">Please enter valid ownership<br /></small>
+      </div>
+    </div>
+    <div class="col-12 col-md-12 col-lg-12">
+      <label>Guarantor Business Address:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <textarea class="form-control" formControlName="guarantorBussinessAddress" maxlength="1000"></textarea>
+        <small *ngIf="guarantorForm.get('guarantorBussinessAddress').touched && guarantorForm.get('guarantorBussinessAddress').errors?.required" class="text-danger">
+          Guarantor Bussiness Address is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>City:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorBussinessCity" maxlength="200">
+        <small *ngIf="guarantorForm.get('guarantorBussinessCity').touched && guarantorForm.get('guarantorBussinessCity').errors?.required" class="text-danger">
+          Guarantor Bussiness City is required
+        </small>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>State:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <ng-select [items]="states"
+                   placeholder="Select State" bindValue="value" bindLabel="text" formControlName="guarantorBussinessState" [disabled]="true">
+        </ng-select>
+        <small *ngIf="guarantorForm.get('guarantorBussinessState').touched && guarantorForm.get('guarantorBussinessState').errors?.required" class="text-danger">
+          Guarantor Bussiness State is required
+        </small>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Zip:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorBussinessZip" maxlength="50">
+        <small *ngIf="guarantorForm.get('guarantorBussinessZip').touched && guarantorForm.get('guarantorBussinessZip').errors?.required" class="text-danger">
+          Guarantor Bussiness Zip is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>County:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorBussinessCounty" maxlength="200">
+        <small *ngIf="guarantorForm.get('guarantorBussinessCounty').touched && guarantorForm.get('guarantorBussinessCounty').errors?.required" class="text-danger">
+          Guarantor Bussiness County is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-12 col-lg-12">
+      <label>Guarantor Home Address:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <textarea class="form-control" formControlName="guarantorHomeAddress" maxlength="1000"></textarea>
+        <small *ngIf="guarantorForm.get('guarantorHomeAddress').touched && guarantorForm.get('guarantorHomeAddress').errors?.required" class="text-danger">
+          Guarantor Home Address is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>City:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorHomeCity" maxlength="200">
+        <small *ngIf="guarantorForm.get('guarantorHomeCity').touched && guarantorForm.get('guarantorHomeCity').errors?.required" class="text-danger">
+          Guarantor Home City is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>State:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <ng-select [items]="states"
+                   placeholder="Select State" bindValue="value" bindLabel="text" formControlName="guarantorHomeState">
+        </ng-select>
+        <small *ngIf="guarantorForm.get('guarantorHomeState').touched && guarantorForm.get('guarantorHomeState').errors?.required" class="text-danger">
+          Guarantor Home State is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Zip:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorHomeZip" maxlength="50">
+        <small *ngIf="guarantorForm.get('guarantorHomeZip').touched && guarantorForm.get('guarantorHomeZip').errors?.required" class="text-danger">
+          Guarantor Home Zip is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>County:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorHomeCounty" maxlength="200">
+        <small *ngIf="guarantorForm.get('guarantorHomeCounty').touched && guarantorForm.get('guarantorHomeCounty').errors?.required" class="text-danger">
+          Guarantor Home County is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Guarantor Phone:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorPhone" maxlength="100">
+        <small *ngIf="guarantorForm.get('guarantorPhone').touched && guarantorForm.get('guarantorPhone').errors?.required" class="text-danger">
+          Guarantor Home Phone is required
+        </small>
+        <small *ngIf="guarantorForm.get('guarantorPhone').touched && guarantorForm.get('guarantorPhone').errors?.pattern"
+               class="text-danger">Please enter valid phone<br /></small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Guarantor Email:<span class="text-danger">*</span></label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorEmail" maxlength="200">
+        <small *ngIf="guarantorForm.get('guarantorEmail').touched && guarantorForm.get('guarantorEmail').errors?.required" class="text-danger">
+          Guarantor Home Email is required
+        </small>
+        <small *ngIf="guarantorForm.get('guarantorEmail').touched && guarantorForm.get('guarantorEmail').errors?.email" class="text-danger">Please enter valid Email</small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Social Security#:</label>
+      <div class="form-group">
+        <input type="text" class="form-control" formControlName="guarantorSocialNumber" maxlength="100">
+        <small *ngIf="guarantorForm.get('guarantorSocialNumber').touched && guarantorForm.get('guarantorSocialNumber').errors?.pattern"
+               class="text-danger">Please enter valid number<br /></small>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <label>Date of Birth:</label>
+      <div class="form-group">
+        <p-calendar inputStyleClass="form-control start-date" formControlName="guarantorFormattedDateOfBirth" placeholder="Select Date of Birth" [showTime]="false"
+                    dateFormat="dd/mm/yy"></p-calendar>
+      </div>
+    </div>
+  </div>
+

@@ -1,0 +1,131 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Add Loan Term</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a routerLink="/loanTerm">Add Loan Term</a></li>
+            <li class="breadcrumb-item active">{{pageTitle}}</li>
+          </ul>
+        </div>
+        <div class="col-lg-12 mt-3">
+          <a routerLink="/loanTerm" class="w-auto sw-100 btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
+          <!--<button class="w-auto sw-100 btn btn-dark" (click)="Cancel()"><i class="fa fa-arrow-left"></i>&nbsp;Back</button>-->
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white custom-shadow py-3">
+            <div class="col-md-12">
+              <form [formGroup]="addForm" autocomplete="off">
+                <div class="bank-box" [ngClass]="{'disabled':loadSave}">
+                  <div class="row">
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Lender Name:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <div class="form-group">
+                          <ng-select [items]="listbank" [loading]="loadSave" placeholder="Select Lender" formControlName="lenderId"
+                                     bindLabel="text" bindValue="value"></ng-select>
+
+                        </div>
+                        <!--<input type="text" class="form-control" formControlName="lenderName" maxlength="50" placeholder="Enter Lender Name"
+             [ngClass]="{'is-invalid': (lenderName.invalid && (lenderName.dirty || lenderName.touched) && (lenderName.errors?.required || lenderName.errors?.maxlength)) }">
+      <small *ngIf="lenderName.invalid && (lenderName.dirty || lenderName.touched) && lenderName.errors?.required"
+             class="text-danger">Lender Name is required</small>
+      <input type="hidden" formControlName="id" />-->
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Code:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter Code" formControlName="code"
+                               [ngClass]="{'is-invalid': (code.invalid && (code.dirty || code.touched) && (code.errors?.maxlength)) }">
+                        <!--<small *ngIf="code.invalid && (code.dirty || code.touched) && code.errors?.required"
+                               class="text-danger">Code is required</small>-->
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Term:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter Term" formControlName="term"
+                               [ngClass]="{'is-invalid': (term.invalid && (term.dirty || term.touched) && (term.errors?.required || term.errors?.maxlength)) }">
+                        <small *ngIf="term.invalid && (term.dirty || term.touched) && term.errors?.required"
+                               class="text-danger">Term is required</small>
+                        <small *ngIf="term.invalid && (term.dirty || term.touched) && term.errors?.maxlength"
+                               class="text-danger">Term can not be greater than 2 characters.</small>
+                      </div>
+                    </div>
+
+                    <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Status:<span class="text-danger">*</span></label>
+    <div class="form-group">
+      <ng-select [items]="lstStatus"
+                 placeholder="Select Status" bindValue="value" bindLabel="text" formControlName="statusId"
+                 [ngClass]="{'is-invalid': (statusId.invalid && (statusId.dirty || statusId.touched) && statusId.errors?.required) }">
+      </ng-select>
+      <small *ngIf="statusId.touched && statusId.errors?.required" style="color:red;">Please select Status</small>
+    </div>
+  </div>-->
+                    <!--<div class="col-12 col-md-12 col-lg-12">
+    <label class="m-label-s">Bank Address:</label>
+    <hr size="4" class="mt-0 border-secondary">
+  </div>-->
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>APR:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter APR" formControlName="apr"
+                               [ngClass]="{'is-invalid': (apr.invalid && (apr.dirty || apr.touched) && (apr.errors?.required || apr.errors?.maxlength)) }">
+                        <small *ngIf="apr.invalid && (apr.dirty || apr.touched) && apr.errors?.required"
+                               class="text-danger">APR is required</small>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Dealer Fees:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter Dealer Fees"
+                               formControlName="dealerFee"
+                               [ngClass]="{'is-invalid': (dealerFee.invalid && (dealerFee.dirty || dealerFee.touched) && (dealerFee.errors?.required || dealerFee.errors?.maxlength)) }">
+                        <small *ngIf="dealerFee.invalid && (dealerFee.dirty || dealerFee.touched) && dealerFee.errors?.required"
+                               class="text-danger">Dealer Fees is required</small>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Loan Description:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <textarea type="text" class="form-control" formControlName="loanDescription" placeholder="Enter Loan Description"
+                                  [ngClass]="{'is-invalid': (loanDescription.invalid && (loanDescription.dirty || loanDescription.touched) && (loanDescription.errors?.required || loanDescription.errors?.maxlength)) }"></textarea>
+                        <small *ngIf="loanDescription.invalid && (loanDescription.dirty || loanDescription.touched) && loanDescription.errors?.required"
+                               class="text-danger">Loan Description is required</small>
+                        <small *ngIf="loanDescription.invalid && (loanDescription.dirty || loanDescription.touched) && loanDescription.errors?.maxlength"
+                               class="text-danger">Loan Description must be less than 500 characters.</small>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                </div>
+              </form>
+              <div class="col-12 p-0">
+                <a  class="btn btn-success form-btns" (click)="addeditLoanTerm()"><i class="feather-save"></i> Submit</a>
+                <a href="/loanTerm" class="btn btn-danger form-btns" ><i class="fa fa-times"></i> Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+
+
+</div>

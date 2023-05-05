@@ -1,0 +1,141 @@
+<div bsModal #WorkOrderLineItemModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+           <div class="modal-header">
+            <h4 class="modal-title">{{headTitle}}</h4>
+            <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+         
+          <div class="modal-body" style="margin-bottom:10px;">
+            <form [formGroup]="addLineItemForm">
+              <div class="form-group">
+                <div class="row mb-2">
+                  <div class="col-md-12 col-lg-12">
+                    <label>To-Do Item Number<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input disabled type="text" class="form-control" formControlName="lineItemNo" maxlength="50" [ngClass]="{'is-invalid': (lineItemNo.invalid && (lineItemNo.dirty || lineItemNo.touched) && (lineItemNo.errors?.required || lineItemNo.errors?.maxlength)) }">
+                      <small *ngIf="lineItemNo.invalid && (lineItemNo.dirty || lineItemNo.touched) && lineItemNo.errors?.required"
+                             class="text-danger">To-Do Item Number is required</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-2">                  
+                    <div class="col-md-12 col-lg-6">
+                        <label>Work Order:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <ng-select [ngClass]="{'disabledddl':true}" [items]="workOrderList" placeholder="Select Work Order" formControlName="workOrder"
+                                     bindLabel="text" bindValue="value"
+                                     [ngClass]="{'is-invalid': (workOrder.invalid && (workOrder.dirty || workOrder.touched) && (workOrder.errors?.required || workOrder.errors?.maxlength)) }">
+          
+                          </ng-select>
+                          <small *ngIf="workOrder.invalid && (workOrder.dirty || workOrder.touched) && workOrder.errors?.required"
+                                 class="text-danger">Work Order is required</small>
+          
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <label>Status:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <ng-select [items]="statusList" placeholder="Select Status" formControlName="status"
+                                     bindLabel="text" bindValue="value"
+                                     [ngClass]="{'is-invalid': (status.invalid && (status.dirty || status.touched) && (status.errors?.required || status.errors?.maxlength)) }">
+          
+                          </ng-select>
+                          <small *ngIf="status.invalid && (status.dirty || status.touched) && status.errors?.required"
+                                 class="text-danger">Status is required</small>
+          
+                        </div>
+                      </div>
+          
+                  </div>
+                  <div class="row mb-2">  
+                                 
+                    <div class="col-md-12 col-lg-6">
+                        <label>Completed Date:</label>
+                        <div class="form-group datepickerinpop">
+                            <p-calendar [showIcon]="true"  placeholder="Select Date" class="calendarwidth" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date "
+                            formControlName="completedDate"
+                            [showTime]="false" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>           
+                                <!-- <small *ngIf="completedDate.invalid && (completedDate.dirty || completedDate.touched) && completedDate.errors?.required"
+                                       class="text-danger">Completed Date is required</small> -->
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <label>Subject:</label>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Enter subject" formControlName="subject" maxlength="50">
+                            <!-- [ngClass]="{'is-invalid': (subject.invalid && (subject.dirty || subject.touched) && (subject.errors?.required || subject.errors?.maxlength)) }" -->
+                            <!-- <small *ngIf="subject.invalid && (subject.dirty || subject.touched) && subject.errors?.required"
+                                   class="text-danger">Subject is required</small> -->
+                          </div>
+                      </div>
+          
+                  </div>
+                  <div class="col-md-12 col-lg-12">
+                    <label>Description:</label>
+                    <!-- <label>Description<span class="text-danger">*</span></label> -->
+
+                    <div class="form-group">
+                        <textarea type="text" class="form-control" maxlength="500" placeholder="Enter Description"
+                                  formControlName="description"></textarea>
+                                  <!-- [ngClass]="{'is-invalid': (description.invalid && (description.dirty || description.touched) && (description.errors?.required || description.errors?.maxlength)) }" -->
+                        <!-- <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.required"
+                               style="color:red;">Description is required</small>
+                        <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.maxlength"
+                               style="color:red;">Description must be less than 5000 characters.</small> -->
+                      </div>
+                  </div>
+              </div>
+           
+            </form>
+            <div *ngIf="Id>0" class="mt-1" style="width:100%;">
+              <div class="card-header">
+                <div class="row">
+                  <div style="font-weight:bold;" class="col col-md-12">                  
+                   System Information
+                  </div>
+                </div>  
+              </div>             
+                <div class="card-body mt-0">
+                  <div class="row">
+                    <div class="col col-md-2">
+                     Created By:
+                    </div>
+                    <div class="col col-md-4">                    
+                     {{createdBy}}
+                    </div>
+                    <div  class="col col-md-2" style="padding-left:5px;">
+                      Created On:
+                      </div>
+                      <div  class="col col-md-4">                    
+                        {{createdDate | DateTimeToLocal:'Date'}}
+                      </div>
+                                      </div>
+                  <br>
+                  <div class="row">
+                    <div *ngIf="updatedBy" class="col col-md-2" style="padding-left:5px;">
+                      Modified By:
+                       </div>
+                       <div *ngIf="updatedBy" class="col col-md-4">                    
+                         {{updatedBy}} 
+                       </div> 
+                    <div *ngIf="updatedBy" class="col col-md-2" style="padding-left:5px;">
+                      Modified On:
+                      </div>
+                      <div *ngIf="updatedBy" class="col col-md-4">                    
+                        {{updatedDate | DateTimeToLocal:'Date'}}
+                      </div>
+                  </div>
+                </div>            
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" (click)="save()" class="btn btn-success mr-2" [disabled]="!addLineItemForm.valid"><i class="feather-save"></i> Submit</button>
+            <button type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white mr-1"></i> Close</button>
+          </div>
+      </div>
+    </div>
+  </div>
+  

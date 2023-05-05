@@ -1,0 +1,180 @@
+<div bsModal #FieldsModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">User Defined Fields</h4>
+                <a type="button" class="close" (click)="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></a>
+            </div>
+            <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;">
+                <div>
+                    <div class="row">
+                        <div class="col-lg-12 portlets ">
+                            <div class="panel">
+                                <div class="panel-content border p-3">
+                                    <form [formGroup]="" autocomplete="off">
+                                        <div class="row">
+                                            <div id="FixedDiv" class="col-md-4 col-lg-4 pr-2">
+
+                                                <div id="accordion">
+                                                    <div class="panel active">
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a href="#newCustomFields" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+                                                                    <span>Custom Fields</span>
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="newCustomFields" class="panel-collapse collapse active show" style="">
+                                                            <div class="panel-body row p-0">
+                                                                <div class="bordered-content w-100">
+                                                                    <div class="w-100">
+                                                                        <ul class="types columnlist list-group custom-field-layout custom-field-layout-left-panel mb-3">
+                                                                            <li class="list-group-item selected" id="1" code="string" maxlength="100" *ngFor="let row of filedLists" pDraggable="color" (onDragStart)="dragStart($event,row,'Add')" (onDragEnd)="dragEnd($event,'detail')">
+                                                                                <a href="javascript:void(0);">
+                                                                                    <i class="{{row.class_name}}"></i>
+                                                                                    <span>
+                                                                              {{row.name}}
+                                                                            </span>
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="col-8">
+
+
+
+                                                <h3 class="form-heading"><span>Details</span></h3>
+
+                                                <div class="row custom_feild_box left-panel-dragdrop " dnd-sortable-container [dropZones]="['container-dropZone']" style="position:relative" (onDrop)="dropNewGrop($event)" pDroppable="color">
+                                                    <div class="bg_ovelay_full-width text_design" *ngIf="!UserDefinedControl">
+                                                        <div class="brd_inside" style="height: 100%">Drop Here</div>
+                                                    </div>
+
+                                                    <div class="w-100 py-3 drop" pDroppable="color" style="overflow-y:visible;max-height:380px;overflow-x: visible; position:relative;     min-height: 52px;">
+
+                                                        <!-- <div class="dropHere_default_box" *ngIf="!UserDefinedControl">
+                                                            <div class="brd_inside">Drop Here</div>
+                                                        </div> -->
+                                                        <div class="bg_ovelay_full text_design text_medium" *ngIf="dragDetail">
+                                                            <div class="brd_inside_full">Drop Here</div>
+                                                        </div>
+
+                                                        <ng-container *ngIf="UserDefinedControl">
+                                                            <div>
+                                                                <div class="draged-item" pDroppable="color" dnd-sortable [dragEnabled]="true" (mousedown)="fordragcontrol()" (onDragStart)="dragStart($event,'Remove')">
+                                                                    <span class="form-control 100 float-left">{{UserDefinedControl.display_name
+                                                                  }}</span>
+                                                                    <span class="w-25 float-right" style="padding-top:10px; position: absolute; right: 0px;">
+                                                                      <span class="w-25 float-right" style="padding-top:10px; position: absolute; right: 0px;">
+                                                                        <a href="javscript:;">
+                                                                            <span>
+                                                                                <!-- start-->
+                                                                                <span
+                                                                                    (click)="hideme =! hideme"><i
+                                                                                        class="feather-more-horizontal text-secondary float-right anchodeshowdrop"></i></span>
+                                                                    <!--end-->
+
+                                                                    <div class="dropdown-menu  float-right hideshowdropdown quickkact" [ngClass]="{'hide' : hideme == false,'show' : hideme == true}">
+                                                                        <div>
+                                                                            <a href="javascript:void(0);" (click)="EditCustomFields()" class="dropdown-item px-2" draggable="false"><i
+                                                                                                class="feather-edit-2 text-success"></i>
+                                                                                            <span
+                                                                                                class="ml-1 text-secondary"
+                                                                                                style="font-size: 14px;">View
+                                                                                                Properties</span></a>
+                                                                        </div>
+                                                                        <div>
+                                                                            <a href="javascript:void(0);" (click)="RemoveCustomFields()" class="dropdown-item px-2" draggable="false"><i
+                                                                                                class="feather-trash-2 text-danger"></i>
+                                                                                            <span class="ml-1 text-dark"
+                                                                                                style="font-size: 14px;">Remove
+                                                                                                Field</span></a>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    </span>
+                                                                    </a>
+                                                                    </span>
+                                                                    </span>
+                                                                    <div class="clearfix"></div>
+                                                                </div>
+                                                            </div>
+
+                                                        </ng-container>
+
+
+
+
+
+
+                                                    </div>
+                                                </div>
+
+                                                <!--
+                                                <div class="row custom_feild_box " style="position:relative">
+                                                    <div class="bg_ovelay_full text_design text_medium" *ngIf="dragDetail">
+                                                        <div class="brd_inside_full">Drop Here</div>
+                                                    </div>
+
+                                                    <ng-container>
+                                                        <div class="col-12 px-2">
+                                                            <div class="table-responsive no-padding">
+                                                                <table class="table table-hover table-dynamic" style="min-width:auto;">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Field Name</th>
+                                                                            <th class="text-center" width="120">Action
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr lass="draged-item" dnd-sortable (mousedown)="fordragcontrol() " (onDragStart)="dragStart($event,c, 'Remove') " [dragData]="c " [ngClass]="{ 'customdieldbg': c.is_system_generated==false} ">
+
+                                                                            <td class="text-center ">
+
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                           </div>
+                                                    </ng-container>
+
+                                                </div> -->
+
+                                                <div class="clearfix "></div>
+
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer ">
+                <button type="submit " class="btn btn-success form-btns " (click)="save() "><i class="feather-save text-white pr-2 "></i>Submit</button>
+                <button type="submit " class="btn btn-danger form-btns " (click)="closeModal() " data-dismiss="modal " aria-label="Close "><i class="feather-x text-white "></i> Cancel</button>
+            </div>
+            <!-- <app-loader [size]=60 [color]=" 'white' "  class="loader-popup "></app-loader> -->
+        </div>
+    </div>
+</div>
+
+
+<!-- `````````````````````````````````````````````````` -->
+
+
+<app-propertiespopupcustom #propertiesPopupcustom (customFieldLayOut)="customFieldLayOut()"></app-propertiespopupcustom>

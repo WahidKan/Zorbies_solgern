@@ -1,0 +1,153 @@
+<li class="arrowright top30" [formGroup]="targetForm">
+  <p class="shape_btn" *ngIf="!targetForm.get('isConditionAdded')?.value"><a class="addtarget_btn" (click)="showConditionModal()">Add Target</a></p>
+  <div class="formsfieldmainunique_condition" *ngIf="targetForm.get('isConditionAdded').value">
+    <div class="innercontbase">
+      <div class="innercont">{{targetForm.value.targetCondition.displayCondition }}</div>
+      <div class="inneredit">
+        <a data-placement="left" href="javascript:void(0);" title="" (click)="editCondition()">
+          <div class="d-inline-block iconedit_unique"></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade " bsModal #addConditionModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Rule</h5>
+          <button type="button" class="close" (click)="hideConditionModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="px-1" [ngClass]="{'col-md-12':hideFieldList,'col-md-9':!hideFieldList}">
+              <div class="border">
+                <div class="list-group" style="min-height: 210px;" formArrayName="conditions" [ngStyle]="vwRuleId != null ? {'pointer-events': 'none'} : {}">
+                  <ul class="form-header">
+                    <li> </li>
+                    <li class="pl-2"> Field</li>
+                    <li class="pl-2"> Conditional Operator</li>
+                    <li class="pl-2"> </li>
+                    <li class="pl-2"> Value</li>
+                    <li> </li>
+                    <li> </li>
+                  </ul>
+                  <div *ngFor="let condition of conditions.controls;let i=index" [formGroupName]="i">
+                    <ul class="from-rules text-center" *ngIf="condition.get('relationWithParent').value">
+                      <li class="text-center"><span class="or-and rounded-circle"><b>{{condition.get('relationWithParent').value}}</b></span></li>
+                    </ul>
+                    <ul class="from-rules">
+                      <li class="form-group align-middle px-2">
+                        <input formControlName="openingBrackets" style="width: auto;min-width: 20px;max-width: 20px;" class="form-control txtOpeningBrackets px-1">
+                      </li>
+                      <!-- <li class="form-group align-middle px-2">
+                        <ng-select [items]="subModuleList" formControlName="subModuleId"
+                                   placeholder="Select Module" bindLabel="sub_module_name" (change)="onSubModuleChange($event,condition)"
+                                   [closeOnSelect]="true">
+                        </ng-select>
+                      </li> -->
+                      <li class="form-group align-middle px-2">
+                        <ng-select [items]="customFieldsList" formControlName="fieldId"
+                                   placeholder="Select Field" bindLabel="name" (change)="onFieldChange($event,condition,i)"
+                                   [closeOnSelect]="true" [clearable]="false" [appendTo]="'body'">
+
+                        </ng-select>
+                      </li>
+                      <li class="form-group align-middle px-2">
+                        <ng-select [items]="condition.get('operators').value" formControlName="operatorId" (change)="onOperatorChange($event,condition,i)"
+                                   placeholder="Select Operator" bindLabel="operator_display_name"
+                                   [closeOnSelect]="true" [clearable]="false" [appendTo]="'body'">
+                        </ng-select>
+                      </li>
+                      <li class="form-group align-middle px-2">
+                        <ng-select [items]="condition.get('conditions').value" formControlName="conditionsId"
+                                   placeholder="Select Condition" bindLabel="name" [appendTo]="'body'"
+                                   [closeOnSelect]="true" [clearable]="false" [ngStyle]="condition.get('disableDropdown').value ? {'pointer-events': 'none'} : {}">
+                        </ng-select>
+
+                      </li>
+                      <li class="form-group align-middle px-2">
+                        <solgen-rule-input [formGroup]="condition" [operator]="condition.get('operatorId').value" [from]="condition" [disabled]="condition.get('disableDropdown').value"
+                        [controlName]="'fieldValue'" [id]="i" [operatorType]="condition.get('conditionsId').value" [updateOnOperatorType]="true" [customFiledList]="customFieldsList"></solgen-rule-input>
+                        <!-- <solgen-rule-input [formGroup]="condition" [operator]="condition.get('operatorId').value"
+                        [openedFrom]="condition.get('conditions').value" *ngIf="condition.get('operatorId').value && condition.get('operatorId').value.operator_expression =='between'"
+                        [from]="condition" [controlName]="'fieldSecondValue'" [id]="i"></solgen-rule-input> -->
+                      </li>
+                      <li class="form-group align-middle px-2">
+                        <input type="text" class="form-control" formControlName="closingBrackets" style="width:30px;">
+                      </li>
+
+                      <li class="text-center">
+                        <a *ngIf="i>0" href="javascript:void(0);" [ngClass]="{'invisible':(vwRuleId != null)}" (click)="removeCondition(i)" class="text-red font-16">
+                          <i class="feather-trash-2"></i>
+                        </a>
+
+                        <a *ngIf="condition.get('conditionsId').value !== null ? condition.get('conditionsId').value.value === '3' : ''" href="javascript:void(0);" [ngClass]="{'invisible':(vwRuleId != null)}" (click)="CalculationModal(condition)" class="text-blue font-16">
+                          <i class="feather-edit-2"></i>
+                        </a>
+                      </li>
+
+                    </ul>
+
+                  </div>
+                </div>
+                <div class="p-3 text-center">
+                  <div class="cstm-drop-btn text-center">
+                    <select #addNewCondition class="btn ddlupdatestatus btn-success" [ngClass]="{'invisible':(vwRuleId != null)}" [disabled]="!conditions.valid" (change)="addCondition($event)">
+                      <option selected="selected"> Add</option>
+                      <option>Or</option>
+                      <option>And</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="step-default p-3 border mt-2 rounded"><b>Condition:</b>{{targetForm.value.targetCondition.displayCondition}} <!--(Loan Application Equal To Sales Tax)--> </div>
+
+
+            </div>
+            <div [ngClass]="{'d-none':hideFieldList,'col-md-3':!hideFieldList}">
+              <div class="border" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+                <table class="table table-hover table-dynamic table-cont">
+                  <thead class="bg-light">
+                    <tr>
+                      <th>Field Name</th>
+                      <th style="min-width:100px;">Data Type</th>
+
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="customFieldsList!=null">
+                    <tr *ngFor="let item of customFieldsList">
+                      <td>{{item.name}}</td>
+                      <td>{{item.sql_type}}</td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="customFieldsList==null">
+                    <tr style="margin-left:10px; display:table;">
+                      No data found.
+                    </tr>
+                  </tbody>
+
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+<app-solgen-rule-condition-calculation #resultCalculationModal></app-solgen-rule-condition-calculation>
+        </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn" [ngClass]="{'btn-outline-info':hideFieldList,'btn-info':!hideFieldList,'invisible':vwRuleId != null}" (click)="showFieldList()"><i class="fa fa-list-ol"></i> {{textFieldListButton}}</button>
+          <button type="button" class="btn btn-success mr-1" [ngClass]="{'invisible':(vwRuleId != null)}" data-dismiss="modal" (click)="saveCondition()" [disabled]="!conditions.valid"><i class="feather-save"></i> Save</button>
+          <button type="button" class="btn btn-danger" (click)="hideConditionModal()"><i class="feather-x"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+</li>

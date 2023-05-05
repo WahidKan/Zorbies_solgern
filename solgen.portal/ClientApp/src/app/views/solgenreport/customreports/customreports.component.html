@@ -1,0 +1,159 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Dynamic Reports</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Dynamic Reports</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <div class="row my-2 align-items-end">
+          <div class="col-md-6 col-xl-6">
+            <div class="row searchfield align-items-end">
+              <div class="col-lg-4 float-left mb-lg-0 mb-4 pr-md-0">
+                <input class="form-control" title="" [(ngModel)]="txtFilter" placeholder="Search by name" (keyup)='searchReports($event)' />
+              </div>
+              <div class="col-lg-4 float-left mb-lg-0 mb-2">
+                <a href="javascript:void(0);" (click)="OnSearch()" class="btn btn-dark form-btns smview mr-2" tooltip="Search"><i class="feather-search mr-1"></i> Search</a>
+                <a href="javascript:void(0);" (click)="resetFilter()" class="btn btn-white form-btns smview" tooltip="Reset"><i class="feather-repeat mr-1"></i> Reset</a>
+               </div>
+            </div>
+
+          </div>
+          <div class="col-md-6 col-xl-6">
+            <div class="dt-buttons">
+              <!--*ngIf='isAdd'
+          *ngIf='isDelete'-->
+              <a class="btn btn-success form-btns smview mr-2" routerLink="/solgenreport/addeditcustomreport" tooltip="Add Report"><i class="feather-plus mr-1"></i> Add</a>
+              <a class="btn btn-danger form-btns" href="javascript:void(0);" (click)="deleteAllReport()" tooltip="Delete"><span><i class="feather-trash-2 mr-1"></i> Delete</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-content px-3 pagination2 table-responsive no-padding">
+        <div class="header-chart mb-1">Reports</div>
+        <div class="table-responsive">
+          <div class="table table-striped">
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                           [rows]="columndata"
+                           [columnMode]="'force'"
+                           [headerHeight]="40"
+                           [footerHeight]="40"
+                           [scrollbarH]="true"
+                           [rowHeight]="'40'"
+                           [externalPaging]="true"
+                           [externalSorting]="true"
+                           [loadingIndicator]="loading"
+                           [count]="totalRecords"
+                           [offset]="currentPage"
+                           [limit]="pageSizeValue"
+                           (page)='setPage($event)'
+                           (sort)="onSort($event)"
+                           [selectionType]="SelectionType.checkbox"
+                           [selectAllRowsOnPage]="false"
+                           [selected]="selected"
+                           (select)="onSelect($event)">
+              <ngx-datatable-column [width]="42"
+                                    [sortable]="false"
+                                    [canAutoResize]="false"
+                                    [draggable]="false"
+                                    [resizeable]="false"
+                                    [headerCheckboxable]="true"
+                                    [checkboxable]="true">
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Report Name" [sortable]="true" prop="report_name">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a class="smview" [routerLink]="['/solgenreport/customreportview',row.Id]" title="View Report">{{row.report_name}}</a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Sub Module Name" [sortable]="true" prop="subModule_name">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.subModule_name}}
+                </ng-template>
+              </ngx-datatable-column>
+
+              <!--<ngx-datatable-column name="Description" [sortable]="true" prop="description"></ngx-datatable-column>-->
+              <ngx-datatable-column name="Created By" [sortable]="true" prop="CreatedBy">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.createdby}}
+                </ng-template>
+
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Created On" [sortable]="true" prop="created_on">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.created_on|pstdatetimetolocaldate}}
+                </ng-template>
+                |
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Last Modified By" [sortable]="true" prop="modifyby">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.modifyby}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="text-center">
+                    <a [routerLink]="['/solgenreport/customreportview',row.Id]" class="btn-edit" title="View Report"><i class="feather-eye mr-2"></i></a>
+                    <a class="btn-edit" [routerLink]="['/solgenreport/addeditcustomreport/edit',row.Id]" title="Edit Report"><i class="feather-edit-2 text-success pr-2"></i></a>
+                    <a href="javascript:void(0);" class="btn-edit" (click)="deleteReport(row)"><i title="Delete Report" class="feather-trash-2 text-danger"></i></a>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template
+                             let-rowCount="rowCount"
+                             let-pageSize="pageSize"
+                             let-selectedCount="selectedCount"
+                             let-currentPage="currentPage"
+                             let-offset="offset"
+                             let-isVisible="isVisible">
+                  <div>
+                    <div style="color:black; margin-right:10px;" class="page-size-record" *ngIf='(rowCount  > 0)'>
+                      <span style="text-align:right; width:80px;vertical-align: middle;">
+                        <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false"
+                                   (change)="onChange($event)" draggable="false" [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="page-count" *ngIf='(rowCount  > 0)'>
+                    {{commonService.PageString(curPage,pageSizeValue,rowCount)}}
+                  </div>
+                  <datatable-pager [pagerLeftArrowIcon]="'feather-chevron-left'"
+                                   [pagerRightArrowIcon]="'feather-chevron-right'"
+                                   [pagerPreviousIcon]="'feather-chevrons-left'"
+                                   [pagerNextIcon]="'feather-chevrons-right'"
+                                   [page]="curPage"
+                                   [size]="pageSizeValue"
+                                   [count]="totalRecords"
+                                   [hidden]="!((rowCount / pageSize) > 1)"
+                                   (change)="setPage($event)">
+                  </datatable-pager>
+                </ng-template>
+              </ngx-datatable-footer>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+      <!-- <app-common-icon-picker  #FlowTypeSelection></app-common-icon-picker> -->
+    </div>
+  </div>
+</div>
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loading" class="loader-popup"></app-loader>

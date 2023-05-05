@@ -1,0 +1,1173 @@
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<div class="clearfix"></div>
+<ng-container *ngFor="let item of groupTop">
+  <div *ngIf="item.IsVisible" class="card m-0 border">
+    <span class="text-capitalize p-3 font-weight-bold text-center " style="font-size: 24px;">
+      {{item.default_value}}
+    </span>
+  </div>
+</ng-container>
+<div class="card  border-0" >
+  <div class=" panel">
+    <div class="row ">
+      <div class="col-lg-12 border-bottom">
+        <app-stagemanagement #stageManagement  (callForDDLList)="ddlOpportunity($event.target.value)"  (callToViewFilterBarFunction)="openSendToLoanHomi(opid)" [submoduleName]="submoduleName" 
+        [headerTitleName]="OpportunityName"  [iconClass]="iconClass"  [customCompnentValuesTop]="customCompnentValuesTop"  
+        [areButtonsVisible]="true" [selectedAction]="selectedAction" [pageLink]="'/opportunity/editOpportunity/'"  [isLoanProductAssociated]="isLoanProductAssociated" [moduleName]="moduleName" (newItemEvent)="addItem($event)"
+    ></app-stagemanagement>
+      </div>
+        <div class="col-lg-12 mt-3">
+          <div class="panel-content w-100  p-2 px-3 ">
+            <div class="row mt-2 scroll-in-content">
+
+              <div class="col-sm-12 col-lg-8">
+                <h3 class="form-heading mt-0"><span>Details</span></h3>
+                <div id="accordion" [ngClass]="{'disabled':loadSave}">
+                  <form [formGroup]="form" *ngIf="form">
+                    <ng-container *ngFor="let item of formControlList">
+                      <div *ngIf="item.IsVisible" class="panel active">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a href="#{{item.group_display_name}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                              <span> {{item.group_name}}</span>
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="{{item.group_display_name}}" class="panel-collapse collapse active show" style="">
+                          <div class="panel-body row px-0 mt-0">
+                            <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let inner of item.InnerData;">
+                              <div class="input-group border-bottom">
+                                <div class="col-sm-12 col-md-6 px-0">
+                                  <span class="py-2 d-block"><strong>{{ inner.display_name}}:</strong></span>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                  <span *ngIf='inner.dt_code=="datetime" || inner.dt_code=="date" ' class="py-2 d-block">
+                                    <ng-container *ngIf='inner.dt_code=="datetime"'>{{ inner.value | DateTimeToLocal}}</ng-container>
+                                    <ng-container *ngIf='inner.dt_code=="date"'>{{ inner.value | date: 'MM-dd-yyyy'}}</ng-container>
+                                  </span>
+                                  <span *ngIf="inner.value!=null  && inner.dt_code!='boolean' && inner.field_route==null && inner.dt_code!='datetime' && inner.dt_code!='date'" class="py-2 d-block">{{ inner.value}}</span>
+                                  <span *ngIf="inner.value!=null  && inner.dt_code!='boolean' && inner.field_route!=null" class="py-2 d-block">
+                                    <a href="javascript:void(0);" [routerLink]="[inner.field_route,inner.ref_value]">{{ inner.value}}</a>
+                                  </span>
+
+                                  <!--============================== For CheckBox ===========================-->
+                                  <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                                    <div class="form-check form-check-inline">
+                                      <div class="custom-control custom-checkbox pl-0">
+                                        <label class="switch  mb-0">
+                                          <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                          <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!--============================== For CheckBox ===========================-->
+                                  <!-- <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                                    <div class="form-check form-check-inline">
+                                      <div class="custom-control custom-checkbox pl-0">
+                                        <label class="switch mb-0">
+                                          <input type="checkbox" id="chk_{{inner.custom_field_id}}" [formControlName]="inner.form_controlName" disabled>
+                                          <span class="slider round" id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div> -->
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngFor="let item of executionFlow">
+                      <div *ngIf="executionFlow.length>0" class="panel active">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a href="#{{item.automationFlowName}}" class="accordion-toggle" data-toggle="collapse"
+                              data-parent="#accordion" aria-expanded="true">
+                              <span> {{item.automationFlowName}}</span>
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="{{item.automationFlowName}}" class="panel-collapse collapse active show" style="">
+                          <div class="panel-body row px-0 mt-0">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                              <div class="input-group border-bottom">
+                                  <div class="float-left ">
+                                    <div style="height: 40px !important;width:40px !important; cursor:pointer;">
+                                      <a href="javascript:void(0);" (click)="ExecuteAutomationFlow(item.automationFlowId)">
+                                        <svg focusable="false" data-key="flow" aria-hidden="true" viewBox="0 0 100 120"
+                                          class="slds-icon slds-icon_small" fill="white">
+                                          <rect width="100" rx="15" height="90" fill="rgb(1, 118, 211)" />
+                                          <g>
+                                            <path
+                                              d="M79.9 30.7c-2.6-5.1-9.2-14.6-21.5-9-7.6 3.5-11.9 5.5-11.9 5.5l-11 4.8c-3.1 1.5-9.9-.6-13.7-2-1.1-.4-2.1.8-1.6 1.9 2.6 5.1 9.2 14.6 21.5 9 7.6-3.5 22.9-10.1 22.9-10.1 3.1-1.5 9.9.6 13.7 2 1.1.2 2.1-.9 1.6-2.1zM53.5 46.8c-1.4.8-6.9 3.3-6.9 3.3l-5.5 2.4C38.4 54 32.5 52 29 50.6c-1-.5-1.9.8-1.4 1.8 2.2 5 8.1 14 18.9 8.5 6.7-3.4 12.4-5.6 12.4-5.6 2.7-1.5 8.6.5 12.1 1.9 1 .4 1.9-.8 1.4-1.9-2.3-5-8.2-14-18.9-8.5zM49.5 68.9c-1.1.6-3 1.8-3 1.8-2.1 1.3-6.5-.4-9.1-1.7-.7-.4-1.4.8-1 1.8 1.6 4.5 6 12.6 14.1 7.6 3-1.9 3-1.8 3-1.8 2.2-1.1 6.5.4 9.1 1.6.7.4 1.4-.8 1-1.8-1.6-4.4-5.7-12.1-14.1-7.5z">
+                                            </path>
+                                          </g>
+                                        </svg>
+                                      </a>
+                                    </div>
+                                  </div>
+                                  <div class="float-left ml-1" style="margin-top: -2px !important;">
+                                      <a href="javascript:void(0);" (click)="ExecuteAutomationFlow(item.automationFlowId)">
+                                      {{item.automationFlowName}}                                 
+                                    </a>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </form>
+                </div>
+              </div>
+              <div class="col-sm-12 col-lg-4 relatedtab">
+                <h3 class="form-heading mt-0"><span>Related</span></h3>
+                <div id="accordion" *ngIf="relatedObjects">
+                  <ng-container *ngFor="let item of relatedObjects;let i=index;">
+                    <ng-container *ngIf="item.IsVisible">
+                      <ng-container *ngIf="item.layout_type == 'appointments'">
+                        <app-appointments #appointmentlist title="Appointments" submoduleName="{{submoduleName}}"
+                                          primaryKey="{{Id}}" [header]="true"></app-appointments>
+                      </ng-container>
+                      <ng-container *ngIf="item.layout_type != 'notes' && item.layout_type != 'appointments' && item.layout_type != 'table' && item.layout_type != 'files' && item.layout_type != 'textarea'">
+                        <app-listview [data]="item" [index]="i" (editUtilityAccount)="UtilityAccount()"></app-listview>
+                      </ng-container>
+                      <ng-container *ngIf="item.layout_type == 'textarea' && item.default_value">
+                        <div class="w-100 p-3 mb-2 text-center information-section">
+                          <span class="text-capitalize font-weight-bold" style="font-size: 24px;">
+                            {{item.default_value}}
+                          </span>
+                        </div>
+                      </ng-container>
+                     
+                      <ng-container *ngIf="item.layout_type == 'notes'">
+                        <app-newnoteslist #listnotesmodel [view]="false" [DisplayOnEmpty]="true" subModuleName="{{submoduleName}}" [AccountId]="accountId" [ObjectRefId]="Id"></app-newnoteslist>
+                      </ng-container>
+                      <ng-container *ngIf="item.layout_type == 'files'">
+                        <app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="{{Id}}"></app-files>
+                      </ng-container>
+                      <ng-container *ngIf="item.layout_type == 'table'">
+                        <app-tableview [data]="item" [index]="i" [SubModuleName]="submoduleName" [RecordId]="Id"  [primaryContactId]="primaryContactId"  [primaryContractId]="primaryContractId" [primaryProposalId]="primaryProposalId" (refreshEmitter)="RefreshRelatedObjects($event)" (openAddContact)="AddContact($event)" (openAddEditContractPopup)='AddMappingContract($event)' (openAddEditWorkOrderPopup)='AddMappingWorkOrder($event)' (openAddEditProposalPopup)='AddMappingProposal($event)'  ></app-tableview>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+
+
+
+
+
+                </div>
+
+                <!--<div id="accordion" [ngClass]="{'disabled':loadSave}">-->
+                <!--==========================Utility & Proposal Design Information Account Detail ===========================================================-->
+                <!--<div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#account" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>Utility & Proposal Design Information</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="account" class="panel-collapse collapse active show" style="">
+                  <div class="panel-body p-2 mt-0">
+                  <a href="javascript:void(0);" (click)="Edit_Utility_Account()" class="btn-in-panel"><span data-toggle="modal"><i class="fa fa-pencil mr-2"></i>Edit</span></a>
+                  <div class="modal-body">
+                    <div class="row mb-2">
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Account:</b></label>
+                        <div class="form-group">
+                          <a routerLink="/accountslist/view/{{accountId}}">{{accountName}}</a>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Utility Company:</b></label>
+                        <div class="form-group">
+                          <a routerLink="/accountslist/view/{{UtilityCompanyId}}">{{utilityCompany}}</a>
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Utility Account Number:</b></label>
+                        <div class="form-group">
+                          {{utilityAccountNumber}}
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Utility Meter Number:</b></label>
+                        <div class="form-group">
+                          {{utilityMeterNumber}}
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Estimated Annual Kwh Usage:</b></label>
+                        <div class="form-group">
+                          {{estimatedAnnualKwhUsage}}
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Last Utility Bill URL:</b></label>
+                        <div class="form-group">
+                          {{lastUtilityBillURL}}
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Home Sq. Ft.:</b></label>
+                        <div class="form-group">
+                          {{homeSqFt}}
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Sales Tax Rate:</b></label>
+                        <div class="form-group">
+                          {{taxRate}}
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>FTC Not Eligible:</b></label>
+                        <div class="form-group">
+                          <label class="switch">
+                            <input type="checkbox" disabled [checked]="fTCNotEligible">
+
+                            <span class="slider round"><span>Yes</span></span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Billing Address:</b></label>
+                        <div class="form-group">
+                          {{utilityBillingAddress}}
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>Full Utility Bill:</b></label>
+                        <div class="form-group">
+                          <label class="switch">
+                            <input type="checkbox" disabled [checked]="fullUtilityBill">
+                            <span class="slider round"><span>Yes</span></span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-lg-6">
+                        <label><b>No Utility Account or Meter Number:</b></label>
+                        <div class="form-group">
+                          <label class="switch">
+                            <input type="checkbox" disabled [checked]="noUtilityAccountOrMeterNumber">
+                            <span class="slider round"><span>Yes</span></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>-->
+                <!--<div class="panel-body p-2 mt-0">
+                <div class="table-responsive ngxtbl">
+                  <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                [rows]="lstAccounts.data"
+                                [columnMode]="'force'"
+                                [scrollbarH]="true"
+                                [rowHeight]="'40'"
+                                [headerHeight]="40"
+                                [footerHeight]="40"
+                                [externalPaging]="true"
+                                [externalSorting]="true"
+                                [loadingIndicator]="loadSave"
+                                [count]="lstAccounts.pager.totalItems"
+                                [offset]="lstAccounts.pager.currentPage"
+                                [limit]="lstAccounts.pager.pageSize"
+                                (page)='setAccountPageNo($event)'
+                                (sort)="onAccountSort($event)">
+                    <ngx-datatable-column name="Account" prop="Name" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div title="{{row.Name}}">
+                          <a [routerLink]="['/accountslist/view',row.Id]">{{row.Name| truncate}}</a>&nbsp;
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Utility Company" prop="Utility_Company" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div title="{{row.Utility_Company}}">
+                          <a [routerLink]="['/accountslist/view',row.UtilityCompanyId]">{{row.Utility_Company| truncate}}</a>&nbsp;
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Utility Account Number" prop="Utility_Account_Number" [sortable]="true"> </ngx-datatable-column>
+                    <ngx-datatable-column name="Utility Meter Number" prop="Utility_Meter_Number" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Estimated Annual Kwh Usage" prop="Estimated_Annual_Kwh_Usage" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Last Utility Bill URL" prop="Last_Utility_Bill_URL" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Home Sq. Ft." prop="Home_Sq_Ft" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Tax Rate" prop="Tax_Rate" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="FTC Not Eligible" prop="FTC_Not_Eligible" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <label class="switch">
+                          <input type="checkbox" disabled [checked]="row.FTC_Not_Eligible">
+                          <span class="slider round"><span>Yes</span></span>
+                        </label>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Billing Address" prop="BillingAddress" [sortable]="true"></ngx-datatable-column>
+                    <ngx-datatable-column name="Full Utility Bill" prop="Full_Utility_Bill" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <label class="switch">
+                          <input type="checkbox" disabled [checked]="row.Full_Utility_Bill">
+                          <span class="slider round"><span>Yes</span></span>
+                        </label>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="No Utility Account or Meter Number" prop="No_Utility_Account_or_Meter_Number" [sortable]="true">
+                      <ng-template let-row="row" ngx-datatable-cell-template>-->
+                <!--*ngIf='row.No_Utility_Account_or_Meter_Number'-->
+                <!--<label class="switch">
+                      <input type="checkbox" disabled [checked]="row.No_Utility_Account_or_Meter_Number">
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div class="text-center">
+                      <a href="javascript:void(0);" (click)="Edit_Utility_Account(row)" title="Edit"><i class="fa fa-pencil text-success pr-2"></i></a>-->
+                <!--<a href="javascript:void(0);" (click)="deleteAssignedResource(row,'AssignedResource')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>-->
+                <!--</div>
+
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template
+                              let-rowCount="rowCount"
+                              let-pageSize="lstAccounts.pager.pageSize"
+                              let-selectedCount="selectedCount"
+                              let-currentPage="lstAccounts.pager.currentPage"
+                              let-offset="offset"
+                              let-isVisible="isVisible">-->
+                <!--<div class="page-count" *ngIf='(rowCount  > 0)'>
+                    {{commonService.PageString(lstAccounts.pager.currentPage,lstAccounts.pager.pageSize,rowCount)}}
+                </div>-->
+                <!--<datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                          [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                          [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                          [pagerNextIcon]="'fa fa-angle-double-right'"
+                                          [page]="lstAccounts.pager.currentPage"
+                                          [size]="lstAccounts.pager.pageSize"
+                                          [count]="lstAccounts.pager.totalItems"
+                                          [hidden]="!((rowCount / lstAccounts.pager.pageSize) > 1)"
+                                          (change)="setAccountPageNo($event)">
+                          </datatable-pager>
+                        </ng-template>
+                      </ngx-datatable-footer>
+                    </ngx-datatable>
+                  </div>
+                </div>-->
+                <!--</div>
+                </div>
+                </div>-->
+                <!--=====================================================================================================================================-->
+                <!--<div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#Contact" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>Contact ({{contactCount}})</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="Contact" class="panel-collapse collapse active show" style="">
+                  <a href="javascript:void(0);" class="btn-in-panel" data-dismiss="modal" (click)="AddContact()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add</a>
+                  <div class="panel-body p-2 mt-0">
+                    <div class="table-responsive ngxtbl">
+                      <ngx-datatable #table class="bootstrap"
+                                    [rows]="contactpagedData.data"
+                                    [columnMode]="'force'"
+                                    [scrollbarH]="true"
+                                    [rowHeight]="'40'"
+                                    [headerHeight]="40"
+                                    [footerHeight]="40"
+                                    [externalPaging]="true"
+                                    [externalSorting]="true"
+                                    [loadingIndicator]="loadSave"
+                                    [count]="contactpagedData.pager.totalItems"
+                                    [offset]="contactpagedData.pager.currentPage"
+                                    [limit]="contactpagedData.pager.pageSize"
+                                    (page)='setPageContact($event)'
+                                    (sort)="onSort($event)">
+
+
+
+                        <ngx-datatable-column name="Name" [sortable]="true" prop="Name" [minWidth]="150">
+
+
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Email" sortable="false" prop="Email" [minWidth]="150"></ngx-datatable-column>
+
+                        <ngx-datatable-column name="Mobile" sortable="false" prop="MobilePhone" [minWidth]="150"></ngx-datatable-column>
+                        <ngx-datatable-column name="Primary" sortable="true" prop="IsPrimary">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <label class="switch">
+                              <input type="checkbox" disabled [checked]="row.IsPrimary">
+                              <span class="slider round"><span>Yes</span></span>
+                            </label>
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [maxWidth]="200" headerClass="text-center" name="Action" [sortable]="false">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div class="text-center">
+                              <a *ngIf="row.IsPrimary != true" (click)="DeleteContact(row.id,row.Name)" class="btn-delete"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                            </div>
+
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-footer>
+                          <ng-template ngx-datatable-footer-template
+                                      let-rowCount="rowCount"
+                                      let-pageSize="pageSize"
+                                      let-selectedCount="selectedCount"
+                                      let-currentPage="currentPage"
+                                      let-offset="offset"
+                                      let-isVisible="isVisible">
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>-->
+                <!--Showing {{(contactpagedData.pager.currentPage+1 - 1 )* pageSizeValueContact + 1}}  to {{contactpagedData.pager.currentPage+1 * pageSizeValueContact}} out of {{rowCount}}  enteries-->
+                <!--{{commonService.PageString(contactpagedData.pager.currentPage,contactpagedData.pager.pageSize,rowCount)}}
+                </div>-->
+                <!--<div>
+                  <div style="color:black; margin-right:10px;" class="page-size-record">
+                    <span style="text-align:right; width:80px;vertical-align: middle;">
+                      <ng-select [searchable]="false" [items]="lstPageSizeContact" appendTo="body" [(ngModel)]='pageSizeValueContact' dropzone="fixed" [clearable]="false" (change)="onChangeContact($event)" draggable="false" [closeOnSelect]="true"
+                                bindLabel="text" bindValue="text"></ng-select>
+                    </span>
+                  </div>
+                </div>-->
+                <!--<datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                              [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                              [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                              [pagerNextIcon]="'fa fa-angle-double-right'"
+                                              [page]="contactpagedData.pager.currentPage+1"
+                                              [size]="pageSizeValueContact"
+                                              [count]="contactpagedData.pager.totalItems"
+                                              [hidden]="!((rowCount / pageSize) > 1)"
+                                              (change)="setPageContact($event)">
+                              </datatable-pager>
+                            </ng-template>
+                          </ngx-datatable-footer>
+                        </ngx-datatable>
+                      </div>
+                    </div>
+                  </div>
+                </div>-->
+                <!--=====================================================================================================================================-->
+                <!--==================================================== Product ===========================================================-->
+                <!--<div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#Product" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>Products ({{productCount}})</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="Product" class="panel-collapse collapse active show" style="">
+                  <div class="panel-body p-2 mt-0">
+                    <div class="table-responsive ngxtbl">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                    [rows]="lstProducts.data"
+                                    [columnMode]="'force'"
+                                    [scrollbarH]="true"
+                                    [rowHeight]="'40'"
+                                    [headerHeight]="40"
+                                    [footerHeight]="40"
+                                    [externalPaging]="true"
+                                    [externalSorting]="true"
+                                    [loadingIndicator]="loadSave"
+                                    [count]="lstProducts.pager.totalItems"
+                                    [offset]="lstProducts.pager.currentPage"
+                                    [limit]="lstProducts.pager.pageSize"
+                                    (page)='setProductsPageNo($event)'
+                                    (sort)="onProductsSort($event)">
+
+                        <ngx-datatable-column name="Product Name " prop="ProductName" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Product Family" prop="ProductFamily" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Product Code" prop="ProductCode" [sortable]="true"></ngx-datatable-column>
+
+
+                        <ngx-datatable-footer>
+                          <ng-template ngx-datatable-footer-template
+                                      let-rowCount="rowCount"
+                                      let-pageSize="lstProducts.pager.pageSize"
+                                      let-selectedCount="selectedCount"
+                                      let-currentPage="lstProducts.pager.currentPage"
+                                      let-offset="offset"
+                                      let-isVisible="isVisible">
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>
+                              ss-->
+                <!--Showing {{(lstProducts.pager.currentPage - 1 )* lstProducts.pager.pageSize + 1}}  to {{lstProducts.pager.currentPage * lstProducts.pager.pageSize}} out of {{rowCount}}  enteries-->
+                <!--{{commonService.PageString(lstProducts.pager.currentPage,lstProducts.pager.pageSize,rowCount)}}
+                              </div>
+
+                              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                              [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                              [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                              [pagerNextIcon]="'fa fa-angle-double-right'"
+                                              [page]="lstProducts.pager.currentPage"
+                                              [size]="lstProducts.pager.pageSize"
+                                              [count]="lstProducts.pager.totalItems"
+                                              [hidden]="!((rowCount / lstProducts.pager.pageSize) > 1)"
+                                              (change)="setProductsPageNo($event)">
+                              </datatable-pager>
+                            </ng-template>
+                          </ngx-datatable-footer>
+                        </ngx-datatable>
+                      </div>
+                    </div>
+                  </div>
+                </div>-->
+                <!--==============================================================================================================================-->
+                <!--======================================================Work Orders=============================================================-->
+                <!--<div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#workOrders" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>Work Orders ({{workOrderCount}})</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="workOrders" class="panel-collapse collapse active show" style="">
+                  <div class="panel-body p-2 mt-0">
+                    <div class="table-responsive ngxtbl">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                    [rows]="lstWorkOrders.data"
+                                    [columnMode]="'force'"
+                                    [scrollbarH]="true"
+                                    [rowHeight]="'40'"
+                                    [headerHeight]="40"
+                                    [footerHeight]="40"
+                                    [externalPaging]="true"
+                                    [externalSorting]="true"
+                                    [loadingIndicator]="loadSave"
+                                    [count]="lstWorkOrders.pager.totalItems"
+                                    [offset]="lstWorkOrders.pager.currentPage"
+                                    [limit]="lstWorkOrders.pager.pageSize"
+                                    (page)='setWorkorderPageNo($event)'
+                                    (sort)="onWorkOrdersSort($event)">-->
+                <!--<ngx-datatable-column name="Work Order Number" prop="WorkOrderNumber" [sortable]="true"></ngx-datatable-column>-->
+                <!--<ngx-datatable-column name="Work Order Number" prop="WorkOrderNumber" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a class="view-list" [routerLink]="['/workorder/view',row.Id]" href="javascript:void(0);" [title]="row.WorkOrderNumber">{{row.WorkOrderNumber}}</a>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Subject" prop="Subject" [sortable]="true"></ngx-datatable-column>
+                <ngx-datatable-column name="Status" prop="Status" [sortable]="true"></ngx-datatable-column>
+                <ngx-datatable-column name="Sub Status" prop="SubStatus" [sortable]="true"></ngx-datatable-column>
+                <ngx-datatable-column name="Work Type" prop="WorkType" [sortable]="true"></ngx-datatable-column>
+                <ngx-datatable-column name="Created Date" prop="CreatedDate" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span *ngIf="!row.CreatedDate" [title]="row.CreatedDate">-</span>
+                    <span *ngIf="row.CreatedDate" [title]="row.CreatedDate">{{row.CreatedDate | DateTimeToLocal }}</span>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="End Date" prop="EndDate" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span *ngIf="!row.EndDate" [title]="row.EndDate">-</span>
+                    <span *ngIf="row.EndDate" [title]="row.EndDate">{{row.EndDate | DateTimeToLocal }}</span>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="FollowUp DateTime" prop="FollowUpDateTime" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span *ngIf="!row.FollowUpDateTime" [title]="row.FollowUpDateTime">-</span>
+                    <span *ngIf="row.FollowUpDateTime" [title]="row.FollowUpDateTime">{{row.FollowUpDateTime | DateTimeToLocal }}</span>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="FollowUp Note" prop="FollowUpNote" [sortable]="true"></ngx-datatable-column>
+
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template
+                              let-rowCount="rowCount"
+                              let-pageSize="lstWorkOrders.pager.pageSize"
+                              let-selectedCount="selectedCount"
+                              let-currentPage="lstWorkOrders.pager.currentPage"
+                              let-offset="offset"
+                              let-isVisible="isVisible">
+                    <div class="page-count" *ngIf='(rowCount  > 0)'>-->
+                <!--Showing {{(lstWorkOrders.pager.currentPage - 1 )* lstWorkOrders.pager.pageSize + 1}}  to {{lstWorkOrders.pager.currentPage * lstWorkOrders.pager.pageSize}} out of {{rowCount}}  enteries-->
+                <!--{{commonService.PageString(lstWorkOrders.pager.currentPage,lstWorkOrders.pager.pageSize,rowCount)}}
+
+                              </div>
+
+                              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                              [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                              [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                              [pagerNextIcon]="'fa fa-angle-double-right'"
+                                              [page]="lstWorkOrders.pager.currentPage"
+                                              [size]="lstWorkOrders.pager.pageSize"
+                                              [count]="lstWorkOrders.pager.totalItems"
+                                              [hidden]="!((rowCount / lstWorkOrders.pager.pageSize) > 1)"
+                                              (change)="setWorkorderPageNo($event)">
+                              </datatable-pager>
+                            </ng-template>
+                          </ngx-datatable-footer>
+                        </ngx-datatable>
+                      </div>
+                    </div>
+                  </div>
+                </div>-->
+                <!--==============================================================================================================================-->
+                <!--==================================================== Contracts ===========================================================-->
+                <!--<div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#contract" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>Contract ({{ContractCount}})</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="contract" class="panel-collapse collapse active show" style="">
+                  <div class="panel-body p-2 mt-0">
+                    <div class="table-responsive ngxtbl">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                    [rows]="lstContract.data"
+                                    [columnMode]="'force'"
+                                    [scrollbarH]="true"
+                                    [rowHeight]="'40'"
+                                    [headerHeight]="40"
+                                    [footerHeight]="40"
+                                    [externalPaging]="true"
+                                    [externalSorting]="true"
+                                    [loadingIndicator]="loadSave"
+                                    [count]="lstContract.pager.totalItems"
+                                    [offset]="lstContract.pager.currentPage"
+                                    [limit]="lstContract.pager.pageSize"
+                                    (page)='setContractPageNo($event)'
+                                    (sort)="onContractSort($event)">
+                        <ngx-datatable-column name="Contract Number" prop="ContractNumber" [sortable]="true">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <a [routerLink]="['/contract/view',row.Id]">{{row.ContractNumber}}</a>
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Name" prop="Name" [sortable]="true"> </ngx-datatable-column>
+                        <ngx-datatable-column name="Status" prop="Status" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-footer>
+                          <ng-template ngx-datatable-footer-template
+                                      let-rowCount="rowCount"
+                                      let-pageSize="lstContract.pager.pageSize"
+                                      let-selectedCount="selectedCount"
+                                      let-currentPage="lstContract.pager.currentPage"
+                                      let-offset="offset"
+                                      let-isVisible="isVisible">
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>-->
+                <!--Showing {{(lstContract.pager.currentPage - 1 )* lstContract.pager.pageSize + 1}}  to {{lstContract.pager.currentPage * lstContract.pager.pageSize}} out of {{rowCount}}  enteries-->
+                <!--{{commonService.PageString(lstContract.pager.currentPage,lstContract.pager.pageSize,rowCount)}}
+                              </div>
+
+                              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                              [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                              [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                              [pagerNextIcon]="'fa fa-angle-double-right'"
+                                              [page]="lstContract.pager.currentPage"
+                                              [size]="lstContract.pager.pageSize"
+                                              [count]="lstContract.pager.totalItems"
+                                              [hidden]="!((rowCount / lstContract.pager.pageSize) > 1)"
+                                              (change)="setContractPageNo($event)">
+                              </datatable-pager>
+                            </ng-template>
+                          </ngx-datatable-footer>
+                        </ngx-datatable>
+                      </div>
+                    </div>
+                  </div>
+                </div>-->
+                <!--==============================================================================================================================-->
+                <!--==================================================== Proposals ===========================================================-->
+                <!--<div class="panel active">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a href="#proposal" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                      <span>Proposals ({{proposalCount}})</span>
+                    </a>
+                  </h4>
+                </div>
+
+                            <div id="panelBodynine" class="panel-collapse active show p-0 border-0" data-parent="#accordion">
+                              <a href="javascript:void(0);" class="btn-in-panel" (click)="AddMappingProposal()"
+                                data-toggle="modal"><i class="feather-plus mr-2"></i> New</a>
+                              <div id="mapping_locations" class="panel-collapse collapse active show">
+                                <app-proposal-mapping  [OpportunityName]="OpportunityName"
+                                [opprAccountId]="opprAccountId" [opprAccountName]="opprAccountName" #listproposalmappingmodel>
+                                </app-proposal-mapping>
+                              </div>
+                            </div>
+
+                <div id="proposal" class="panel-collapse collapse active show" style="">
+                  <div class="panel-body p-2 mt-0">
+                    <div class="table-responsive ngxtbl">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                    [rows]="lstProposals.data"
+                                    [columnMode]="'force'"
+                                    [scrollbarH]="true"
+                                    [rowHeight]="'40'"
+                                    [headerHeight]="40"
+                                    [footerHeight]="40"
+                                    [externalPaging]="true"
+                                    [externalSorting]="true"
+                                    [loadingIndicator]="loadSave"
+                                    [count]="lstProposals.pager.totalItems"
+                                    [offset]="lstProposals.pager.currentPage"
+                                    [limit]="lstProposals.pager.pageSize"
+                                    (page)='setProposalPageNo($event)'
+                                    (sort)="onProposalSort($event)">
+                        <ngx-datatable-column name="Proposal Number" prop="ProposalNumber" [sortable]="true"> </ngx-datatable-column>
+                        <ngx-datatable-column name="Proposal Name" prop="Name" [sortable]="true">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <a [routerLink]="['/proposal-list/viewproposal',row.Id]">{{row.Name}}</a>
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Total System Cost" prop="TotalSystemCost" [sortable]="true"></ngx-datatable-column>
+                        <ngx-datatable-column name="Primary" sortable="true" prop="IsPrimary">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <label class="switch">
+                              <input type="checkbox" disabled [checked]="row.IsPrimary">
+                              <span class="slider round"><span>Yes</span></span>
+                            </label>
+                          </ng-template>
+                        </ngx-datatable-column>                      <ngx-datatable-footer>
+                          <ng-template ngx-datatable-footer-template
+                                      let-rowCount="rowCount"
+                                      let-pageSize="lstProposals.pager.pageSize"
+                                      let-selectedCount="selectedCount"
+                                      let-currentPage="lstProposals.pager.currentPage"
+                                      let-offset="offset"
+                                      let-isVisible="isVisible">
+                            <div class="page-count" *ngIf='(rowCount  > 0)'>-->
+                <!--Showing {{(lstProposals.pager.currentPage - 1 )* lstProposals.pager.pageSize + 1}}  to {{lstProposals.pager.currentPage * lstProposals.pager.pageSize}} out of {{rowCount}}  enteries-->
+                <!--{{commonService.PageString(lstProposals.pager.currentPage,lstProposals.pager.pageSize,rowCount)}}
+                              </div>
+                              <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                              [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                              [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                              [pagerNextIcon]="'fa fa-angle-double-right'"
+                                              [page]="lstProposals.pager.currentPage"
+                                              [size]="lstProposals.pager.pageSize"
+                                              [count]="lstProposals.pager.totalItems"
+                                              [hidden]="!((rowCount / lstProposals.pager.pageSize) > 1)"
+                                              (change)="setProposalPageNo($event)">
+                              </datatable-pager>
+                            </ng-template>
+                          </ngx-datatable-footer>
+                        </ngx-datatable>
+                      </div>
+                    </div>
+                  </div>
+                </div>-->
+                <!--==============================================================================================================================-->
+                <!--fileupload start-->
+                <!--<app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="{{Id}}"></app-files>-->
+                <!--end fileupload-->
+                <!--</div>-->
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+
+<!--=================================================== Request Design/ Redesign Popup ==================================================================-->
+
+<div class="modal fade show" bsModal #requestdesign="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{requesttitle}}</h4>
+        <button type="button" class="close" (click)="closerequestdesign()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; height:100%; overflow:visible;">
+        <form [formGroup]="addRequestDesignForm" autocomplete="off">
+          <div class="row">
+            <div class="col-12 col-md-12 col-lg-12">
+              <div class="row">
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Scheduled Close Date/Time:<span class="text-danger">*</span></label>
+                  <div class="form-group datepickerinpop ">
+                    <p-calendar formControlName="requestDate" placeholder="Select Date" class="calendarwidth" [showIcon]="true" [hourFormat]="(timeFormat==24)?'24':'12'"
+                                [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030" [style]="{ 'position': 'relative' }"
+                                [ngClass]="{'is-invalid': (requestDate.invalid && (requestDate.dirty || requestDate.touched) && requestDate.errors?.required) }" hideOnDateTimeSelect="true"></p-calendar>
+                    <small *ngIf="requestDate.invalid && (requestDate.dirty || requestDate.touched) && requestDate.errors?.required"
+                           style="color:red;">Please select Scheduled Close Date/Time</small>
+                  </div>
+                </div>
+
+
+
+                <div class="col-12 col-md-12 col-lg-12 d-none" *ngIf="!isredesign">
+                  <label>Adder Notes:</label>
+                  <div class="form-group">
+                    <textarea rows="3" class="form-control" formControlName="adderNotes" maxlength="100000" style="min-height:120px;"></textarea>
+                  </div>
+                </div>
+                <div class="col-12  col-lg-6">
+
+                  <label>Loan Product:<span class="text-danger">*</span></label>
+                  <ng-select [items]="lstloanproduct" placeholder="Select Loan product" bindValue="value" bindLabel="text" formControlName="loanproduct"
+                             [ngClass]="{'is-invalid': (loanproduct.invalid && (loanproduct.dirty || loanproduct.touched) && (loanproduct.errors?.required || loanproduct.errors?.maxlength)) }">
+                  </ng-select>
+                  <small *ngIf="loanproduct.invalid && (loanproduct.dirty || loanproduct.touched) && loanproduct.errors?.required"
+                         class="text-danger">Loan Product is required.</small>
+                </div>
+                <div class="col-12 col-lg-6">
+
+                  <label>Mounting Location:<span class="text-danger">*</span></label>
+                  <ng-select [items]="lstMountain" placeholder="Select Mounting Location" bindValue="value" bindLabel="text" formControlName="mountainloaction"
+                             (change)="onCustomChange($event)"
+                             [ngClass]="{'is-invalid': (mountainloaction.invalid && (mountainloaction.dirty || mountainloaction.touched) && (mountainloaction.errors?.required || mountainloaction.errors?.maxlength)) }">
+                  </ng-select>
+                  <small *ngIf="mountainloaction.invalid && (mountainloaction.dirty || mountainloaction.touched) && mountainloaction.errors?.required"
+                         class="text-danger">Mounting Locationis required.</small>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Shop Has Electrical Sub Panel:<span class="text-danger" *ngIf="shopValidationSign">*</span></label>
+                  <div class="form-group">
+                    <ng-select [items]="lstShop" placeholder="Select " bindValue="value" bindLabel="name" formControlName="shopHasElectricalSubPanel"
+                               [ngClass]="{'is-invalid': (shopHasElectricalSubPanel.invalid && (shopHasElectricalSubPanel.dirty || shopHasElectricalSubPanel.touched) && (shopHasElectricalSubPanel.errors?.required || shopHasElectricalSubPanel.errors?.maxlength)) }">
+
+                    </ng-select>
+                    <small *ngIf="shopHasElectricalSubPanel.invalid && (shopHasElectricalSubPanel.dirty || shopHasElectricalSubPanel.touched) && shopHasElectricalSubPanel.errors?.required"
+                           class="text-danger">Electrical Sub Panel is required.</small>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Roof Type:<span class="text-danger" *ngIf="rMValidationSign">*</span></label>
+                  <ng-select [items]="lstRoof" placeholder="Select Roof Type" bindValue="value" bindLabel="name" formControlName="rooftype"
+                             [ngClass]="{'is-invalid': (rooftype.invalid && (rooftype.dirty || rooftype.touched) && (rooftype.errors?.required || rooftype.errors?.maxlength)) }">
+                  </ng-select>
+                  <small *ngIf="rooftype.invalid && (rooftype.dirty || rooftype.touched) && rooftype.errors?.required"
+                         class="text-danger">Roof Type is required.</small>
+                </div>
+
+                <div class="col-md-12 col-lg-6">
+                  <label>Roof Material:<span class="text-danger" *ngIf="rMValidationSign">*</span> </label>
+                  <div class="form-group">
+                    <ng-select [items]="lstRoofMaterial" placeholder="Select Roof Material" bindValue="value" bindLabel="name" formControlName="roofMaterial"
+                               (change)="onroofMaterialChange($event)"
+                               [ngClass]="{'is-invalid': (roofMaterial.invalid && (roofMaterial.dirty || roofMaterial.touched) && (roofMaterial.errors?.required || roofMaterial.errors?.maxlength)) }">
+                    </ng-select>
+                    <small *ngIf="roofMaterial.invalid && (roofMaterial.dirty || roofMaterial.touched) && roofMaterial.errors?.required"
+                           class="text-danger">Roof Material is required.</small>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                  <label>Re-Roof Needed:<span class="text-danger" *ngIf="reeRoofValidationSign">*</span> </label>
+                  <div class="form-group">
+                    <ng-select [items]="lstReRoofNeeded" placeholder="Select Re-Roof Needed:" bindValue="value" bindLabel="name" formControlName="reRoofNeeded"
+                               [ngClass]="{'is-invalid': (reRoofNeeded.invalid && (reRoofNeeded.dirty || reRoofNeeded.touched) && (reRoofNeeded.errors?.required || reRoofNeeded.errors?.maxlength)) }">
+
+                    </ng-select>
+                    <small *ngIf="reRoofNeeded.invalid && (reRoofNeeded.dirty || reRoofNeeded.touched) && reRoofNeeded.errors?.required"
+                           class="text-danger">Re-Roof Needed is required.</small>
+                  </div>
+                </div>
+
+
+
+                <div class="col-md-12 col-lg-6">
+                  <div class="form-group">
+                    <label class="label_block">Smart Thermostat Installation</label>
+                    <label class="switch">
+                      <input type="checkbox" class="form-control" formControlName="Smart_Thermostat_Installation">
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-3">
+                  <div class="form-group">
+                    <label class="label_block">Insulation Upgrade</label>
+                    <label class="switch">
+                      <input type="checkbox" class="form-control" formControlName="Insulation_Upgrade">
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-12 col-lg-3">
+
+                  <div class="form-group">
+                    <label class="label_block">Main Panel Upgrade</label>
+                    <label class="switch">
+                      <input type="checkbox" class="form-control" formControlName="main_panel">
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </div>
+
+                </div>
+                <div class="col-md-12 col-lg-3">
+                  <div class="form-group">
+                    <label class="label_block">Max R Upgrade</label>
+                    <label class="switch">
+                      <input type="checkbox" class="form-control" formControlName="maxr">
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-3">
+                  <div class="form-group">
+                    <label class="label_block">LED Lightbulb Upgrade</label>
+                    <label class="switch">
+                      <input type="checkbox" class="form-control" formControlName="Led">
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-12 col-lg-12">
+                  <label *ngIf="isredesign">Design Notes:<span class="text-danger">*</span></label>
+                  <label *ngIf="!isredesign">Design Notes:</label>
+                  <div class="form-group">
+                    <textarea rows="3" class="form-control" formControlName="designNotes" maxlength="100000" style="min-height:120px;" [ngClass]="{'is-invalid': (designNotes.invalid && (designNotes.dirty || designNotes.touched) && designNotes.errors?.required)}"></textarea>
+                    <small *ngIf="designNotes.invalid && (designNotes.dirty || designNotes.touched) && designNotes.errors?.required"
+                           class="text-danger">Please enter Design Notes</small>
+                  </div>
+                </div>
+
+
+                <div class="col-md-12 col-lg-6" *ngIf="isredesign">
+                  <label>Proposal Redesign Reason:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <ng-select [items]="requestredesignList" placeholder="Select Proposal Redesign Reason" bindValue="value" bindLabel="text" formControlName="redisgnReason"
+                               [ngClass]="{'is-invalid': (redisgnReason.invalid && (redisgnReason.dirty || redisgnReason.touched) && redisgnReason.errors?.required)}"></ng-select>
+                    <small *ngIf="redisgnReason.invalid && (redisgnReason.dirty || redisgnReason.touched) && redisgnReason.errors?.required"
+                           class="text-danger">Please select Proposal Redesign Reason</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveRequestDesign()"><i class="feather-save text-white"></i> Submit</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="closerequestdesign()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--===========================================================================================================================================================================-->
+<!--=================================================== Edit  Utility & Proposal Design Information Popup ==================================================================-->
+
+<div class="modal fade in show" bsModal #edit_Utility_Proposal_Design_InformationPopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="closeUtility_Proposal_Design_InformationPopup()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; height:500px;">
+        <form [formGroup]="edit_Utility_Proposal_Design_InformationForm" [ngClass]="{'disabled':loadSave}">
+          <div class="row mb-2">
+
+            <div class="col-md-12 col-lg-6">
+              <label>Utility Company:</label>
+              <div class="form-group">
+
+                <ng-select [items]="utilityCompanyList" placeholder="Select Utility Company"
+                           (clear)="onClearLangUtilityCompany(utilityCompanyList)"
+                           (keyup)="onKeyUtilityCompany($event,utilityCompanyList)"
+                           (scrollToEnd)="onScrollToEndUtilityCompany(utilityCompanyList)" [virtualScroll]="true"
+                           formControlName="Utility_Company"
+                           bindLabel="text" bindValue="value"></ng-select>
+
+                <!--<input type="text" class="form-control" formControlName="Utility_Company" maxlength="50" />-->
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+              <label>Utility Account Number:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Utility_Account_Number" maxlength="50" />
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+              <label>Utility Meter Number:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Utility_Meter_Number" maxlength="50" />
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+              <label>Estimated annual KWH Usage:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Annual_kwh_Usage" maxlength="50" />
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Last Utility Bill URL:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Last_Utility_bill_URL" maxlength="50" />
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Home Sq. Ft.:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Home_Sqft" maxlength="50" />
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Sales Tax Rate:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Sales_Tax_Rate" maxlength="50" />
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+              <label>FTC Not Eligible:</label>
+              <div class="form-group">
+                <!--<input type="text" class="form-control" formControlName="No_Utility_Account_or_Meter_Number" maxlength="50" />-->
+
+                <label class="switch">
+                  <input type="checkbox" class="form-control" formControlName="FTC_Not_Eligible">
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Billing City:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Billing_City" maxlength="50" />
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Billing Street:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Billing_Street" maxlength="50" />
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Billing State:</label>
+              <div class="form-group">
+                <ng-select [items]="ddlStateList" placeholder="Select Billing State"
+                           formControlName="Billing_State"
+                           bindLabel="text" bindValue="value"></ng-select>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Billing Country:</label>
+              <div class="form-group">
+                <ng-select [items]="ddlCountryList" placeholder="Select Billing Country"
+                           formControlName="Billing_Country"
+                           bindLabel="text" bindValue="value"></ng-select>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>Billing Postal Code:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="Billing_Postal_Code" maxlength="50" />
+              </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+              <label>Full Utility Bill:</label>
+              <div class="form-group">
+                <!--<input type="text" class="form-control" formControlName="No_Utility_Account_or_Meter_Number" maxlength="50" />-->
+
+                <label class="switch">
+                  <input type="checkbox" class="form-control" formControlName="Full_Utility_Bill">
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <label>No Utility Account or Meter Number:</label>
+              <div class="form-group">
+                <!--<input type="text" class="form-control" formControlName="No_Utility_Account_or_Meter_Number" maxlength="50" />-->
+
+                <label class="switch">
+                  <input type="checkbox" class="form-control" formControlName="No_Utility_Account_or_Meter_Number">
+                  <span class="slider round"><span>Yes</span></span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveUtility_Proposal_Design_Information()"><i class="feather-save text-white"></i> Save</button>
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeUtility_Proposal_Design_InformationPopup()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--==============================================================================================================================-->
+<!--=================================================== Contact add ==================================================================-->
+<div bsModal #addContact="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{Type}} Contact </h4>
+
+        <button type="button" class="close" (click)="closeContact()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; max-height:600px;">
+        <app-addcontact #addcontact12 [opprAccountId]="opprAccountId" [contactId]="EditContactId" [ownerId]="ownerId" [oppid]=opid [solgenpower]="solgenpower" [forAccount]="false" (contactemit)="contactmsg(true)" (refreshOpportunityRelatedtab)="getRelatedObjects()"></app-addcontact>
+      </div>
+    </div>
+  </div>
+</div>
+<!--==============================================================================================================================-->
+<!--======================================================sendToLoanHomi Popup ===========================================================================================-->
+<app-sendtoloanhomimodelpopup #openSendToLoanHomiPopup (refreshEvent)="refreshPage($event)"></app-sendtoloanhomimodelpopup>
+<!--===========================================================================================================================================================================-->
+<!--==================================================================Welcomecall popup=========================================================================================================-->
+<div bsModal #addwelcomenote="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Submit Welcome Call</h4>
+
+        <button type="button" class="close" (click)="closewelcomeNote()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; max-height:600px;">
+        <div class="col-12 col-md-12 col-lg-12">
+          <label>Welcome Call Notes:</label>
+          <div class="form-group">
+            <textarea rows="3" class="form-control" [(ngModel)]="welcomenote" maxlength="100000" style="min-height:120px;"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveWelcomecallNoteOpportunity()"><i class="feather-save text-white"></i> Submit</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="closewelcomeNote()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<app-proposal-mapping [OpportunityName]="OpportunityName"
+                      [opprAccountId]="opprAccountId" [opprAccountName]="opprAccountName" #listproposalmappingmodel>
+</app-proposal-mapping>
+<app-contract-mapping [OpportunityName]="OpportunityName"
+                      [opprAccountId]="opprAccountId" [opprAccountName]="opprAccountName" #listcontractmappingmodel>
+</app-contract-mapping>
+<app-work-order-mapping [OpportunityName]="OpportunityName"
+                      [opprAccountId]="opprAccountId" [opprAccountName]="opprAccountName" #listworkordermappingmodel>
+</app-work-order-mapping>
+<app-makeappointment #makeappointment (appointmentRefresh)="appointmentRefresh()"></app-makeappointment>
+

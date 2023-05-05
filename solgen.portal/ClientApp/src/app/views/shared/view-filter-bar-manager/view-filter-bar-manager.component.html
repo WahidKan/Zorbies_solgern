@@ -1,0 +1,363 @@
+<div class="row flex-row-reverse py-2 border-0 mb-3" *ngIf="submoduleName == 'Contract'">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <a [routerLink]="[pageLink,Id]" class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+            <li *ngFor="let item of customCompnentValuesTop">
+                <strong *ngIf="item.ColumnName !='ContractNumber' && item.field_route==null || item.ColumnName =='Service_Territory__c'">{{ item.display_name}}:</strong>
+                <strong *ngIf="item.dt_code!='date' &&  item.ColumnName =='Account Name' &&  item.dt_code!='datetime'">{{ item.value }}</strong>
+                <strong *ngIf="item.dt_code=='date'"> {{ item.value | date: 'MM-dd-yyyy'}}</strong>
+                <strong *ngIf="item.dt_code=='datetime'"> {{ item.value | DateTimeToLocal}}</strong>
+                <span *ngIf="item.field_route!=null && item.ColumnName !='Service_Territory__c'"><strong>{{ item.display_name}}:</strong>
+          <a [routerLink]="[item.field_route,item.ref_value]">
+            {{ item.value}}
+          </a>
+        </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="card mt-3 border-0" style="background:none" *ngIf="submoduleName ==  'locations'">
+    <div class="clearfix"></div>
+    <div class="card mb-4 border item-view">
+        <span class="text-capitalize p-3 font-weight-bold border-bottom heading-above-subhead">
+      <i class="{{logoClass}} float-left user-imgicon mr-2" style="font-size: 27px;"></i>
+      <span class="float-left w-85-res mt-2" > {{titleName}}</span>
+        <span class="cntnt-right-btn multibtns mr15 btn-iconres">
+        <a [routerLink]="[pageLink,Id]" class="btn btn-success text-white mr-2 mb-0 mb-md-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a href="javascript:void(0);" class="btn btn-dark text-white mb-0 mb-md-2 smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+      </span>
+        </span>
+    </div>
+</div>
+
+<div class="row flex-row-reverse py-2 border-0 mb-3" *ngIf="submoduleName == 'account' ">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <!-- <a  class="btn btn-primary text-white mr-2 smview"  *ngIf="submoduleName == 'account'" ><i class="feather-phone-call mr-1"></i> Welcome Call</a>  -->
+        <a [routerLink]="[pageLink,Id,roleName]" class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex" *ngIf="submoduleName == 'Contact'">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+            <li *ngFor="let item of customCompnentValuesTop">
+                <span><strong >{{ item.DisplayName}}:</strong> {{ item.Value}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex" *ngIf="submoduleName == 'account'">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+            <li *ngFor="let item of customCompnentValuesTop">
+                <span *ngIf="item.ColumnName!='BillingAddress' && item.ColumnName!='BillingCity' && item.ColumnName!='BillingStreet' && item.ColumnName!='BillingState' && item.ColumnName!='BillingCountry' && item.ColumnName!='BillingPostalCode' && item.ColumnName!='Name'  && item.ColumnName!='Description' && item.field_route==null">
+          <strong>{{ item.display_name}}:</strong>
+          {{ item.value}}
+        </span>
+                <span *ngIf=" item.field_route!=null || item.ColumnName=='Account_Opportunity' || item.ColumnName=='Service_Territory' ">
+          <span *ngIf="item.ref_value">
+            <strong>{{ item.display_name}}:</strong>
+            <a [routerLink]="[item.field_route,item.ref_value]"> {{ item.value}}</a>
+          </span>
+                <span *ngIf="!item.ref_value">
+            <strong>{{ item.display_name}}:</strong>
+            {{ item.value}}
+          </span>
+                </span>
+                <span *ngIf="item.ColumnName=='BillingAddress'">
+          <span>
+            <strong>{{ item.display_name}}:</strong>
+            {{acountBillingAddress}}
+          </span>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+
+
+<div class="row flex-row-reverse py-2 border-0 mb-3" *ngIf="submoduleName == 'Contact'">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <!-- <a  class="btn btn-primary text-white mr-2 smview"  *ngIf="submoduleName == 'account'" ><i class="feather-phone-call mr-1"></i> Welcome Call</a>  -->
+        <a [routerLink]="[pageLink,Id]" class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex" *ngIf="submoduleName == 'Contact'">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+            <li *ngFor="let item of customCompnentValuesTop">
+                <span><strong >{{ item.DisplayName}}:</strong> {{ item.Value}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex" *ngIf="submoduleName == 'account'">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+            <li *ngFor="let item of customCompnentValuesTop">
+                <span *ngIf="item.ColumnName!='BillingAddress' && item.ColumnName!='BillingCity' && item.ColumnName!='BillingStreet' && item.ColumnName!='BillingState' && item.ColumnName!='BillingCountry' && item.ColumnName!='BillingPostalCode' && item.ColumnName!='Name'  && item.ColumnName!='Description' && item.field_route==null">
+        <strong>{{ item.display_name}}:</strong>
+        {{ item.value}}
+      </span>
+                <span *ngIf=" item.field_route!=null || item.ColumnName=='Account_Opportunity' || item.ColumnName=='Service_Territory' ">
+        <span *ngIf="item.ref_value">
+          <strong>{{ item.display_name}}:</strong>
+          <a [routerLink]="[item.field_route,item.ref_value]"> {{ item.value}}</a>
+        </span>
+                <span *ngIf="!item.ref_value">
+          <strong>{{ item.display_name}}:</strong>
+          {{ item.value}}
+        </span>
+                </span>
+                <span *ngIf="item.ColumnName=='BillingAddress'">
+        <span>
+          <strong>{{ item.display_name}}:</strong>
+          {{acountBillingAddress}}
+        </span>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+
+
+<div class="row flex-row-reverse py-2 border-0 mb-3" *ngIf="submoduleName == 'operating-hours' && adViewStatus">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <a [routerLink]="" (click)="callToViewFilterBarFunction.emit($event)" class="btn btn-success text-white mr-2">
+            <i class="feather-edit-2 mr-1"></i> Edit
+        </a>
+        <a class="btn btn-dark text-white" (click)="OnBackToListClick()"> <i class="feather-arrow-left mr-1"></i> Back </a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div *ngIf="submoduleName == 'Requirements'" class="row flex-row-reverse py-2 border-0 mb-3">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <a [routerLink]="[pageLink,Id]" class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div *ngIf="submoduleName == 'Products'" class="row flex-row-reverse py-2 border-0  p-3 mb-3">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <a [routerLink]="[pageLink,Id]" class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+            <li *ngFor="let item of customCompnentValuesTop">
+                <span *ngIf="item.ColumnName !='ProductPrice' && item.ColumnName !='ProductName' && item.ColumnName != 'ProductIcon' && item.ColumnName != 'CreatedById' && item.ColumnName != 'CreatedAt' && item.ColumnName != 'LastModifiedById' && item.ColumnName != 'LastModifiedById' && item.ColumnName != 'ModifyAt' && item.ColumnName !='LoanProductAssociate'">
+              <strong>{{ item.display_name}}:</strong> {{ item.value}}</span>
+
+                <span *ngIf="item.ColumnName =='ProductPrice'">
+                <strong>{{ item.display_name}}:</strong> ${{ item.value}}</span>
+
+                <!-- ----------------------------- -->
+                <div class=" bg-transparent" *ngIf="item.dt_code=='boolean' && item.ColumnName =='LoanProductAssociate'">
+                    <strong>{{ item.display_name}}:</strong>
+                    <div class="form-check form-check-inline">
+                        <div class="custom-control custom-checkbox pl-0">
+                            <label class="switch  mb-0">
+              <input type="checkbox" [checked]="item.value=='1'" disabled>
+              <span class="slider round"><span>Yes</span></span>
+              </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- ----------------------------- -->
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row flex-row-reverse py-2 border-0 mb-3" *ngIf="submoduleName == 'serviceappointment'">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <a *ngIf="adViewStatus" class="btn btn-secondary text-white mr-2"><i class="feather-edit-2"></i> Edit</a>
+        <a *ngIf="!adViewStatus" [routerLink]="[pageLink,Id]" class="btn btn-success mr-2"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+            <li *ngFor="let item of customCompnentValuesTop">
+                <span *ngIf="item.ColumnName!='AppointmentNumber' && item.ColumnName!='Status'">
+          <span>
+            <strong>{{ item.display_name}}:</strong>
+            <span *ngIf="item.dt_code=='datetime' || item.dt_code=='date'">{{ item.value | DateTimeToLocal}}</span>
+                <span *ngIf="item.dt_code!='datetime' && item.dt_code!='date'">{{ item.value}}</span>
+                </span>
+                <!-- <span *ngIf="item.field_route!=null">
+            <span *ngIf="item.ref_value">
+              <strong>{{ item.display_name}}:</strong>
+              <a  [routerLink]="[item.field_route,item.ref_value]"> {{ item.value}}</a>
+            </span>
+          </span> -->
+                </span>
+                <span *ngIf="item.ColumnName=='Status'">
+            <strong>{{ item.display_name}}:</strong>
+            <span class="text-white p-1 ml-1 rounded" [style.background-color]="item.value | split:'::':1 ">
+              {{ item.value | split:'::':0}}
+            </span>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div *ngIf="submoduleName == 'Productrequireddetail'" class="row flex-row-reverse py-2 m-2 border-0 mb-3">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <a class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div *ngIf="submoduleName == 'projects'" class="row flex-row-reverse py-2 border-0 mb-3">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <a [routerLink]="[pageLink,Id]" class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row flex-row-reverse py-2 border-0 mb-3" *ngIf="submoduleName == 'serviceresource'">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <a [routerLink]="[pageLink,Id]" class="btn btn-success mr-2"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+            <li *ngFor="let item of customCompnentValuesTop">
+                <span *ngIf="item.ColumnName != 'Name'">
+          <span *ngIf="item.ColumnName != 'SF_IsActive' && !item.field_route">
+            <strong>{{ item.display_name}}:</strong> {{ item.value}}
+          </span>
+                <span *ngIf="item.ColumnName != 'SF_IsActive' && item.field_route ">
+            <strong>{{ item.display_name}}:</strong> <a href="javascript:void(0);" [routerLink]="[item.field_route,item.ref_value]"> {{ item.value}}</a>
+          </span>
+                <span *ngIf="item.ColumnName=='SF_IsActive' && item.value!= '0'">
+            <strong>{{ item.display_name}}:</strong>&nbsp;
+            <span class="status-box bg-success">Active</span>
+                </span>
+                <span *ngIf="item.ColumnName=='SF_IsActive' && item.value == '0'">
+            <strong>{{ item.display_name}}:</strong>&nbsp;
+            <span class="status-box bg-danger">Inactive</span>
+                </span>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div *ngIf="submoduleName == 'servicecrew'" class="row flex-row-reverse py-2 border-0 mb-3">
+    <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+        <a (click)="callToViewFilterBarFunction.emit($event)" class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+        <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+    </div>
+    <div class="col-md-6 col-lg-7 view-details d-flex">
+        <span class="user-imgicon"><i class="{{logoClass}}"></i></span>
+        <ul class="user-content w-100">
+            <li>
+                <h4>{{titleName}}</h4>
+            </li>
+            <li *ngFor="let item of customCompnentValuesTop">
+                <span *ngIf="item.field_route==null" class="d-block"><strong>{{ item.display_name}}:</strong> {{ item.value}}</span>
+                <span *ngIf="item.field_route!=null" class="d-block"><strong>{{ item.display_name}}:</strong> <a [routerLink]="[item.field_route,item.ref_value]">{{ item.value}}</a></span> </li>
+        </ul>
+    </div>
+</div>
+
+<div *ngIf="submoduleName == 'facebookAdSet' || submoduleName == 'facebookcampaign'">
+    <div class="float-left p-3" *ngIf="submoduleName != 'facebookcampaign'">
+        <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#Details" role="tab" aria-selected="true">Details</a>
+            </li>
+        </ul>
+    </div>
+    <div class="float-left p-3" *ngIf="submoduleName == 'facebookcampaign'">
+        <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#Details" role="tab" aria-selected="true">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="lead-tab" data-toggle="tab" href="#AdSet" role="tab" (click)="callToViewFilterBarFunction.emit($event)" aria-selected="true">AD SETS & ADS</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="delivery-options" data-toggle="tab" href="#ReportMatrix" role="tab" aria-selected="true">Report Matrix</a>
+            </li>
+        </ul>
+    </div>
+    <div class="float-right p-3">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a *ngIf="adViewStatus" [routerLink]="[pageLink,Id]" class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+                <a class="btn btn-dark text-white smview" (click)="OnBackToListClick()"><i
+          class="feather-arrow-left mr-1"></i> Back</a>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+
+    
+    <div bsModal #AppointmentScheduleModal="bs-modal" class="modal fade"  tabindex="-1" role="dialog" aria-hidden="true">
+        <div style="max-width:40% !important;" class="modal-dialog modal-xl modal-info ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">AppointMent Schedule</h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body container" style=" margin-bottom:10px; max-height:600px">
+                    <div style="padding-left: 10%;">
+                        <button  type="button" class="btn btn-success form-btns" (click)="UpdateScheduledAppointmentStatus('start')"> Start Appointment</button>
+                        <button style="margin-left: 50%;" type="button" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close">Cancel</button>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>

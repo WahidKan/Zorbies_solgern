@@ -1,0 +1,16 @@
+<!--<app-dashboard [user]="userData" *ngIf="userData.userType==='usertype01'|| userData.userType==='usertype06'  || userData.userType==='' || userData.userType===null"></app-dashboard>-->
+<!--<app-salesdashboard [user]="userData" *ngIf="userData.userType==='usertype03'"></app-salesdashboard>
+<app-operationdashboard [user]="userData" *ngIf="userData.userType==='usertype02'"></app-operationdashboard>
+
+-->
+<!--<app-bankdashboard [user]="userData" *ngIf="userData.userType==='usertype04'"></app-bankdashboard>-->
+ <app-customerdashboard [user]="userData" *ngIf="userData.userType==='usertypecontact' && !mobileScreen"></app-customerdashboard> 
+
+<app-mobile-views [user]="userData" *ngIf="userData.userType==='usertypecontact' && mobileScreen"></app-mobile-views>
+
+<!--<app-otheruserdashboard [user]="userData" *ngIf="userData.userType!='usertype02' && userData.userType!='usertype03'  && userData.userType!='usertype05' && userData.userType!='usertype01' "> </app-otheruserdashboard>-->
+
+<app-otheruserdashboard [user]="userData" *ngIf="userData.userType!='usertypecontact' && userData.userType!='usertypesuperadmin'"> </app-otheruserdashboard>
+
+<!--<app-otheruserdashboard [user]="userData"> </app-otheruserdashboard>-->
+<app-super-admin-dashboard [user]="userData" *ngIf=" userData.userType=='usertypesuperadmin'"> </app-super-admin-dashboard>

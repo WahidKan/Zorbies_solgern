@@ -1,0 +1,81 @@
+ul { list-style: none; padding-left: 0em; margin: 0em; }
+.button-3 { text-align: center; }
+.button-3 li { display: inline-block; width: 110px; max-width: 110px; height: auto; padding-top: 0; padding-bottom: 0; margin-bottom: 1%; }
+.last { clear: left; }
+.first { clear: right; }
+#numberDisplay input { height: 2em; text-align: center; background: none; padding: .5em 1.4em; margin-top: 0px; margin-bottom: 1%; font-size: 2em; font-family: "Helvetica Neue"; font-weight: 100; width: 100%; border: 0px; font-weight: 700; color: #2f4050;    border-bottom: 1px solid #b3b1b1;     margin-bottom: 12px; }  
+#actions .call.ready { background: rgba(0, 255, 0, 0.2); } 
+#actions .call.ready:hover { background: rgba(0, 255, 0, 0.4); }
+#actions .skip.ready { background: rgba(0, 255, 0, 0.2); } 
+#actions .skip.ready:hover { background: rgba(0, 255, 0, 0.4); }
+#actions .clear.ready { background: rgba(255, 0, 0, 0.2); }
+#actions .clear.ready:hover { background: rgba(255, 0, 0, 0.4); }
+#actions .deactive {opacity: .2; }
+#dialpad, #actions, #numberDisplay { max-width: 480px;max-height: 340px; margin: 0 auto; overflow-y: auto; overflow-x: hidden; }
+#dialpad.deactive { opacity: .2; }
+#dialpad.deactive li:hover, #actions li.deactive:hover { background: #eee; }
+#dialpad li { font-weight: bold; background: #fff; width: 100%; margin-right: 3px;  cursor:pointer; position:relative;     box-shadow: 0px -1px 10px -1px #dadada inset; border: 1px solid #c5c5c5; transition:all ease 0.3s;     border-radius: 5px;}
+#dialpad li:hover {      box-shadow: 0px -2px 18px -3px #c1c1c1 inset;  }
+#dialpad li:nth-child(3n+3) {margin-right: 0px; }
+#dialpad li a { width: 100%; height: 56px; display: inline-block; line-height: 56px; font-size: 24px; color: #2f4050; border: 1px solid transparent; }
+#dialpad li:hover a{ }
+#actions li { background: #efefef; opacity: .8; }
+#actions li.call.active { background: rgba(0, 255, 0, 0.2); }
+#actions li.hangup { background: rgba(255, 125, 0, 0.2); }
+#actions li.hangup:hover { background: rgba(255, 125, 0, 0.4); }
+#actions li:hover { background: #ccc; }
+div#wrapper { width: 100%; height: 100%; position: fixed; background: rgba(0,0,0,.5); top: 0px; right: 0px; z-index: 10000; visibility:hidden; transition: all ease .5s;}
+div#phone { /*background-image: linear-gradient(#ececec, #fff); padding-bottom: 25px; min-height: 412px;background-image: linear-gradient(#ececec, #fff)*/ background-color: white; padding-bottom:10px; min-height:460px; width:480px; position:fixed; bottom:-460px; z-index: 100000; transition: all ease .5s; border-radius: 5px 5px 0px 0px;     right: 16px;}
+div#phone.activedialer{bottom:0px; transition: all ease .5s;}
+div#phone.activedialer.minimize{bottom:-417px; transition: all ease .5s;}
+div#phone .s-heading{background: #41b2f9; padding: 10px; border-radius: 5px 5px 0px 0px; margin-bottom: 10px; color: #fff; font-size: 17px;}
+div#phone .d-heading{background: #dc3545; padding: 10px; border-radius: 5px 5px 0px 0px; margin-bottom: 10px; color: #fff; font-size: 17px;}
+#actions li.btn{ width: 170px; max-width: 170px; cursor:pointer;}
+#actions li{ padding: 13px 9px; border-radius: 0px !important; margin-top: 2px; color: #fff; font-size: 18px; border: 2px solid #fff; box-shadow: 0px -1px 20px -1px rgba(0,0,0,.4) inset !important;     border-radius: 5px !important;} 
+#actions li.btn-success { background: #218838; }
+#actions li.btn-light { background: #41b2f9; }
+#actions li.btn-danger { background: #dc3545; }
+#dialpad li span small{ display:block; position:absolute; font-size:18px; left:50%; bottom:-18px; margin-left:-5px; font-weight:700; color:#9c9c9c; }
+#actions .three-elements li {  max-width: 33.3% !important;}
+#actions .btn-mute {  background-color: #2f4050;}
+#actions .btn-mute:hover {  background-color: #2f4050;}
+#actions .btn-hold {  background-color: #e2e2e2;  color: #2f4050;}
+#actions .btn-hold:hover {  background-color: #d4d4d4;  color: #2f4050;}
+.voice-call-screen { min-height: 338px; display: flex; justify-content: center; align-items: center; text-align: center; }
+.c-number { font-size: 30px; font-weight: 700; padding: 40px 0px 0px 0px; }
+.c-ic-connected { padding-bottom: 40px; font-weight: 700; }
+.c-text { font-size: 16px; }
+.c-timer { font-weight: 700; font-size: 18px; }
+a.clear-cross {  position: absolute;  right: 40px;  top: 64px;  font-size: 22px;  color: #777777 !important; transition:all .3s;}
+a.clear-cross i::after {    position: absolute;    border-top: 9px solid transparent;    border-right: 9px solid #777777;    border-bottom: 9px solid transparent;    height: 0;    width: 0;     content: "";    left: -8px;    top: 7px;  }
+a.clear-cross:hover {opacity:.8;}
+.border-outer{
+  
+    border-left:1px  solid #dddddd !important;  
+    border-right:1px  solid #dddddd !important;  
+    border-bottom:1px  solid #dddddd !important;  
+}
+.app-maindiv{
+    margin-left: 10px !important;
+     margin-right: 10px  !important;
+}
+.app-card-header{
+    background-color: #eeeeee !important;
+    width:100%;
+}
+.app-span{
+    margin-left: -10px;
+}
+.app-button{
+    width:153px;
+}
+.app-desc-label{
+    padding-top:1px;
+    padding-bottom:5px;
+}
+.app-card-body{
+    padding-bottom:10px !important;
+    padding-top:3px;
+    padding-left:3px;
+    padding-right:3px;
+}

@@ -1,0 +1,15 @@
+D:\ZolarWorkSpace\Solgen\solgen.Service\bin\Debug\netstandard2.0\Solgen.Service.deps.json
+D:\ZolarWorkSpace\Solgen\solgen.Service\bin\Debug\netstandard2.0\Solgen.Service.dll
+D:\ZolarWorkSpace\Solgen\solgen.Service\bin\Debug\netstandard2.0\Solgen.Service.pdb
+D:\ZolarWorkSpace\Solgen\solgen.Service\bin\Debug\netstandard2.0\Solgen.Core.dll
+D:\ZolarWorkSpace\Solgen\solgen.Service\bin\Debug\netstandard2.0\Solgen.Repository.dll
+D:\ZolarWorkSpace\Solgen\solgen.Service\bin\Debug\netstandard2.0\Solgen.Repository.pdb
+D:\ZolarWorkSpace\Solgen\solgen.Service\bin\Debug\netstandard2.0\Solgen.Core.pdb
+D:\ZolarWorkSpace\Solgen\solgen.Service\obj\Debug\netstandard2.0\Solgen.Service.csproj.AssemblyReference.cache
+D:\ZolarWorkSpace\Solgen\solgen.Service\obj\Debug\netstandard2.0\Solgen.Service.GeneratedMSBuildEditorConfig.editorconfig
+D:\ZolarWorkSpace\Solgen\solgen.Service\obj\Debug\netstandard2.0\Solgen.Service.AssemblyInfoInputs.cache
+D:\ZolarWorkSpace\Solgen\solgen.Service\obj\Debug\netstandard2.0\Solgen.Service.AssemblyInfo.cs
+D:\ZolarWorkSpace\Solgen\solgen.Service\obj\Debug\netstandard2.0\Solgen.Service.csproj.CoreCompileInputs.cache
+D:\ZolarWorkSpace\Solgen\solgen.Service\obj\Debug\netstandard2.0\Solgen.Service.csproj.CopyComplete
+D:\ZolarWorkSpace\Solgen\solgen.Service\obj\Debug\netstandard2.0\Solgen.Service.dll
+D:\ZolarWorkSpace\Solgen\solgen.Service\obj\Debug\netstandard2.0\Solgen.Service.pdb

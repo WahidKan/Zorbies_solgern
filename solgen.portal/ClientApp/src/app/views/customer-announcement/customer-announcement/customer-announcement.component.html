@@ -1,0 +1,178 @@
+
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  <app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+
+<div class="clearfix"></div>
+
+<div class="panel">
+  <div class="panel-content p-4">
+    <form [formGroup]="form" autocomplete="off">
+      <div class="row  mb-2">
+        <div class="col-md-12 col-lg-6">
+          <label>Title:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <input type="text" class="form-control" formControlName="title" maxlength="50" placeholder="Enter title"
+                   [ngClass]="{'is-invalid': (title.invalid && (title.dirty || title.touched) && (title.errors?.required)) }">
+                   <!-- [ngClass]="{'is-invalid': (title.invalid && (title.dirty || title.touched) && (title.errors?.required || title.errors?.maxlength)) }"> -->
+            <small *ngIf="title.invalid && (title.dirty || title.touched) && title.errors?.required"
+                   class="text-danger">Title  is required</small>
+          </div>
+        </div>
+        <!-- <div class="col-md-12 col-lg-6">
+          <label>Recuring Type:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <ng-select [items]="lstRecuringType" placeholder="Select Recuring Type" bindLabel="text" bindValue="value" formControlName="recuringType" (change)="onChange($event)"
+                       [ngClass]="{'is-invalid': (recuringType.invalid && (recuringType.dirty || recuringType.touched) && recuringType.errors?.required)}"></ng-select>
+            <small *ngIf="recuringType.invalid && (recuringType.dirty || recuringType.touched) && recuringType.errors?.required"
+                   class="text-danger">Please select Recuring Type</small>
+
+          </div>
+        </div> 
+        <div class="col-md-12 col-lg-6">
+          <label>Start Date:<span class="text-danger">*</span></label>
+          <div class="form-group ">
+            <p-calendar formControlName="startDate" placeholder="Select Date" dateFormat="mm-dd-yy" yearRange="2000:2030" [minDate]="minimumDate"
+                        [monthNavigator]="true" [yearNavigator]="true"
+                        [ngClass]="{'is-invalid': (startDate.invalid && (startDate.dirty || startDate.touched) && startDate.errors?.required) }"></p-calendar>
+            <small *ngIf="startDate.invalid && (startDate.dirty || startDate.touched) && startDate.errors?.required"
+                   style="color:red;">Please select Date</small>
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-6">
+          <label>End Date:<span *ngIf="endDateValidator" class="text-danger">*</span></label>
+          <div class="form-group ">
+            <p-calendar formControlName="endDate" placeholder="Select Date" dateFormat="mm-dd-yy" yearRange="2000:2030" [monthNavigator]="true" [yearNavigator]="true" [minDate]="(startDate.value == null ? minimumDate : startDate.value)"
+                        [ngClass]="{'is-invalid': (endDate.invalid && (endDate.dirty || endDate.touched) && endDate.errors?.required) }"></p-calendar>
+            <small *ngIf="endDate.invalid && (endDate.dirty || endDate.touched) && endDate.errors?.required"
+                   style="color:red;">Please select Date</small>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-lg-6">
+          <label>UserType:</label>
+          <div class="form-group">
+            <ng-select [items]="lstUserType" [loading]="loadSave" multiple="true" placeholder="Select UserType" formControlName="usertype"
+                       bindLabel="text" bindValue="value"></ng-select>
+
+          </div>
+        </div>-->
+        <!-- <div class="col-md-12 col-lg-6">
+          <label>Status :</label>
+          <div class="form-group">
+            <label class="switch">
+              <input type="checkbox" id="customCheck1" formControlName="statusId">
+              <span class="slider round"><span>Yes</span></span>
+            </label>
+          </div>
+        </div> -->
+        <!-- <div class="col-md-12 col-lg-6">
+          <label>Choose File:</label> -->
+        <!--<div class="input-group-prepend" *ngIf="imageLink!=''">
+        <div id="myModal" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="height:450px!important;width:450px!important; ">
+              <div class="">
+                <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-content">
+                <div class="text-center">
+                  <img src={{imageLink}} alt="img" style="height:450px!important;width:450px!important; " class="img-responsive">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>-->
+        <!-- <div class="custom-file w-100 m-fileup">
+                <input class="custom-file-input" #file type="file" name='file' #fileInput [accept]="fileExtension" (change)="setFile($event)" lang="es">
+                <label class="custom-file-label">{{setFileName}}</label>
+              </div>
+              <small class="text-danger"><i class="text-primary">Valid file format is {{fileExtension}}</i> </small> -->
+        <!-- <div class="custom-file w-50 m-fileup">
+                <input class="custom-file-input" #file type="file" name='file' #fileInput accept="audio/mp3,video/mp4,video/avi,video/mov,video/3gp,video/mpeg,image/x-png,image/gif,image/jpeg" (change)="setFile($event)" lang="es">
+                <label class="custom-file-label">{{setFileName}}</label>
+              </div>
+              <small><i class="text-primary">Valid image format is audio/mp3, video/mp4, video/avi, video/mov, video/3gp, video/mpeg, image/x-png, image/gif, image/jpeg and limit upto 5MB.</i> </small> -->
+        <div class="col-md-12 col-lg-6">
+                    <label>Text:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="text" maxlength="50" placeholder="Enter text"
+                             [ngClass]="{'is-invalid': (text.invalid && (text.dirty || text.touched) && (text.errors?.required || text.errors?.maxlength)) }">
+                      <small *ngIf="text.invalid && (text.dirty || text.touched) && text.errors?.required"
+                             class="text-danger">Title  is required</small>
+                    </div>
+        </div>
+        <div class="col-md-12 col-lg-6">
+                    <label>Url:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="url" maxlength="50" placeholder="Enter url"
+                             [ngClass]="{'is-invalid': (url.invalid && (url.dirty || url.touched) && (url.errors?.required || url.errors?.maxlength)) }">
+                      <small *ngIf="url.invalid && (url.dirty || url.touched) && url.errors?.required"
+                             class="text-danger">Url is required</small>
+                    </div>
+        </div>
+        <div class="col-md-12 col-lg-6">
+          <label>Status:</label>
+          <div class="form-group">
+            <ng-select [items]="StatusList" formControlName="statusId"
+                      placeholder="Select Status" bindValue="value" bindLabel="text" [closeOnSelect]="true">
+             </ng-select>
+         
+          </div>
+        </div>  
+        <div class="col-md-12 col-lg-6">
+          <label>Visible To:</label>
+          <div class="form-group">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" formControlName="visibleTo" name="visibleTo"
+              id="exampleRadios1" value="all_customers" checked>
+            <label class="form-check-label" for="exampleRadios1">
+              All Customers
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" formControlName="visibleTo" name="visibleTo"
+              id="exampleRadios2" value="select_customers">
+            <label class="form-check-label" for="exampleRadios2">
+              Select Customers
+            </label>
+          </div>
+        </div>
+        </div>
+
+        <div class="col-md-12 col-lg-12">
+          <label>Description:<span class="text-danger">*</span></label>
+          <div class="form-group">
+            <textarea class="form-control" rows="3" placeholder="Enter description" formControlName="description"maxlength="500"
+                      [ngClass]="{'is-invalid': (description.invalid && (description.dirty || description.touched) && (description.errors?.required || description.errors?.maxlength)) }">
+                      </textarea>
+            <!--<input type="text" class="form-control" placeholder="Enter message" formControlName="message"
+      [ngClass]="{'is-invalid': (message.invalid && (message.dirty || message.touched) && (message.errors?.required || message.errors?.maxlength)) }">-->
+            <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.required"
+                   class="text-danger">Message is required</small>
+
+          </div>
+        </div>
+        <!--<div class="col-md-12 col-lg-4">
+                    <label>Acknowledgment Required:</label>
+                    <div class="form-group">
+                    <label class="switch">
+                    <input type="checkbox" id="customCheck2" formControlName="acknowledgmentRequired">
+                    <span class="slider round"><span>Yes</span></span>
+                    </label>
+                    </div>
+                    </div>-->
+         <!-- </div> -->
+      
+        <div class="col-sm-12 col-md-12">
+          <a  href="javascript:void(0);"  class="btn btn-success mr-2" (click)="AddEditCusAnnouncement()"><i class="feather-save"></i> Submit</a>
+          <a href="javascript:void(0);" class="btn btn-danger" (click)="Cancel()"><i class="feather-x"></i> Cancel</a>
+        </div>
+      
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+

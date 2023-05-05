@@ -1,0 +1,1975 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Work Order Details</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+      <li><a class="smview" routerLink="/workorder">Manage Work Order</a></li>
+      <li class="active">Work Order Details</li>
+    </ol>
+  </div>
+
+</div> -->
+<div class="clearfix"></div>
+
+<ng-container *ngFor="let item of groupTop">
+  <div *ngIf="item.IsVisible" class="card m-0 border">
+    <span class="text-capitalize p-3 font-weight-bold text-center " style="font-size: 24px;">
+      {{item.default_value}}
+    </span>
+  </div>
+</ng-container>
+
+<!--<div class="clearfix"></div>
+<div class="card m-0 mb-4 border">
+  <span class="text-capitalize p-3 font-weight-bold text-center" style="font-size: 24px;" *ngIf="isFixOrder">
+    {{statusValue}}
+  </span>
+</div>-->
+
+<!--<app-newnoteslist #listnotesmodel1 subModuleName="workorder" [view]="true" [AccountId]="accountId" [ObjectRefId]="Id" (newItemEvent)="addItem($event)">
+</app-newnoteslist>-->
+<!--<div class="col-md-12 col-sm-12 list-card-view" *ngIf="NotificationListData!=null && NotificationListData!='' ">
+  <div class="card card-block noti" >
+    <div class="card-main alert-warning border-0" *ngFor="let item of NotificationListData">
+      <h5 class="card-title mt-3 mb-3">
+        {{item.title}}
+        <span class="badge badge-warning ng-star-inserted ml-2" style="color:#000;padding:5px">Unread</span>-->
+<!--<a href="javascript:void(0);" (click)="redirectToSource(item.noteId)" class="float-right"><i aria-hidden="true" class="fa fa-external-link" title="Go To Source"></i></a>-->
+<!--<a href="javascript:void(0);" (click)="displayDetailNotification(item)" class="float-right bg-primary px-2" style="border-radius: 4px;"><i class="feather-eye text-white" title="View"></i></a> &nbsp;
+      </h5>
+      <p><strong>Description:</strong> {{item.description | truncate:250 }}</p>
+    </div>
+  </div>
+</div>-->
+
+
+<div class="clearfix"></div>
+<div class="card border-0">
+  <div class="panel">
+    <div class="row">
+      <div class="col-lg-12">
+
+
+
+        <div class="item-view">
+         
+
+            <div class="card-body timeline position-relative pt-0 card-body-m">
+
+              <div class="row flex-row-reverse py-3 border-bottom ">
+                <div class="col-md-6 col-lg-5 text-md-right btns-viewui">
+                    <a href="javascript:void(0);" class="btn btn-info text-white mr-2 smview" (click)="onUpdateStatusClick(false)"
+                       *ngIf="isStartWork==true"><i class="feather-edit-2 mr-1"></i> Start Work Order</a>
+                    <a href="javascript:void(0);" class="btn btn-white text-white mr-2 smview" (click)="onUpdateStatusClick(true)"
+                       *ngIf="isCompleteWork==true"><i class="feather-edit-2 mr-1"></i> Complete Work Order</a>
+                    <a href="javascript:void(0);" class="btn btn-info text-white mr-2 smview" (click)="auditpopup()">
+                      <i class="feather-edit-2 mr-1"></i>View Checklist
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-primary text-white mr-2 smview" (click)="Fix_Order()">
+                      <i class="feather-edit-2 mr-1"></i> Fix Work Order
+                    </a>
+                    <a href="javascript:void(0);" [routerLink]="['/workorder/edit',Id]"
+                       class="btn btn-success text-white mr-2 smview"><i class="feather-edit-2 mr-1"></i> Edit</a>
+                    <a href="javascript:void(0);" class="btn btn-dark text-white smview" (click)="OnBackToListClick()">
+                      <i class="feather-arrow-left mr-1"></i> Back
+                    </a>
+                </div>
+
+
+
+                <!-- <i class="fa fa-user-circle-o text-dark float-left mr-2" style="font-size:27px;"></i> -->
+                <div class="col-md-6 col-lg-7 view-details d-flex">
+                  <span class="user-imgicon"><i class="feather-user"></i></span>
+                  <ul class="user-content">
+                    <li><h4>{{productRequiredWorkOrderNumber}}</h4></li>
+                    <li class="" *ngFor="let item of customCompnentValuesTop"  >
+
+                      <span class="" *ngIf=" item.ColumnName!='Status'">
+                        <span *ngIf="item.field_route==null" class="d-block">
+                          <strong>{{ item.display_name}}: </strong>
+                          <ng-container *ngIf="item.dt_code!='date' &&  item.dt_code!='datetime'">{{ item.value }} </ng-container>
+                          <ng-container *ngIf="item.dt_code=='date'"> {{ item.value | date: 'MM-dd-yyyy'}}</ng-container>
+                          <ng-container *ngIf="item.dt_code=='datetime'"> {{ item.value | date: 'MM-dd-yyyy, h:mm a'}}</ng-container>
+                        </span>
+                        <span *ngIf="item.ColumnName =='AccountId'" class="dd-block">
+                          <strong>
+                            {{ item.display_name }}:
+                          </strong> <a href="javascript:void(0);"
+                                       [routerLink]="[item.field_route,item.ref_value]"> {{ item.value}}</a>
+                        </span>
+                      </span>
+                      <span class="" *ngIf="item.ColumnName=='Status'">
+                        <span class="d-block">
+                          <strong>{{ item.display_name}}:</strong>
+                          <ng-container *ngIf="item.value">
+                            <span class="text-white p-1 ml-1 rounded" [style.background-color]="item.value | split:'::':1 ">
+                              {{ item.value | split:'::':0}}
+                            </span>
+                          </ng-container>
+                        </span>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          
+        </div>
+      </div>
+
+      <div class="col-lg-12">
+        <div class="panel-content w-100  px-3">
+          <div class="row mt-2 scroll-in-content">
+
+            <div [ngClass]="{'col-sm-12 col-lg-8': isAdmin || isCompleteWork, 'col-sm-12 col-lg-12': !isAdmin  && !isCompleteWork}">
+              <div class="panel cntainerwithoutbg clearfix">
+                <div class="panel-content clearfix mb-4 p-0">
+                  <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#Details" role="tab"
+                         aria-selected="true">DETAILS</a>
+                    </li>
+                    <!--<li class="nav-item"> <a class="nav-link" id="stage-tab" data-toggle="tab" href="#stage" role="tab" aria-selected="false">Stage Configuration</a> </li>
+              <li class="nav-item"> <a class="nav-link" id="rule-tab" data-toggle="tab" href="#rule" role="tab" aria-selected="false">Rule Engine</a> </li>-->
+                    <!-- <li class="nav-item">
+                      <a class="nav-link" id="list-stage" data-toggle="tab" href="#Requirement" role="tab"
+                         aria-selected="false">REQUIREMENTS</a>
+                    </li> -->
+                    <li class="nav-item">
+                      <a class="nav-link" id="list-lineItem" data-toggle="tab" href="#LineItem" role="tab"
+                         aria-selected="false">To-do List</a>
+                    </li>
+                  </ul>
+
+                  <div class="tab-content" id="myTabContent">
+                    <!-- Start Lead Setting   *ngIf="!isFinancial"-->
+                    <div class="tab-pane fade active show" id="Details" role="tabpanel">
+                      <!-- <h3 class="form-heading mt-0"><span>Details</span></h3> -->
+                      <div id="accordion">
+                        <form [formGroup]="form" *ngIf="form">
+                          <ng-container *ngFor="let item of formControlList">
+                            <ng-container *ngIf="item.IsVisible">
+                              <div *ngIf="item.layout_type != 'textarea'" class="panel active">
+                                <div class="panel-heading">
+                                  <h4 class="panel-title">
+                                    <a href="#{{item.group_display_name}}" class="accordion-toggle" data-toggle="collapse"
+                                       data-parent="#accordion" aria-expanded="true">
+                                      <span>
+                                        {{item.group_name}}
+                                      </span>
+                                    </a>
+                                  </h4>
+                                </div>
+                                <div id="{{item.group_display_name}}" class="panel-collapse collapse active show"
+                                     style="">
+                                  <div class="panel-body row px-0 mt-0">
+                                    <div class="col-sm-12 col-md-6 {{(isStartWork)?'col-lg-3':'col-lg-4'}}"
+                                         *ngFor="let inner of item.InnerData;">
+                                      <div class="input-group border-bottom">
+                                        <div class="col-sm-12 col-md-6 px-0">
+                                          <span class="py-2 d-block"><strong>{{ inner.display_name}}:</strong></span>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6">
+                                          <span *ngIf="inner.value!=null  && inner.dt_code!='boolean' && inner.field_route==null && inner.dt_code!='select'"
+                                                class="py-2 d-block">
+
+                                            <ng-container *ngIf="inner.dt_code=='datetime'">
+                                              {{
+ inner.value |
+                                            DateTimeToLocal
+                                              }}
+                                            </ng-container>
+                                            <ng-container *ngIf="inner.dt_code=='date'">
+                                              {{
+ inner.value | date:
+                                            'MM-dd-yyyy'
+                                              }}
+                                            </ng-container>
+                                            <ng-container *ngIf="inner.dt_code!='datetime' && inner.dt_code!='date'">
+                                              {{
+                                            inner.value
+                                              }}
+                                            </ng-container>
+                                          </span>
+                                          <span *ngIf="inner.value!=null  && inner.dt_code!='boolean' && inner.field_route!=null"
+                                                class="py-2 d-block">
+                                            <a href="javascript:void(0);"
+                                               [routerLink]="[inner.field_route,inner.ref_value]">{{ inner.value}}</a>
+                                          </span>
+                                          <span *ngIf="inner.dt_code == 'select'">
+                                            <span *ngIf="inner.FieldFrom !=null">
+                                              {{inner.value }}
+                                            </span>
+                                            <span *ngIf="inner.FieldFrom==null && inner.field_route==null">
+                                              <span *ngFor="let itemColorCode of getListingColorCode(inner.value);">
+                                                <span *ngIf="itemColorCode.colorkey==undefined">
+                                                  {{itemColorCode.color}}
+                                                </span>
+                                                <span *ngIf="itemColorCode.colorkey!=undefined"
+                                                      style="max-width:150px !important;" class="status-box"
+                                                      [title]="itemColorCode.color"
+                                                      [ngStyle]="{background: itemColorCode.colorkey}">
+                                                  {{itemColorCode.color}}
+                                                </span>
+                                              </span>
+                                            </span>
+                                          </span>
+                                          <!--============================== For CheckBox ===========================-->
+                                          <div class="form-control pl-0 border-0 bg-transparent"
+                                               *ngIf="inner.dt_code=='boolean'">
+                                            <div class="form-check form-check-inline">
+                                              <div class="custom-control custom-checkbox pl-0">
+                                                <label class="switch  mb-0">
+                                                  <input type="checkbox" id="chk_{{inner.custom_field_id}}"
+                                                         [formControlName]="inner.form_controlName" disabled>
+                                                  <span class="slider round"
+                                                        id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                                </label>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <!--============================== For CheckBox ===========================-->
+                                          <!-- <div class="form-control pl-0 border-0 bg-transparent"
+                                               *ngIf="inner.dt_code=='checkbox'">
+                                            <div class="form-check form-check-inline">
+                                              <div class="custom-control custom-checkbox pl-0">
+                                                <label class="switch mb-0">
+                                                  <input type="checkbox" id="chk_{{inner.custom_field_id}}"
+                                                         [formControlName]="inner.form_controlName" disabled>
+                                                  <span class="slider round"
+                                                        id="{{inner.custom_field_id}}"><span>Yes</span></span>
+                                                </label>
+                                              </div>
+                                            </div>
+                                          </div> -->
+
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div *ngIf="item.layout_type === 'textarea'"
+                                   class="w-100 p-3 mb-2 text-center information-section">
+                                <span class="text-capitalize font-weight-bold" style="font-size: 24px;">
+                                  {{item.default_value}}
+                                </span>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                          <ng-container *ngFor="let item of executionFlow">
+                            <div *ngIf="executionFlow.length>0" class="panel active">
+                              <div class="panel-heading">
+                                <h4 class="panel-title">
+                                  <a href="#{{item.automationFlowName}}" class="accordion-toggle" data-toggle="collapse"
+                                     data-parent="#accordion" aria-expanded="true">
+                                    <span> {{item.automationFlowName}}</span>
+                                  </a>
+                                </h4>
+                              </div>
+                              <div id="{{item.automationFlowName}}" class="panel-collapse collapse active show" style="">
+                                <div class="panel-body row px-0 mt-0">
+                                  <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="input-group border-bottom">
+                                      <div class="float-left ">
+                                        <div style="height: 40px !important;width:40px !important; cursor:pointer;">
+                                          <a href="javascript:void(0);" (click)="ExecuteAutomationFlow(item.automationFlowId)">
+                                            <svg focusable="false" data-key="flow" aria-hidden="true" viewBox="0 0 100 120"
+                                                 class="slds-icon slds-icon_small" fill="white">
+                                              <rect width="100" rx="15" height="90" fill="rgb(1, 118, 211)" />
+                                              <g>
+                                                <path d="M79.9 30.7c-2.6-5.1-9.2-14.6-21.5-9-7.6 3.5-11.9 5.5-11.9 5.5l-11 4.8c-3.1 1.5-9.9-.6-13.7-2-1.1-.4-2.1.8-1.6 1.9 2.6 5.1 9.2 14.6 21.5 9 7.6-3.5 22.9-10.1 22.9-10.1 3.1-1.5 9.9.6 13.7 2 1.1.2 2.1-.9 1.6-2.1zM53.5 46.8c-1.4.8-6.9 3.3-6.9 3.3l-5.5 2.4C38.4 54 32.5 52 29 50.6c-1-.5-1.9.8-1.4 1.8 2.2 5 8.1 14 18.9 8.5 6.7-3.4 12.4-5.6 12.4-5.6 2.7-1.5 8.6.5 12.1 1.9 1 .4 1.9-.8 1.4-1.9-2.3-5-8.2-14-18.9-8.5zM49.5 68.9c-1.1.6-3 1.8-3 1.8-2.1 1.3-6.5-.4-9.1-1.7-.7-.4-1.4.8-1 1.8 1.6 4.5 6 12.6 14.1 7.6 3-1.9 3-1.8 3-1.8 2.2-1.1 6.5.4 9.1 1.6.7.4 1.4-.8 1-1.8-1.6-4.4-5.7-12.1-14.1-7.5z">
+                                                </path>
+                                              </g>
+                                            </svg>
+                                          </a>
+                                        </div>
+                                      </div>
+                                      <div class="float-left ml-1" style="margin-top: -2px !important;">
+                                        <a href="javascript:void(0);" (click)="ExecuteAutomationFlow(item.automationFlowId)">
+                                          {{item.automationFlowName}}
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </form>
+                      </div>
+                    </div>
+                    <div class="tab-pane  fade" id="Requirement" role="tabpanel">
+                      <div id="accordion">
+
+                        <!--WorkOrderlineItem-->
+                        <div class="panel active ">
+                          <div class="panel-heading">
+                            <h4 class="panel-title">
+                              <a href="#requirementForparent" class="accordion-toggle" data-toggle="collapse"
+                                 data-parent="#accordion" aria-expanded="true">
+                                <span>Project Requirements for Parent Account ({{RequirementCount}})</span>
+                              </a>
+                            </h4>
+                          </div>
+                          <div id="requirementForparent" class="panel-collapse collapse active show" style="">
+                            <a class="btn-in-panel cursor-pointer" (click)="openAddNewRequirementPopup()" data-toggle="modal">
+                              <i class="feather-plus mr-2 "></i> Add
+                            </a>
+                            <div class="panel-body p-2 mt-0">
+                              <div class="table-responsive ngxtbl">
+                                <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                               [rows]="requirementListingData.data" [columnMode]="'force'" [headerHeight]="40"
+                                               [footerHeight]="40" [scrollbarH]="true" [rowHeight]="'40'" [externalPaging]="true"
+                                               [externalSorting]="true" [loadingIndicator]="loadSave"
+                                               [count]="requirementListingData.pager.totalItems"
+                                               [offset]="requirementListingData.pager.curPage"
+                                               [limit]="requirementListingData.pager.pageSize" (page)='setPagereq($event)'
+                                               (sort)="onSortreq($event)" [selectAllRowsOnPage]="false">
+                                  <ngx-datatable-column name="Requirement Name" prop="Name" [sortable]="true">
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column name="Record Type" prop="RecordTypeName" [sortable]="true">
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column name="Type" prop="Requirement_Type" [sortable]="true">
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column name="Status" prop="SFStatus" [sortable]="true">
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column name="Required By" prop="RequiredByName" [sortable]="true">
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column name="Due Date" prop="Due_Date" [sortable]="true">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                      {{row.Due_Date | date:'MM/dd/yyyy'}}
+                                    </ng-template>
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column name="Completed Date" prop="Completed_Date" [sortable]="true">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                      {{row.Completed_Date | date:'MM/dd/yyyy'}}
+                                    </ng-template>
+                                  </ngx-datatable-column>
+                                  <!-- <ngx-datatable-column name="Required By" prop="Required_by__c" [sortable]="true">
+                            </ngx-datatable-column>    -->
+                                  <ngx-datatable-column name="Description" prop="Requirement_Description" [sortable]="true">
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column name="Action" [sortable]="false" [maxWidth]="100"
+                                                        headerClass="text-center">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                      <div class="text-center">
+                                        <a (click)="editRequirement(row)" title="Edit">
+                                          <i class="fa fa-pencil cursor-pointer text-success pr-2"></i>
+                                        </a>
+                                        <a title="Click to delete." (click)="DeleteRequirement(row)"
+                                           href="javascript:void(0);"><i class="feather-trash-2 text-danger"></i></a>
+                                      </div>
+                                    </ng-template>
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-footer>
+                                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount"
+                                                 let-pageSize="pageSize" let-selectedCount="selectedCount"
+                                                 let-curPage="curPagereq" let-offset="offset" let-isVisible="isVisible">
+                                      <!-- <div>
+                                  <div style="color:black; margin-right:10px;" class="page-size-record"
+                                    *ngIf='(rowCount  > 0)'>
+                                    <span style="text-align:right; width:80px;vertical-align: middle;">
+                                      <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body"
+                                        [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false"
+                                        (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                        bindLabel="text" bindValue="text"></ng-select>
+                                    </span>
+                                  </div>
+                                </div> -->
+
+                                      <div class="page-count" *ngIf='(rowCount  > 0)'>
+                                        {{commonService.PageString(requirementListingData.pager.currentPage,requirementListingData.pager.pageSize,rowCount)}}
+                                      </div>
+
+                                      <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                       [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                       [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                       [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                       [page]="requirementListingData.pager.currentPage" [size]="pageSizeValuereq"
+                                                       [count]="requirementListingData.pager.totalItems"
+                                                       [hidden]="!((rowCount / pageSize) > 1)" (change)="setPagereq($event)">
+                                      </datatable-pager>
+
+
+                                    </ng-template>
+                                  </ngx-datatable-footer>
+                                </ngx-datatable>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!--End-->
+
+
+
+                      </div>
+                    </div>
+                    <div class="tab-pane  fade" id="LineItem" role="tabpanel">
+                      <div id="accordion">
+                        <!--WorkOrderlineItem-->
+                        <div class="panel active ">
+                          <div class="panel-heading">
+                            <h4 class="panel-title">
+                              <a href="#LineItem" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                <span>To-do List ({{lineItemCount}})</span>
+                              </a>
+                            </h4>
+                          </div>
+                          <div id="LineItem" class="panel-collapse collapse active show" style="">
+                            <a href="javascript:void(0);" class="btn-in-panel" (click)="AddLineItem()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add</a>
+                            <div class="panel-body p-2 mt-0">
+                              <div class="table-responsive ngxtbl">
+                                <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                               [rows]="LineItempagedData.data"
+                                               [columnMode]="'force'"
+                                               [scrollbarH]="true"
+                                               [rowHeight]="'40'"
+                                               [headerHeight]="40"
+                                               [footerHeight]="40"
+                                               [externalPaging]="true"
+                                               [externalSorting]="true"
+                                               [loadingIndicator]="loadSave"
+                                               [count]="LineItempagedData.pager.totalItems"
+                                               [offset]="LineItempagedData.pager.currentPage"
+                                               [limit]="LineItempagedData.pager.pageSize"
+                                               (page)='setPageLineItem($event)'
+                                               (sort)="onSortLineItems($event)">
+
+                                  <ngx-datatable-column name="To-do Item Number" prop="LineItemNumber" [sortable]="true" headerClass="text-center">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                      <div class="text-center">
+                                        <a title="Edit LineItem" href="javascript:void(0);" (click)="editLineItem(row.Id)">{{row.LineItemNumber}}</a>
+                                      </div>
+
+                                    </ng-template>
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column name="Subject" sortable="false" prop="Subject" [sortable]="true" [minWidth]="150"></ngx-datatable-column>
+                                  <ngx-datatable-column name="Description" sortable="false" prop="Description" [sortable]="true" [minWidth]="150"></ngx-datatable-column>
+                                  <ngx-datatable-column name="Status" sortable="false" prop="StatusCategory" [sortable]="true" [minWidth]="150"></ngx-datatable-column>
+                                  <ngx-datatable-column name="Completed Date" sortable="false" prop="Completed_Date__c" [sortable]="true" [minWidth]="150">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                      {{row.Completed_Date__c |date:'MM-dd-yyyy' }}
+                                      <!-- date:'MM-dd-yyyy'   ,DateTimeToLocal:'Date' -->
+                                      <!-- getUserSelectedZoneToUTC
+                                commanService.getUserUTCToSelectedZoneTime -->
+                                    </ng-template>
+                                  </ngx-datatable-column>
+                                  <!-- <ngx-datatable-column name="Sort Order" sortable="false" prop="Sort_Order__c" [sortable]="true" [minWidth]="150"></ngx-datatable-column> -->
+
+                                  <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                      <div class="text-center">
+                                        <a href="javascript:void(0);" (click)="editLineItem(row.Id)" title="Edit Line Itme"><i class="fa fa-pencil text-success pr-2"></i></a>
+                                        <a href="javascript:void(0);" (click)="DeleteLineItem(row)"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                                      </div>
+
+                                    </ng-template>
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-footer>
+                                    <ng-template ngx-datatable-footer-template
+                                                 let-rowCount="rowCount"
+                                                 let-pageSize="pageSize"
+                                                 let-selectedCount="selectedCount"
+                                                 let-currentPage="LineItempagedData.pager.currentPage"
+                                                 let-offset="offset"
+                                                 let-isVisible="isVisible">
+                                      <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                                        {{commonService.PageString(LineItempagedData.pager.currentPage,LineItempagedData.pager.pageSize,rowCount)}}
+                                      </div>
+
+                                      <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                                       [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                                       [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                                       [pagerNextIcon]="'fa fa-angle-double-right'"
+                                                       [page]="LineItempagedData.pager.currentPage"
+                                                       [size]="pageSizeValueLineitem"
+                                                       [count]="LineItempagedData.pager.totalItems"
+                                                       [hidden]="!((rowCount / pageSize) > 1)"
+                                                       (change)="setPageLineItem($event)">
+                                      </datatable-pager>
+                                    </ng-template>
+
+                                  </ngx-datatable-footer>
+                                </ngx-datatable>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <!--End-->
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-lg-4 mt-lg-4 relatedtab" *ngIf="!isStartWork || userType == 'usertypecompanyadmin'">
+              <h3 class="form-heading mt-0"><span>Related</span></h3>
+              <div id="accordion" *ngIf="relatedObjects">
+                <ng-container *ngFor="let item of relatedObjects;let i=index;">
+                  <ng-container *ngIf="item.IsVisible">
+                    <ng-container *ngIf="item.layout_type != 'notes' && item.layout_type != 'table' && item.layout_type != 'files' && item.layout_type != 'appointments' && item.layout_type != 'textarea' && item.layout_type != 'form'">
+                      <app-listview [data]="item" [index]="i"></app-listview>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'textarea' && item.default_value">
+                      <div class="w-100 p-3 mb-2 text-center information-section">
+                        <span class="text-capitalize font-weight-bold" style="font-size: 24px;">
+                          {{item.default_value}}
+                        </span>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'table'">
+                      <app-tableview [data]="item" [index]="i" [SubModuleName]="submoduleName" [RecordId]="Id"
+                                     (refreshEmitter)="RefreshRelatedObjects($event)"
+                                     (openAddEditProductPopup)='AddProductRequiredPopup($event)'
+                                     (deleteProductRequiredItem)='deleteProductREquired($event)'></app-tableview>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'form'">
+                      <app-formview [data]="item" [index]="i" [ModuleName]="moduleName" [SubModuleName]="submoduleName"
+                                    [RecordId]="Id" (RefreshEvent)="RefreshEvent()"></app-formview>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'notes'">
+                      <app-newnoteslist #listnotesmodel [view]="false" [DisplayOnEmpty]="true"
+                                        subModuleName="{{submoduleName}}" [AccountId]="accountId" [ObjectRefId]="Id"></app-newnoteslist>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'files'">
+                      <app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}"
+                                 primaryKey="{{Id}}"></app-files>
+                    </ng-container>
+                    <ng-container *ngIf="item.layout_type == 'appointments'">
+                      <app-appointments #appointmentlist title="Appointments" [solgenpower]="solgenpower" submoduleName="{{submoduleName}}"
+                                        primaryKey="{{Id}}" [header]="true"></app-appointments>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!--<div class="panel active rght-panel " *ngIf="isInterconnection">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#workOrderSummary" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                <span>Summary</span>
+              </a>
+            </h4>
+          </div>
+          <div id="workOrderSummary" class="panel-collapse collapse active show" style="">
+
+            <div class="modal-body p-2 mt-2" [ngClass]="{'disabled':loadSave}">
+              <div class="row">
+                <div class="col-md-12 mb-2">
+                  <h4 class="sub-heading">Customer</h4>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Primary Account Holder:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].PrimaryAccountHolder}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Address:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].AccountAddress}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Mobile:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].Phone}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Email:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].Email}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Sales Date:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].SaleDate | DateTimeToLocal:'Date'}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>New Construction:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].NewConstruction}}</span></div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mb-2">
+                  <h4 class="sub-heading">SOLGEN POWER</h4>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Installer Name:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].InstallerNam}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Installer Email Address:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].InstallerEmailAddress}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Installer Phone Number:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].InstallerPhoneNumber}} </span></div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mb-2">
+                  <h4 class="sub-heading">UTILITY</h4>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Utility Company:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].UtilityCompany}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Utility Account Number:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].UtilityAccountNumber}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Utility Meter Number:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].UtilityMeterNumber}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Existing Amperage of Service:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].ExistingAmperage}} <strong>amps</strong></span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>How many Meters:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].HowmanyMeters}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Utility Links:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].UtilityLinks}} </span></div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mb-2">
+                  <h4 class="sub-heading">SYSTEM</h4>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>System Size:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-1 d-block">{{SumarryData[0].systemsize}} <span>kW with {{SumarryData[0].panelNumberQuantity}} <span>Panel</span></span></span>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Battery:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].Battery}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Generator:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].Generator}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Estimated Total System Cost:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].EstimatedTotalSystemCost | currency}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Estimated In-Service Date:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].EstimatedServiceDate | DateTimeToLocal:'Date'}}</span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Total Labor Cost:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].TotalLaborCost | currency}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Type of Meter Installation:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].TypeofMeterInstallation}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>AC Voltage:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].ACVoltage}} <span>V</span> </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Proposed Generator Interconnection:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].ProposedGeneratorInterconnection}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Connection:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].Connection}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Method of Generation:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].MethodofGeneration}} </span></div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mb-2">
+                  <h4 class="sub-heading">EQUIPMENT</h4>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong style="font-weight: 700; font-size: 16px;">PANEL :</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].panelName}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Panel Number Quantity:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].panelNumberQuantity}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Panel Out Put Rating:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].panelOutPutrating}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Total Watts for Panels (DC):</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].TotalWatt | currency}} </span></div>
+                  </div>
+
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Panel Manufacturer:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].PanelManufacturer}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Panel Model #:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].PanelCode}} </span></div>
+                  </div>
+                  <div class="input-group mt-3">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0">
+                      <span style="font-weight: 700; font-size: 16px;">INVERTER:</span>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Name:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].InvProductName}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Quantity:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].Quantity}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Inverter Rating (ea):</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-1 d-block">
+                        {{SumarryData[0].InverterRatingEa}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Inverter Output Watts (AC):</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block"> {{SumarryData[0].InverterOutputWatts}}</span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Manufacturer:</strong></span></div>
+                    <div class="col-sm-12 col-md-6">
+                      <span class="py-1 d-block">
+                        {{SumarryData[0].ManufacturerName}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Model#:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].productCode}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0">
+                      <span class="py-1 d-block">
+                        <strong>UL Listed or equivalent?:</strong>
+                      </span>
+                    </div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">Yes</span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Certifying Utility:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].CertifyingUtility}} </span></div>
+                  </div>
+                  <div class="input-group mt-3">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0">
+                      <span style="font-weight: 700; font-size: 16px;">RACKING:</span>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Racking:</strong></span></div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].RackingName}} </span></div>
+                  </div>
+                  <div class="input-group">
+                    <div class="col-sm-12 col-md-6 pl-2 pr-0">
+                      <span class="py-1 d-block">
+                        <strong>Type of Array Mounting ({{SumarryData[0].RackingManufacturer}}):</strong>
+                      </span>
+                    </div>
+                    <div class="col-sm-12 col-md-6"><span class="py-1 d-block">{{SumarryData[0].RackingManufacturer}} </span></div>
+                  </div>
+                  <div class="col-md-12 mb-2 d-none">
+                    <h4 class="sub-heading">REQUIREMENT</h4>-->
+                <!--<div class="input-group" *ngFor="let items of SumarryData[0].RequirementData">
+            <div class="col-sm-12 col-md-6 pl-2 pr-0"><span class="py-1 d-block"><strong>Required By:</strong></span></div>
+            <div class="col-sm-12 col-md-6">
+              <a class=" view-list" [routerLink]="['/accountslist/view',items.account__c]" href="javascript:void(0);" [title]="items.name">
+                {{ items.name}}
+              </a>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+              <span class="py-1 d-block">{{items.requirement_description__c }}</span>
+            </div>
+          </div>-->
+                <!--</div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>-->
+                <!--=================================== Engineering Questions ================================-->
+                <!--<div class="panel active rght-panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#EngineeringQuestion" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                  <span>Engineering Questions</span>
+                </a>
+              </h4>
+            </div>
+            <div id="EngineeringQuestion" class="panel-collapse collapse active show" style="">
+              <a href="javascript:void(0);" (click)="AddEngineeringQuestionPopup()" class="btn-in-panel"><span data-toggle="modal"><i class="fa fa-pencil mr-2"></i>Edit</span></a>
+              <div class="modal-body">
+                <form [formGroup]="addEditEngineeringForm" autocomplete="off">
+                  <div class="row mb-2">
+                    <div class="col-md-12 col-lg-6">
+                      <label>MPU Needed:</label>
+                      <div class="form-group">
+                        <ng-select #clearDrop [items]="lstMPU"
+                                   placeholder="None" bindValue="value" bindLabel="text" formControlName="mpuNeeded"
+                                   [closeOnSelect]="true">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Trenching Needed:</label>
+                      <div class="form-group">
+                        <ng-select #clearDrop [items]="lstTrenching"
+                                   placeholder="None" bindValue="value" bindLabel="text" formControlName="trenchingNeeded"
+                                   [closeOnSelect]="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-6">
+                      <label>Retrofit Needed:</label>
+                      <div class="form-group">
+                        <ng-select #clearDrop [items]="lstRetrofit"
+                                   placeholder="None" bindValue="value" bindLabel="text" formControlName="retrofitNeeded"
+                                   [closeOnSelect]="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-6">
+                      <label>Interconnection Type:</label>
+                      <div class="form-group">
+                        <ng-select #clearDrop [items]="lstInterconnection"
+                                   placeholder="None" bindValue="value" bindLabel="text" formControlName="interconnectionType"
+                                   [closeOnSelect]="true">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Number of Arrays:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Arrays" formControlName="numberOfArrays" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Roof Material:</label>
+                      <div class="form-group">
+                        <ng-select #clearDrop [items]="lstroofMaterial"
+                                   placeholder="None" bindValue="value" bindLabel="text" formControlName="roofMaterial"
+                                   [closeOnSelect]="true">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Roof Tilt:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Roof Tilt" formControlName="roofTilt" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Mid Clamps:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Mid Clamps" formControlName="midClamps" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>End Clamps:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter End Clamps" formControlName="endClamps" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Grounding Lugs:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Grounding Lugs" formControlName="groundingLugs" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>T-Bolts:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter T-Bolts" formControlName="tBolts" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>End Covers:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter End Covers" formControlName="endCovers" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Splice:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Splice" formControlName="splice" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Flashings:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Flashings" formControlName="flashings" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Rail:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Rail" formControlName="rail" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Rail Weight:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Weight" formControlName="railWeight" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>Module Weight:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Module Weight" formControlName="moduleWeight" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>PSF:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter PSF" formControlName="pSF" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-6">
+                      <label>Total Weight:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Please Enter Total Weight" formControlName="totalWeight" (keypress)="numberOnly($event)">
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-6">
+                      <label>ENG First Review By:</label>
+                      <div class="form-group">
+                        <ng-select #clearDrop [items]="lstUsers"
+                                   placeholder="None" bindValue="value" bindLabel="text" formControlName="eNGFirstReviewBy"
+                                   [closeOnSelect]="true">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6">
+                      <label>ENG First Review Date:<span class="text-danger"></span></label>
+                      <div class="form-group datepickerinpop">
+                        <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="eNGFirstReviewDate"
+                                    inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030">
+                        </p-calendar>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-6">
+                      <label>ENG Second Review By:</label>
+                      <div class="form-group">
+                        <ng-select #clearDrop [items]="lstUsers"
+                                   placeholder="None" bindValue="value" bindLabel="text" formControlName="eNGSecondReviewBy"
+                                   [closeOnSelect]="true">
+                        </ng-select>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-12 col-lg-6">
+                      <label>ENG Second Review Date:<span class="text-danger"></span></label>
+                      <div class="form-group datepickerinpop">
+                        <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="eNGSecondReviewDate"
+                                    inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2021:2030" [hourFormat]="(timeFormat==24)?'24':'12'">
+
+                        </p-calendar>
+
+
+                      </div>
+                    </div>
+                  </div>
+                </form>
+                <div class="modal-footer" *ngIf="onSaveEngQuesBtn">
+                  <button type="submit" class="btn btn-success form-btns" (click)="onSaveEngQues()"><i class="feather-save text-white"></i> Save</button>
+                </div>
+              </div>
+
+            </div>
+          </div>-->
+                <!--=======================================================================================-->
+                <!--<div class="panel active">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#proposal" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                  <span>Proposal Information</span>
+                </a>
+              </h4>
+            </div>
+            <div id="proposal" class="panel-collapse collapse active show" style="">
+              <div class="panel-body p-2 mt-0">
+                <div class="row mb-2">
+                  <div class="col-md-12 col-lg-6">
+                    <label><strong>System Size:</strong></label>
+                    <div class="form-group">
+                      <span title="{{lstProposal.System_Size}}">{{lstProposal.System_Size}}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label><strong>No of Panels:</strong></label>
+                    <div class="form-group">
+                      <span title="{{lstProposal.Panels}}">{{lstProposal.Panels}}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label><strong>Offset:</strong></label>
+                    <div class="form-group">
+                      <span title="{{lstProposal.Offset}}">{{lstProposal.Offset}}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label><strong>Energy Percentage:</strong></label>
+                    <div class="form-group">
+                      <span title="{{lstProposal.Energy_Percentage}}">{{lstProposal.Energy_Percentage}}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label><strong>Proposal Design Link:</strong></label>
+                    <div class="form-group">
+                      <span><a href="{{lstProposal.Desgin_Link}}" target="_blank">{{lstProposal.Desgin_Link}}</a></span>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-lg-6">
+                    <label><strong>Design Notes:</strong></label>
+                    <div class="form-group">
+                      <span title="{{lstProposal.Desgin_Notes}}">{{lstProposal.Desgin_Notes | truncate:250}}</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>-->
+                <!--============================================================================================-->
+                <!--<app-files title="Files" moduleName="{{moduleName}}" submoduleName="{{submoduleName}}" primaryKey="{{Id}}"></app-files>-->
+                <!--=========================================================================================-->
+                <!--<div class="panel active">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#serviceAppointments" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                <span>Service Appointments ({{ServiceAppointmentCount}})</span>
+              </a>
+            </h4>
+          </div>
+          <div id="serviceAppointments" class="panel-collapse collapse active show" style="">-->
+                <!--<a href="javascript:void(0);" class="btn-in-panel" ><span data-toggle="modal"><i class="feather-plus mr-2"></i>Add</span></a>-->
+                <!--<div class="panel-body p-2 mt-0">
+          <div class="table-responsive ngxtbl">
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                           [rows]="lstServiceAppointments.data"
+                           [columnMode]="'force'"
+                           [scrollbarH]="true"
+                           [rowHeight]="'40'"
+                           [headerHeight]="40"
+                           [footerHeight]="40"
+                           [externalPaging]="true"
+                           [externalSorting]="true"
+                           [loadingIndicator]="loadSave"
+                           [count]="lstServiceAppointments.pager.totalItems"
+                           [offset]="lstServiceAppointments.pager.currentPage"
+                           [limit]="lstServiceAppointments.pager.pageSize"
+                           (page)='setServiceAppointmentPageNo($event)'
+                           (sort)="onServiceAppointmentSort($event)">
+
+              <ngx-datatable-column name="Appointment Number" prop="AppointmentNumber" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a href="javascript:void(0);" [routerLink]="['/serviceappointment/view',row.Id]">{{row.AppointmentNumber}}</a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Subject" prop="Subject" [sortable]="true"></ngx-datatable-column>
+              <ngx-datatable-column name="Status" prop="Status" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span class="text-white p-1 ml-1 rounded" [style.background-color]="row.Status | split:'::':1 ">{{ row.Status | split:'::':0}}</span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Scheduled Start" prop="StartDate" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.StartDate | DateTimeToLocal}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Scheduled End" prop="EndDate" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.EndDate | DateTimeToLocal}}
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template
+                             let-rowCount="rowCount"
+                             let-pageSize="lstServiceAppointments.pager.pageSize"
+                             let-selectedCount="selectedCount"
+                             let-currentPage="lstServiceAppointments.pager.currentPage"
+                             let-offset="offset"
+                             let-isVisible="isVisible">-->
+                <!--<div class="page-count" *ngIf='(rowCount  > 0)'>
+              {{commonService.PageString(lstServiceAppointments.pager.currentPage,lstServiceAppointments.pager.pageSize,rowCount)}}
+          </div>-->
+                <!--<datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                         [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                         [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                         [pagerNextIcon]="'fa fa-angle-double-right'"
+                                         [page]="lstServiceAppointments.pager.currentPage"
+                                         [size]="lstServiceAppointments.pager.pageSize"
+                                         [count]="lstServiceAppointments.pager.totalItems"
+                                         [hidden]="!((rowCount / lstServiceAppointments.pager.pageSize) > 1)"
+                                         (change)="setServiceAppointmentPageNo($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>-->
+                <!--=================================== Product Required ================================-->
+                <!--<div class="panel active">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#ProductsRequired" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                <span>Products Required ({{ProductsRequiredCounts}})</span>
+              </a>
+            </h4>
+          </div>
+          <div id="ProductsRequired" class="panel-collapse collapse active show" style="">
+            <a href="javascript:void(0);" (click)="AddProductRequiredPopup()" class="btn-in-panel"><span data-toggle="modal"><i class="feather-plus mr-2"></i>Add</span></a>
+            <div class="panel-body p-2 mt-0">
+              <div class="table-responsive ngxtbl">
+                <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                               [rows]="lstProductsRequired.data"
+                               [columnMode]="'force'"
+                               [scrollbarH]="true"
+                               [rowHeight]="'40'"
+                               [headerHeight]="40"
+                               [footerHeight]="40"
+                               [externalPaging]="true"
+                               [externalSorting]="true"
+                               [loadingIndicator]="loadSave"
+                               [count]="lstProductsRequired.pager.totalItems"
+                               [offset]="lstProductsRequired.pager.currentPage"
+                               [limit]="lstProductsRequired.pager.pageSize"
+                               (page)='setProductRequiredPageNo($event)'
+                               (sort)="onProductRequiredSort($event)">
+
+                  <ngx-datatable-column name="Product Required Number" prop="ProductRequiredNumber" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <a href="javascript:void(0);" [routerLink]="['/manageproductrequired/viewProductRequired',row.Id]">{{row.ProductRequiredNumber}}</a>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Product Name" prop="ProductName" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <a href="javascript:void(0);" [routerLink]="['/product/viewproducts',row.ProductMasterId]">{{row.ProductName}}</a>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Description" prop="Description" [sortable]="true"></ngx-datatable-column>
+                  <ngx-datatable-column name="Quantity Required" prop="QuantityRequired" [sortable]="true"></ngx-datatable-column>
+
+                  <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <div class="text-center">
+                        <a href="javascript:void(0);" (click)="EditProductREquired(row)" title="Edit"><i class="fa fa-pencil text-success pr-2"></i></a>
+                        <a href="javascript:void(0);" (click)="deleteProductREquired(row,'appointment')"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                      </div>
+
+                    </ng-template>
+                  </ngx-datatable-column>
+
+
+                  <ngx-datatable-footer>
+                    <ng-template ngx-datatable-footer-template
+                                 let-rowCount="rowCount"
+                                 let-pageSize="lstProductsRequired.pager.pageSize"
+                                 let-selectedCount="selectedCount"
+                                 let-currentPage="lstProductsRequired.pager.currentPage"
+                                 let-offset="offset"
+                                 let-isVisible="isVisible">-->
+                <!--<div class="page-count" *ngIf='(rowCount  > 0)'>
+              {{commonService.PageString(lstProductsRequired.pager.currentPage,lstProductsRequired.pager.pageSize,rowCount)}}
+
+          </div>-->
+                <!--<datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                         [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                         [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                         [pagerNextIcon]="'fa fa-angle-double-right'"
+                                         [page]="lstProductsRequired.pager.currentPage"
+                                         [size]="lstProductsRequired.pager.pageSize"
+                                         [count]="lstProductsRequired.pager.totalItems"
+                                         [hidden]="!((rowCount / lstProductsRequired.pager.pageSize) > 1)"
+                                         (change)="setProductRequiredPageNo($event)">
+                        </datatable-pager>
+                      </ng-template>
+                    </ngx-datatable-footer>
+                  </ngx-datatable>
+
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>-->
+                <!--=======================================================================================-->
+                <!--<div class="panel active">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#oppurtunity" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                <span>Opportunity  ({{OpportunityCount}})</span>
+              </a>
+            </h4>
+          </div>
+          <div id="oppurtunity" class="panel-collapse collapse active show" style="">
+            <div class="panel-body p-2 mt-0">
+              <div class="table-responsive ngxtbl">
+                <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                               [rows]="lstOpportunity.data"
+                               [columnMode]="'force'"
+                               [scrollbarH]="true"
+                               [rowHeight]="'40'"
+                               [headerHeight]="40"
+                               [footerHeight]="40"
+                               [externalPaging]="true"
+                               [externalSorting]="true"
+                               [loadingIndicator]="loadSave"
+                               [count]="lstOpportunity.pager.totalItems"
+                               [offset]="lstOpportunity.pager.currentPage"
+                               [limit]="lstOpportunity.pager.pageSize"
+                               (page)='setOpportunityPageNo($event)'
+                               (sort)="onOpportunitySort($event)">
+                  <ngx-datatable-column name="Opportunity Name" prop="OpportunityName" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <a href="javascript:void(0);" [routerLink]="['/opportunity/viewOpportunity',row.Id]">{{row.OpportunityName}}</a>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Account Name" prop="AccountName" [sortable]="true"></ngx-datatable-column>
+                  <ngx-datatable-column name="Close Date" prop="CloseDate" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      {{row.CloseDate | DateTimeToLocal}}
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-footer>
+                    <ng-template ngx-datatable-footer-template
+                                 let-rowCount="rowCount"
+                                 let-pageSize="lstOpportunity.pager.pageSize"
+                                 let-selectedCount="selectedCount"
+                                 let-currentPage="lstOpportunity.pager.currentPage"
+                                 let-offset="offset"
+                                 let-isVisible="isVisible">
+                      <div class="page-count" *ngIf='(rowCount  > 0)'>
+                      </div>
+                      <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                       [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                       [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                       [pagerNextIcon]="'fa fa-angle-double-right'"
+                                       [page]="lstOpportunity.pager.currentPage"
+                                       [size]="lstOpportunity.pager.pageSize"
+                                       [count]="lstOpportunity.pager.totalItems"
+                                       [hidden]="!((rowCount / lstOpportunity.pager.pageSize) > 1)"
+                                       (change)="setOpportunityPageNo($event)">
+                      </datatable-pager>
+                    </ng-template>
+                  </ngx-datatable-footer>
+                </ngx-datatable>-->
+                <!--<a href="javascript:void(0);" (click)="displaynotedetail(row)">{{row.note_description | truncate : 50}}</a>-->
+                <!--</div>
+              </div>
+            </div>
+          </div>-->
+                <!--=================================== Work Order History ================================-->
+                <!--<div class="panel active">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#workorderhistory" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                <span>Work Order History  ({{WorkOrderHistoryCount}})</span>
+              </a>
+            </h4>
+          </div>
+          <div id="workorderhistory" class="panel-collapse collapse active show" style="">
+            <div class="panel-body p-2 mt-0">
+              <div class="table-responsive ngxtbl">
+                <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                               [rows]="lstWorkOrderHistory.data"
+                               [columnMode]="'force'"
+                               [scrollbarH]="true"
+                               [rowHeight]="'40'"
+                               [headerHeight]="40"
+                               [footerHeight]="40"
+                               [externalPaging]="true"
+                               [externalSorting]="true"
+                               [loadingIndicator]="loadSave"
+                               [count]="lstWorkOrderHistory.pager.totalItems"
+                               [offset]="lstWorkOrderHistory.pager.currentPage"
+                               [limit]="lstWorkOrderHistory.pager.pageSize"
+                               (page)='setWorkOrderHistoryPageNo($event)'
+                               (sort)="onWorkOrderHistorySort($event)">
+                  <ngx-datatable-column name="SFStatus" prop="SFStatus" [sortable]="true"></ngx-datatable-column>
+                  <ngx-datatable-column name="Start Date" prop="StartDateTime" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      {{row.StartDateTime | DateTimeToLocal}}
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="End Date" prop="EndDateTime" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      {{row.EndDateTime | DateTimeToLocal}}
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Modified By" prop="ModifiedBy" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      {{row.ModifiedBy }}
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-footer>
+                    <ng-template ngx-datatable-footer-template
+                                 let-rowCount="rowCount"
+                                 let-pageSize="lstWorkOrderHistory.pager.pageSize"
+                                 let-selectedCount="selectedCount"
+                                 let-currentPage="lstWorkOrderHistory.pager.currentPage"
+                                 let-offset="offset"
+                                 let-isVisible="isVisible">
+                      <div class="page-count" *ngIf='(rowCount  > 0)'>
+                        Showing {{(lstWorkOrderHistory.pager.currentPage - 1 )* lstWorkOrderHistory.pager.pageSize + 1}}  to {{lstWorkOrderHistory.pager.currentPage * lstWorkOrderHistory.pager.pageSize}} out of {{rowCount}}  enteries
+                      </div>
+                      <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                       [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                       [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                       [pagerNextIcon]="'fa fa-angle-double-right'"
+                                       [page]="lstWorkOrderHistory.pager.currentPage"
+                                       [size]="lstWorkOrderHistory.pager.pageSize"
+                                       [count]="lstWorkOrderHistory.pager.totalItems"
+                                       [hidden]="!((rowCount / lstWorkOrderHistory.pager.pageSize) > 1)"
+                                       (change)="setWorkOrderHistoryPageNo($event)">
+                      </datatable-pager>
+                    </ng-template>
+                  </ngx-datatable-footer>
+                </ngx-datatable>-->
+                <!--<a href="javascript:void(0);" (click)="displaynotedetail(row)">{{row.note_description | truncate : 50}}</a>-->
+                <!--</div>
+              </div>
+            </div>
+          </div>-->
+                <!--=======================================================================================-->
+
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+      </div>
+    
+  
+
+
+
+
+
+<!--===================================================== Fix Order Model========================================================-->
+<div class="modal fade in show" bsModal #FixOrder="bs-modal" tabindex="-1" role="dialog"
+  style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="closeFixOrderPopupModelPopup()" data-dismiss="modal"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; height:290px; overflow:visible;">
+        <form [formGroup]="addFixOrderForm">
+          <div class="row mb-2">
+            <div class="col-md-12 col-lg-6">
+              <label>Department<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstdepartment" placeholder="Select Department" formControlName="departmentId"
+                  bindLabel="text" bindValue="value" (change)="onDepartmentSelected($event)"
+                  [ngClass]="{'is-invalid': (departmentId.invalid && (departmentId.dirty || departmentId.touched) && departmentId.errors?.required)}">
+                </ng-select>
+                <small
+                  *ngIf="departmentId.invalid && (departmentId.dirty || departmentId.touched) && departmentId.errors?.required"
+                  class="text-danger">Please select Department</small>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6" *ngIf="showSubCategoryDropDown">
+              <label>Sub Category</label>
+              <div class="form-group">
+                <ng-select [items]="lstdepartmentSubCategory" placeholder="Select Sub Category"
+                  formControlName="departmentSubCategoryId" bindLabel="text" bindValue="value"></ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-md-12 col-lg-12">
+              <label>Description:</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" style="min-height:120px;" placeholder="Enter Description"
+                  formControlName="fixOrderDescription" #machineDescription maxlength="1000"></textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveFixOrder()"><i
+            class="feather-save text-white"></i> Save</button>
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeFixOrderPopupModelPopup()"
+          data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--===============================================================================================================================-->
+<!--===================================================== Update Status Model========================================================-->
+<div class="modal fade in show" bsModal #UpdateStatus="bs-modal" tabindex="-1" role="dialog"
+  style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="closeUpdateStatusModal()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow-x:inherit;overflow-y:inherit;">
+        <form [formGroup]="updateStatusForm">
+          <div class="row">
+            <div class="col-md-12 col-lg-6">
+              <label>Work Order Status<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstStatus" placeholder="Select Work Order Status" formControlName="statusId"
+                  bindLabel="text" bindValue="value"
+                  [ngClass]="{'is-invalid': (statusId.invalid && (statusId.dirty || statusId.touched) && statusId.errors?.required)}">
+                </ng-select>
+                <small *ngIf="statusId.invalid && (statusId.dirty || statusId.touched) && statusId.errors?.required"
+                  class="text-danger">Please select Work Order Status</small>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="onSaveStatusClick()"><i
+            class="feather-save text-white"></i> Save</button>
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeUpdateStatusModal()" data-dismiss="modal"
+          aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loaderStatus" class="loader-popup"></app-loader>
+</div>
+<!--===============================================================================================================================-->
+<!--===================================================== Add Update Product Required========================================================-->
+<div class="modal fade in show" bsModal #ProductRequired="bs-modal" tabindex="-1" role="dialog"
+  style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{ProductRequiredTitle}}</h4>
+        <button type="button" class="close" (click)="closeProductRequiredModal()" data-dismiss="modal"
+          aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="overflow-x:inherit;overflow-y:inherit;">
+        <form [formGroup]="addForm">
+          <div class="row">
+            <div class="col-md-12">
+              <h4>if would like Enerflo to automatically find the best apt time based on availalility.</h4>
+              <div class="row col-12">
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Parent Record:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <input type="text" [disabled]="true" class="form-control" placeholder="Please enter Parent Record"
+                      formControlName="ParentRecord">
+                  </div>
+                </div>
+
+
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Product Required:<span class="text-danger">*</span></label>
+                  <div class="form-group">
+                    <ng-select #clearDrop [items]="lstProductRequired" placeholder="Select Product Required"
+                      bindValue="value" bindLabel="text" formControlName="ProductRequired" [closeOnSelect]="true"
+                      [ngClass]="{'is-invalid': (ProductRequired.invalid && (ProductRequired.dirty || ProductRequired.touched) && ProductRequired.errors?.required) }">
+                    </ng-select>
+                    <small
+                      *ngIf="ProductRequired.invalid && (ProductRequired.dirty || ProductRequired.touched) && ProductRequired.errors?.required"
+                      style="color:red;">Please select Product Required</small>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Quantity Required:<span class="text-danger"></span></label>
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Please enter Parent Record"
+                      formControlName="QuantityRequired">
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Date Delivered:<span class="text-danger"></span></label>
+                  <div class="form-group datepickerinpop">
+                    <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true"
+                      inputStyleClass="form-control start-date " formControlName="DateDelivered"
+                      hourFormat="{{timeFormat}}" [showTime]="false" inputId="timeonly" dateFormat="mm/dd/yy"
+                      showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030">
+                    </p-calendar>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                  <label>Quantity Unit Of Measure:<span class="text-danger"></span></label>
+                  <div class="form-group">
+                    <ng-select #clearDrop [items]="lstQuantityUnitOfMeasure"
+                      placeholder="Select Quantity Unit Of Measure" bindValue="value" bindLabel="text"
+                      formControlName="QuantityUnitOfMeasure" [closeOnSelect]="true">
+                    </ng-select>
+                    <small
+                      *ngIf="ProductRequired.invalid && (ProductRequired.dirty || ProductRequired.touched) && ProductRequired.errors?.required"
+                      style="color:red;">Please select Product Required</small>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="onProductRequiredClick()"><i
+            class="feather-save text-white"></i> Save</button>
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeProductRequiredModal()"
+          data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<!--==================================================== Audit popup ==============================================================-->
+<div bsModal #audit="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">CheckList Review</h4>
+        <button type="button" class="close" (click)="closeAudit()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body" style="max-height: 600px; overflow:auto !important;">
+
+        <div class="table-responsive no-padding mb-0" *ngFor="let item of CheckListGroup; let auditIndex=index;">
+          <h3 class="form-heading mt-4 mb-0"> <span>{{item.AppointmentNumber}} - {{item.WorkTypeName}} /
+              {{item.WorkOrderNumber}}</span></h3>
+          <table class="table table-hover table-dynamic mb-0" style="min-width:300px;">
+            <thead>
+              <tr>
+                <!--<th width="100">Sr.No.</th>-->
+                <th>Name</th>
+                <th width="200">Final Score</th>
+                <th width="150">Is Excluded?</th>
+              </tr>
+            </thead>
+
+            <ng-container *ngFor="let inner of item.InnerData;let j=index">
+              <tbody>
+                <tr *ngIf="item.InnerData[0].Name != null">
+                  <!--<td>{{inner.RowNum}}</td>-->
+
+                  <td>
+
+
+                    <a *ngIf="item.isExclude!=true" href="javascript:void(0);"
+                      (click)="auditChecklistDetail(inner.id,inner.ServiceAppointmentId, true)">{{inner.Name}}</a>
+                    <a *ngIf="item.isExclude==true">{{inner.Name}}</a>
+                  </td>
+                  <td>{{inner.FinalScoreCount}}/{{inner.QuestionCount}}</td>
+                  <td>
+                    <div class="d-inline-block align-middle m-0 ml-2">
+                      <label class="switch m-0">
+                        <input type="checkbox" id={{inner.id}} [checked]="item.isExclude"
+                          (click)="auditSwitchClicked($event,item.id,item.ServiceAppointmentId)" disabled>
+                        <span class="slider round">
+                          <span>Yes</span>
+                        </span>
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                <tr *ngIf="item.InnerData[0].Name == null">
+                  <td colspan="3" class="text-center"><span class="text-center text-danger">No data to display</span>
+                  </td>
+                </tr>
+              </tbody>
+            </ng-container>
+          </table>
+        </div>
+
+
+        <div class="table-responsive no-padding mb-0">
+          <table class="table table-hover table-dynamic mb-0" style="min-width:300px;">
+            <tr>
+              <td width="100" class="border-0"></td>
+              <td class="border-0"></td>
+              <td width="200" class="border-0">
+                <span *ngFor="let items of auditData; let auditIndex=index;">
+                  <span *ngIf="auditIndex==0 && items.OverallScoreText=='Pending'" style="max-width:150px !important;"
+                    class="status-box bg-warning text-dark p-2">{{items.OverallScore}}
+                    <strong>({{items.OverallScoreText}})</strong></span>
+
+                  <span *ngIf="auditIndex==0 && items.OverallScoreText=='Fail'" style="max-width:150px !important;"
+                    class="status-box bg-danger p-2">
+                    {{items.OverallScore}} <strong>({{items.OverallScoreText}})</strong>
+                  </span>
+
+                  <span *ngIf="auditIndex==0 && items.OverallScoreText=='Pass'" style="max-width:150px !important;"
+                    class="status-box bg-success p-2">
+                    {{items.OverallScore}} <strong>({{items.OverallScoreText}})</strong>
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeAudit()" data-dismiss="modal"
+          aria-label="Close"><i class="fa fa-times text-white"></i> Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--=======================================================================================================================================-->
+<!--======================================================== Audit Check List Popup =======================================================-->
+<div bsModal #auditCheckList="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{auditTitle}}</h4>
+        <button type="button" class="close" (click)="closeAuditCheckList()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="isModalShow" class="modal-body" style=" margin-bottom:10px; max-height:600px;">
+        <a href="javascript:;" *ngIf="isScroll" class="back-to-top" (click)="ClickForScrollTop()"><i
+            class="fa fa-chevron-up"></i></a>
+        <div class="w-100 bg-light p-2 mb-2" id="l-of-sections" [ngClass]="{'d-none':(this.isDisabled)}">
+          <!--<h5><strong>List of Sections</strong></h5>-->
+          <ul style="list-style: none; max-height: 130px;    overflow: auto;">
+            <li *ngFor="let section of SectionGroupTop;let j=index" class="pb-2 w-50 d-inline-block">
+              <a class="nav-link scrollto p-0 text-dark" (click)="ClickForScroll(section.SECTION_ID)"
+                href="javascript:void(0);" style="font-size:16px; line-height:24px;">
+                <strong>{{j+1}}:</strong> {{section.SECTION_NAME}} - {{section | SectionNameWithScoreTop}}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="max-hsc">
+          <div id="section_{{section.SECTION_ID}}" class="manage-color section_{{section.SECTION_ID}}"
+            *ngFor="let section of SectionGroup; let scIndex=index;">
+            <div class="col-12 col-md-12 col-lg-12 p-0" id="l-of-sections_ScrollingId"
+              style="margin: 0px; padding: 0px;">
+              <h3 class="form-heading ng-star-inserted ml-0 " [ngClass]="{'mt-0':scIndex == 0 , 'mt-3':scIndex > 0}">
+                <span>{{section.SECTION_NAME}} :</span><strong [ngClass]="{'d-none':(this.isDisabled)}"
+                  style=" float: right; line-height: 40px; font-size: 16px; padding-right:10px;">{{section |
+                  SectionNameWithScore}}</strong>
+              </h3>
+            </div>
+
+            <div class="row mng-number border align-items-stretch mx-0 mb-1"
+              *ngFor="let ques of section.Question ; let quesIndex=index;">
+              <div class="col-lg-2 bg-numbr1 p-3 text-center d-flex align-items-center" style="background: #dcf1ff;">
+                <h2 class="w-100">{{quesIndex+1}}</h2>
+              </div>
+              <div class="col-lg-10 p-3 d-flex align-items-center">
+                <div class="w-100">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label *ngIf="ques.SubQuestions" style="font-size: 17px;"><b>{{ques.QUESTION}}</b></label>
+                      <div class="w-100 d-flex flex-wrap">
+                      </div>
+                    </div>
+                    <div class="col-lg-12" *ngIf='ques.SubQuestions;else elseblock'>
+                      <ng-container *ngFor="let subques of ques.SubQuestions ;let k=index;">
+                        <label *ngIf="k==0" [ngClass]="{'d-none':subques.VISIBLE_TO != 'Auditor'}"><b>Audit
+                            Result:</b></label>
+                        <div class="fulwith-radio-n-check  mb-4">
+                          <div class="w-100 d-flex align-content-center align-items-center">
+                            <div class="clearfix"></div>
+                            <label class="text-capitalize mr-auto"
+                              [ngClass]="{'after-none':subques.VISIBLE_TO != 'Auditor'}"
+                              style="font-weight:700">{{subques.QUESTION}}</label>
+                          </div>
+                          <div class="w-100 mb-2 d-flex flex-wrap align-content-center align-items-center pl-1">
+                            <div class="w-100" style="border-left: 5px solid #41b2f9; padding-left: 10px;">
+                              <div class="w-100 mb-2" *ngIf="subques.Answers"><span
+                                  *ngIf="subques.Answers[0].ANSWER">Answer: {{subques.Answers[0].ANSWER}} </span></div>
+                              <div class="w-100 mb-2" *ngIf="subques.Answers"><span
+                                  *ngIf="subques.Answers[0].ANSWER_GIVEN_BY"><em>Created By:
+                                    {{subques.Answers[0].ANSWER_GIVEN_BY}}</em></span></div>
+                              <div *ngIf="checkListType == 'photochecklist' && subques.Answers" class="w-100 mb-2">
+                                <div *ngIf="subques.Answers[0].Attachments;else elseBlock">
+                                  <img *ngFor="let att of subques.Answers[0].Attachments;let attachmentIndex=index;"
+                                    loading="lazy" src="{{att.ThumbnailUrl}}" class="img-fluid"
+                                    (click)="open(subques.Answers[0].Attachments, attachmentIndex)"
+                                    style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;  cursor: zoom-in">
+                                </div>
+                                <ng-template #elseBlock>
+                                  <span>No images found.</span>
+                                </ng-template>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="w-100 mb-4 mt-4 p-2" style="background:#f1f1f1"
+                            [ngClass]="{'d-none':(this.isDisabled)}">
+                            <div class="w-100">
+                              <label class="d-block"><b>Is provided information correct?</b></label>
+                              <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                  <div class="custom-control custom-radio mx-2  p-0">
+                                    <input type="radio" id="subquesradio{{scIndex}}{{quesIndex}}{{k}}Y" value="1"
+                                      name="subques{{scIndex}}{{quesIndex}}{{k}}" [(ngModel)]="subques.IsCorrect"
+                                      [checked]="subques.IsCorrect == '1'" (ngModelChange)="onRadioChange()">
+                                    <label for="subquesradio{{scIndex}}{{quesIndex}}{{k}}Y"
+                                      class="radio-label">Yes</label>
+                                  </div>
+                                  <div class="custom-control custom-radio mx-2  p-0">
+                                    <input type="radio" id="subquesradio{{scIndex}}{{quesIndex}}{{k}}N" value="0"
+                                      name="subques{{scIndex}}{{quesIndex}}{{k}}" [(ngModel)]="subques.IsCorrect"
+                                      [checked]="subques.IsCorrect == '0'" (ngModelChange)="onRadioChange()">
+                                    <label for="subquesradio{{scIndex}}{{quesIndex}}{{k}}N"
+                                      class="radio-label">No</label>
+                                  </div>
+                                  <div class="custom-control custom-radio mx-2  p-0">
+                                    <input type="radio" id="subquesradio{{scIndex}}{{quesIndex}}{{k}}NS" value=""
+                                      name="subques{{scIndex}}{{quesIndex}}{{k}}" [(ngModel)]="subques.IsCorrect"
+                                      [checked]="!subques.IsCorrect" (ngModelChange)="onRadioChange()">
+                                    <label for="subquesradio{{scIndex}}{{quesIndex}}{{k}}NS" class="radio-label">No
+                                      Score</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="w-100">
+                              <label><b>Auditor Comment:</b></label>
+                              <div class="form-group mb-0">
+                                <textarea class="form-control audit-textarea" [(ngModel)]='subques.Comment'
+                                  style="margin-bottom: 18px;"></textarea>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                    <ng-template #elseblock>
+                      <div class="col-lg-12">
+                        <div class="fulwith-radio-n-check  mb-4">
+                          <div class="w-100 d-flex align-content-center align-items-center">
+                            <div class="clearfix"></div>
+                            <label class="text-capitalize mr-auto"
+                              [ngClass]="{'after-none':ques.VISIBLE_TO != 'Auditor'}"
+                              style="font-weight:700">{{ques.QUESTION}}</label>
+                          </div>
+                          <div class="w-100 mb-2 d-flex flex-wrap align-content-center align-items-center pl-1">
+                            <div class="w-100" style="border-left: 5px solid #41b2f9; padding-left: 10px;">
+                              <div class="w-100 mb-2" *ngIf="ques.Answers">Answer: {{ques.Answers[0].ANSWER}}</div>
+                              <div class="w-100 mb-2" *ngIf="ques.Answers"><em>Created By:
+                                  {{ques.Answers[0].ANSWER_GIVEN_BY}}</em></div>
+                              <div *ngIf="checkListType == 'photochecklist'" class="w-100 mb-2">
+                                <div *ngIf="ques.Answers;else elseBlock">
+                                  <img *ngFor="let att of ques.Answers[0].Attachments;let attachmentIndex=index;"
+                                    src="{{att.FileUrl}}" loading="lazy" class="img-fluid"
+                                    (click)="open(ques.Answers[0].Attachments, attachmentIndex)"
+                                    style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;  cursor: zoom-in">
+                                </div>
+                                <ng-template #elseBlock>
+                                  <span>No images found.</span>
+                                </ng-template>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="w-100 mb-4 mt-4 p-2" style="background:#f1f1f1"
+                            [ngClass]="{'d-none':(this.isDisabled)}">
+                            <div class="w-100">
+                              <label class="d-block"><b>Is provided information correct?</b></label>
+                              <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                  <div class="custom-control custom-radio mx-2  p-0">
+                                    <input type="radio" id="quesradio{{scIndex}}{{quesIndex}}Y" value="1"
+                                      name="ques{{scIndex}}{{quesIndex}}" [(ngModel)]="ques.AuComments[0].IsCorrect"
+                                      [checked]="ques.AuComments[0].IsCorrect == '1'" (ngModelChange)="onRadioChange()">
+                                    <label for="quesradio{{scIndex}}{{quesIndex}}Y" class="radio-label">Yes</label>
+                                  </div>
+                                  <div class="custom-control custom-radio mx-2  p-0">
+                                    <input type="radio" id="quesradio{{scIndex}}{{quesIndex}}N" value="0"
+                                      name="ques{{scIndex}}{{quesIndex}}" [(ngModel)]="ques.AuComments[0].IsCorrect"
+                                      [checked]="ques.AuComments[0].IsCorrect == '0'" (ngModelChange)="onRadioChange()">
+                                    <label for="quesradio{{scIndex}}{{quesIndex}}N" class="radio-label">No</label>
+                                  </div>
+                                  <div class="custom-control custom-radio mx-2  p-0">
+                                    <input type="radio" id="quesradio{{scIndex}}{{quesIndex}}NS" value=""
+                                      name="ques{{scIndex}}{{quesIndex}}" [(ngModel)]="ques.AuComments[0].IsCorrect"
+                                      [checked]="!ques.AuComments[0].IsCorrect" (ngModelChange)="onRadioChange()">
+                                    <label for="quesradio{{scIndex}}{{quesIndex}}NS" class="radio-label">No
+                                      Score</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="w-100">
+                              <label><b>Auditor Comment:</b></label>
+                              <div class="form-group mb-0">
+                                <textarea class="form-control audit-textarea" [(ngModel)]='ques.AuComments[0].Comment'
+                                  style="margin-bottom: 18px;"></textarea>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-success text-white" [ngClass]="{'d-none':(this.isDisabled)}"
+          (click)="onSubmitAuditCheckList()"><i class="feather-save"></i> Submit</a>
+        <button type="submit" [ngClass]="{'d-none':(this.isDisabled)}" class="btn btn-danger text-white"
+          (click)="closeAuditCheckList()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i>
+          Cancel</button>
+        <a href="javascript:;" class="btn btn-dark text-white" (click)="closeAuditCheckList()"><i
+            class="fa fa-arrow-left"></i> Back</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<!--=======================================================================================================================================-->
+
+<div bsModal #notesDetailModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Message</h4>
+        <button type="button" class="close" (click)="closeNote(dataNoti.noteId)">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow:auto; margin-bottom:10px;">
+        <div class="col-md-12" *ngIf="dataNoti">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Sender:</label>
+                <div class="col-sm-9">
+                  <p class="form-control-plaintext text-left" id="staticEmail">{{dataNoti.senderName}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-5 col-form-label font-weight-bold">Received On:</label>
+                <div class="col-sm-7">
+                  <p class="form-control-plaintext text-left" id="staticEmail">{{dataNoti.CreatedOn |
+                    utcdatetimetolocal}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Subject:</label>
+                <div class="col-sm-9">
+                  <p class="form-control-plaintext text-left" id="staticEmail">{{dataNoti.title}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-5 col-form-label font-weight-bold">Status:</label>
+                <div class="col-sm-7">
+
+                  <p class="form-control-plaintext text-left" id="staticEmail">
+                    {{dataNoti.Status}}
+                    <span class="badge badge-warning">Unread</span>
+                    <!--<ng-template #IsUnread>
+                      <span class="badge badge-success">Read</span>
+                    </ng-template>-->
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-12 col-form-label font-weight-bold">Message:</label>
+                <div class="col-sm-12">
+                  <p class="form-control-plaintext text-left" [innerHTML]="dataNoti.description"></p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeNote(dataNoti.noteId)" data-dismiss="modal"
+          aria-label="Close"><i class="fa fa-times text-white"></i>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--====================================================================Project Requirement===================================================================-->
+
+<app-addeditprojectrequirements #addeditprojectrequirements (callGetRequirementListingData)="callRequirementListingData()"></app-addeditprojectrequirements>
+<app-work-order-line-item-popup #lineItemWorkOrderPopup (refreshLineItemList)="GetWorkOrderLineItemList()"></app-work-order-line-item-popup>
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

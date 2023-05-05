@@ -1,0 +1,863 @@
+<div bsModal #modal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div *ngIf="form" [formGroup]="form" class="modal-dialog modal-xl modal-info " [ngClass]="{'disabled':loadSave}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Edit Screen</h4>
+                <button type="button" class="close" (click)="Cancel()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div formArrayName="nodes" class="modal-body pb-0">
+                <div class="row" *ngFor="let node of nodes.controls; let a = index">
+                    <div class="col-12" *ngIf="node.get('nodeId').value == nodeId && node.get('nodeType').value=='Screen'">
+                        <div class="row">
+                            <div id="FixedDiv" class="px-1" [ngClass]="(!isCompanyTypeFinancialInstitute)?'col-md-3 col-lg-3':'col-md-3 col-lg-3'">
+
+                                <div class="panel-content clearfix mb-4 mb-4 pl-2 pr-0 pt-0 ">
+
+                                    <ul class="nav nav-tabs nav-cust row" id="myTab" role="tablist">
+                                        <li class="nav-item col-12">
+                                            <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#Component" role="tab" aria-selected="true">Component</a>
+                                        </li>
+                                        <li class="nav-item col-12">
+                                            <a class="nav-link" id="list-stage" data-toggle="tab" href="#Fields" role="tab" aria-selected="false">Fields(Beta)</a>
+                                        </li>
+
+                                    </ul>
+                                    <div style="overflow-y: auto; max-height:  700px;" class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade active show" id="Component" role="tabpanel">
+                                            <div class="bordered-content">
+                                                <ul class="types columnlist list-group custom-field-layout custom-field-layout-left-panel">
+
+                                                    <li class="list-group-item selected" id="1" code="string" maxlength="100" *ngFor="let row of colors" pDraggable="row" (onDragStart)="dragStart($event,row)" (onDragEnd)="dragEnd($event)">
+                                                        <a href="javascript:void(0);">
+                                                            <i class="{{row.class_name}}"></i>
+                                                            <span>
+                                                                {{row.name}}
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+                                        <div [formGroup]="node.get('component')" class="tab-pane  fade" id="Fields" role="tabpanel">
+                                            <label for="Action" class="form-label"><span
+                                                    style="color: red;">*</span>&nbsp;Resources</label>
+                                            <ng-select (change)="onChangeResource($event)" formControlName="resourceId" placeholder="Select object" appendTo="body" [items]="resourceList" bindLabel="name" bindValue="resourceId"></ng-select>
+
+                                            <div class="bordered-content" style="overflow-y: auto; max-height:550px;">
+                                                <ul class=" columnlist custom-field-layout custom-field-layout-left-panel">
+                                                    <p class="bg-light p-3 mb-0" *ngIf="mainScreenForm.get('resourceId').value">
+                                                        <input type="text" class="form-control w-100" (keyup)="onKeyuptxt($event)" maxlength="500" placeholder="Search field here">
+                                                    </p>
+                                                    <hr class="mb-0" />
+                                                    <li class="list-group-item selected" id="1" code="string" maxlength="100" *ngFor="let row of customFields" pDraggable="row" (onDragStart)="dragStart($event,row)" (onDragEnd)="dragEnd($event)">
+
+                                                        <a href="javascript:void(0);">
+                                                            <i class="{{row.class_name}}"></i>
+                                                            <span>
+                                                                {{row.display_name}}
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="px-1" [ngClass]="(!isCompanyTypeFinancialInstitute)?'col-md-6 col-lg-6':'col-md-9 col-lg-9'" style="overflow-y: auto; max-height:  800px;">
+
+                                <div dnd-sortable-container [sortableData]="group" [dropZones]="['container-dropZone']">
+
+                                    <div id="container" class=" mb-3" dnd-sortable [dragEnabled]="dragOperation">
+                                        <div class="drop" pDroppable="row" (onDrop)="dropNewGrop($event)" dnd-sortable-container [sortableData]="mainScreenForm.get('controls').controls" [dropZones]="['widget-dropZone']">
+                                            <div class="drop_right_heading">
+                                                <div class="col-md-12 col-lg-12">
+
+                                                    <div class="card">
+                                                        <div *ngIf="isHeaderVisible" (click)="showDefaultScreenProperties($event);" style="z-index: 2" class="card-header">
+                                                            <strong>{{headerLabel}}</strong>
+                                                            <div class="float-right">
+                                                                <div class="form-group d-flex justify-content-between">
+                                                                    <div class="dropdown form-group">
+                                                                        <a href="javascript:void(0);" class="column-setting d-inline-block" draggable="false">
+                                                                            <i (click)="openDisplaySetting()" class="fa fa-cog text-dark" style="font-size: 20px;"></i>
+                                                                            <div class="dropdown-menu selctlay" [ngStyle]="{ display: displaySettingFlag ? 'block' : 'none' }" id="column-setting">
+                                                                                <span class="hedlay">Select
+                                                                                    Layout</span>
+                                                                                <ng-container>
+                                                                                    <div class="custom-control custom-radio">
+                                                                                        <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'single')">
+                                                                                            <input type="radio" class="custom-control-input" id="singlecustomRadioNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="single" [checked]="singleColumn">
+                                                                                            <label class="custom-control-label" for="singlecustomRadioNewGrp{{a}}">Single
+                                                                                                Column</label>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                    <div class="custom-control custom-radio">
+                                                                                        <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'double')">
+                                                                                            <input type="radio" class="custom-control-input" id="doublecustomRadioNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="double" [checked]="doubleColumn">
+                                                                                            <label class="custom-control-label" for="doublecustomRadioNewGrp{{a}}">Double
+                                                                                                Columns</label>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                    <div class="custom-control custom-radio">
+                                                                                        <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'triple')">
+                                                                                            <input type="radio" class="custom-control-input" id="tripleColumnsNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="triple" [checked]="tripleColumn">
+                                                                                            <label class="custom-control-label" for="tripleColumnsNewGrp{{a}}">Triple
+                                                                                                Columns</label>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                    <div class="custom-control custom-radio">
+                                                                                        <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'four')">
+                                                                                            <input type="radio" class="custom-control-input" id="fourColumnsNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}" value="four" [checked]="fourColumn">
+                                                                                            <label class="custom-control-label" for="fourColumnsNewGrp{{a}}">Four
+                                                                                                Columns</label>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </ng-container>
+                                                                            </div>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="card-body">
+                                                            <div class="row custom_feild_box" style="min-height:75px;">
+                                                                <!-- {{test(mainScreenForm.get('controls').controls)}} -->
+                                                                <ng-container *ngFor="let control of mainScreenForm.get('controls').controls; let controlIndex=index">
+                                                                    <div [ngClass]="{'col-lg-12 col-xl-12': (mainScreenForm.get('displayFormat').value =='single' ||  mainScreenForm.get('displayFormat').value == '')
+                                                                    && !isCompanyTypeFinancialInstitute, 'col-lg-6 col-xl-6': mainScreenForm.get('displayFormat').value =='double' , 'col-lg-4 col-xl-4':mainScreenForm.get('displayFormat').value =='triple', 'col-lg-3 col-xl-3': mainScreenForm.get('displayFormat').value =='four' }">
+
+                                                                        <div class="draged-item" dnd-sortable [sortableIndex]="controlIndex" [dragEnabled]="!dragOperation" (mousedown)="fordragcontrol()" [dragData]="control" (click)="showSelectProps(control,mainScreenForm.get('controls').controls,controlIndex)" [ngClass]="{'active': control.get('isEditProg').value ===true}">
+                                                                            <ng-container *ngIf="isCompanyTypeFinancialInstitute;else elseblock;">
+                                                                                <span class="form-control w-75 float-left">{{
+                                                                                    control.get('name').value
+                                                                                    }}</span>
+                                                                                <span class="w-25 float-right" style="padding-top:10px;">
+                                                                                    <a href="javscript:;">
+                                                                                        <span>
+                                                                                            <span
+                                                                                                (click)="hideme[controlIndex] =! hideme[controlIndex]"><i
+                                                                                                    class="fa fa-ellipsis-h text-secondary float-right anchodeshowdrop"></i></span>
+                                                                                <div class="dropdown-menu float-right hideshowdropdown quickkact" [ngClass]="{'hide' : hideme[controlIndex] == false,'show' : hideme[controlIndex] == true}" id="column-setting{{controlIndex}}">
+                                                                                    <div>
+                                                                                        <a href="javascript:void(0);" (click)="RemoveCustomFields(a,controlIndex,controlIndex)" class="dropdown-item px-2" draggable="false"><i
+                                                                                                            class="feather-trash-2 text-danger"></i>
+                                                                                                        <span
+                                                                                                            class="ml-1 text-dark"
+                                                                                                            style="font-size: 14px;">Delete
+                                                                                                            Field</span></a>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                                </span>
+                                                                                </a>
+                                                                                </span>
+
+                                                                            </ng-container>
+                                                                            <ng-template #elseblock>
+                                                                                <span class="py-1 w-75 float-left">
+                                                                                    <ng-container
+                                                                                        *ngIf="control.get('fieldType').value != 'texteditor'">
+                                                                                        <label class="text-capitalize">
+                                                                                            <span
+                                                                                                *ngIf="control.get('fieldType').value !='span'">{{control.get('name').value}}</span>
+                                                                                <span *ngIf="control.get('isRequired').value" class="text-danger">*</span>
+                                                                                </label>
+
+                                                                </ng-container>
+
+                                                                <!--for input value and field type text-->
+                                                                <input *ngIf="control.get('fieldType').value=='textbox'" [ngClass]="{'disabledddl':true}" id="input_{{controlIndex}}" name="input_{{controlIndex}}" class="form-control" type="text" />
+
+                                                                <!-- placeholder="{{control.get('name').value}}"  -->
+                                                                <!--for input value and field type textarea-->
+                                                                <!-- <input
+                                                                                        *ngIf="control.get('fieldType').value=='radio'"
+                                                                                        [ngClass]="{'disabledddl':true}"
+                                                                                        id="input_{{controlIndex}}"
+                                                                                        name="input_{{controlIndex}}"
+                                                                                        class="form-control" type="radio"
+                                                                                         /> -->
+                                                                <textarea *ngIf="control.get('fieldType').value=='textarea'" [ngClass]="{'disabledddl':true}" class="form-control" rows="4" id="textarea_{{controlIndex}}" name="textarea_{{controlIndex}}"></textarea>
+                                                                <!-- placeholder="{{control.get('name').value}}" -->
+
+                                                                <!--for input value and field type editor-->
+                                                                <ng-container *ngIf="control.get('fieldType').value=='texteditor'">
+                                                                    <p-editor [ngClass]="{'disabledddl':true}" pDroppable="row" (onDrop)="dropFields($event,a,controlIndex)" (onTextChange)="OnEditorChange($event,a,controlIndex)" id="editor{{controlIndex}}" [(ngModel)]="editor[controlIndex]" [ngModelOptions]="{standalone: true}"
+                                                                        (onInit)="onEditorLoad(controlIndex,control)">
+                                                                        <p-header> </p-header>
+                                                                    </p-editor>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="control.get('fieldType').value=='span'">
+                                                                    <div class="clearfix"></div>
+                                                                    <p id="paragraph_{{controlIndex}}">
+                                                                        <span>{{control.get('description').value}}</span>
+                                                                    </p>
+
+                                                                </ng-container>
+
+                                                                <!--for input value and field type date-->
+                                                                <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " *ngIf="control.get('fieldType').value=='date'" hideOnDateTimeSelect="true" inputId="cald_{{controlIndex}}" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true"
+                                                                    [yearNavigator]="true" yearRange="1919:2030">
+                                                                </p-calendar>
+
+                                                                <!--for input value and field type datetime-->
+                                                                <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " *ngIf="control.get('fieldType').value=='datetime'" [hourFormat]="(timeFormat==24)?'24':'12'" hideOnDateTimeSelect="true" [showTime]="true" inputId="caldt_{{controlIndex}}"
+                                                                    dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030">
+                                                                </p-calendar>
+
+                                                                <!--for input value and field type number-->
+                                                                <input *ngIf="control.get('fieldType').value=='number' " [ngClass]="{'disabledddl':true}" min="0" value="0" step="0.01" id="input_{{controlIndex}}" name="input_{{controlIndex}}" class="form-control" type="number" />
+                                                                <!-- placeholder="{{control.get('name').value}}"  -->
+                                                                <!--for input value and field type number-->
+                                                                <input *ngIf="control.get('fieldType').value=='decimal'" [ngClass]="{'disabledddl':true}" pattern="^\d*(\.\d{0,2})?$" min="0" value="0" step="0.01" id="input_{{controlIndex}}" name="input_{{controlIndex}}" class="form-control" type="number" />
+                                                                <!-- placeholder="{{control.get('name').value}}"  -->
+
+                                                                <!--for input value and field type dropdown-->
+                                                                <ng-container *ngIf="control.get('fieldType').value=='dropdown' || control.get('fieldType').value=='select'">
+
+                                                                    <div class="clearfix"></div>
+                                                                    <ng-select [ngClass]="{'disabledddl':true}" id="ddl_{{controlIndex}}" [items]="control.get('selectlistvalues').value" bindLabel="value" bindValue="id">
+                                                                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                                                                            <span>{{item.value}}
+                                                                                                    <span
+                                                                                                        *ngIf="item.color!=''">&nbsp;&nbsp;&nbsp;&nbsp;<span
+                                                                                                            [style.background-color]="item.color">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;
+                                                                            {{item.color}}
+                                                                            </span>
+                                                                            </span>
+                                                                        </ng-template>
+                                                                    </ng-select>
+                                                                </ng-container>
+                                                                <!-- placeholder="{{control.get('name').value}}" -->
+                                                                <!--for input value and field type radio-->
+                                                                <ng-container *ngIf="control.get('fieldType').value=='radio'">
+                                                                    <div class="clearfix"></div>
+                                                                    <ng-container *ngIf="control.get('pickListOptions').value">
+                                                                        <ng-container *ngFor="let item of control.get('pickListOptions').value;let radioIndex=index;">
+                                                                            <span class="mr-3">
+                                                                                                    <input
+                                                                                                        [ngClass]="{'disabledddl':true}"
+                                                                                                        id="radio-_{{controlIndex}}_{{radioIndex}}"
+                                                                                                        name="radio-_{{controlIndex}}"
+                                                                                                        [value]=""
+                                                                                                        type="radio"
+                                                                                                        class="mr-15">
+                                                                                                    <label
+                                                                                                        for="radio-_{{controlIndex}}_{{radioIndex}}"
+                                                                                                        class="radio-label mr-15">{{item.field}}</label>
+                                                                                                </span>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
+
+                                                                <!--for input value and field type checkbox-->
+                                                                <ng-container *ngIf="control.get('fieldType').value=='checkbox'">
+                                                                    <div class="clearfix"></div>
+                                                                    <ng-container>
+                                                                        <!-- *ngIf="control.get('pickListOptions').value" -->
+                                                                        <!-- <ng-container
+                                                                                                *ngFor="let item of control.get('pickListOptions').value;let checkIndex=index;"> -->
+                                                                        <span class="mr-3">
+                                                                                                <input
+                                                                                                    [ngClass]="{'disabledddl':true}"
+                                                                                                    id="chk-_{{controlIndex}}_{{controlIndex}}"
+                                                                                                    [value]=""
+                                                                                                    type="checkbox"
+                                                                                                    class="mr-15">
+                                                                                                <label
+                                                                                                    for="chk-_{{controlIndex}}_{{controlIndex}}"
+                                                                                                    class="radio-label">{{control.get('name').value}}</label>
+                                                                                            </span>
+                                                                        <!-- </ng-container> -->
+                                                                    </ng-container>
+                                                                </ng-container>
+
+                                                                <!--for input value and field type boolean-->
+                                                                <ng-container *ngIf="control.get('fieldType').value=='boolean'">
+                                                                    <div class="clearfix"></div>
+                                                                    <label class="switch  mb-0">
+                                                                                            <!-- [checked]="getItemToParseBolean(control.default_value)" -->
+                                                                                            <!-- tem -->
+                                                                                            <input type="checkbox"
+                                                                                                [ngClass]="{'disabledddl':true}"
+                                                                                                id="bool{{controlIndex}}">
+                                                                                            <span class="slider round"
+                                                                                                id="bool{{controlIndex}}"><span>Yes</span></span>
+                                                                                        </label>
+                                                                </ng-container>
+
+
+                                                                </span>
+                                                                <span class="w-25 float-right" style="padding-top:10px;">
+                                                                                    <a href="javascript:void(0);">
+                                                                                        <span>
+                                                                                            <span
+                                                                                                (click)="hideme[controlIndex] =! hideme[controlIndex]"><i
+                                                                                                    class="fa fa-ellipsis-h text-secondary float-right anchodeshowdrop"></i></span>
+                                                                <div class="dropdown-menu float-right hideshowdropdown quickkact" [ngClass]="{'hide' : hideme[controlIndex] == false,'show' : hideme[controlIndex] == true}" id="column-setting{{controlIndex}}">
+                                                                    <div>
+                                                                        <a href="javascript:void(0);" (click)="RemoveCustomFields(a,controlIndex,controlIndex)" class="dropdown-item px-2" draggable="false"><i
+                                                                                                            class="feather-trash-2 text-danger"></i>
+                                                                                                        <span
+                                                                                                            class="ml-1 text-dark"
+                                                                                                            style="font-size: 14px;">Delete
+                                                                                                            Field</span></a>
+                                                                    </div>
+
+                                                                </div>
+                                                                </span>
+                                                                </a>
+                                                                </span>
+
+                                                                </ng-template>
+
+                                                                <div class="clearfix"></div>
+                                                                </div>
+                                                                </div>
+                                                                <div class="clearfix" *ngIf="control.get('fieldType').value=='break'">
+                                                                </div>
+
+                                                                </ng-container>
+                                                            </div>
+                                                        </div>
+
+                                                        <div (click)="showDefaultScreenProperties($event)" *ngIf="isFooterVisible" class="card-footer d-flex justify-content-between">
+                                                            <div>
+                                                                <button *ngIf="isPauseButtonVisible" class="btn  btn-outline-secondary btn-light">{{PauseButtonLabel}}</button>
+                                                            </div>
+                                                            <div>
+                                                                <button *ngIf="isPreviousButtonVisible" class="btn btn-outline-secondary btn-light mr-1">{{PreviousButtonLabel}}</button>
+                                                                <button *ngIf="isFinishButtonVisible" class="btn btn-primary">{{NextorFinishButtonLabel}}</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="overflow-y: auto; max-height:  800px;" class="col-md-3 col-lg-3 px-1">
+                                <div [formGroup]="node.get('component')" class="bordered-content" id="FixedDivCustomField">
+                                    <div *ngIf="controlArrayIndexNo != null">
+                                        <div class="card-header datafield-header">
+                                            <p>View Properties</p>
+                                        </div>
+                                        <div class="card-body  mb-3 " style="overflow-y: auto; padding-left: 0px !important; padding-right: 0px !important;">
+                                            <div>
+                                                <ng-container formArrayName="controls" *ngFor="let control of node.get('component').get('controls').controls; let controlIndex=index">
+                                                    <div *ngIf="control.get('isEditProg').value" [formGroup]="control">
+                                                        <div class="">
+                                                            <label> <span class="text-danger">*</span> Label (Max Char Limit 50)</label>
+                                                            <input maxlength="50" type="text" class="form-control" formControlName="name" [readOnly]="isCustomField" [ngClass]="{'is-invalid': (controlName.invalid && (controlName.dirty || controlName.touched) && (controlName.errors?.required)) }">
+                                                            <small *ngIf="(controlName.invalid && (controlName.dirty || controlName.touched)) && controlName.errors?.required" class="text-danger">label is required</small>
+                                                        </div>
+                                                        <div class=" mt-2">
+                                                            <label *ngIf="!(control.value.dtCode == 'span')">Description (Max Char Limit 200)</label>
+                                                            <textarea maxlength="200" class="form-control" formControlName="description"></textarea>
+                                                        </div>
+                                                        <div *ngIf="!(control.value.dtCode == 'select' || control.value.dtCode == 'radio' || control.value.dtCode == 'span')" class="">
+                                                            <label>Default Value</label>
+                                                            <!-- <input type="text" name="value{{i}}" class="form-control" formControlName="value" placeholder="Enter Value"> -->
+                                                            <!-- <ng-select [items]="valueList" formControlName="defaultValue"
+                                                            placeholder="Enter Value Or Search Resource" bindLabel="text"
+                                                            addTagText="add new value" [addTag]="CreateNew">
+                                                        </ng-select> -->
+                                                            <input type="text" class="form-control" formControlName="defaultValue" (change)="test(control)">
+                                                        </div>
+                                                        <div *ngIf="!(control.value.dtCode ==  'checkbox' || control.value.dtCode ==  'url' || control.value.dtCode == 'span')" class=" mt-2 ml-1">
+                                                            <div class="form-check">
+                                                                <input type="checkbox" (change)="ShowHidFields($event,control)" class="form-check-input" formControlName="isRequired">
+                                                                <label style="padding-left:0.5rem">Require</label>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="control.value.dtCode =='decimal'" class="">
+                                                            <label> <span class="text-danger">*</span> Decimal
+                                                              Places</label>
+                                                            <input type="number" class="form-control" formControlName="decimalPlaces">
+                                                        </div>
+                                                        <div *ngIf="(control.value.dtCode =='radio' || control.value.dtCode == 'select')" class=" mt-2">
+                                                            <label>Data Type</label>
+                                                            <ng-select [items]="dataTypeList" formControlName="value" placeholder="Search Data Type" bindValue="value" bindLabel="text">
+                                                            </ng-select>
+                                                        </div>
+                                                        <div *ngIf="control.value.dtCode =='url'" class=" mt-2">
+                                                            <label>Disabled</label>
+                                                            <ng-select [items]="valueList" formControlName="isDisabled" placeholder="Enter or Search" bindLabel="text" addTagText="add new value" [addTag]="CreateNew">
+                                                            </ng-select>
+                                                        </div>
+                                                        <div *ngIf="control.value.dtCode =='url'" class=" mt-2">
+                                                            <label>Pattern</label>
+                                                            <ng-select [items]="valueList" formControlName="pattern" placeholder="Enter or Search" bindLabel="text" addTagText="add new value" [addTag]="CreateNew">
+                                                            </ng-select>
+                                                        </div>
+                                                        <div *ngIf="control.value.dtCode =='url'" class=" mt-2">
+                                                            <label>Read Only</label>
+                                                            <ng-select [items]="readOnlyList" formControlName="isReadOnly" placeholder="Enter or Search" bindValue="value" bindLabel="text">
+                                                            </ng-select>
+                                                        </div>
+                                                        <div *ngIf="control.value.dtCode =='url'" class=" mt-2">
+                                                            <label>Value</label>
+                                                            <!-- <ng-select [items]="valueList" formControlName="urlValue"
+                                                            placeholder="Enter or Search" bindLabel="text"
+                                                            addTagText="add new value" [addTag]="CreateNew">
+                                                        </ng-select> -->
+                                                            <input type="text" class="form-control" formControlName="urlValue">
+                                                        </div>
+                                                        <div *ngIf="(control.value.dtCode =='radio' || control.value.dtCode == 'select' )" class=" mt-2">
+                                                            <div class="accordion" id="accordion">
+                                                                <div>
+                                                                    <div class="panel active">
+                                                                        <div class="panel-heading">
+                                                                            <h4 class="panel-title">
+                                                                                <a href="#configureChoice" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                                                    <span> Configure Choices</span>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div id="configureChoice" class="panel-collapse collapse active show">
+                                                                            <div class="panel-body px-2 mt-0 clearfix">
+                                                                                <div class="pl-10 pr-10 mb-2 align-items-end justify-content-between mt-2">
+                                                                                    <label>Component Type</label>
+                                                                                    <ng-select [ngClass]="{'disabledddl':true}" [items]="componentTypes" placeholder=" Search" bindLabel="text" bindValue="value" formControlName="componentType">
+                                                                                    </ng-select>
+                                                                                </div>
+                                                                                <div class=" mb-2 mt-2">
+                                                                                    <div formArrayName="pickListOptions" *ngFor="let choice of control.get('pickListOptions').controls; let controlIndex=index">
+                                                                                        <div class="pl-10 pr-13 row align-items-end justify-content-between" [formGroupName]="controlIndex">
+                                                                                            <div class="col-sm-9">
+                                                                                                <label><span
+                                                                                                    class="text-danger">*</span>Choice</label>
+                                                                                                <input type="text" class="form-control" formControlName="field">
+                                                                                                <!-- <ng-select
+                                                                                                [items]="conditionValueList"
+                                                                                                formControlName="field"
+                                                                                                placeholder="Enter Or Search Choice"
+                                                                                                bindLabel="text"
+                                                                                                bindValue="value"
+                                                                                                addTagText="add new Choice"
+                                                                                                [addTag]="CreateNew">
+                                                                                            </ng-select> -->
+                                                                                            </div>
+                                                                                            <div class="col-sm-3">
+                                                                                                <button [disabled]="control.get('pickListOptions').length < 2" (click)="deletePicklistItem(controlIndex)" class="btn btn-danger form-btns" tooltip="Delete Choice">
+                                                                                                <span><i
+                                                                                                        class="feather-trash-2"></i></span>
+                                                                                            </button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="ml-1">
+                                                                                    <button class="btn btn-success" (click)="addNewChoice()"><i
+                                                                                        class="feather-plus"></i>Add
+                                                                                    Choice</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 col-lg-12 mt-2" style="padding-left: 0px !important; padding-right: 3px !important;">
+                                                            <div class="accordion" id="accordion">
+                                                                <div>
+                                                                    <div class="panel active">
+                                                                        <div class="panel-heading">
+                                                                            <h4 class="panel-title">
+                                                                                <a href="#setComponentVisibility" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                                                    <span> Set Component Visibility</span>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div id="setComponentVisibility" class="panel-collapse collapse active show">
+                                                                            <div class="panel-body px-2 mt-0 ">
+                                                                                <div>
+                                                                                    <label>When to Display Component</label>
+                                                                                    <ng-select [items]="displayList" (change)="ShowConditionModal($event,controlIndex)" placeholder=" Search" bindLabel="text" bindValue="value" formControlName="customDisplayCondition" appendTo="body">
+                                                                                    </ng-select>
+                                                                                </div>
+                                                                                <div *ngIf="(editScreenId>0 && displayConditionValue !='always' && displayConditionValue !=null)" class="col-md-12 col-lg-12">
+                                                                                    <button class="btn btn-success" (click)="ShowConditionModal(control.get('customDisplayCondition').value,controlIndex)">Show
+                                                                                      Details</button>
+                                                                                </div>
+                                                                                <!--  -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!(control.value.dtCode =='span')" class="col-md-12 col-lg-12 mt-2" style="padding-left: 0px !important; padding-right: 3px !important;">
+                                                            <div class="accordion" id="accordion">
+                                                                <div>
+                                                                    <div class="panel active">
+                                                                        <div class="panel-heading">
+                                                                            <h4 class="panel-title">
+                                                                                <a href="#validateInputId" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                                                    <span> Validate Input</span>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div id="validateInputId" class="panel-collapse collapse active show">
+                                                                            <div class="panel-body px-2 mt-0">
+                                                                                <div>
+                                                                                    <label> <span class="text-danger" *ngIf="(control.get('validateInput').invalid && (control.get('validateInput').dirty || control.get('validateInput').touched)) && control.get('validateInput').errors?.required">*</span> Error Message</label>
+                                                                                    <textarea class="form-control" formControlName="validateInput" rows="3"></textarea>
+                                                                                    <small *ngIf="(control.get('validateInput').invalid && (control.get('validateInput').dirty || control.get('validateInput').touched)) && control.get('validateInput').errors?.required" class="text-danger">Error Message is required</small>
+                                                                                </div>
+                                                                                <!--  -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="!(control.value.dtCode =='span')" class="col-md-12 col-lg-12 mt-2" style="padding-left: 0px !important; padding-right: 3px !important;">
+                                                            <div class="accordion" id="accordion">
+                                                                <div>
+                                                                    <div class="panel active">
+                                                                        <div class="panel-heading">
+                                                                            <h4 class="panel-title">
+                                                                                <a href="#provideHelpId" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                                                    <span> Provide Help</span>
+                                                                                </a>
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div id="provideHelpId" class="panel-collapse collapse active show">
+                                                                            <div class="panel-body px-2 mt-0">
+                                                                                <div>
+                                                                                    <label>Help Text</label>
+                                                                                    <textarea class="form-control" formControlName="helpText" rows="3"></textarea>
+                                                                                </div>
+                                                                                <!--  -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-----------------------Start VisiblityConditionPopup------------------------->
+                                                        <div bsModal #visiblityConditionModal="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                                                            <div class="modal-border modal-dialog modal-xl modal-info " [ngClass]="{'disabled':loadSave}">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h4 class="modal-title">Component Visibilty Condition
+                                                                        </h4>
+                                                                        <button type="button" class="close" aria-label="Close" (click)="hideConditionModal()">
+                                                                          <span aria-hidden="true">&times;</span>
+                                                                      </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div>
+                                                                            <!-- [formGroup]="control.get('Conditions')" -->
+                                                                            <div>
+                                                                                <div formArrayName="Conditions" *ngFor="let condition of control.get('Conditions').controls; let i=index">
+                                                                                    <div class="row">
+                                                                                        <div class="offset-5 col-1 text-center mt-4">
+                                                                                            <strong class="d-block pb-2" *ngIf="control.get('Conditions').length > 1 && i > 0 &&  control.get('customDisplayCondition').value === 2 ">AND</strong>
+                                                                                            <strong class="d-block pb-2" *ngIf="control.get('Conditions').length > 1 && i > 0  &&  control.get('customDisplayCondition').value === 3 ">OR</strong>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row mb-2 align-items-end justify-content-between" [formGroupName]="i">
+                                                                                        <!-- <div class="col-md-1 col-lg-1">
+                                                                                          <strong class="d-block pb-2"
+                                                                                              *ngIf="condition.length > 1">And</strong>
+                                                                                      </div> -->
+                                                                                        <div class="col-md-1 col-lg-1">
+                                                                                            <div class="col-1 text-center mt-4">
+                                                                                                <strong class="d-block pb-2" *ngIf=" i>0 && componentVisCon == 2 ">AND</strong>
+                                                                                                <strong class="d-block pb-2" *ngIf=" i>0 && componentVisCon == 3 ">OR</strong>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-2 col-lg-3">
+                                                                                            <label>Resource:<span
+                                                                                                  class="text-danger">*</span></label>
+                                                                                            <ng-select [items]="fieldList" formControlName="resource" groupBy="groupName" placeholder="Enter Or Search Resource" bindLabel="displayName" bindValue="id" (change)="onResourceChange($event,condition)" appendTo="body">
+                                                                                            </ng-select>
+
+                                                                                            <div>{{test(condition.get('resource').value,fieldList)}}</div>
+                                                                                            <!-- <input type="text"
+                                                                                            class="form-control"
+                                                                                            formControlName="resource"> -->
+                                                                                        </div>
+                                                                                        <div class="col-2 pr-0" *ngIf="condition.get('isResource') && condition.get('isResource').value == true">
+                                                                                            <label class="form-label">Field</label>
+                                                                                            <ng-select [items]="condition.get('customfieldsList').value" placeholder="Select Field" formControlName="customFieldId" bindLabel="displayName" bindValue="PrimaryTableColumn" (change)="onFieldChange($event,condition)" [appendTo]="'body'">
+                                                                                            </ng-select>
+                                                                                        </div>
+                                                                                        <div class="col-md-2 col-lg-3">
+                                                                                            <label>Operator:<span
+                                                                                                  class="text-danger">*</span></label>
+                                                                                            <ng-select [items]="operatorList" placeholder="Select Operator" formControlName="operator" bindLabel="text" bindValue="value" appendTo="body">
+                                                                                            </ng-select>
+                                                                                            <!-- <input type="text"
+                                                                                            class="form-control"
+                                                                                            formControlName="operator"> -->
+                                                                                        </div>
+                                                                                        <div class="col-md-2 col-lg-2 pb-1">
+                                                                                            <label>Value:<span
+                                                                                                  class="text-danger">*</span></label>
+                                                                                            <!-- <ng-select [items]="conditionValueList" formControlName="value" placeholder="Enter  Or Search Value" bindLabel="text" bindValue="value" addTagText="add new value" [addTag]="CreateNew">
+                                                                                          </ng-select> -->
+                                                                                            <input type="text" class="form-control" formControlName="value">
+                                                                                        </div>
+                                                                                        <div class="col-md-1 col-lg-1 pb-1">
+                                                                                            <button [disabled]="control.get('Conditions').length < 2" (click)="deleteCondition(i)" class="btn btn-danger form-btns" tooltip="Delete Condition">
+                                                                                              <span><i
+                                                                                                      class="feather-trash-2"></i></span>
+                                                                                          </button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row mt-3">
+                                                                                <div class="col-md-3 col-lg-3">
+                                                                                    <button class="btn btn-success  float-left" (click)="addNewCondition()"><i
+                                                                                          class="feather-plus"></i>Add
+                                                                                      Condition</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer d-flex justify-content-between">
+                                                                        <div>
+                                                                            <div class="text-danger" *ngIf="areVisibilityConditionsInValid">
+                                                                                Fields marked with * sign are required before save.</div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <button type="button" class="btn btn-success form-btns" (click)="Save()"><i
+                                                                                  class="feather-save text-white"></i>
+                                                                              Save</button>
+                                                                            <button type="button" class="btn btn-danger form-btns ml-1" data-dismiss="modal" aria-label="Close" (click)="hideConditionModal()"><i
+                                                                                  class="fa fa-times text-white"></i>
+                                                                              Cancel</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-success form-btns" (click)="Save()"><i
+                                                                            class="feather-save text-white"></i>
+                                                                        Save</button>
+                                                                    <button type="button" class="btn btn-danger form-btns" data-dismiss="modal" aria-label="Close" (click)="hideConditionModal()"><i
+                                                                            class="fa fa-times text-white"></i>
+                                                                        Cancel</button>
+                                                                </div> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-----------------------End VisiblityConditionPopup---------------------------->
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div *ngIf="controlArrayIndexNo == null" style="max-height:60vh; padding-left: 0px !important; padding-right: 3px !important;">
+                                        <div class="card-header datafield-header">
+                                            <p>Screen Properties</p>
+                                        </div>
+
+                                        <div class="pt-1">
+                                            <div class="col-md-12 col-lg-12" style="padding-left: 0px !important; padding-right: 3px !important;">
+                                                <div class="accordion" id="accordion">
+                                                    <div class="panel active">
+
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a href="#ConfigureHeader" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                                    <span>Configure Header</span>
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="ConfigureHeader" class="panel-collapse collapse active show">
+                                                            <div class="panel-body px-2 mt-0">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input checked (change)="showHeader()" type="checkbox" class="custom-control-input" id="ShowHeader" formControlName="isHeaderShown">
+                                                                    <label class="custom-control-label" for="ShowHeader">Show Header</label>
+                                                                </div>
+                                                                <div class="row">
+
+                                                                    <div class="col-md-12 col-lg-12">
+                                                                        <label> <span class="text-danger">*</span>
+                                                                            label (Max Char Limit 50)</label>
+                                                                        <input maxlength="50" type="text" class="form-control" formControlName="name" (change)="ChangeHeaderText($event)" [ngClass]="{'is-invalid': (screenName.invalid && (screenName.dirty || screenName.touched) && (screenName.errors?.required)) }">
+                                                                        <small *ngIf="(screenName.invalid && (screenName.dirty || screenName.touched)) && screenName.errors?.required" class="text-danger">Header label is
+                                                                            required</small>
+                                                                    </div>
+                                                                    <div class="col-md-12 col-lg-12">
+                                                                        <label>Description (Max Char Limit 200)</label>
+                                                                        <textarea maxlength="200" formControlName="description" maxlength="200" class="form-control" rows="2"></textarea>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel active">
+
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a href="#ConfigureFooter" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                                                                    <span>Configure Footer</span>
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <!-- 668 show -->
+                                                        <div id="ConfigureFooter" class="panel-collapse collapse active show">
+                                                            <div class="panel-body px-2 mt-0">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input checked (change)="showFooter($event)" type="checkbox" class="custom-control-input" id="showFooter" formControlName="isFooterShown">
+                                                                    <label class="custom-control-label" for="showFooter">Show Footer</label>
+                                                                </div>
+                                                                <p>Navigation</p>
+
+                                                                <div>
+                                                                    <div>
+                                                                        <strong>Next or Finish Button:</strong>
+                                                                        <div class="form-group">
+                                                                            <div class="form-check-inline">
+                                                                                <div class="custom-radio">
+                                                                                    <input type="radio" class="custom-control-input" id="nextFinishRadio" name="nextOrFinishButton" (click)="nextOrFinishButtonChange($event)" value="standardValue" formControlName="nextOrFinishButton">
+                                                                                    <label class="custom-control-label" for="nextFinishRadio">Use the
+                                                                                        standard label</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-check-inline">
+                                                                                <div class="custom-radio">
+                                                                                    <input type="radio" class="custom-control-input" id="nextFinishRadio1" name="nextOrFinishButton" (click)="nextOrFinishButtonChange($event)" value="customValue" formControlName="nextOrFinishButton">
+                                                                                    <label class="custom-control-label" for="nextFinishRadio1">Use a
+                                                                                        custom
+                                                                                        label</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-check-inline">
+                                                                                <div class="custom-radio">
+                                                                                    <input type="radio" class="custom-control-input" id="nextFinishRadio2" name="nextOrFinishButton" (click)="nextOrFinishButtonChange($event)" value="hideButton" formControlName="nextOrFinishButton">
+                                                                                    <label class="custom-control-label" for="nextFinishRadio2">Hide
+                                                                                        Next/Finish</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="" *ngIf="isVisibleNextorFinishCustumInput">
+                                                                        <label><span class="text-danger">*</span>Next Or
+                                                                            Finish Button Label</label>
+                                                                        <input (change)="ChangeNextorFinishButtonText($event)" type="text" class="form-control" formControlName="nextOrFinishCustomLabel" [ngClass]="{'is-invalid': (nextFinishButton.invalid && (nextFinishButton.dirty || nextFinishButton.touched) && (nextFinishButton.errors?.required)) }">
+                                                                        <small *ngIf="(nextFinishButton.invalid && (nextFinishButton.dirty || nextFinishButton.touched)) && nextFinishButton.errors?.required" class="text-danger">Next Or Finish Button
+                                                                            Label is required</small>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <div>
+                                                                        <strong>Previous Button:</strong>
+                                                                        <div class="form-group">
+                                                                            <div class="form-check-inline">
+                                                                                <div class="custom-radio">
+                                                                                    <input type="radio" class="custom-control-input" id="previousButtonRadio" name="previousbutton" (click)="previousButtonChange($event)" value="standardValue" formControlName="previousbutton">
+                                                                                    <label class="custom-control-label" for="previousButtonRadio">Use
+                                                                                        the
+                                                                                        standard label</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-check-inline">
+                                                                                <div class="custom-radio">
+                                                                                    <input type="radio" class="custom-control-input" id="previousButtonRadio1" name="previousbutton" (click)="previousButtonChange($event)" value="customValue" formControlName="previousbutton">
+                                                                                    <label class="custom-control-label" for="previousButtonRadio1">Use a
+                                                                                        custom
+                                                                                        label</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-check-inline">
+                                                                                <div class=" custom-radio">
+                                                                                    <input type="radio" class="custom-control-input" id="previousButtonRadio2" name="previousbutton" (click)="previousButtonChange($event)" value="hideButton" formControlName="previousbutton">
+                                                                                    <label class="custom-control-label" for="previousButtonRadio2">Hide
+                                                                                        Previous</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="" *ngIf="isVisiblePreviousButtonCustumInput">
+                                                                        <label><span
+                                                                                class="text-danger">*</span>Previous
+                                                                            Button Label</label>
+                                                                        <input (change)="ChangePreviousButtonText($event)" type="text" class="form-control" formControlName="previousButtonCustomLabel" [ngClass]="{'is-invalid': (previousButton.invalid && (previousButton.dirty || previousButton.touched) && (previousButton.errors?.required)) }">
+                                                                        <small *ngIf="(previousButton.invalid && (previousButton.dirty || previousButton.touched)) && previousButton.errors?.required" class="text-danger">Previous Button Label is
+                                                                            required</small>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="">
+                                                                        <strong>Pause Button:</strong>
+                                                                        <div class="form-group">
+                                                                            <div class="form-check-inline">
+                                                                                <div class=" custom-radio">
+                                                                                    <input type="radio" class="custom-control-input" id="pauseRadio" name="pausebutton" (click)="pauseButtonChange($event)" value="standardValue" formControlName="pausebutton">
+                                                                                    <label class="custom-control-label" for="pauseRadio">Use the
+                                                                                        standard label</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-check-inline">
+                                                                                <div class=" custom-radio">
+                                                                                    <input type="radio" class="custom-control-input" id="pauseRadio1" name="pausebutton" (click)="pauseButtonChange($event)" value="customValue" formControlName="pausebutton">
+                                                                                    <label class="custom-control-label" for="pauseRadio1">Use a custom
+                                                                                        label</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-check-inline">
+                                                                                <div class=" custom-radio">
+                                                                                    <input type="radio" class="custom-control-input" id="pauseRadio2" name="pausebutton" (click)="pauseButtonChange($event)" value="hideButton" formControlName="pausebutton">
+                                                                                    <label class="custom-control-label" for="pauseRadio2">Hide
+                                                                                        Pause</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="" *ngIf="isVisiblePauseButtonCustumInput">
+                                                                        <label><span class="text-danger">*</span>Pause
+                                                                            Button Label</label>
+                                                                        <input (change)="ChangePauseButtonText($event)" type="text" class="form-control" formControlName="pauseButtonCutomLabel" [ngClass]="{'is-invalid': (pauseButton.invalid && (pauseButton.dirty || pauseButton.touched) && (pauseButton.errors?.required)) }">
+                                                                        <small *ngIf="(pauseButton.invalid && (pauseButton.dirty || pauseButton.touched)) && pauseButton.errors?.required" class="text-danger">Pause Button Label is
+                                                                            required</small>
+
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer text-right">
+                <a href="javascript:void(0);" class="btn btn-success" (click)="AddFormForCustomField()"><i
+                        class="feather-save pr-1"></i> Submit</a>
+                <a href="javascript:void(0);" class="btn btn-danger" (click)="Cancel()"><i class="fa fa-times pr-1"></i>
+                    Cancel</a>
+            </div>
+
+        </div>
+    </div>
+</div>

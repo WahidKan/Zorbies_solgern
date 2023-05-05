@@ -1,0 +1,68 @@
+<div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Document Maker</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li>
+        <a routerLink="/dashboard">Dashboard</a>
+      </li>
+      <li class="active">Document Maker</li>
+    </ol>
+  </div>
+</div>
+<div class="row mr-0" style="float: right">
+  <button class="btn btn-primary" (click)="submitDocument()">
+    Submit
+  </button>
+  <button
+    *ngIf="submitted"
+    class="btn btn-info ml-2"
+    routerLink="preview"
+  >
+    Preview
+  </button>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-sm-4 col-md-3 col-lg-2"></div>
+  <div class="col-sm-8 col-md-9 col-lg-10">
+    <app-custom-tool-bar [config]="config"></app-custom-tool-bar>
+    <!-- <angular-editor-toolbar
+    [id]="'1'"
+    [uploadUrl]="config.uploadUrl"
+    [showToolbar]="config.showToolbar !== undefined ? config.showToolbar : true"
+    [fonts]="getFonts()"
+    [customClasses]="config.customClasses"
+    [defaultFontName]="config.defaultFontName"
+    [defaultFontSize]="config.defaultFontSize"
+    [hiddenButtons]="config.toolbarHiddenButtons"
+    ></angular-editor-toolbar> -->
+  </div>
+
+  <!-- (execute)="executeCommand($event)" -->
+  <!-- <angular-editor id="editor1" [config]="config1" (ngModelChange)="onChange($event)"
+(blur)="onBlur($event)"></angular-editor> -->
+</div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="row">
+        <div class="col-sm-4 col-md-3 col-lg-2 border-right pr-0">
+          <app-content></app-content>
+        </div>
+        <div
+          class="col-sm-8 col-md-9 col-lg-10 pl-0"
+          style="
+            overflow-y: auto;
+            overflow-x: hidden;
+            height: 100%;
+            background-color: #efedec;
+          "
+        >
+          <div (mousedown)="focusOut($event)" class="w-100 p-3">
+            <app-canvas [document]="documentForm"></app-canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

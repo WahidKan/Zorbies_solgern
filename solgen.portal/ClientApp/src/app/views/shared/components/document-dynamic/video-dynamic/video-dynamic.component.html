@@ -1,0 +1,60 @@
+<div [formGroup]="video">
+  <div class="row">
+    <div class="col-12">
+      <div data-toggle="modal" [attr.data-target]="'#exampleModal' + video.get('id').value" *ngIf="!sanitizedUrl">
+        <i class="fa fa-video-camera"></i><span>Click to add a video</span>
+      </div>
+
+      <div *ngIf="sanitizedUrl">
+        <iframe
+          [src]="sanitizedUrl"
+          frameborder="0"
+          allowfullscreen
+          class="form-control"
+          [ngStyle]="video.get('style').value"
+          [appAutofocus]="focus"
+          [style.height.px]="video.get('height').value"
+          [style.width.px]="video.get('width').value - 20"
+        >
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    [id]="'exampleModal' + video.get('id').value"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+    bsModal
+    #modal="bs-modal"
+    [config]="{ backdrop: 'static' }"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Video</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="display: grid">
+          <label for="videoUrl">Paste a video URL to embed it in your document. YouTube is supported only.</label>
+          <br />
+          <input (input)="onUrlChanged($event.target.value)" type="text" style="width: 50%" name="videoUrl" />
+          <small>Paste your video link here</small>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success form-btns" (click)="onVideoAdd()" ria-label="Close" data-dismiss="modal">
+            <i class="feather-save text-white pr-2"> </i>Add Video
+          </button>
+          <button type="button" class="btn btn-danger form-btns" aria-label="Close" data-dismiss="modal" (click)="close()">
+            <i class="fa fa-times text-white"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

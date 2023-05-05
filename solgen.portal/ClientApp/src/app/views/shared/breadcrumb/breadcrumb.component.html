@@ -1,0 +1,18 @@
+<div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+        <h2 class="float-left pr-2 w-100">
+            <strong>{{data.headerTitle}}</strong>
+        </h2>
+        <div class="breadcrumb-wrapper w-100">
+            <ol class="breadcrumb">
+                <li [ngClass]="!breadcrumb.isLink ? 'active' : ''" *ngFor="let breadcrumb of data.breadcrumb; let i = index;">
+                    {{!breadcrumb.isLink ? breadcrumb.name : '' }}
+                    <a *ngIf="breadcrumb.isLink" routerLink="{{breadcrumb.link}}">{{breadcrumb.name}}</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <!-- <div class="col-md-6 text-right right pr-0">
+        <a *ngIf="isSuperAdmin==true" href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="feather-repeat mr-1"></i>Switch Company</a>
+    </div> -->
+</div>

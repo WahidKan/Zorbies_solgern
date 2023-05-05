@@ -1,0 +1,14 @@
+.nav-cust .nav-link.active::after {
+    border-top: 0 solid #2f4050;
+    position: absolute;
+    content: "";
+    bottom: -10px;
+    width: 18px;
+    height: 9px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    z-index: 1;
+}

@@ -1,0 +1,705 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>{{pageTitle}}</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li><a routerLink="/marketing/campaigns-list">Manage Campaigns</a></li>
+        <li class="active">{{pageTitle}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<!-- <div class="row ">
+  <div class="col-sm-12 col-md-12 text-right">
+    <div class="card  mb-4 border ">
+    <span class="text-capitalize p-3 float-right font-weight-bold border-bottom heading-above-subhead">
+      
+      <a href="javascript:void(0);" class="btn btn-dark text-white smview" routerLink="/marketing/campaigns-list"><i
+          class="fa fa-arrow-left mr-1"></i> Back To List</a>
+    </span>
+  </div>
+</div>
+</div> -->
+
+
+<div class="panel">
+  <div class="panel-content clearfix mb-4 p-4">
+    <form id="myform" *ngIf='addCampaignForm' [formGroup]="addCampaignForm" autocomplete="off">
+      <div class="row mx-auto mb-2">
+        <h3 class="form-heading ng-star-inserted"><span>Campaign Information</span></h3>
+        <div class="clearfix"></div>
+        <div class="row">
+          <!-- <div class="col-12 col-md-4 col-lg-4">
+        <label>Id:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Id"
+            formControlName="id"
+            [ngClass]="{ 'is-invalid': id?.invalid && (id.dirty || id.touched) && (id.errors?.required || id.errors?.nameExist) }"
+          />
+          <small *ngIf="id?.invalid && (id.dirty || id.touched) && id.errors?.nameExist" class="text-danger">Id Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Acoount Id:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Account Id"
+            formControlName="account_id"
+            [ngClass]="{ 'is-invalid': account_id?.invalid && (account_id.dirty || account_id.touched) && (account_id.errors?.required || account_id.errors?.nameExist) }"
+          />
+          <small *ngIf="account_id?.invalid && (account_id.dirty || account_id.touched) && account_id.errors?.nameExist" class="text-danger">Account Id Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Ad Strategy Group Id:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Ad Strategy Group Id"
+            formControlName="ad_strategy_group_id"
+            [ngClass]="{ 'is-invalid': ad_strategy_group_id?.invalid && (ad_strategy_group_id.dirty || ad_strategy_group_id.touched) && (ad_strategy_group_id.errors?.required || ad_strategy_group_id.errors?.nameExist) }"
+          />
+          <small *ngIf="ad_strategy_group_id?.invalid && (ad_strategy_group_id.dirty || ad_strategy_group_id.touched) && ad_strategy_group_id.errors?.nameExist" class="text-danger">Ad Strategy Group Id Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Ad Strategy Id:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Ad Strategy Id"
+            formControlName="ad_strategy_id"
+            [ngClass]="{ 'is-invalid': ad_strategy_id?.invalid && (ad_strategy_id.dirty || ad_strategy_id.touched) && (ad_strategy_id.errors?.required || ad_strategy_id.errors?.nameExist) }"
+          />
+          <small *ngIf="ad_strategy_id?.invalid && (ad_strategy_id.dirty || ad_strategy_id.touched) && ad_strategy_id.errors?.nameExist" class="text-danger">Ad Strategy Id Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Boosted Object Id:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Boosted Object Id"
+            formControlName="boosted_object_id"
+            [ngClass]="{ 'is-invalid': boosted_object_id?.invalid && (boosted_object_id.dirty || boosted_object_id.touched) && (boosted_object_id.errors?.required || boosted_object_id.errors?.nameExist) }"
+          />
+          <small *ngIf="boosted_object_id?.invalid && (boosted_object_id.dirty || boosted_object_id.touched) && boosted_object_id.errors?.nameExist" class="text-danger">Boosted Object Id Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Budget Rebalamce Flag:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Budget Rebalance Flag"
+            formControlName="budget_rebalance_flag"
+            [ngClass]="{ 'is-invalid': budget_rebalance_flag?.invalid && (budget_rebalance_flag.dirty || budget_rebalance_flag.touched) && (budget_rebalance_flag.errors?.required || budget_rebalance_flag.errors?.nameExist) }"
+          />
+          <small *ngIf="budget_rebalance_flag?.invalid && (budget_rebalance_flag.dirty || budget_rebalance_flag.touched) && budget_rebalance_flag.errors?.nameExist" class="text-danger">Budget Rebalance Flag Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Budget Remaining:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Budget Remaining"
+            formControlName="budget_remaining"
+            [ngClass]="{ 'is-invalid': budget_remaining?.invalid && (budget_remaining.dirty || budget_remaining.touched) && (budget_remaining.errors?.required || budget_remaining.errors?.nameExist) }"
+          />
+          <small *ngIf="budget_remaining?.invalid && (budget_remaining.dirty || budget_remaining.touched) && budget_remaining.errors?.nameExist" class="text-danger">Budget Remaining Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Buying Type:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buying Type"
+            formControlName="buying_type"
+            [ngClass]="{ 'is-invalid': buying_type?.invalid && (buying_type.dirty || buying_type.touched) && (buying_type.errors?.required || buying_type.errors?.nameExist) }"
+          />
+          <small *ngIf="buying_type?.invalid && (buying_type.dirty || buying_type.touched) && buying_type.errors?.nameExist" class="text-danger">Buying Type Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Can Create Brand Lift Study:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Can Create Brand Lift Study"
+            formControlName="can_create_brand_lift_study"
+            [ngClass]="{ 'is-invalid': can_create_brand_lift_study?.invalid && (can_create_brand_lift_study.dirty || can_create_brand_lift_study.touched) && (can_create_brand_lift_study.errors?.required || can_create_brand_lift_study.errors?.nameExist) }"
+          />
+          <small *ngIf="can_create_brand_lift_study?.invalid && (can_create_brand_lift_study.dirty || can_create_brand_lift_study.touched) && can_create_brand_lift_study.errors?.nameExist" class="text-danger">Can Create Brand Lift Study Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Can Use Spend Cap:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Can Use Spend Cap"
+            formControlName="can_use_spend_cap"
+            [ngClass]="{ 'is-invalid': can_use_spend_cap?.invalid && (can_use_spend_cap.dirty || can_use_spend_cap.touched) && (can_use_spend_cap.errors?.required || can_use_spend_cap.errors?.nameExist) }"
+          />
+          <small *ngIf="can_use_spend_cap?.invalid && (can_use_spend_cap.dirty || can_use_spend_cap.touched) && can_use_spend_cap.errors?.nameExist" class="text-danger">Can Use Spend Cap Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Created Time:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Created Time"
+            formControlName="created_time"
+            [ngClass]="{ 'is-invalid': created_time?.invalid && (created_time.dirty || created_time.touched) && (created_time.errors?.required || created_time.errors?.nameExist) }"
+          />
+          <small *ngIf="created_time?.invalid && (created_time.dirty || created_time.touched) && created_time.errors?.nameExist" class="text-danger">Created Time Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Daily Budget:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Daily Budget"
+            formControlName="daily_budget"
+            [ngClass]="{ 'is-invalid': daily_budget?.invalid && (daily_budget.dirty || daily_budget.touched) && (daily_budget.errors?.required || daily_budget.errors?.nameExist) }"
+          />
+          <small *ngIf="daily_budget?.invalid && (daily_budget.dirty || daily_budget.touched) && daily_budget.errors?.nameExist" class="text-danger">Daily Budget Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Is Skadnetwork Attribution:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Is Skadnetwork Attribution"
+            formControlName="is_skadnetwork_attribution"
+            [ngClass]="{ 'is-invalid': is_skadnetwork_attribution?.invalid && (is_skadnetwork_attribution.dirty || is_skadnetwork_attribution.touched) && (is_skadnetwork_attribution.errors?.required || is_skadnetwork_attribution.errors?.nameExist) }"
+          />
+          <small *ngIf="is_skadnetwork_attribution?.invalid && (is_skadnetwork_attribution.dirty || is_skadnetwork_attribution.touched) && is_skadnetwork_attribution.errors?.nameExist" class="text-danger">Is Skadnetwork Attribution Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Last Budget Toggling Time:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Last Budget Toggling Time"
+            formControlName="last_budget_toggling_time"
+            [ngClass]="{ 'is-invalid': last_budget_toggling_time?.invalid && (last_budget_toggling_time.dirty || last_budget_toggling_time.touched) && (last_budget_toggling_time.errors?.required || last_budget_toggling_time.errors?.nameExist) }"
+          />
+          <small *ngIf="last_budget_toggling_time?.invalid && (last_budget_toggling_time.dirty || last_budget_toggling_time.touched) && last_budget_toggling_time.errors?.nameExist" class="text-danger">Last Budget Toggling Time Already Exist!</small>
+        </div>
+      </div>
+   
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Lifetime Budget:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Lifetime Budget"
+            formControlName="lifetime_budget"
+            [ngClass]="{ 'is-invalid': lifetime_budget?.invalid && (lifetime_budget.dirty || lifetime_budget.touched) && (lifetime_budget.errors?.required || lifetime_budget.errors?.nameExist) }"
+          />
+          <small *ngIf="lifetime_budget?.invalid && (lifetime_budget.dirty || lifetime_budget.touched) && lifetime_budget.errors?.nameExist" class="text-danger">Lifetime Budget Already Exist!</small>
+        </div>
+      </div> -->
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Campaign Name:<span class="text-danger">*</span></label>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Campaign Name" formControlName="name"
+                [ngClass]="{'is-invalid': (name.invalid && (name.dirty || name.touched) && name.errors?.required)}">
+              <small *ngIf="name.invalid && (name.dirty || name.touched) && name.errors?.required"
+                class="text-danger">Campaign Name is required</small>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Campaign Id:</label>
+            <div class="form-group">
+              <input type="text" disabled class="form-control" formControlName="id">
+
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Campaign Owner</label>
+            <div class="form-group">
+              <input type="text" class="form-control" readonly formControlName="campaign_owner">
+            </div>
+          </div>
+
+          <div class="col-md-12 col-lg-4">
+            <label>Is Active:</label>
+            <div class="form-group">
+              <label class="switch">
+                <input type="checkbox" id="customCheck1" formControlName="isActive">
+                <span class="slider round"><span>Yes</span></span>
+              </label>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Status:<span class="text-danger">*</span></label>
+
+            <div class="form-group">
+              <ng-select [items]="statusList" [loading]="loadSave" placeholder="Select Status" formControlName="status"
+                bindLabel="text" bindValue="value">
+              </ng-select>
+              <small *ngIf="status.invalid && (status.dirty || status.touched) && status.errors?.required"
+                class="text-danger">Select Status</small>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Type:</label>
+            <div class="form-group">
+              <ng-select [items]="camgaignlist" [loading]="loadSave" placeholder="Select Type" formControlName="type"
+                bindLabel="text" bindValue="text">
+              </ng-select>
+
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Start Date:<span class="text-danger">*</span></label>
+            <!-- <div class="form-group">
+            <input type="text" class="form-control" placeholder="Start Time" formControlName="start_time"
+              [ngClass]="{'is-invalid': (start_time.invalid && (start_time.dirty || start_time.touched) && start_time.errors?.required)}">
+            <small *ngIf="start_time.invalid && (start_time.dirty || start_time.touched) && start_time.errors?.required"
+              class="text-danger">Start Time is required</small>
+          </div> -->
+            <div class="form-group datepickerinpop">
+              <p-calendar class="calendarwidth" inputStyleClass="form-control start-date" formControlName="start_time"
+                placeholder="Select Date" [showIcon]="true" [showTime]="false" dateFormat="mm/dd/yy"
+                showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                [ngClass]="{'is-invalid': (start_time.invalid && (start_time.dirty || start_time.touched) && start_time.errors?.required)}">
+              </p-calendar>
+              <small
+                *ngIf="start_time.invalid && (start_time.dirty || start_time.touched) && start_time.errors?.required"
+                class="text-danger">Start Date is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>End Date:<span class="text-danger">*</span></label>
+            <!-- <div class="form-group">
+            <input type="text" class="form-control" placeholder="Start Time" formControlName="start_time"
+              [ngClass]="{'is-invalid': (start_time.invalid && (start_time.dirty || start_time.touched) && start_time.errors?.required)}">
+            <small *ngIf="start_time.invalid && (start_time.dirty || start_time.touched) && start_time.errors?.required"
+              class="text-danger">Start Time is required</small>
+          </div> -->
+            <div class="form-group datepickerinpop">
+              <p-calendar class="calendarwidth" inputStyleClass="form-control end-date" formControlName="end_time"
+                placeholder="Select Date" [showIcon]="true" [showTime]="false" dateFormat="mm/dd/yy"
+                showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                (onSelect)="changeTotimeValue($event)"
+                [ngClass]="{'is-invalid': (end_time.invalid && (end_time.dirty || end_time.touched) && end_time.errors?.required)}">
+              </p-calendar>
+              <small *ngIf="end_time.invalid && (end_time.dirty || end_time.touched) && end_time.errors?.required"
+                class="text-danger">End Date is required</small>
+            </div>
+          </div>
+
+         
+
+
+
+
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Discount Name</label>
+            <div class="form-group">
+              <input type="text" class="form-control" formControlName="discount_name">
+            </div>
+          </div>
+
+
+          <div class="col-12 col-md-4 col-lg-4">
+
+            <label>Discount Amount:</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+              </div>
+              <input type="number" (keypress)="numberOnly($event)" class="form-control"
+                formControlName="discount_amount" placeholder="Discount Amount">
+            </div>
+          </div>
+
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Sale Group Type:</label>
+            <div class="form-group">
+              <ng-select [items]="SalesGroupList" [loading]="loadSave" placeholder="Select Sale Group Type"
+                formControlName="sale_group_type" bindLabel="text" bindValue="text">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Service Territory:</label>
+            <div class="form-group">
+              <ng-select [items]="lstTerritory" [loading]="loadSave" placeholder="Select Service Territory"
+                formControlName="service_territory" bindLabel="text" bindValue="value">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>External Id</label>
+            <div class="form-group">
+              <input type="text" class="form-control"  formControlName="external_id">
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Campaign Status Facebook</label>
+            <div class="form-group">
+              <input type="text" class="form-control" formControlName="campaign_status_facebook">
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Daily Budget:<span class="text-danger">*</span></label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+              </div>
+              <input type="number" (keypress)="numberOnly($event)" class="form-control" formControlName="daily_budget"
+                [ngClass]="{'is-invalid': (daily_budget.invalid && (daily_budget.dirty || daily_budget.touched) && (daily_budget.errors?.required || daily_budget.errors?.minlength))}"
+                maxlength="100" />
+
+
+            </div>
+            <div>
+              <small
+                *ngIf="daily_budget.invalid && (daily_budget.dirty || daily_budget.touched) && daily_budget.errors?.required"
+                class="text-danger">Daily Budget is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Impressions:<span class="text-danger">*</span></label>
+            <div class="form-group">
+              <input type="text" (keypress)="numberOnly($event)" class="form-control"
+                [ngClass]="{'is-invalid': (impressions.invalid && (impressions.dirty || impressions.touched) && (impressions.errors?.required || impressions.errors?.minlength))}"
+                formControlName="impressions" />
+              <small
+                *ngIf="impressions.invalid && (impressions.dirty || impressions.touched) && impressions.errors?.required"
+                class="text-danger">Impressions is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Facebook Account ID</label>
+            <div class="form-group">
+              <input type="text" class="form-control" formControlName="facebook_account_id">
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Spends:</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+              </div>
+              <input type="number" (keypress)="numberOnly($event)" class="form-control" formControlName="spends" />
+            </div>
+          </div>
+          <div class="col-12 col-md-12 col-lg-12">
+            <label>Description:</label>
+            <div class="form-group">
+              <textarea class="form-control" formControlName="description" maxlength="2000"></textarea>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+          <!-- <div class="col-12 col-md-4 col-lg-4">
+      <label>Account Id:</label>
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Account Id"
+          formControlName="account_id"
+                />
+           </div>
+    </div>  -->
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Buying Type:<span class="text-danger">*</span></label>
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Buying Type" formControlName="buying_type"
+                [ngClass]="{'is-invalid': (buying_type.invalid && (buying_type.dirty || buying_type.touched) && buying_type.errors?.required)}">
+              <small
+                *ngIf="buying_type.invalid && (buying_type.dirty || buying_type.touched) && buying_type.errors?.required"
+                class="text-danger">Buying Type is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Categories:<span class="text-danger">*</span></label>
+
+            <div class="form-group">
+              <ng-select [items]="categoryList" [loading]="loadSave" placeholder="Select Category"
+                formControlName="special_ad_categories" bindLabel="text" bindValue="value" [multiple]="true">
+              </ng-select>
+              <small
+                *ngIf="special_ad_categories.invalid && (special_ad_categories.dirty || special_ad_categories.touched) && special_ad_categories.errors?.required"
+                class="text-danger">Please select Category</small>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4 col-lg-4">
+            <label>Campaign Objective:<span class="text-danger">*</span></label>
+
+            <div class="form-group">
+              <ng-select [items]="objectiveList" [loading]="loadSave" placeholder="Select Campaign Objective"
+                formControlName="objective" bindLabel="text" bindValue="value">
+              </ng-select>
+              <small *ngIf="objective.invalid && (objective.dirty || objective.touched) && objective.errors?.required"
+                class="text-danger">Please select Campaign Objective</small>
+            </div>
+          </div>
+
+          <!-- <div class="col-12 col-md-4 col-lg-4">
+      <label>Created Time:</label>
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Created Time"
+          formControlName="created_time"
+                />
+           </div>
+    </div>  -->
+
+
+
+          <!-- <div class="col-12 col-md-4 col-lg-4">
+      <label>Status:</label>
+      <div class="form-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Status"
+          formControlName="status"
+                />
+           </div>
+    </div>  -->
+          <!-- <div class="col-12 col-md-4 col-lg-4">
+      <label>Status:</label>
+      <div class="form-group">
+          <ng-select [items]="statusList" formControlName="status" placeholder="Status"
+              bindValue="value" bindLabel="text">
+          </ng-select>
+      </div>
+  </div> -->
+
+          <!-- <div class="col-12 col-md-4 col-lg-4">
+        <label>Objective:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Objective"
+            formControlName="objective"
+            [ngClass]="{ 'is-invalid': objective?.invalid && (objective.dirty || objective.touched) && (objective.errors?.required || objective.errors?.nameExist) }"
+          />
+          <small *ngIf="objective?.invalid && (objective.dirty || objective.touched) && objective.errors?.nameExist" class="text-danger">Objective Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Source Campaign Id:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Source Campaign Id"
+            formControlName="source_campaign_id"
+            [ngClass]="{ 'is-invalid': source_campaign_id?.invalid && (source_campaign_id.dirty || source_campaign_id.touched) && (source_campaign_id.errors?.required || source_campaign_id.errors?.nameExist) }"
+          />
+          <small *ngIf="source_campaign_id?.invalid && (source_campaign_id.dirty || source_campaign_id.touched) && source_campaign_id.errors?.nameExist" class="text-danger">Source Campaign Id Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Spend Cap:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Spend Cap"
+            formControlName="spend_cap"
+            [ngClass]="{ 'is-invalid': spend_cap?.invalid && (spend_cap.dirty || spend_cap.touched) && (spend_cap.errors?.required || spend_cap.errors?.nameExist) }"
+          />
+          <small *ngIf="spend_cap?.invalid && (spend_cap.dirty || spend_cap.touched) && spend_cap.errors?.nameExist" class="text-danger">Spend Cap Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Start Time:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Start Time"
+            formControlName="start_time"
+            [ngClass]="{ 'is-invalid': start_time?.invalid && (start_time.dirty || start_time.touched) && (start_time.errors?.required || start_time.errors?.nameExist) }"
+          />
+          <small *ngIf="start_time?.invalid && (start_time.dirty || start_time.touched) && start_time.errors?.nameExist" class="text-danger">Start Time Already Exist!</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-4">
+        <label>Stop Time:<span class="text-danger">*</span></label>
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Stop Time"
+            formControlName="stop_time"
+            [ngClass]="{ 'is-invalid': stop_time?.invalid && (stop_time.dirty || stop_time.touched) && (stop_time.errors?.required || stop_time.errors?.nameExist) }"
+          />
+          <small *ngIf="stop_time?.invalid && (stop_time.dirty || stop_time.touched) && stop_time.errors?.nameExist" class="text-danger">Stop Time Already Exist!</small>
+        </div>
+      </div> -->
+
+
+
+        </div>
+
+      </div>
+      <div class="row mx-auto mb-2">
+        <h3 class="form-heading ng-star-inserted"><span>Planning</span></h3>
+        <div class="clearfix"></div>
+
+
+
+
+
+
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-4 col-lg-4">
+          <label>Num Sent in Campaign:</label>
+          <div class="form-group">
+            <input type="number" (keypress)="numberOnly($event)" class="form-control"
+              formControlName="num_sent_in_campaign">
+          </div>
+        </div>
+        <div class="col-12 col-md-4 col-lg-4">
+          <label>Budgeted Cost In Campaign:</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">$</span>
+            </div>
+            <input type="number" (keypress)="numberOnly($event)" class="form-control"
+              formControlName="budgeted_cost_in_campaign">
+          </div>
+
+        </div>
+        <div class="col-12 col-md-4 col-lg-4">
+          <label>Expected Response (%):</label>
+          <div class="form-group">
+            <input type="number" (keypress)="numberOnly($event)" class="form-control"
+              formControlName="expected_response">
+          </div>
+        </div>
+        <div class="col-12 col-md-4 col-lg-4">
+          <label>Actual Cost in Campaign:</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">$</span>
+            </div>
+            <input type="number" (keypress)="numberOnly($event)" class="form-control"
+              formControlName="actual_cost_in_campaign">
+          </div>
+
+        </div>
+        <div class="col-12 col-md-4 col-lg-4">
+          <label>Expected Revenue in Campaign:</label>
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">$</span>
+            </div>
+            <input type="number" (keypress)="numberOnly($event)" class="form-control"
+              formControlName="expected_revenue_in_campaign">
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="row mb-3">
+      <div class="col-sm-12 col-md-12  ">
+          <button type="submit" class="btn btn-success form-btns mr-1" (click)="saveForm()"><i
+              class="feather-save text-white pr-2 "></i>Submit</button>
+          <button type="button" class="btn btn-danger form-btns ml-1" (click)="close()"> <i
+              class="feather-x text-white"></i>Cancel</button>
+      </div>
+    </div>
+
+    <!-- <div class="row">
+      <button type="submit" class="btn btn-success form-btns" (click)="saveForm()"><i
+          class="feather-save text-white pr-2"></i>Submit</button>
+      <button type="button" class="btn btn-danger form-btns" (click)="close()"> <i
+          class="fa fa-times text-white"></i>Cancel</button>
+    </div> -->
+  </div>
+</div>
+
+<!-- <h3 class="form-heading mt-0"><span>Add</span></h3> -->
+<div class="clearfix"></div>
+
+<!-- <app-add-edit-operating-hour-modal #addEditModal></app-add-edit-operating-hour-modal> -->

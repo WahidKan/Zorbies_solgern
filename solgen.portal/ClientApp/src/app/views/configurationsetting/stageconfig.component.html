@@ -1,0 +1,512 @@
+<!-- <div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Stage Config</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li>
+        <a routerLink="/dashboard">Dashboard</a>
+      </li>
+      <li *ngIf="!isStateManagement" class="active">Stage Configuration</li>
+      <li *ngIf="isStateManagement"><a routerLink="/statemanagement">Manage Stage </a></li>
+      <li *ngIf="isStateManagement" class="active">Edit Stage</li>
+    </ol>
+  </div>
+
+</div> -->
+
+<div *ngIf="!loadSave" class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+      <h2 class="float-left pr-2 w-100">
+          <strong>Stage Config</strong>
+        </h2>
+      <div class="breadcrumb-wrapper w-100">
+        <ol class="breadcrumb">
+          <li>
+            <a routerLink="/dashboard">Dashboard</a>
+          </li>
+          <li *ngIf="!isStateManagement" class="active">Stage Configuration</li>
+          <li *ngIf="isStateManagement"><a routerLink="/statemanagement">Manage Stage </a></li>
+          <!-- <li *ngIf="isStateManagement" class="active">Edit Stage</li> -->
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+      <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="feather-repeat mr-1"></i>Switch Company</a>
+    </div>
+  </div>
+
+  <!-- <div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+        <h2 class="float-left pr-2 w-100">
+            <strong>{{data.headerTitle}}</strong>
+          </h2>
+        <div class="breadcrumb-wrapper w-100">
+          <ol class="breadcrumb">
+            <li [ngClass]="!breadcrumb.isLink ? 'active' : ''" *ngFor="let breadcrumb of data.breadcrumb; let i = index;" >
+              {{!breadcrumb.isLink ?  breadcrumb.name :  '' }}
+              <a *ngIf="breadcrumb.isLink" routerLink="{{breadcrumb.link}}">{{breadcrumb.name}}</a>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="col-md-6 text-right right pr-0">
+        <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="feather-repeat mr-1"></i>Switch Company</a>
+      </div>
+    </div> -->
+    
+<div class="clearfix"></div>
+<div *ngIf="!loadSave" class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel cntainerwithoutbg clearfix">
+      <div class="panel-content border clearfix mb-4 p-3">
+        <ul class="nav nav-tabs nav-cust" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active show" id="lead-tab" data-toggle="tab" href="#Stage" role="tab"
+              aria-selected="true">Stage Config</a>
+          </li>
+          <!--<li class="nav-item"> <a class="nav-link" id="stage-tab" data-toggle="tab" href="#stage" role="tab" aria-selected="false">Stage Configuration</a> </li>
+    <li class="nav-item"> <a class="nav-link" id="rule-tab" data-toggle="tab" href="#rule" role="tab" aria-selected="false">Rule Engine</a> </li>-->
+          <li class="nav-item">
+            <a class="nav-link" id="list-stage" data-toggle="tab" href="#liststage" (click)="calaulate()" role="tab"
+              aria-selected="false">Version History</a>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+
+
+
+
+          <!-- Start Lead Setting   *ngIf="!isFinancial"-->
+          <div class="tab-pane fade active show" id="Stage" role="tabpanel">
+            <div class="panel-header" *ngIf="!isFinancial">
+              <div class="row mt-2">
+                <div class="col-md-4" *ngIf="!IsDetail">
+                  <label>Module</label>
+                  <ng-select #clearModuleDrop [items]="lstModule" placeholder="Select Module" [(ngModel)]="moduleId"
+                    bindValue="value" bindLabel="text" [closeOnSelect]="true" (change)="SetSubmoduleValue($event.value)"
+                    disabled (clear)="restMasterddl()">
+                  </ng-select>
+
+                </div>
+                <div class="col-md-4" *ngIf="IsDetail">
+                  <label>Module</label>
+                  <ng-select #clearModuleDrop [items]="lstModule" placeholder="Select Module" [(ngModel)]="moduleId"
+                    bindValue="value" bindLabel="text" [closeOnSelect]="true" (change)="SetSubmoduleValue($event.value)"
+                    (clear)="restMasterddl()">
+                  </ng-select>
+
+                </div>
+                <div class="col-md-4" *ngIf="!IsDetail">
+                  <label>Sub Module</label>
+                  <ng-select #clearSubModuleDrop [items]="lstsubModule" placeholder="Select Sub Module"
+                    [(ngModel)]="subModuleId" bindValue="value" bindLabel="text" [closeOnSelect]="true"
+                    (change)="SetStatusValue($event.value)" disabled (clear)="restMasterddl()">
+                  </ng-select>
+
+                </div>
+                <div class="col-md-4" *ngIf="IsDetail">
+                  <label>Sub Module</label>
+                  <ng-select #clearSubModuleDrop [items]="lstsubModule" placeholder="Select Sub Module"
+                    [(ngModel)]="subModuleId" bindValue="value" bindLabel="text" [closeOnSelect]="true"
+                    (change)="SetStatusValue($event.value)" (clear)="restMasterddl()">
+                  </ng-select>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 portlets p-0" *ngIf="showstage">
+              <div class="panel pt-3 mb-0">
+
+                <form [formGroup]="stageform" [ngClass]="{'disabled':loadSave}">
+                  <div class="panel-content pagination2 table-responsive no-padding"
+                    style="min-height:auto;overflow: auto;">
+                    <table id="example" class="table mb-0" style="min-width:1240px;">
+                      <thead class="thead-bg">
+                        <tr *ngIf="fields.controls.length > 0">
+                          <th style="min-width:70px"></th>
+                          <th scope="col">Stage Name</th>
+                          <th scope="col" style="display:none">Mandatory</th>
+                          <th scope="col" style="display:none">Due Days</th>
+                          <th scope="col">Accessibility For UserType</th>
+                          <th scope="col">Hide For</th>
+                          <th scope="col">Link Form</th>
+                          <th scope="col" style="min-width:250px"></th>
+                          <th scope="col"></th>
+                        </tr>
+
+                      </thead>
+
+                      <tbody formArrayName="fields" dnd-sortable-container [sortableData]="fields.controls">
+                        <ng-container *ngFor="let field of fields.controls; let i=index" [formGroupName]="i">
+
+                          <tr *ngIf="fields.controls.length > 0" dnd-sortable [sortableIndex]="i"
+                            (onDropSuccess)="onDropSuccess()" [dragEnabled]="IsDetail">
+                            <td>
+
+                              <span class="mt-2 arrow_col"><i class="fa fa-arrows-v"></i> {{i+1}}</span>
+                            </td>
+                            <td>
+                              <div class="form-group mb-0" *ngIf="IsDetail">
+                                <input type="text" class="form-control" formControlName="stagename" maxlength="50"
+                                  placeholder="Enter Value" id="{{'stagename' + i}}"
+                                  [ngClass]="{'is-invalid': (field.controls.stagename.invalid && (field.controls.stagename.dirty || field.controls.stagename.touched) && (field.controls.stagename.errors?.required || field.controls.stagename.errors?.maxlength)) }">
+                                <small
+                                  *ngIf="field.controls.stagename.invalid && (field.controls.stagename.dirty || field.controls.stagename.touched) && field.controls.stagename.errors?.required"
+                                  class="text-danger">Stage Name is required</small>
+                                <!--<input type="text"  id="{{'display_order' + i}}" formControlName="display_order"  [value]="i" />-->
+                              </div>
+                              <div class="form-group mb-0" *ngIf="!IsDetail">
+                                <input type="text" class="form-control" disabled formControlName="stagename"
+                                  maxlength="50" placeholder="Enter Value" id="{{'stagename' + i}}"
+                                  [ngClass]="{'is-invalid': (field.controls.stagename.invalid && (field.controls.stagename.dirty || field.controls.stagename.touched) && (field.controls.stagename.errors?.required || field.controls.stagename.errors?.maxlength)) }">
+                                <small
+                                  *ngIf="field.controls.stagename.invalid && (field.controls.stagename.dirty || field.controls.stagename.touched) && field.controls.stagename.errors?.required"
+                                  class="text-danger">Stage Name is required</small>
+                                <!--<input type="text"  id="{{'display_order' + i}}" formControlName="display_order"  [value]="i" />-->
+                              </div>
+                            </td>
+
+                            <td style="display:none"></td>
+                            <!--<td>
+    <div class="form-group">
+      <ng-select [items]="sustagelist" id="{{'substageid' + i}}" placeholder="Select field name" formControlName="substageid"
+                 bindLabel="text" bindValue="value" [ngClass]="{'is-invalid': (field.controls.substageid.invalid && (field.controls.substageid.dirty || field.controls.substageid.touched) && field.controls.substageid.errors?.required) }"></ng-select>
+      <small *ngIf="field.controls.substageid.invalid && (field.controls.substageid.dirty || field.controls.substageid.touched) && field.controls.substageid.errors?.required"
+             style="color:red;">Please select Link Stage</small>
+    </div>
+  </td>-->
+                            <!--<td style="display:none">
+    <div class="form-group" style="width: 150px;">
+      <div class="form-group  mb-0">
+        <label class="switch">
+          <input type="checkbox" id="{{'mandatory' +i}}" formControlName="mandatory" value="stageform[i]">
+          <span class="slider round"><span>Yes</span></span>
+        </label>
+      </div>
+    </div>
+  </td>
+  <td style="display:none">
+    <div class="form-group  mb-0">
+      <input type="number" class="form-control" id="{{'duedays' +i}}" formControlName="duedays" maxlength="50" placeholder="Enter Value"
+             [ngClass]="{'is-invalid': (field.controls.duedays.invalid && (field.controls.duedays.dirty || field.controls.duedays.touched) && (field.controls.duedays.errors?.required || field.controls.duedays.errors?.maxlength)) }">
+      <small *ngIf="field.controls.duedays.invalid && (field.controls.duedays.dirty || field.controls.duedays.touched) && field.controls.duedays.errors?.required"
+             class="text-danger">Due Days is required</small>
+    </div>
+  </td>-->
+                            <td>
+                              <div class="form-group  mb-0">
+                                <ng-select [items]="lstUserType" id="{{'usertype' + i}}" [closeOnSelect]="true"
+                                  placeholder="Select usertype" formControlName="usertype" multiple="true"
+                                  bindLabel="text" (change)="checkAccessibilityUserType($event,i)" bindValue="value"
+                                  [ngClass]="{'is-invalid': (field.controls.usertype.invalid && (field.controls.usertype.dirty || field.controls.usertype.touched) && field.controls.usertype.errors?.required) }">
+                                </ng-select>
+                                <small
+                                  *ngIf="field.controls.usertype.invalid && (field.controls.usertype.dirty || field.controls.usertype.touched) && field.controls.usertype.errors?.required"
+                                  style="color:red;">Please select Assign User Type</small>
+                              </div>
+                            </td>
+
+
+                            <td>
+                              <div class="form-group  mb-0">
+                                <ng-select [items]="lstUserType" id="{{'usertype' + i}}" [closeOnSelect]="true"
+                                  placeholder="Select usertype" formControlName="notVisibleForUserType"
+                                  (change)="checkUserType($event,i)" multiple="true" bindLabel="text" bindValue="value"
+                                  [ngClass]="{'is-invalid': (field.controls.usertype.invalid && (field.controls.usertype.dirty || field.controls.usertype.touched) && field.controls.usertype.errors?.required) }">
+                                </ng-select>
+                                <small
+                                  *ngIf="field.controls.usertype.invalid && (field.controls.usertype.dirty || field.controls.usertype.touched) && field.controls.usertype.errors?.required"
+                                  style="color:red;">Please select Hide For</small>
+                              </div>
+                            </td>
+
+                            <td>
+                              <div class="form-group  mb-0">
+                                <!--(change)="selcdropdown($event,field,i)"-->
+                                <ng-select class="mr-2 float-left" style="width:90%;" [items]="lstpage"
+                                  id="{{'pages' + i}}" [closeOnSelect]="true" placeholder="Select page"
+                                  formControlName="pages" multiple="true" (remove)="resetlinkpages($event,field,i)"
+                                  bindLabel="text" bindValue="value"
+                                  [ngClass]="{'is-invalid': (field.controls.pages.invalid && (field.controls.pages.dirty || field.controls.pages.touched) && field.controls.pages.errors?.required) }">
+                                </ng-select>
+                                <small
+                                  *ngIf="field.controls.pages.invalid && (field.controls.pages.dirty || field.controls.pages.touched) && field.controls.pages.errors?.required"
+                                  style="color:red;">Please select Link Page</small>
+                                <a class="text-info float-left pt-2" (click)="ShowForms(field,'stageView')"><i
+                                    class="feather-eye"></i></a>
+                              </div>
+
+                            </td>
+                            <td class="align-middle" *ngIf="IsDetail"> <a href="javascript:void(0)"
+                                class="text-dark add-child" (click)="addSubStageFields(i)" data-toggle="tooltip"
+                                data-placement="top" title="Add Sub Stage"><i class="feather-plus-circle"></i> Add Sub
+                                Stage</a></td>
+                            <td class="align-middle" *ngIf="!IsDetail"> <a class="text-dark add-child"
+                                data-toggle="tooltip" data-placement="top"><i class="feather-plus-circle"></i> Add Sub
+                                Stage</a></td>
+                            <td class="text-center align-middle">
+                              <div class="form-group mt-2 mb-0 text-center">
+                                <a *ngIf="i > 0 && IsDetail" href="javascript:void(0);" (click)="removeFields(i)"> <i
+                                    class="feather-trash-2 text-danger"></i></a>
+                                <a *ngIf="i > 0 && !IsDetail"> <i class="feather-trash-2 text-danger"></i></a>
+
+
+                              </div>
+                            </td>
+                          </tr>
+
+
+                          <!--substages-->
+                          <!--<tr *ngFor="let subField of field.value.substages" formArray="substages">-->
+                          <ng-container formArrayName="substages">
+
+                            <tr *ngFor="let subField of field.get('substages').controls; let j =index"
+                              [formGroupName]="j">
+                              <td></td>
+
+                              <td>
+                                <div class="form-group mb-0" *ngIf="IsDetail">
+                                  <input type="text" class="form-control" formControlName="substagename"
+                                    placeholder="Enter Value"
+                                    [ngClass]="{'is-invalid': (subField.controls.substagename.invalid && (subField.controls.substagename.dirty || subField.controls.substagename.touched) && (subField.controls.substagename.errors?.required || subField.controls.substagename.errors?.maxlength)) }">
+                                  <small
+                                    *ngIf="subField.controls.substagename.invalid && (subField.controls.substagename.dirty || subField.controls.substagename.touched) && subField.controls.substagename.errors?.required"
+                                    class="text-danger">Sub Stage Name is required</small>
+                                  <!--<input type="text"  id="{{'display_order' + i}}" formControlName="display_order"  [value]="i" />-->
+                                </div>
+                                <div class="form-group mb-0" *ngIf="!IsDetail">
+                                  <input type="text" class="form-control" disabled formControlName="substagename"
+                                    placeholder="Enter Value"
+                                    [ngClass]="{'is-invalid': (subField.controls.substagename.invalid && (subField.controls.substagename.dirty || subField.controls.substagename.touched) && (subField.controls.substagename.errors?.required || subField.controls.substagename.errors?.maxlength)) }">
+                                  <small
+                                    *ngIf="subField.controls.substagename.invalid && (subField.controls.substagename.dirty || subField.controls.substagename.touched) && subField.controls.substagename.errors?.required"
+                                    class="text-danger">Sub Stage Name is required</small>
+                                  <!--<input type="text"  id="{{'display_order' + i}}" formControlName="display_order"  [value]="i" />-->
+                                </div>
+
+
+                              </td>
+                              <td style="display:none"></td>
+                              <td style="display:none"></td>
+                              <td>
+                                <div class="form-group  mb-0">
+                                  <ng-select [items]="lstUserType" [closeOnSelect]="true" placeholder="Select usertype"
+                                    formControlName="usertypesubstage" multiple="true" bindLabel="text"
+                                    bindValue="value"
+                                    [ngClass]="{'is-invalid': (subField.controls.usertypesubstage.invalid && (subField.controls.usertypesubstage.dirty || subField.controls.usertypesubstage.touched) && subField.controls.usertypesubstage.errors?.required) }">
+                                  </ng-select>
+                                  <small
+                                    *ngIf="subField.controls.usertypesubstage.invalid && (subField.controls.usertypesubstage.dirty || subField.controls.usertypesubstage.touched) && subField.controls.usertypesubstage.errors?.required"
+                                    style="color:red;">Please select Assign User Type</small>
+                                </div>
+
+                              </td>
+
+                              <td>
+                                <div class="form-group  mb-0">
+                                  <ng-select [items]="lstUserType" [closeOnSelect]="true" placeholder="Select usertype"
+                                    formControlName="notVisibleForSubStageUserType" multiple="true" bindLabel="text"
+                                    bindValue="value"
+                                    [ngClass]="{'is-invalid': (subField.controls.notVisibleForSubStageUserType.invalid && (subField.controls.notVisibleForSubStageUserType.dirty || subField.controls.notVisibleForSubStageUserType.touched) && subField.controls.notVisibleForSubStageUserType.errors?.required) }">
+                                  </ng-select>
+                                  <small
+                                    *ngIf="subField.controls.notVisibleForSubStageUserType.invalid && (subField.controls.notVisibleForSubStageUserType.dirty || subField.controls.notVisibleForSubStageUserType.touched) && subField.controls.notVisibleForSubStageUserType.errors?.required"
+                                    style="color:red;">Please select Is Not Visible For</small>
+                                </div>
+
+                              </td>
+
+
+                              <td>
+                                <div class="form-group  mb-0">
+                                  <ng-select [items]="lstpage" class="mr-2 float-left" style="width:90%;"
+                                    [closeOnSelect]="true" placeholder="Select page" formControlName="pagessubstage"
+                                    multiple="true" bindLabel="text" bindValue="value"
+                                    (change)="selcdropdown($event,field,j)" (remove)="resetlinkpages($event,field,j)"
+                                    [ngClass]="{'is-invalid': (subField.controls.pagessubstage.invalid && (subField.controls.pagessubstage.dirty || subField.controls.pagessubstage.touched) && subField.controls.pagessubstage.errors?.required) }">
+                                  </ng-select>
+                                  <small
+                                    *ngIf="subField.controls.pagessubstage.invalid && (subField.controls.pagessubstage.dirty || subField.controls.pagessubstage.touched) && subField.controls.pagessubstage.errors?.required"
+                                    style="color:red;">Please select Link Page</small>
+                                  <a class="text-info float-left pt-2" (click)="ShowForms(subField,'sub')"><i
+                                      class="feather-eye"></i></a>
+                                </div>
+
+                              </td>
+                              <td class="align-middle">
+                                <div class="form-group" *ngIf="IsDetail">
+                                  <div class="custom-control custom-radio custom-control-inline p-0">
+                                    <input id="sequncereq-{{i}}{{j}}" type="radio" value="Sequence"
+                                      (change)="setseqvalue(field,$event,i)" formControlName="issequenceforsubstage">
+                                    <label for="sequncereq-{{i}}{{j}}"
+                                      class="radio-label font-weight-normal">Sequence</label>
+                                  </div>
+                                  <div class="custom-control custom-radio custom-control-inline p-0">
+                                    <input id="parallelreq-{{i}}{{j}}" type="radio" value="Parallel"
+                                      (change)="setseqvalue(field,$event,i)" formControlName="issequenceforsubstage">
+                                    <label for="parallelreq-{{i}}{{j}}"
+                                      class="radio-label font-weight-normal">Parallel</label>
+                                  </div>
+                                </div>
+                                <div class="form-group" *ngIf="!IsDetail">
+                                  <div class="custom-control custom-radio custom-control-inline p-0">
+                                    <input id="sequncereq-{{i}}{{j}}" type="radio" disabled value="Sequence"
+                                      (change)="setseqvalue(field,$event,i)" formControlName="issequenceforsubstage">
+                                    <label for="sequncereq-{{i}}{{j}}"
+                                      class="radio-label font-weight-normal">Sequence</label>
+                                  </div>
+                                  <div class="custom-control custom-radio custom-control-inline p-0">
+                                    <input id="parallelreq-{{i}}{{j}}" type="radio" disabled value="Parallel"
+                                      (change)="setseqvalue(field,$event,i)" formControlName="issequenceforsubstage">
+                                    <label for="parallelreq-{{i}}{{j}}"
+                                      class="radio-label font-weight-normal">Parallel</label>
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td class="text-center align-middle">
+                                <a *ngIf="IsDetail" href="javascript:void(0);" (click)="removeSubstageFields(field,j)">
+                                  <i class="feather-trash-2 text-danger"></i></a>
+
+                                <a *ngIf="!IsDetail"> <i class="feather-trash-2 text-danger"></i></a>
+                              </td>
+                            </tr>
+
+                          </ng-container>
+
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!--<div formarray="substages">
+    <ng-container *ngFor="let fieldsdsa of fields.controls">
+
+
+      <h1> {{fieldsdsa.value.substages |json}}      new data</h1>
+
+    </ng-container>
+  </div>-->
+                  <div class="data-empty" *ngIf="fields.controls.length < 1">
+                    <p>No Record Found</p>
+                  </div>
+                  <div class="panel-footer border-top py-3 border-bottom-0 px-0">
+                    <div class="row">
+                      <div class="col-md-12" style="display:none">
+                        <div class="form-group">
+                          <div class="form-group">
+                            <label class="switch">
+                              <input type="checkbox" id="{{'mandatory' +i}}" formControlName="sequence_mandatory">
+                              <span class="slider round"><span>Yes</span></span>
+                            </label> Sequence Mandatory
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-sm-12 pl-4 ">
+                        <a href="javascript:void(0)" *ngIf="IsDetail" class="btn btn-primary mr-2 mt-2 mt-sm-0"
+                          (click)="addFields()"><span><i class="feather-plus"></i> Add Stage</span></a>
+                        <a *ngIf="!IsDetail" class="btn btn-primary mr-2" href="javascript:void(0)"><span><i
+                              class="feather-plus"></i> Add Stage</span></a>
+                        <a *ngIf="fields.controls.length > 0" href="javascript:void(0)" (click)="addeditstage()"
+                          class="btn btn-success mr-2"><i class="feather-save"></i> Submit</a>
+                        <!--<a href="javascript:void(0)" (click)="CheckValue()" class="btn btn-success mr-2"><i class="feather-save"></i> Check</a>-->
+
+                        <a *ngIf="fields.controls.length > 0" class="btn btn-white" (click)="cancel()"
+                          href="javascript:void(0)"><span><i class="feather-repeat"></i> Reset</span></a>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane p-0 fade" id="liststage" role="tabpanel">
+            <div class="panel-content px-3 pagination2 table-responsive no-padding">
+
+              <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data"
+                [columnMode]="'force'" [headerHeight]="40" [scrollbarH]="true" [rowHeight]="'40'" [footerHeight]="40"
+                [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage"
+                [limit]="pagedData.pager.pageSize" (page)='setPage($event)' (sort)="onSort($event)">
+                <ngx-datatable-column name="Version" [sortable]="true" prop="BatchId">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+
+                    <a href="javascript:void(0);" (click)="Batchid(row.BatchId)" class="btn-edit">{{row.BatchId}}</a>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Total Record" prop="Loanappid" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+
+                    <a href="javascript:void(0);" (click)="loanapp(row.BatchId)" class="btn-edit">{{row.Loanappid}}</a>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Created On" prop="Createdon" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.Createdon | DateTimeToLocal}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <!--(row[col.COLUMN_NAME] | DateTimeToLocal-->
+                <!--<ngx-datatable-column name="Term" prop="Term" [sortable]="true">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.Term}} years
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Apr" prop="Apr" [sortable]="true">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.Apr}} %
+          </ng-template>
+        </ngx-datatable-column>-->
+                <!--<ngx-datatable-column name="Dealer Fees" prop="DealerFee" [sortable]="true">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.DealerFee}} %
+          </ng-template>
+        </ngx-datatable-column>-->
+                <!--<ngx-datatable-column [width]="80" name="Action" [sortable]="false" headerClass="text-right">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div class="icon-text-left">
+              <a (click)="edit(row.Id)" class="btn-edit"><i title="Click to edit." class="fa fa-pencil text-success pr-2"></i></a>
+              <a (click)="delete(row.Id)" class="btn-delete"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+            </div>
+
+          </ng-template>
+        </ngx-datatable-column>-->
+
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                    let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset"
+                    let-isVisible="isVisible">
+                    <div class="page-count">
+                      {{rowCount}} total
+                    </div>
+                    <div>
+                      <div style="color:black; margin-right:10px;" class="page-size-record">
+                        <span style="text-align:right; width:80px;vertical-align: middle;">
+                          <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body"
+                            [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)"
+                            draggable="false" [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                        </span>
+                      </div>
+                    </div>
+                    <datatable-pager  [pagerLeftArrowIcon]="'feather-chevron-left'"
+                    [pagerRightArrowIcon]="'feather-chevron-right'"
+                    [pagerPreviousIcon]="'feather-chevrons-left'"
+                    [pagerNextIcon]="'feather-chevrons-right'" 
+                      [page]="pagedData.pager.currentPage+1"
+                      [size]="pageSizeValue" [count]="pagedData.pager.totalItems"
+                      [hidden]="!((rowCount / pageSize) > 1)" (change)="setPage($event)">
+                    </datatable-pager>
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<app-stageinfo  *ngIf="!loadSave" #stageInfo></app-stageinfo>
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

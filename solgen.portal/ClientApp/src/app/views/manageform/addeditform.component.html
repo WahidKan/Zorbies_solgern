@@ -1,0 +1,430 @@
+
+
+  <div class="header float-left w-100 mb-2 d-flex">
+    <div class="col-md-6 pl-0">
+      <h2 class="float-left pr-2 w-100" *ngIf="!isSolgenPower"><strong>Add/Edit Form Fields</strong></h2>
+      <h2 class="float-left pr-2 w-100" *ngIf="isSolgenPower"><strong>Add/Edit Screen Fields</strong></h2>
+      <div class="breadcrumb-wrapper w-100">
+        <ol class="breadcrumb">
+          <li><a class="smview" routerLink="/dashboard">Dashboard</a></li>
+          <li *ngIf="!isSolgenPower" ><a class="smview" href="javascript:void(0);" (click)="Cancel()">Manage Form</a></li>
+          <li *ngIf="isSolgenPower"><a class="smview" href="javascript:void(0);" (click)="Cancel()">Manage Screen</a></li>
+          <li class="active">{{pageTitle}}</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+      <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="feather-repeat mr-1"></i>Switch Company</a>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets ">
+    <div class="panel">
+      <div class="panel-content p-3 px-4">
+        <form [formGroup]="manageForm" autocomplete="off">
+          <div class="row" [ngClass]="{'disabled':loadSave}">
+            <div class="px-1" id="FixedDiv" [ngClass]="(!isCompanyTypeFinancialInstitute)?'col-md-2 col-lg-2':'col-md-3 col-lg-3'">
+              <h3 class="side_panel-heading"> Select New Field</h3>
+              <div class="bordered-content">
+                <ul class="types columnlist list-group custom-field-layout custom-field-layout-left-panel mb-3">
+
+                  <li class="list-group-item selected" id="1" code="string" maxlength="100" *ngFor="let row of colors"
+                      pDraggable="row"
+                      (onDragStart)="dragStart($event,row)" (onDragEnd)="dragEnd($event)">
+                    <a href="javascript:void(0);">
+                      <i class="{{row.class_name}}"></i>
+                      <span>
+                        {{row.name}}
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+
+
+                <!--<div *ngFor="let color of colors" class="border col-md-6 col-lg-6" pDraggable="color"
+           (onDragStart)="dragStart($event,color)" (onDragEnd)="dragEnd($event)">
+        <i class="{{color.classname}}"></i>&nbsp;{{color.name}}
+      </div>-->
+              </div>
+            </div>
+
+            <div class="px-1" [ngClass]="(!isCompanyTypeFinancialInstitute)?'col-md-7 col-lg-7':'col-md-9 col-lg-9'">
+              <div class="drop" pDroppable="row" (onDrop)="drop($event)" style="display:none">
+                <div class="col-md-12 col-lg-12">
+                  <div class="form-group d-flex justify-content-between">
+                    <input type="text" class="form-control w-50" formControlName="fieldName" maxlength="500" placeholder="Enter Secion name12">
+                    <div class="dropdown form-group">
+                      <a href="javascript:void(0);" class="column-setting py-2 d-block" (click)="toggleClass($event,'show')"><i class="fa fa-cog text-dark" style="font-size: 20px;"></i></a>
+                      <div class="dropdown-menu" [ngClass]="condition ? 'show' : 'hide'" id="column-setting">
+                        <!--<a class="dropdown-item" href="javascrip:;">double Columns</a>-->
+                        Select Layout
+                        <div class="custom-control custom-radio">
+                          <input type="radio" class="custom-control-input" id="customRadio1" name="contactPreferredDocumentSignedBy"
+                                 (click)="toggleClassRadioButton($event,'single')" value="single" checked>
+                          <label class="custom-control-label" for="customRadio1">Single Columns</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <input type="radio" class="custom-control-input" id="customRadio1" name="contactPreferredDocumentSignedBy"
+                                 (click)="toggleClassRadioButton($event,'double')" value="double">
+                          <label class="custom-control-label" for="customRadio1">Double Columns</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <!--<a class="dropdown-item" href="javascrip:;">Triple Columns</a>-->
+                          <input type="radio" class="custom-control-input" id="tripleColumns" name="contactPreferredDocumentSignedBy"
+                                 (click)="toggleClassRadioButton($event,'triple')" value="triple">
+                          <label class="custom-control-label" for="tripleColumns">Triple Columns</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                          <!--<a class="dropdown-item" href="javascrip:;">Four Columns</a>-->
+                          <input type="radio" class="custom-control-input" id="fourColumns" (click)="toggleClassRadioButton($event,'four')"
+                                 name="contactPreferredDocumentSignedBy" value="four">
+                          <label class="custom-control-label" for="fourColumns">Four Columns</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p-orderList [value]="droped" styleClass="two-column" dragdrop="true">
+
+                  <ng-template let-c pTemplate="item">
+
+
+                    <div class="draged-item" *ngIf="c.display_name; else elseblock2">
+                      <i class="{{c.class_name}}"></i>&nbsp;{{c.display_name}}<i class="fa fa-ellipsis-h text-secondary float-right"></i>
+                    </div>
+                    <ng-template elseblock2>
+                      <div [ngClass]="{'col-12': formPageType =='single', 'col-md-6': formPageType =='double', 'col-lg-4':formPageType =='triple', 'col-lg-3 col-xl-3': formPageType =='four' }" id="newSection">
+                        <div class="draged-item" pDraggable="c" style="background-color:antiquewhite"
+                             (onDragStart)="dragStartGroupToGroup($event,c)" (onDragEnd)="dragEndGroupToGroup($event)" *ngIf="c.name; else elseblock">
+                          <i class="{{c.class_name}}"></i>
+                          {{c.name}} <a href="javascript:void(0);">
+                            <span>
+                              <span (click)="hideme[droped.indexOf(c)+uniqueid] =! hideme[droped.indexOf(c)+uniqueid]"><i class="fa fa-ellipsis-h text-secondary float-right"></i></span>
+                              <div class="dropdown-menu" [ngClass]="{'hide' : hideme[droped.indexOf(c)+uniqueid] == false,'show' : hideme[droped.indexOf(c)+uniqueid] == true}" id="column-setting+{{droped.indexOf(c)}}">
+                                <div class="custom-control custom-checkbox">
+                                  <input id="'chk_'+ {{c.dt_code}}+ '_' + {{c.id}}+ '_' + {{droped.indexOf(c)}}" class="dynamic custom-control-input" (click)="SystemDefinedPropertyRequired(c.id,c,droped.indexOf(c),$event)" type="checkbox">
+                                  <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="'chk_'+ {{c.dt_code}}+ '_' + {{c.id}}+ '_' + {{droped.indexOf(c)}}">Mark As Required</label>
+                                </div>
+
+                                <div>
+                                  <a href="javascript:void(0);" (click)="EditCustomFields(c.id,c,droped.indexOf(c))" class="dropdown-item px-2" draggable="false"><i class="fa fa-pencil text-success"></i> <span class="ml-1 text-secondary" style="font-size: 14px;">View Properties</span></a>
+                                </div>
+                                <div>
+                                  <a href="javascript:void(0);" (click)="RemoveCustomFieldSystemDefined(droped.indexOf(c),c)" class="dropdown-item px-2" draggable="false"><i class="feather-trash-2 text-danger"></i> <span class="ml-1 text-dark" style="font-size: 14px;">Delete Field</span></a>
+                                </div>
+
+                              </div>
+                            </span>
+                          </a>
+
+                        </div>
+                      </div>
+                    </ng-template>
+
+                  </ng-template>
+
+                </p-orderList>
+              </div>
+              <style>
+                .customdieldbg {
+                  background-color: #effaff;
+                }
+              </style>
+              <!--<div class="col-md-8 col-lg-8">
+
+    Drag Containers <input type="checkbox" (click)="dragfullgroup()" />
+  </div>-->
+              <div dnd-sortable-container [sortableData]="group" [dropZones]="['container-dropZone']">
+                <ng-container *ngFor="let field of group; let a = index" >
+                  <div id="container"  class=" mb-3" dnd-sortable [sortableIndex]="a" [dragEnabled]="dragOperation">
+                    <div class="drop" pDroppable="row" (onDrop)="dropNewGrop($event,a)" dnd-sortable-container [sortableData]="field.controls" [dropZones]="['widget-dropZone']">
+                      <div class="drop_right_heading">
+                        <div class="col-md-12 col-lg-12">
+                          <div class="form-group d-flex justify-content-between" (mousedown)="fordragcontainer()">
+                            <input type="text" class="form-control w-50" [value]="field.group_display_name" (keyup)="changegroup($event,a)" maxlength="500" placeholder="Enter Section Name">
+                            <div class="dropdown form-group">
+                              <a href="javascript:void(0);" class="column-setting py-2 d-block"
+                                 (click)="hidemeNewGrp[a] =! hidemeNewGrp[a]"><i class="fa fa-cog text-dark" style="font-size: 20px;"></i></a>
+                              <div class="dropdown-menu selctlay"
+                                   [ngClass]="{'hide' : hidemeNewGrp[a] == false,'show' : hidemeNewGrp[a] == true}"
+                                   id="column-setting">
+                                <span class="hedlay">Select Layout</span>
+                                <div class="custom-control custom-radio">
+                                  <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'single')">
+                                    <input type="radio" class="custom-control-input" id="customRadioNewGrpSingle{{a}}" name="contactPreferredDocumentSignedBy{{a}}"
+                                           value="single" [checked]="field.group_layout_type=='single'">
+                                    <label class="custom-control-label" for="customRadioNewGrpSingle{{a}}">Single Columns</label>
+                                  </a>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                  <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'double')">
+                                    <input type="radio" class="custom-control-input" id="customRadioNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}"
+                                           value="double" [checked]="field.group_layout_type=='double' || field.group_layout_type==''">
+                                    <label class="custom-control-label" for="customRadioNewGrp{{a}}">Double Columns</label>
+                                  </a>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                  <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'triple')">
+
+                                    <input type="radio" class="custom-control-input" id="tripleColumnsNewGrp{{a}}" name="contactPreferredDocumentSignedBy{{a}}"
+                                           value="triple" [checked]="field.group_layout_type=='triple'">
+                                    <label class="custom-control-label" for="tripleColumnsNewGrp{{a}}">Triple Columns</label>
+
+                                  </a>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                  <a href="javascript:void(0)" (click)="toggleClassRadioButtonNew($event,a,'four')">
+                                    <input type="radio" class="custom-control-input" id="fourColumnsNewGrp{{a}}"
+                                           name="contactPreferredDocumentSignedBy{{a}}" value="four" [checked]="field.group_layout_type=='four'">
+                                    <label class="custom-control-label" for="fourColumnsNewGrp{{a}}">Four Columns</label>
+                                  </a>
+                                </div>
+                                <div>
+                                  <a href="javascript:void(0);" (click)="Removeform(a)" class="dropdown-item" draggable="false"><i class="feather-trash-2 text-danger" style="font-size: 20px;"></i> <span class="ml-1 text-dark" style="font-size: 14px;">Delete Section</span></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row custom_feild_box" style="min-height:75px;">
+                        <ng-container *ngFor="let control of field.controls; let controlIndex=index">
+                          <div [ngClass]="{'col-lg-12 col-xl-12': dynamicformNewSection[a] =='single'
+                             && !isCompanyTypeFinancialInstitute
+                            , 'col-lg-6 col-xl-6': (dynamicformNewSection[a] =='double' ||  dynamicformNewSection[a] == ''), 'col-lg-4 col-xl-4':dynamicformNewSection[a] =='triple', 'col-lg-3 col-xl-3': (dynamicformNewSection[a] =='four' ||  !dynamicformNewSection[a] ) }">
+
+                            <div class="draged-item" dnd-sortable [sortableIndex]="controlIndex" [dragEnabled]="!dragOperation" (mousedown)="fordragcontrol()"
+                                 [dragData]="control" [ngClass]="{'customdieldbg': control.is_system_generated ==false}">
+
+                              <ng-container *ngIf="isCompanyTypeFinancialInstitute;else elseblock;">
+                                <span class="form-control w-75 float-left">{{(control.is_system_generated ==false ? control.name : control.display_name) | DisplayName}}</span>
+                                <span class="w-25 float-right" style="padding-top:10px;">
+                                  <a href="javscript:;">
+                                    <span>
+                                      <span (click)="hideme[a+''+controlIndex] =! hideme[a+''+controlIndex]"><i class="fa fa-ellipsis-h text-secondary float-right anchodeshowdrop"></i></span>
+                                      <div class="dropdown-menu float-right hideshowdropdown quickkact" [ngClass]="{'hide' : hideme[a+''+controlIndex] == false,'show' : hideme[a+''+controlIndex] == true}" id="column-setting{{a}}{{controlIndex}}">
+                                        <div>
+                                          <a href="javascript:void(0);" (click)="EditCustomFields(a,control.id,control,controlIndex,'NewGroupCreated')" class="dropdown-item px-2" draggable="false"><i class="fa fa-pencil text-success"></i> <span class="ml-1 text-secondary" style="font-size: 14px;">View Properties</span></a>
+                                        </div>
+                                        <div *ngIf="!control.is_system_generated">
+                                          <a href="javascript:void(0);" (click)="RemoveCustomFields(a,controlIndex,a+''+controlIndex)" class="dropdown-item px-2" draggable="false"><i class="feather-trash-2 text-danger"></i> <span class="ml-1 text-dark" style="font-size: 14px;">Delete Field</span></a>
+                                        </div>
+
+                                      </div>
+                                    </span>
+                                  </a>
+                                </span>
+                              </ng-container>
+
+
+                              <ng-template #elseblock>
+                                <span class="py-1 w-75 float-left">
+                                  <ng-container *ngIf="control.field_type != 'texteditor'">
+                                    <label class="text-capitalize">
+                                      {{(control.is_system_generated ==false ? control.name : control.display_name) | DisplayName}}
+                                      <span *ngIf="control.is_required" class="text-danger">*</span>
+                                    </label>
+                                  </ng-container>
+
+                                  <!--for input value and field type text-->
+                                  <input *ngIf="control.field_type=='textbox'" id="input_{{controlIndex}}" name="input_{{controlIndex}}" class="form-control" type="text" placeholder="{{control.display_name | DisplayName}}" />
+
+                                  <!--for input value and field type textarea-->
+                                  <textarea *ngIf="control.field_type=='textarea'" class="form-control" id="textarea_{{controlIndex}}" name="textarea_{{controlIndex}}" placeholder="{{control.display_name | DisplayName}}"></textarea>
+
+
+                                  <!--for input value and field type editor-->
+                                  <ng-container *ngIf="control.field_type=='texteditor'">
+                                    <p-editor pDroppable="row" (onDrop)="dropFields($event,a,controlIndex)" (onTextChange)="OnEditorChange($event,a,controlIndex)" id="editor{{controlIndex}}" [(ngModel)]="editor[controlIndex]" [ngModelOptions]="{standalone: true}" (onInit)="onEditorLoad(controlIndex,control)"><p-header> </p-header></p-editor>
+                                  </ng-container>
+
+
+                                  <!--for input value and field type date-->
+                                  <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " *ngIf="control.field_type=='date'" hideOnDateTimeSelect="true"
+                                              inputId="cald_{{controlIndex}}" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                                  <!--for input value and field type datetime-->
+                                  <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date " *ngIf="control.field_type=='datetime'" [hourFormat]="(timeFormat==24)?'24':'12'" hideOnDateTimeSelect="true"
+                                              [showTime]="true" inputId="caldt_{{controlIndex}}" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                                  <!--for input value and field type number-->
+                                  <input *ngIf="control.field_type=='number' " min="0" value="0" step="0.01" id="input_{{controlIndex}}" name="input_{{controlIndex}}" class="form-control" type="number" placeholder="{{(control.is_system_generated ==false ? control.name : control.display_name) | DisplayName}}" />
+
+                                  <!--for input value and field type number-->
+                                  <input *ngIf="control.field_type=='decimal'" pattern="^\d*(\.\d{0,2})?$" min="0" value="0" step="0.01" id="input_{{controlIndex}}" name="input_{{controlIndex}}" class="form-control" type="number" placeholder="{{(control.is_system_generated ==false ? control.name : control.display_name) | DisplayName}}" />
+
+
+                                  <!--for input value and field type dropdown-->
+                                  <ng-container *ngIf="control.field_type=='dropdown'">
+
+                                    <div class="clearfix"></div>
+                                    <ng-select id="ddl_{{controlIndex}}" [items]="control.selectlistvalues"
+                                               bindLabel="value" bindValue="id" placeholder="{{(control.is_system_generated ==false ? control.name : control.display_name) | DisplayName}}">
+                                      <ng-template ng-option-tmp let-item="item" let-index="index">
+                                        <span>{{item.value}} <span *ngIf="item.color!=''">&nbsp;&nbsp;&nbsp;&nbsp;<span [style.background-color]="item.color">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp; {{item.color}}</span></span>
+                                      </ng-template>
+                                    </ng-select>
+                                  </ng-container>
+
+                                  <!--for input value and field type radio-->
+                                  <ng-container *ngIf="control.field_type=='radioButton'">
+                                    <div class="clearfix"></div>
+                                    <ng-container *ngIf="control.picklist_options">
+                                      <ng-container *ngFor="let item of control.picklist_options.split(',');let radioIndex=index;">
+                                        <span class="mr-3">
+                                          <input id="radio-{{a}}_{{controlIndex}}_{{radioIndex}}" name="radio-{{a}}_{{controlIndex}}" [value]="" type="radio" class="mr-15">
+                                          <label for="radio-{{a}}_{{controlIndex}}_{{radioIndex}}" class="radio-label mr-15">{{item}}</label>
+                                        </span>
+                                      </ng-container>
+                                    </ng-container>
+                                  </ng-container>
+
+                                  <!--for input value and field type checkbox-->
+                                  <ng-container *ngIf="control.field_type=='checkbox'">
+                                    <div class="clearfix"></div>
+                                    <ng-container *ngIf="control.picklist_options">
+                                      <ng-container *ngFor="let item of control.picklist_options.split(',');let checkIndex=index;">
+                                        <span class="mr-3">
+                                          <input id="chk-{{a}}_{{controlIndex}}_{{checkIndex}}" [value]="" type="checkbox" class="mr-15">
+                                          <label for="chk-{{a}}_{{controlIndex}}_{{checkIndex}}" class="radio-label">{{item}}</label>
+                                        </span>
+                                      </ng-container>
+                                    </ng-container>
+                                  </ng-container>
+
+                                  <!--for input value and field type boolean-->
+                                  <ng-container *ngIf="control.field_type=='boolean'">
+                                    <div class="clearfix"></div>
+                                    <label class="switch  mb-0">
+                                      <input type="checkbox" id="bool{{controlIndex}}" [checked]="getItemToParseBolean(control.default_value)">
+                                      <span class="slider round" id="bool{{controlIndex}}"><span>Yes</span></span>
+                                    </label>
+                                  </ng-container>
+
+
+                                  <!--<div class="bg-light p-2" *ngIf="control.dependent_id" [innerHTML]="this.GetConditionInString(a,control)"></div>-->
+
+
+                                </span>
+                                <span class="w-25 float-right" style="padding-top:10px;">
+                                  <a href="javascript:void(0);">
+                                    <span>
+                                      <span (click)="hideme[a+''+controlIndex] =! hideme[a+''+controlIndex]"><i class="fa fa-ellipsis-h text-secondary float-right anchodeshowdrop"></i></span>
+                                      <div class="dropdown-menu float-right hideshowdropdown quickkact" [ngClass]="{'hide' : hideme[a+''+controlIndex] == false,'show' : hideme[a+''+controlIndex] == true}" id="column-setting{{a}}{{controlIndex}}">
+                                        <div>
+                                          <a href="javascript:void(0);" (click)="EditCustomFields(a,control.id,control,controlIndex,'NewGroupCreated')" class="dropdown-item px-2" draggable="false"><i class="fa fa-pencil text-success"></i> <span class="ml-1 text-secondary" style="font-size: 14px;">View Properties</span></a>
+                                        </div>
+                                        <div *ngIf="!control.is_system_generated">
+
+                                          <a href="javascript:void(0);" (click)="RemoveCustomFields(a,controlIndex,a+''+controlIndex)" class="dropdown-item px-2" draggable="false"><i class="feather-trash-2 text-danger"></i> <span class="ml-1 text-dark" style="font-size: 14px;">Delete Field</span></a>
+                                        </div>
+
+                                      </div>
+                                    </span>
+                                  </a>
+                                </span>
+
+                              </ng-template>
+
+                              <div class="clearfix"></div>
+                            </div>
+                          </div>
+                          <div class="clearfix" *ngIf="control.field_type=='break'"></div>
+
+                        </ng-container>
+
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                  </div>
+              <div class="col-12 p-0">
+                <a href="javascript:void(0);" class="btn btn-danger float-right" (click)="Cancel()"><i class="feather-x pr-1"></i> Cancel</a>
+                <a href="javascript:void(0);" class="btn btn-success mr-2 float-right" (click)="AddFormForCustomField()"><i class="feather-save pr-1"></i> Submit</a>
+                <a href="javascript:void(0);" title="" class="btn btn-primary formbtn widthhalf  mr-2 float-right" (click)="NewGrop('NewGroup')"
+                   tooltip="Create New Section"><i class="feather-users pr-1"></i>New Section</a>
+
+              </div>
+             
+            </div>
+
+            <div *ngIf="!isCompanyTypeFinancialInstitute" class="col-md-3 col-lg-3 px-1" id="FixedDivCustomField">
+              <div class="bordered-content">
+                <div class="card-header datafield-header">
+                  <p>The following fields can be included in your form. They will be replaced with the data entered by the user in each of them.</p>
+                  <p>
+                    <input type="text" class="form-control w-100" formControlName="SearchFieldName" (keyup)="onKeyup($event)" maxlength="500" placeholder="Search field here">
+                  </p>
+                </div>
+                <div class="card-body types columnlist list-group custom-field-layout custom-field-layout-left-panel mb-3 overflow-auto" style="max-height:65vh;">
+
+                  <div class="accordion" id="accordion">
+                    <ng-container *ngFor="let table_name of customCompnentValues | GetUniqueTableNameFromCustomFieldList;let tableIndex=index;">
+                      <div class="panel active">
+                        <div class="panel-heading">
+                          <h4 class="panel-title">
+                            <a href="#{{table_name}}{{tableIndex}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
+                              <span *ngIf="table_name">
+                                <ng-container *ngIf="companyType === 'companytypeFinancialInstitute';else elseBlock">
+                                  {{table_name | DisplayName}}
+                                </ng-container>
+                                <ng-template #elseBlock>
+                                  {{table_name.substring(3)}}
+                                </ng-template>
+                              </span>
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="{{table_name}}{{tableIndex}}" class="panel-collapse collapse active show" style="">
+                          <div class="panel-body px-2 mt-0">
+                            <ng-container *ngIf="customCompnentValues.length>0;else elseblock;">
+                              <div class="row p-2 m-0 datafield-db" *ngFor="let row of customCompnentValues | GetCustomFieldListByTableName:table_name" pDraggable="row" (onDragStart)="dragStart($event,row)" (onDragEnd)="dragEnd($event)">
+                                <div class="col-10 col-sm-10 col-md- 10 col-lg-10 col-xl-10 pl-0 float-left overflow-hidden">
+                                  <label class="m-0" style="cursor: pointer;" *ngIf="submodule == 'loanapplication'">{{row.display_name | DisplayName}}</label>
+                                  <label class="m-0" style="cursor: pointer;" *ngIf="submodule != 'loanapplication'">{{row.display_name | DisplayName}}</label>
+                                </div>
+                                <div class="col-2 col-sm-2 col-md- 2 col-lg-2 col-xl-2 float-left text-right m-0 pr-0">
+                                  <i class="fa fa-arrows" aria-hidden="true"></i>
+                                </div>
+                              </div>
+                            </ng-container>
+                            <ng-template #elseblock>
+                              <p class="text-center text-danger m-0"> No custom field records are present.</p>
+                            </ng-template>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                    
+                  </div>
+
+                  <!--<ng-container *ngIf="customCompnentValues.length>0;else elseblock;">
+                    <div class="row p-2 m-0 datafield-db" *ngFor="let row of customCompnentValues" pDraggable="row" (onDragStart)="dragStart($event,row)" (onDragEnd)="dragEnd($event)">
+                      <div class="col-10 col-sm-10 col-md- 10 col-lg-10 col-xl-10 pl-0 float-left overflow-hidden">
+                        <label class="m-0" style="cursor: pointer;" *ngIf="submodule == 'loanapplication'">{{row.displayName}}</label>
+                        <label class="m-0" style="cursor: pointer;" *ngIf="submodule != 'loanapplication'">{{row.table_name.substring(3)}} | {{row.display_name}}</label>
+                      </div>
+                      <div class="col-2 col-sm-2 col-md- 2 col-lg-2 col-xl-2 float-left text-right m-0 pr-0">
+                        <i class="fa fa-arrows" aria-hidden="true"></i>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-template #elseblock>
+                    <p class="text-center text-danger m-0"> No custom field records are present.</p>
+                  </ng-template>-->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+  </div>
+</div>
+  
+  <app-propertiespopupform #propertiesform (customFieldLayOut)="customFieldLayOut()"></app-propertiespopupform>

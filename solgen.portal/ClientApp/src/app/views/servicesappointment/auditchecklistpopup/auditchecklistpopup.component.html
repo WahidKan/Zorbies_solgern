@@ -1,0 +1,196 @@
+<div  bsModal #auditCheckList="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{auditTitle}}</h4>
+        <button type="button" class="close" (click)="closeAuditCheckList()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="isModalShow" class="modal-body" style=" margin-bottom:10px; max-height:600px;">
+        <a href="javascript:;" *ngIf="isScroll" class="back-to-top" (click)="ClickForScrollTop()"><i class="fa fa-chevron-up"></i></a>
+        <div class="w-100 bg-light p-2 mb-2" id="l-of-sections" >
+          <!--<h5><strong>List of Sections</strong></h5>-->
+          <ul style="list-style: none; max-height: 130px;    overflow: auto;">
+            <li *ngFor="let section of SectionGroupTop;let j=index" class="pb-2 w-50 d-inline-block">
+              <a class="nav-link scrollto p-0 text-dark" (click)="ClickForScroll(section.SECTION_ID)" href="javascript:void(0);" style="font-size:16px; line-height:24px;">
+                <strong>{{j+1}}:</strong> {{section.SECTION_NAME}} - {{section | SectionNameWithScoreTop}}
+              </a>
+              
+            </li>
+          </ul>
+        </div>
+
+          <div class="max-hsc">
+            <div id="section_{{section.SECTION_ID}}" class="manage-color section_{{section.SECTION_ID}}" *ngFor="let section of SectionGroup; let scIndex=index;">
+              <div class="col-12 col-md-12 col-lg-12 p-0" id="l-of-sections_ScrollingId" style="margin: 0px; padding: 0px;"><h3 class="form-heading ng-star-inserted ml-0 " [ngClass]="{'mt-0':scIndex == 0 , 'mt-3':scIndex > 0}"><span>{{section.SECTION_NAME}} :</span><strong  style=" float: right; line-height: 40px; font-size: 16px; padding-right:10px;">{{section | SectionNameWithScore}}</strong></h3></div>
+
+              <div class="row mng-number border align-items-stretch mx-0 mb-1" *ngFor="let ques of section.Question ; let quesIndex=index;">
+                <div class="col-lg-2 bg-numbr1 p-3 text-center d-flex align-items-center" style="background: #dcf1ff;">
+                  <h2 class="w-100">{{quesIndex+1}}</h2>
+                </div>
+                <div class="col-lg-10 p-3 d-flex align-items-center">
+                  <div class="w-100">
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <label *ngIf="ques.SubQuestions" style="font-size: 17px;"><b>{{ques.QUESTION}}</b></label>
+                        <div class="w-100 d-flex flex-wrap">
+                        </div>
+                      </div>
+                      <div class="col-lg-12" *ngIf='ques.SubQuestions;else elseblock'>
+                        <ng-container *ngFor="let subques of ques.SubQuestions ;let k=index;">
+                          <label *ngIf="k==0" [ngClass]="{'d-none':subques.VISIBLE_TO != 'Auditor'}"><b>Audit Result:</b></label>
+                          <div class="fulwith-radio-n-check  mb-4">
+                            <div class="w-100 d-flex align-content-center align-items-center">
+                              <div class="clearfix"></div>
+                              <label class="text-capitalize mr-auto" [ngClass]="{'after-none':subques.VISIBLE_TO != 'Auditor'}" style="font-weight:700">{{subques.QUESTION}}</label>
+                            </div>
+                            <div class="w-100 mb-2 d-flex flex-wrap align-content-center align-items-center pl-1">
+                              <div class="w-100" style="border-left: 5px solid #41b2f9; padding-left: 10px;">
+                                <div class="w-100 mb-2" *ngIf="subques.Answers"><span *ngIf="subques.Answers[0].ANSWER">Answer: {{subques.Answers[0].ANSWER}} </span></div>
+                                <div class="w-100 mb-2" *ngIf="subques.Answers"><span *ngIf="subques.Answers[0].ANSWER_GIVEN_BY"><em>Created By: {{subques.Answers[0].ANSWER_GIVEN_BY}}</em></span></div>
+                                <div *ngIf="checkListType == 'photochecklist' && subques.Answers" class="w-100 mb-2">
+                                  <div *ngIf="subques.Answers[0].Attachments;else elseBlock">
+
+                                    <img *ngFor="let att of subques.Answers[0].Attachments;let attachmentIndex=index;" loading="lazy" src="{{att.FileUrl}}" class="img-fluid" (click)="open(subques.Answers[0].Attachments, attachmentIndex)" style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;  cursor: zoom-in">
+                                  </div>
+                                  <ng-template #elseBlock>
+                                    <span>No images found.</span>
+                                  </ng-template>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="w-100 mb-4 mt-4 p-2" style="background:#f1f1f1" [ngClass]="{'d-none':(this.isDisabled)}">
+                              <div class="w-100">
+                                <label class="d-block"><b>Is provided information correct?</b></label>
+                                <div class="form-group">
+                                  <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-radio mx-2  p-0">
+                                      <input type="radio" id="subquesradio{{scIndex}}{{quesIndex}}{{k}}Y" value="1" name="subques{{scIndex}}{{quesIndex}}{{k}}" [(ngModel)]="subques.IsCorrect" [checked]="subques.IsCorrect == '1'" (ngModelChange)="onRadioChange()">
+                                      <label for="subquesradio{{scIndex}}{{quesIndex}}{{k}}Y" class="radio-label">Yes</label>
+                                    </div>
+                                    <div class="custom-control custom-radio mx-2  p-0">
+                                      <input type="radio" id="subquesradio{{scIndex}}{{quesIndex}}{{k}}N" value="0" name="subques{{scIndex}}{{quesIndex}}{{k}}" [(ngModel)]="subques.IsCorrect" [checked]="subques.IsCorrect == '0'" (ngModelChange)="onRadioChange()" >
+                                      <label for="subquesradio{{scIndex}}{{quesIndex}}{{k}}N" class="radio-label">No</label>
+                                    </div>
+                                    <div class="custom-control custom-radio mx-2  p-0">
+                                      <input type="radio" id="subquesradio{{scIndex}}{{quesIndex}}{{k}}NS" value="" name="subques{{scIndex}}{{quesIndex}}{{k}}" [(ngModel)]="subques.IsCorrect" [checked]="!subques.IsCorrect" (ngModelChange)="onRadioChange()" >
+                                      <label for="subquesradio{{scIndex}}{{quesIndex}}{{k}}NS" class="radio-label">No Score</label>
+                                    </div>
+
+                                    <div class="custom-control custom-radio mx-2  p-0">
+                                      <input type="radio" id="subquesradio{{scIndex}}{{quesIndex}}{{k}}NR" value="2" name="subques{{scIndex}}{{quesIndex}}{{k}}" [(ngModel)]="subques.IsCorrect" [checked]="subques.IsCorrect == '2'" (ngModelChange)="onRadioChange()" >
+                                      <label for="subquesradio{{scIndex}}{{quesIndex}}{{k}}NR" class="radio-label">Not Required</label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="w-100">
+                                <label><b>Auditor Comment:</b></label>
+                                <div class="form-group mb-0">
+                                  <textarea class="form-control audit-textarea" [(ngModel)]='subques.Comment' style="margin-bottom: 18px;"></textarea>
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+                      <ng-template #elseblock>
+                        <div class="col-lg-12">
+                          <div class="fulwith-radio-n-check  mb-4">
+                            <div class="w-100 d-flex align-content-center align-items-center">
+                              <div class="clearfix"></div>
+                              <label class="text-capitalize mr-auto" [ngClass]="{'after-none':ques.VISIBLE_TO != 'Auditor'}" style="font-weight:700">{{ques.QUESTION}}</label>
+                            </div>
+                            <div class="w-100 mb-2 d-flex flex-wrap align-content-center align-items-center pl-1">
+                              <div class="w-100" style="border-left: 5px solid #41b2f9; padding-left: 10px;">
+                                <div class="w-100 mb-2" *ngIf="ques.Answers">Answer: {{ques.Answers[0].ANSWER}}</div>
+                                <div class="w-100 mb-2" *ngIf="ques.Answers"><em>Created By: {{ques.Answers[0].ANSWER_GIVEN_BY}}</em></div>
+                                <div *ngIf="checkListType == 'photochecklist'" class="w-100 mb-2">
+                                  <div *ngIf="ques.Answers;else elseBlock">
+                                    <img *ngFor="let att of ques.Answers[0].Attachments;let attachmentIndex=index;" src="{{att.FileUrl}}" loading="lazy" class="img-fluid" (click)="open(ques.Answers[0].Attachments, attachmentIndex)" style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;  cursor: zoom-in">
+                                  </div>
+                                  <ng-template #elseBlock>
+                                    <span>No images found.</span>
+                                  </ng-template>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="w-100 mb-4 mt-4 p-2" style="background:#f1f1f1" [ngClass]="{'d-none':(this.isDisabled)}">
+                              <div class="w-100">
+                                <label class="d-block"><b>Is provided information correct?</b></label>
+                                <div class="form-group">
+                                  <div class="form-check form-check-inline">
+                                    <div class="custom-control custom-radio mx-2  p-0">
+                                      <input type="radio" id="quesradio{{scIndex}}{{quesIndex}}Y" value="1" name="ques{{scIndex}}{{quesIndex}}" [(ngModel)]="ques.AuComments[0].IsCorrect" [checked]="ques.AuComments[0].IsCorrect == '1'" (ngModelChange)="onRadioChange()">
+                                      <label for="quesradio{{scIndex}}{{quesIndex}}Y" class="radio-label">Yes</label>
+                                    </div>
+                                    <div class="custom-control custom-radio mx-2  p-0">
+                                      <input type="radio" id="quesradio{{scIndex}}{{quesIndex}}N" value="0" name="ques{{scIndex}}{{quesIndex}}" [(ngModel)]="ques.AuComments[0].IsCorrect" [checked]="ques.AuComments[0].IsCorrect == '0'" (ngModelChange)="onRadioChange()">
+                                      <label for="quesradio{{scIndex}}{{quesIndex}}N" class="radio-label">No</label>
+                                    </div>
+                                    <div class="custom-control custom-radio mx-2  p-0">
+                                      <input type="radio" id="quesradio{{scIndex}}{{quesIndex}}NS" value="" name="ques{{scIndex}}{{quesIndex}}" [(ngModel)]="ques.AuComments[0].IsCorrect" [checked]="!ques.AuComments[0].IsCorrect" (ngModelChange)="onRadioChange()">
+                                      <label for="quesradio{{scIndex}}{{quesIndex}}NS" class="radio-label">No Score</label>
+                                    </div>
+
+                                    <div class="custom-control custom-radio mx-2  p-0">
+                                      <input type="radio" id="quesradio{{scIndex}}{{quesIndex}}NR" value="2" name="ques{{scIndex}}{{quesIndex}}" [(ngModel)]="ques.AuComments[0].IsCorrect" [checked]="!ques.AuComments[0].IsCorrect  == '2' " (ngModelChange)="onRadioChange()">
+                                      <label for="quesradio{{scIndex}}{{quesIndex}}NR" class="radio-label">Not Required</label>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <!--<label class="switch">
+                            <input type="checkbox" id="chkbx{{j+1}}{{k+1}}" [ngModelOptions]="{standalone: true}" [(ngModel)]='ques.AuComments[0].IsCorrect'>
+                            <span class="slider round"><span>Yes</span></span>
+                          </label>-->
+                              </div>
+                              <div class="w-100">
+                                <label><b>Auditor Comment:</b></label>
+                                <div class="form-group mb-0">
+                                  <textarea class="form-control audit-textarea" [(ngModel)]='ques.AuComments[0].Comment' style="margin-bottom: 18px;"></textarea>
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+                      <!--<div class="col-md-12 col-lg-3 mt-2">
+                  <label><b>Is Correct?:</b></label>
+                  <div class="form-group">
+                    <label class="switch">
+                      <input type="checkbox" id="customCheck1" [(ngModel)]='ques.IsCorrect'>
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-12 col-lg-12 mt-2">
+                  <div class="form-group mb-0">
+                    <label><b>Auditor Comment:</b></label>
+                    <textarea class="form-control" [(ngModel)]='ques.Comment'></textarea>
+                  </div>
+                </div>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-success text-white" [ngClass]="{'d-none':(this.isDisabled)}" (click)="onSubmitAuditCheckList()"><i class="feather-save"></i> Submit</a>
+        <button type="submit" [ngClass]="{'d-none':(this.isDisabled)}" class="btn btn-danger text-white" (click)="closeAuditCheckList()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+        <a href="javascript:;" class="btn btn-dark text-white" (click)="closeAuditCheckList()"><i class="fa fa-arrow-left"></i> Back</a>
+      </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+  </div>
+
+</div>
+<app-custom-lightbox #Lightbox  ></app-custom-lightbox>

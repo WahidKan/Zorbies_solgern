@@ -1,0 +1,181 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Salesforce Sync Status</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Salesforce Sync Status</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-header border-bottom pb-3 btn-iconres">
+        <div class="row my-2 searchfield">
+          <div class="col-lg-6 col-xl-5">
+            <div class="row">
+              <div class="col-lg-12 float-left mb-lg-0 mb-2">
+                <input class="form-control input-sm" type="text" [(ngModel)]='objectNameFilter' placeholder="Search by object name, name, or created by" (keyup)='updateObjectNameFilter($event)'>
+              </div>
+              <!-- <div class="col-lg-4 float-left mb-lg-0 mb-2 pl-lg-0">
+                <input class="form-control input-sm" type="text" [(ngModel)]='listFilter' placeholder="Search by name" (keyup)='updateFilter($event)'>
+              </div>
+              <div class="col-lg-4 float-left mb-lg-0 mb-2 pl-lg-0">
+                <input class="form-control input-sm" type="text" [(ngModel)]='CreatedByFilter' placeholder="Search by created by" (keyup)='updateCreatedByFilter($event)'>
+              </div> -->
+            </div>
+          </div>
+          <div class="col-lg-6 col-xl-4">
+            <div class="row">
+              <div class="col-lg-6 float-left mb-lg-0 mb-2 pl-lg-0">
+                <p-calendar class="calendarwidth" [showIcon]="true" [(ngModel)]="startDate" inputStyleClass="form-control start-date" placeholder="Created From" dateFormat="mm/dd/yy" yearRange="2000:2030" [minDate]="minimumDate" [monthNavigator]="true" [yearNavigator]="true"></p-calendar>
+              </div>
+              <div class="col-lg-6 float-left mb-lg-0 mb-2 pl-lg-0">
+                <p-calendar class="calendarwidth" [showIcon]="true" [(ngModel)]="endDate" inputStyleClass="form-control start-date" placeholder="Created To" dateFormat="mm/dd/yy" yearRange="2000:2030" [monthNavigator]="true" [yearNavigator]="true"></p-calendar>
+              </div>
+            </div>
+          </div>
+            <div class="col-lg-12 col-xl-3 float-left pl-lg-0 dt-buttons noabso-res">
+              <a class="btn btn-dark form-btns mr-2" href="javascript:void(0);" (click)="search()" tooltip="Search"><span><i class="feather-search mr-1"></i> Search</span></a>
+              <a class="btn btn-white form-btns" href="javascript:void(0);" (click)="reset()" tooltip="Reset"><span><i class="feather-repeat mr-1"></i> Reset</span></a>
+            </div>
+        </div>
+      </div>
+      <div class="panel-content px-3 pagination2 table-responsive no-padding">
+        <div class="header-chart mb-1">Sync Status</div>
+        <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                       [scrollbarH]="true"
+                       [rowHeight]="'40'"
+                       [rows]="pagedData.data"
+                       [columnMode]="'force'"
+                       [headerHeight]="40"
+                       [footerHeight]="40"
+                       [externalPaging]="true"
+                       [externalSorting]="true"
+                       [loadingIndicator]="loadSave"
+                       [count]="pagedData.pager.totalItems"
+                       [offset]="pagedData.pager.currentPage+1"
+                       [limit]="pagedData.pager.pageSize"
+                       (page)='setPage($event)'
+                       (sort)="onSort($event)"
+                       [selectAllRowsOnPage]="false"
+                       [selected]="selected"
+                       (select)="onSelect($event)">
+          <ngx-datatable-column name="Object Name" prop="ObjectName" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Name" prop="ObjectRefName" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'Service Appointment' || row.ObjectName== 'Attachment (Service Appointment)' || row.ObjectName== 'Note (Service Appointment)'">
+                <a class=" view-list" [routerLink]="['/serviceappointment/view',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'Opportunity' || row.ObjectName== 'Attachment (Opportunity)' || row.ObjectName== 'Note (Opportunity)'">
+                <a class=" view-list" [routerLink]="['/opportunity/viewOpportunity',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="companyType == 'companytypeSolarInstall' && (row.ObjectName== 'Leads' || row.ObjectName== 'Attachment (Lead)' || row.ObjectName== 'Note (Lead)')">
+                <a class=" view-list" [routerLink]="['/lead/view',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="companyType != 'companytypeSolarInstall' && (row.ObjectName== 'Leads' || row.ObjectName== 'Attachment (Lead)' || row.ObjectName== 'Note (Lead)')">
+                <a class=" view-list" [routerLink]="['/lead/viewlead',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="companyType == 'companytypeSolarInstall' && (row.ObjectName== 'Accounts' || row.ObjectName== 'Attachment (Account)' || row.ObjectName== 'Note (Account)')">
+                <a class=" view-list" [routerLink]="['/accountslist/view',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="companyType != 'companytypeSolarInstall' && (row.ObjectName== 'Accounts' || row.ObjectName== 'Attachment (Account)' || row.ObjectName== 'Note (Account)')">
+                <a class=" view-list" [routerLink]="['/accountslist/viewaccount',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'Contacts' || row.ObjectName== 'Attachment (Contact)' || row.ObjectName== 'Note (Contact)'">
+                <a class=" view-list" [routerLink]="['/contactlist/view/',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'Proposal' || row.ObjectName== 'Attachment (Proposal)' || row.ObjectName== 'Note (Proposal)'">
+                <a class=" view-list" [routerLink]="['/proposal-list/viewproposal/',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'Workorder' || row.ObjectName== 'Attachment (Work Order)' || row.ObjectName== 'Note (Work Order)'">
+                <a class=" view-list" [routerLink]="['/workorder/view/',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'Contract' || row.ObjectName== 'Attachment (Contract)' || row.ObjectName== 'Note (Contract)'">
+                <a class=" view-list" [routerLink]="['/contract/view/',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'Service Resource' || row.ObjectName== 'Attachment (Service Resource)' || row.ObjectName== 'Note (Service Resource)'">
+                <a class=" view-list" [routerLink]="['/serviceresource/view/',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'Service Crew' || row.ObjectName== 'Attachment (Service Crew)' || row.ObjectName== 'Note (Service Crew)'">
+                <a class=" view-list" [routerLink]="['/servicecrew/view/',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'Note (Loan Application)'">
+                <a class=" view-list" [routerLink]="['/loanApplication/Detail/',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+              <div title="{{row.ObjectRefName}}" *ngIf="row.ObjectName== 'ProductMaster' || row.ObjectName== 'Attachment (ProductMaster)' || row.ObjectName== 'Note (ProductMaster)'">
+                <a class=" view-list" [routerLink]="['/product/viewproducts/',row.ObjectId]" href="javascript:void(0);" [title]="row.ObjectRefName">{{row.ObjectRefName| truncate : 50 }}</a>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Sync Status" prop="Error" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div title="{{row.Error}}">
+                {{row.Error}}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Created Date" prop="CREATED_AT" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div title="{{(row.CREATED_AT | DateTimeToLocal)}}">
+                {{ (row.CREATED_AT !== null) ? (row.CREATED_AT | DateTimeToLocal) : "" }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Created By" prop="CreatedByName" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template
+                         let-rowCount="rowCount"
+                         let-pageSize="pageSize"
+                         let-selectedCount="selectedCount"
+                         let-currentPage="pagedData.pager.currentPage+1"
+                         let-offset="offset"
+                         let-isVisible="isVisible">
+              <div>
+                <div style="color:black; margin-right:10px;" class="page-size-record" *ngIf='(rowCount  > 0)'>
+                  <span style="text-align:right; width:80px;vertical-align: middle;">
+                    <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                               bindLabel="text" bindValue="text"></ng-select>
+                  </span>
+                </div>
+              </div>
+              <div class="page-count" *ngIf='(rowCount  > 0)'>
+                {{commonService.PageString(pagedData.pager.currentPage+1,pagedData.pager.pageSize,rowCount)}}
+
+              </div>
+              <datatable-pager [pagerLeftArrowIcon]="'feather-chevron-left'"
+                               [pagerRightArrowIcon]="'feather-chevron-right'"
+                               [pagerPreviousIcon]="'feather-chevrons-left'"
+                               [pagerNextIcon]="'feather-chevrons-right'"
+                               [page]="pagedData.pager.currentPage+1"
+                               [size]="pagedData.pager.pageSize"
+                               [count]="pagedData.pager.totalItems"
+                               [hidden]="!((rowCount / pageSize) > 1)"
+                               (change)="setPage($event)">
+              </datatable-pager>
+            </ng-template>
+          </ngx-datatable-footer>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+
+
+

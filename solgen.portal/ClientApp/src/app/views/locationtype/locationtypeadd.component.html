@@ -1,0 +1,67 @@
+<div class="page">
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12 mt-3">
+          <span class="dash">Add Location Type</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a routerLink="/bank">Add Location Type</a></li>
+            <li class="breadcrumb-item active">{{pageTitle}}</li>
+          </ul>
+        </div>
+        <div class="col-lg-12 mt-3">
+          <a routerLink="/locationTypelist" class="w-auto sw-100 btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-12">
+          <div class="bg-white custom-shadow py-3">
+            <div class="col-md-12">
+              <form  autocomplete="off">
+                <div class="bank-box">
+                  <div class="row">
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Location Type:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <ng-select [items]="lstStatusLoc"
+                                   placeholder="Select Location Type" bindValue="value" bindLabel="text">
+                        </ng-select>
+                        <!--<small *ngIf="statusId.touched && statusId.errors?.required" style="color:red;">Please select Status</small>-->
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <label>Status:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <ng-select [items]="lstStatus"
+                                   placeholder="Select Status" bindValue="value" bindLabel="text"  >
+                        </ng-select>
+                        <!--<small *ngIf="statusId.touched && statusId.errors?.required" style="color:red;">Please select Status</small>-->
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </form>
+              <div class="col-12 p-0">
+                <a routerLink="/locationTypelist" class="btn btn-success form-btns"><i class="feather-save"></i> Submit</a>
+                <a routerLink="/locationTypelist" class="btn btn-danger form-btns"><i class="fa fa-times"></i> Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+
+
+</div>
+

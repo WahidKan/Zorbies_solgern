@@ -1,0 +1,68 @@
+<div class="page">
+  <!-- Breadcrumb-->
+  <div class="breadcrumb-holder">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9 mt-3">
+          <span class="dash">Customer Bulk Upload</span>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active">Customer Bulk Upload</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Header Section-->
+  <section class="dashboard-header section-padding">
+    <div class="container-fluid">
+      <div class="contact-box" [ngClass]="{'disabled':loading}">
+        <div class="row d-flex align-items-md-stretch">
+          <div class="col-12">
+            <div class="bg-white border rounded pb-4">
+              <div class="col-md-8 mt-4">
+                <label>Select Document:<span class="text-danger">*</span></label>
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input class="custom-file-input" type="file" name='file' (change)="onFileChange($event)" #fileInput>
+                      <label class="custom-file-label">{{fileName}}</label>
+                    </div>
+                  </div>
+                  <small *ngIf="!isValid" class="text-danger">Document is required<br /></small>
+                  <small><i class="text-primary">Valid documents format is .xls,.xlsx and limit upto 25MB.</i></small>
+                </div>
+              </div>
+              <div class="col-md-8">
+                Click <a href="{{excelDocumentNameLink}}">here</a> to download the Sample File for Customer Bulk Upload
+                      <div class="alert alert-info mt-2">
+                        Excel Sheet contains two sheets;Please enter valid data in both the sheets named ContactInformation and ContactGuarantorInformation.<br />
+                        Guarantor Date Of Birth should be in format MM/DD/YYYY.<br />
+                        The header in Sample File is in Red Color for required data.
+                      </div>
+              </div>
+              <div class="col-12">
+                <button type="submit" (click)="saveBulkUpload()" class="btn btn-primary form-btns" [disabled]="loadSave"><i class="feather-save"></i> Submit</button>
+                <a href="javascript:void(0);" class="btn btn-danger form-btns" (click)="cancel()"><i class="fa fa-times"></i> Cancel</a>
+              </div>
+              <div class="col-md-12 mt-4">
+                <div *ngIf="isError" class="alert alert-danger">
+                  <strong>Please correct the following errors!</strong><br />
+                  <label [innerHtml]="errorMsg">
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-12 mt-4">
+                <div *ngIf="isresp" class="alert alert-success">
+                  <label [innerHtml]="respMsg">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+</div>

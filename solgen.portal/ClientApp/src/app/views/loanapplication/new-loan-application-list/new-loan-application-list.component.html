@@ -1,0 +1,685 @@
+<div class="page">
+  <!-- Breadcrumb-->
+
+<!-- 
+  <div class="header float-left w-100 mb-2">
+    <h2 class="float-left pr-2"><strong>Loan Application</strong></h2>
+    <div class="breadcrumb-wrapper">
+      <ol class="breadcrumb">
+        <li>
+          <a routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Loan Application</li>
+      </ol>
+    </div>
+
+  </div>
+   -->
+
+  <app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+
+  <div class="clearfix"></div>
+
+  <div class="row">
+    <div class="col-lg-12 portlets">
+      <div class="panel">
+        <div class="panel-header border-bottom pb-3 btn-iconres">
+          <div class="row mt-2">
+            <div class="col-md-12 col-xl-6">
+              <!-- <div class="row searchfield">
+                <div class="col-lg-4 float-left mb-lg-0 mb-2">
+                  <input class="form-control input-sm" type="text" [(ngModel)]='listFilter' placeholder="Search By App #/ Name" (keyup)='updateFilter($event)'>
+                </div>
+                <div class="col-lg-8 float-left pl-3 pl-lg-0">
+                  <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="search()" tooltip="Search"><span><i class="feather-search"></i> </span></a>
+                  <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="reset()" tooltip="Reset"><span><i class="fa fa-refresh"></i> </span></a>
+                </div>
+              </div> -->
+              
+              <div class="row searchfield">
+                <div class="col-lg-4 float-left mb-lg-0 mb-2">
+                  <input class="form-control input-sm" type="text" [(ngModel)]='listFilter' placeholder="Search By Name"
+                    (keyup)='updateFilter($event)'>
+                </div>
+                <div class="col-lg-8 float-left pl-3 pl-lg-0">
+                  <a class="btn btn-dark form-btns mr-2 " href="javascript:void(0);" (click)="search()"
+                    tooltip="Search"><span><i class="feather-search mr-1"></i> Search</span></a>
+                  <a class="btn btn-white form-btns" href="javascript:void(0);" (click)="reset()"
+                    tooltip="Reset"><span><i class="feather-repeat mr-1"></i> Reset</span></a>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-12 col-xl-6">
+              <div class="dt-buttons">
+                <div class="form-group d-inline-block align-top mr-2 mb-0">
+                  <ng-select [items]="pagedData.data" placeholder="Select View" bindValue="custom_view_id" bindLabel="view_name" [closeOnSelect]="true" (change)="SetManageViewValue($event.custom_view_id,$event.view_name)" [(ngModel)]="vewId">
+                  </ng-select>
+                </div>
+                <a class="btn btn-primary form-btns mr-2" href="javascript:void(0);" (click)="OpenManageViewPopUp($event)" tooltip="Manage View"><span><i class="feather-list mr-1"></i>View</span></a>
+                <a *ngIf="(isCompanyAdmin || isDealerCompanyAdmin) && listType=='Normal'" class="btn btn-success form-btns" href="javascript:void(0);" routerLink="/loanApplication/masstransfer" tooltip="Transfer Loan Application"><span><i class="fa fa-exchange mr-1"></i>Transfer</span></a>
+
+                <!--<a *ngIf="isCompanyAdmin" class="btn btn-danger form-btns" href="javascript:void(0);" routerLink="/loanApplication/sftplog" tooltip="View SFTP Logs"><span><i class="fa fa-file"></i></span></a>-->
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="panel-content px-3 pagination2 table-responsive no-padding">
+          <div class="header-chart mb-1"> Loan Application</div>
+          
+          <div class="table-responsive">
+            <div class="table table-striped">
+            
+
+              <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                             [rows]="columndata"
+                             [columnMode]="'force'"
+                             [scrollbarH]="true"
+                             [rowHeight]="'40'"
+                             [headerHeight]="40"
+                             [footerHeight]="40"
+                             [externalPaging]="true"
+                             [rowClass]="ApplyCssClassOnRow"
+                             [externalSorting]="true"
+                             [loadingIndicator]="isloadSave"
+                             [count]="totalRecords"
+                             [offset]="currentPage"
+                             [limit]="pageSizeValue"
+                             (page)='setPage($event)'
+                             (sort)="onSort($event)">
+                <ngx-datatable-column *ngFor="let col of columnheading" [name]="col.DISPLAY_NAME" [prop]="col.COLUMN_NAME" [sortable]="col.SORTABLE">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+
+                    <div *ngIf="col.COLUMN_NAME == 't34_LoanApplicationNumber'">
+                     <!-- <a href="javascript:void(0);" (click)="viewLoanApp(row.Id)">{{row.t34_LoanApplicationNumber}} </a>-->
+
+                      <a href="javascript:void(0);" *ngIf="listType == 'Normal' && isUpdate" [routerLink]="['/loanApplication/Detail',row.Id]">{{row.t34_LoanApplicationNumber}} </a>
+
+                      <a href="javascript:void(0);" *ngIf="listType == 'Cancelled' && isUpdate" [routerLink]="['/loanApplications/Cancelled/Detail',row.Id]">{{row.t34_LoanApplicationNumber}} </a>
+
+                      <a href="javascript:void(0);" *ngIf="listType == 'Completed' && isUpdate" [routerLink]="['/loanApplications/Completed/Detail',row.Id]">{{row.t34_LoanApplicationNumber}} </a>
+
+                    </div>
+
+                    <div class="doc-count" *ngIf="col.COLUMN_NAME != 't34_LoanApplicationNumber'">
+
+                      <div [title]="row[col.COLUMN_NAME]" *ngIf="col.COLUMN_NAME=='t36_Name'">
+                        {{row[col.COLUMN_NAME]}}
+                      </div>
+
+                      <div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE=='date'">
+                        {{ (row[col.COLUMN_NAME] !== null) ? (row[col.COLUMN_NAME] | pstdatetimetolocaldate) : "" }}
+                      </div>
+
+                      <div *ngIf="col.COLUMN_NAME=='LASM_StatusType'">
+                        <span class="status-box" title="Status" *ngIf="row.t34_IsCancelRequest" style="background:red">
+
+                          {{row.LASM_StatusType}}
+                        </span>
+                        <span class="single-action" title="Status" *ngIf="!row.t34_IsCancelRequest">
+
+                          {{row.LASM_StatusType}}
+                        </span>
+
+                      </div>
+
+                      <div class="doc-count" *ngIf="col.COLUMN_NAME=='PendingDocument' && listType!='Completed' && listType!='Cancelled'">
+                        <span class="single-action" *ngIf="row.RequiredDoc!=row.ReciveDoc && isUpdate" [title]="row[col.COLUMN_NAME]">
+                          <a href="javascript:void(0);" (click)="DisplayDocumentPopupWindow(row.Id,row.t34_LoanApplicationNumber)" class="text-dark">
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i><span class="noti-circle">{{row.PendingDocument}}</span>
+                          </a>
+                        </span>
+                        <span class="single-action" *ngIf="row.RequiredDoc==row.ReciveDoc  && isUpdate" [title]="row[col.COLUMN_NAME]">
+                          <a href="javascript:void(0);" class="text-dark">
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i><span class="noti-circle nodoc">{{row.PendingDocument}}</span>
+                          </a>
+                        </span>
+
+                      </div>
+
+                      <div class="doc-count" *ngIf="col.COLUMN_NAME=='PendingDocument' && (listType=='Completed' || listType=='Cancelled')">
+                        <span class="single-action" *ngIf="row.RequiredDoc!=row.ReciveDoc" [title]="row[col.COLUMN_NAME]">
+                          <a href="javascript:void(0);" class="text-dark">
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i><span class="noti-circle">{{row.PendingDocument}}</span>
+                          </a>
+                        </span>
+                        <span class="single-action" *ngIf="row.RequiredDoc==row.ReciveDoc" [title]="row[col.COLUMN_NAME]">
+                          <a href="javascript:void(0);" class="text-dark">
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i><span class="noti-circle nodoc">{{row.PendingDocument}}</span>
+                          </a>
+                        </span>
+
+                      </div>
+
+                      <div [title]="row[col.COLUMN_NAME]" *ngIf="col.COLUMN_NAME=='t69_Reason' || col.COLUMN_NAME=='t42_Reason'">
+                        <span class="single-action" *ngIf="col.COLUMN_NAME=='t69_Reason' && col.COLUMN_NAME!='t42_Reason'" [title]="row[col.COLUMN_NAME]">
+                          <a href="javascript:void(0);" class="icon-text-center d-block " *ngIf="row.t69_Reason != null" (click)="showReasonPopUp(row.t34_LoanApplicationNumber,row.t69_Reason,'BankDenyReason')"><i class="feather-eye"></i></a>
+                        </span>
+
+                        <span class="single-action" *ngIf="col.COLUMN_NAME!='t69_Reason' && col.COLUMN_NAME=='t42_Reason'" [title]="row[col.COLUMN_NAME]">
+                          <a href="javascript:void(0);" *ngIf="row.t42_Reason != null" class="icon-text-center d-block " (click)="showReasonPopUp(row.t34_LoanApplicationNumber,row.t42_Reason,'NTPDenyReason')"><i class="feather-eye"></i></a>
+                        </span>
+
+                      </div>
+
+                      <div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE == 'bit'">
+                        <i *ngIf="row[col.COLUMN_NAME] == false" class="fa fa-times text-danger icon_tick"></i>
+                        <i *ngIf="row[col.COLUMN_NAME] == true" class="feather-check text-success icon_tick"></i>
+                      </div>
+
+
+
+
+
+                      <div [title]="row[col.COLUMN_NAME]" *ngIf="col.DATA_TYPE!='date' && col.DATA_TYPE!='bit' && col.COLUMN_NAME!='t36_Name' && col.COLUMN_NAME!='PendingDocument' && col.COLUMN_NAME!='LASM_StatusType' && col.COLUMN_NAME!='t69_Reason' && col.COLUMN_NAME!='t42_Reason'">
+                        {{row[col.COLUMN_NAME]}}
+                      </div>
+
+
+
+
+
+
+                     
+                    </div>
+
+
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Action" [sortable]="false" [maxWidth]="200" headerClass="text-center" *ngIf="!isContact && listType=='Cancelled'">
+
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div class="text-center w-100" *ngIf="(isCompanyAdmin || isSales || isFinanceUser ) && row.Stage!='Completed' && !isBanker">
+                      <a  (click)="uncancelloanapp(row.Id,row.t34_LoanApplicationNumber)" class="btn-edit" title="UnCancel"><i class="feather-rotate-ccw" aria-hidden="true"></i> </a>
+                    </div>
+
+                    <div class="text-center w-100" *ngIf="isBanker">
+                      <a  (click)="uncancelloanapp(row.Id,row.t34_LoanApplicationNumber)" class="btn-edit" title="UnCancel"><i class="feather-rotate-ccw" aria-hidden="true"></i> </a>
+                    </div>
+
+
+                  </ng-template>
+                </ngx-datatable-column>
+
+
+                <ngx-datatable-column [sortable]="false" [maxWidth]="200" headerClass="text-center"
+                                      *ngIf="!isContact && listType!='Completed' && listType!='Cancelled' &&
+                                      (!isDealerUser ||( isDealerUser && (roleCode=='dealer_sales_manager' || roleCode=='dealer_finance_manager' || roleCode=='dealer_companyadmin')))
+                                      &&( !isCommonUser || (isCommonUser && (roleCode=='relationship_director'  || roleCode=='Accounting_Director' )))
+                                      ">
+                  <ng-template let-row="row" ngx-datatable-cell-template>                    
+                    <span class="actions rw_act" style="padding: 1px;"> 
+                      <i class="feather-settings action_icon" [attr.attribute-id]="row.t34_LoanApplicationNumber" aria-hidden="true"></i>
+                      <span class="action-list-box spn{{row.t34_LoanApplicationNumber}}">
+                        <span class="list-actions fsm-list" id="action-list" style="width:210px;">
+
+                          <a *ngIf="isBanker || isFinanceUser  || isSales || (isDealerUser && (roleCode=='dealer_sales_manager' || roleCode=='dealer_finance_manager' || roleCode=='dealer_companyadmin')) || (isCommonUser && (roleCode=='relationship_director'  || roleCode=='Accounting_Director' )) " (click)="showpopup(row.Id,row.t34_LoanApplicationNumber,row.t36_Name)" href="javascript:void(0);" class="actions-onclick view-list"><i class="fa fa-share-square-o pr-2" aria-hidden="true"></i>  </a>
+
+                          <a *ngIf="isCompanyAdmin || isFinanceUser || isSales" (click)="sharelink(row.Id)" class="actions-onclick view-list" href="javascript:void(0);" title="Share Document Link"><i class="feather-share-2 text-warning pr-1" aria-hidden="true"></i> </a>
+
+                          <a *ngIf="isCompanyAdmin" (click)="transferLoanApplication(row.Id,row.t34_LoanApplicationNumber)" class="actions-onclick view-list" href="javascript:void(0);" title="Transfer Loan Application"><i class="fa fa-exchange text-success pr-1" aria-hidden="true"></i> </a>
+
+                        
+                          <!--Date : 13-11-2020-->
+
+                          <a *ngIf="isCompanyAdmin && canAssign" (click)="showAssignSalesPopup(row.Id,row.t34_LoanApplicationNumber,row.t36_Name)" class="actions-onclick view-list" href="javascript:void(0);" title="Assign To User"><i class="fa fa-share-square-o pr-1" aria-hidden="true"></i> </a>
+
+                          <a *ngIf="(isCompanyAdmin || row.t34_IsCancelRequest || isFinanceUser || isSales) && canCancel" (click)="cancelloanapp(row.Id,row.t43_FundApproved,row.t34_IsCancelRequest,row.isBanker,row.t34_LoanApplicationNumber)" class="actions-onclick view-list text-danger" href="javascript:void(0);" title="Cancel"><i class="feather-x" aria-hidden="true"></i> </a>
+
+                          <i class="fa fa-times close close-action" aria-hidden="true"></i>
+
+                        </span>
+                      </span>
+                    </span>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Documents" [sortable]="false" headerClass="text-center" *ngIf="false" [maxWidth]="150">
+
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+
+                    <a href="javascript:void(0);" class="icon-text-center d-block " (click)="openFileUpload(row.AccountId,row.Id)"><i class="feather-eye"></i></a>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template
+                               let-rowCount="rowCount"
+                               let-pageSize="pageSize"
+                               let-selectedCount="selectedCount"
+                               let-currentPage="curPage"
+                               let-offset="offset"
+                               let-isVisible="isVisible">
+                    <div>
+                      <div style="color:black; margin-right:10px;" class="page-size-record" *ngIf='(rowCount  > 0)'>
+                        <span style="text-align:right; width:80px;vertical-align: middle;">
+                          <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                     bindLabel="text" bindValue="text"></ng-select>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="page-count" *ngIf='(rowCount  > 0)'>
+                      <!--Showing {{(curPage - 1 )* pageSizeValue + 1}}  to {{curPage * pageSizeValue}} out of {{totalRecords}}  enteries-->
+
+                      {{commonService.PageString(curPage,pageSizeValue,rowCount)}}
+
+                    </div>
+                    <datatable-pager [pagerLeftArrowIcon]="'feather-chevron-left'"
+                    [pagerRightArrowIcon]="'feather-chevron-right'"
+                    [pagerPreviousIcon]="'feather-chevrons-left'"
+                    [pagerNextIcon]="'feather-chevrons-right'"
+                                     [page]="curPage"
+                                     [size]="pageSizeValue"
+                                     [count]="totalRecords"
+                                     [hidden]="!((rowCount / pageSize) > 1)"
+                                     (change)="setPage($event)"
+                                     [ngClass]="{'text-lg-right':true,'text-md-right':true}">
+                    </datatable-pager>
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="isLoading" class="loader"></app-loader>
+
+</div>
+
+<div class="modal fade in show" bsModal #assignpopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-xl modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Assign Loan Application (#{{applicationNumber}})</h4>
+        <button type="button" class="close" (click)="closemodel()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="panel-header border-bottom py-2">
+
+        <div class="col-md-12 col-xl-12">
+          <div class="row searchfield  mr-1 w-100">
+            <div class="col-sm-12  col-lg-4 mb-lg-0 mb-2">
+              <input class="form-control input-sm" type="text" [(ngModel)]='listBankerNameFilter' placeholder="Search By Name" (keyup)='updateBankerNameFilter($event)'>
+            </div>
+            <div class="col-sm-12  col-lg-4">
+              <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="searchBankUserList()"><span><i class="feather-search"></i> Search</span></a>
+              <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="resetBankUserList()"><span><i class="fa fa-refresh"></i> Reset</span></a>
+              <!--<a class="btn btn-white mr-1" href="javascript:void(0);"><span><i class="fa fa-filter"></i> Filter</span></a>-->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body" style="margin-bottom:10px; max-height:700px; overflow-y:auto;">
+
+        <div class="col-lg-12" [ngClass]="{'disabled':loadSave}">
+          <div class="table-responsive">
+            <div class="table table-striped">
+              <ngx-datatable #table class="bootstrap"
+                             [rows]="pagedDataBankerList.data"
+                             [columnMode]="'force'"
+                             [headerHeight]="40"
+                             [scrollbarH]="true"
+                             [rowHeight]="'40'"
+                             [footerHeight]="40"
+                             [externalPaging]="true"
+                             [externalSorting]="true"
+                             [loadingIndicator]="loadSave"
+                             [messages]="{emptyMessage:'No Record Found.'}"
+                             [count]="pagedDataBankerList.pager.totalItems"
+                             [offset]="pagedDataBankerList.pager.currentPage"
+                             [limit]="pagedDataBankerList.pager.pageSize"
+                             (page)='setPageBankerList($event)'
+                             (sort)="onSortBankerList($event)">
+                <!--[selected]="selected"
+                [selectionType]="SelectionType.checkbox"
+                [selectAllRowsOnPage]="false"
+                [displayCheck]="displayCheck">-->
+
+
+
+
+                <ngx-datatable-column name="Name" [sortable]="true" prop="Name" [minWidth]="150">
+
+
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Email" sortable="true" prop="Email" [minWidth]="150"></ngx-datatable-column>
+                <ngx-datatable-column name="Role" sortable="true" prop="Role" [minWidth]="150" *ngIf="!isCommonUser"></ngx-datatable-column>
+                <ngx-datatable-column name="Assigned" sortable="true" prop="Status">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <label class="switch">
+                      <input type="checkbox" (change)="assignedBanker(row)" [(ngModel)]='row.Status'>
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template
+                               let-rowCount="rowCount"
+                               let-pageSize="pageSize"
+                               let-selectedCount="selectedCount"
+                               let-currentPage="curPageBankUserList"
+                               let-offset="offsetBankUser"
+                               let-isVisible="isVisible">
+                    <div class="page-count" style="max-width:170px;">
+                      Total Records: {{rowCount}}
+                    </div>
+                    <div>
+                      <div style="color:black; margin-right:10px;" class="page-size-record">
+                        <span style="text-align:right; width:80px;vertical-align: middle;">
+                          <ng-select [searchable]="false" [items]="lstPageSizeBankerList" appendTo="body" [(ngModel)]='pageSizeValueBankerList' dropzone="fixed" [clearable]="false" (change)="onChangeBankUserList($event)" draggable="false" [closeOnSelect]="true"
+                                     bindLabel="text" bindValue="text"></ng-select>
+                        </span>
+                      </div>
+                    </div>
+                    <datatable-pager [pagerLeftArrowIcon]="'feather-chevron-left'"
+                    [pagerRightArrowIcon]="'feather-chevron-right'"
+                    [pagerPreviousIcon]="'feather-chevrons-left'"
+                    [pagerNextIcon]="'feather-chevrons-right'"
+                                     [page]="curPageBankUserList"
+                                     [size]="pageSizeValueBankerList"
+                                     [count]="pagedDataBankerList.pager.totalItems"
+                                     [hidden]="!((rowCount / pageSize) > 1)"
+                                     (change)="setPageBankerList($event)">
+                    </datatable-pager>
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="submit" class="btn btn-success form-btns" (click)="saveAssociateBanker()"><i class="feather-save text-white"></i> Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="closemodel()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>-->
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade in show" bsModal #salesassignpopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-xl modal-info">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Assign Loan Application (#{{applicationNumber}})</h4>
+        <button type="button" class="close" (click)="closeSalesAssignModel()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="panel-header border-bottom py-2">
+
+        <div class="col-md-12 col-xl-12">
+          <div class="row searchfield  mr-1 w-100">
+            <div class="col-sm-12  col-lg-4 mb-lg-0 mb-2">
+              <input class="form-control input-sm" type="text" [(ngModel)]='listNameFilter' placeholder="Search By Name" (keyup)='updateNameFilter($event)'>
+            </div>
+            <div class="col-sm-12  col-lg-4">
+              <ng-select #userTypeSelect [items]="lstUserType"
+                         placeholder="Select User Type" bindValue="value" bindLabel="text"
+                         [closeOnSelect]="true"
+                         (change)="SetUserType($event.value)" (clear)="restddl()">
+              </ng-select>
+            </div>
+            <div class="col-sm-12  col-lg-4">
+              <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="searchSaleUserList()"><span><i class="feather-search"></i> Search</span></a>
+              <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="resetSaleUserList()"><span><i class="fa fa-refresh"></i> Reset</span></a>
+              <!--<a class="btn btn-white mr-1" href="javascript:void(0);"><span><i class="fa fa-filter"></i> Filter</span></a>-->
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal-body" style="margin-bottom:10px; max-height:600px; overflow-y:auto;">
+
+
+        <div class="col-lg-12" [ngClass]="{'disabled':loadSave}">
+          <div class="table-responsive">
+            <div class="table table-striped">
+              <ngx-datatable #table class="bootstrap"
+                             [rows]="pagedDataSalesList.data"
+                             [columnMode]="'force'"
+                             [scrollbarH]="true"
+                             [rowHeight]="'40'"
+                             [headerHeight]="40"
+                             [footerHeight]="40"
+                             [externalPaging]="true"
+                             [externalSorting]="true"
+                             [loadingIndicator]="loadSave"
+                             [messages]="{emptyMessage:'No Record Found.'}"
+                             [count]="pagedDataSalesList.pager.totalItems"
+                             [offset]="pagedDataSalesList.pager.currentPage"
+                             [limit]="pagedDataSalesList.pager.pageSize"
+                             (page)='setPageSalesList($event)'
+                             (sort)="onSortSalesList($event)">
+                <!--[selected]="selected"
+                [selectionType]="SelectionType.checkbox"
+                [selectAllRowsOnPage]="false"
+                [displayCheck]="displayCheck">-->
+
+
+
+
+                <ngx-datatable-column name="Name" [sortable]="true" prop="Name" [minWidth]="150">
+
+
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Email" sortable="true" prop="Email" [minWidth]="150"></ngx-datatable-column>
+                <ngx-datatable-column name="Role" sortable="true" prop="Role" [minWidth]="150"></ngx-datatable-column>
+                <ngx-datatable-column name="Assigned" sortable="true" prop="Status " [maxWidth]="150">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <label class="switch">
+                      <input type="checkbox" (change)="assigned(row)" [(ngModel)]='row.Status' [checked]="row.Status">
+                      <span class="slider round"><span>Yes</span></span>
+                    </label>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-footer>
+                  <ng-template ngx-datatable-footer-template
+                               let-rowCount="rowCount"
+                               let-pageSize="pageSize"
+                               let-selectedCount="selectedCount"
+                               let-currentPage="curPageSalesUserList"
+                               let-offset="offsetSaleUser"
+                               let-isVisible="isVisible">
+                    <div class="page-count" style="max-width:170px;">
+                      Total Records: {{rowCount}}
+                    </div>
+                    <div>
+                      <div style="color:black; margin-right:10px;" class="page-size-record">
+                        <span style="text-align:right; width:80px;vertical-align: middle;">
+                          <ng-select [searchable]="false" [items]="lstPageSizeBankerList" appendTo="body" [(ngModel)]='pageSizeValueSalesList' dropzone="fixed" [clearable]="false" (change)="onChangeSalesUserList($event)" draggable="false" [closeOnSelect]="true"
+                                     bindLabel="text" bindValue="text"></ng-select>
+                        </span>
+                      </div>
+                    </div>
+                    <datatable-pager [pagerLeftArrowIcon]="'feather-chevron-left'"
+                    [pagerRightArrowIcon]="'feather-chevron-right'"
+                    [pagerPreviousIcon]="'feather-chevrons-left'"
+                    [pagerNextIcon]="'feather-chevrons-right'"
+                                     [page]="curPageSalesUserList"
+                                     [size]="pageSizeValueSalesList"
+                                     [count]="pagedDataSalesList.pager.totalItems"
+                                     [hidden]="!((rowCount / pageSize) > 1)"
+                                     (change)="setPageSalesList($event)">
+                    </datatable-pager>
+                  </ng-template>
+                </ngx-datatable-footer>
+              </ngx-datatable>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="submit" class="btn btn-success form-btns" (click)="saveAssignedSalesUserDetail()"><i class="feather-save text-white"></i> Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeSalesAssignModel()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>-->
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="modal fade in show" bsModal #AddReason="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add a Cancel Note (#{{applicationNumber}})</h4>
+        <button type="button" class="close" (click)="close()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; height:320px;">
+        <form [formGroup]="addReasonForm" [ngClass]="{'disabled':loadSave}">
+          <div class="row">
+            <!--<div class="col-12 col-md-12 col-lg-12">
+              <label>Name</label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter Note" formControlName="note" [ngClass]="{'is-invalid': (note.invalid && (note.dirty || note.touched) && (note.errors?.required || note.errors?.maxlength)) }">
+                <small *ngIf="note.invalid && (note.dirty || note.touched) && note.errors?.required"
+                       class="text-danger">Note is required</small>
+              </div>
+            </div>-->
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Note</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" style="min-height:140px;" placeholder="Enter Note" formControlName="reasonDescription" maxlength="1000" [ngClass]="{'is-invalid': (reasonDescription.invalid && (reasonDescription.dirty || reasonDescription.touched) && (reasonDescription.errors?.required || reasonDescription.errors?.maxlength)) }"></textarea>
+                <small *ngIf="reasonDescription.invalid && (reasonDescription.dirty || reasonDescription.touched) && reasonDescription.errors?.required"
+                       class="text-danger">Note is required</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12" *ngIf="isCancelRequest==1">
+              <label>Request Date</label>
+              <div class="form-group">
+
+                <p-calendar inputStyleClass="form-control start-date" [baseZIndex]="9999" formControlName="requestdate"
+                            [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                <small *ngIf="requestdate.invalid && (requestdate.dirty || requestdate.touched) && requestdate.errors?.required"
+                       class="text-danger">Request Date is required</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-12" *ngIf="isCancelRequest==0">
+              <label>Cancel Date</label>
+              <div class="form-group">
+                <p-calendar inputStyleClass="form-control start-date" [baseZIndex]="9999" formControlName="closedate"
+                            [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+                <small *ngIf="closedate.invalid && (closedate.dirty || closedate.touched) && closedate.errors?.required"
+                       class="text-danger">Cancel Date is required</small>
+              </div>
+            </div>
+
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveReason()"><i class="feather-save text-white"></i> Save</button>
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>
+
+
+<div class="modal fade in show" bsModal #reasonpopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-xl modal-info">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{reasonHeading}}</h4>
+        <button type="button" class="close" (click)="closeReasonModel()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; max-height:600px; overflow-y:auto;">
+        <div class="row">
+          <div class="col-12 col-md-12 col-lg-12">
+            <div class="form-group">
+              <span>{{DenyReson}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-fileupload #fileupload (customerDoc)="customerDoc()"></app-fileupload>
+
+<app-loanapplicationpendingdocument #pendingDoc [loanapnum]="applicationNumber"></app-loanapplicationpendingdocument>
+
+<app-loanhomiadvancesearchfilter (searchFilterCondition)="ApplyAdvanceFilter($event)" #templatAdvanceFilterView moduleName="finance" subModuleName="LoanApplicationInfo"></app-loanhomiadvancesearchfilter>
+
+<app-loanhomimanageview (customViewid)="GetcustomViewid($event)" #templateLoanHomiManageView moduleName="finance" subModuleName="LoanApplicationInfo"></app-loanhomimanageview>
+
+<app-transferloanapplication #showtransferAppPopUp></app-transferloanapplication>
+
+<div class="modal fade in show" bsModal #UnCancelReason="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+  <div class="modal-dialog modal-lg modal-info ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add a UnCancel Note (#{{applicationNumber}})</h4>
+        <button type="button" class="close" (click)="closeuncancelloanapp()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="margin-bottom:10px; height:320px;">
+        <form [formGroup]="addUnCancelForm" [ngClass]="{'disabled':loadSave}">
+          <div class="row">
+           
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Note</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" style="min-height:140px;" placeholder="Enter Note" formControlName="uncancelReasonDescription" maxlength="1000" [ngClass]="{'is-invalid': (uncancelReasonDescription.invalid && (uncancelReasonDescription.dirty || uncancelReasonDescription.touched) && (uncancelReasonDescription.errors?.required || uncancelReasonDescription.errors?.maxlength)) }"></textarea>
+                <small *ngIf="uncancelReasonDescription.invalid && (uncancelReasonDescription.dirty || uncancelReasonDescription.touched) && uncancelReasonDescription.errors?.required"
+                       class="text-danger">Note is required</small>
+              </div>
+            </div>
+
+
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="SaveUncancelReason()"><i class="feather-save text-white"></i> Save</button>
+
+        <button type="submit" class="btn btn-danger form-btns" (click)="closeuncancelloanapp()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+</div>

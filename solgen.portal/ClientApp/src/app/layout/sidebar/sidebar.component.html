@@ -1,0 +1,114 @@
+
+<!--<div class="sidebar">
+  <div class="logopanel">
+    <h1>
+
+      <a routerLink="dashboard" [ngStyle]="{'background-image':' url('+companyLogo+')'}">
+
+      </a>
+    </h1>
+
+  </div>
+  <div class="sidebar-inner">
+
+
+    <ul class="nav nav-sidebar">
+      <ng-container *ngFor="let item of moduleList">
+        <li class="nav-active" *ngIf="!item.subModules" [routerLinkActive]="'active'">
+          <a href="javascript:void(0);" [routerLink]="item.moduleRoute" [title]="item.moduleName">
+            <i [class]="item.moduleCssClass"></i><span> {{item.moduleName }} </span>
+          </a>
+        </li>
+        <li class="nav-parent" *ngIf="item.subModules">
+          <a href="javascript:void(0);">
+            <i [class]="item.moduleCssClass"></i><span> {{item.moduleName}}</span> <span class="fa arrow"></span>
+          </a>
+          <ul class="children collapse">
+            <li *ngFor="let childItem of item.subModules" [routerLinkActive]="'active'">
+
+              <a *ngIf="!childItem.subModules && !childItem.isForRightMenu" href="javascript:void(0);" [title]="childItem.moduleName" (click)="link(childItem.moduleRoute)">{{childItem.moduleName}}</a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+      <li class="nav-active">
+        <a href="javascript:void(0);" (click)="SignOut()"><span class="icon-box"><i class="icon-logout"></i></span><span>Sign Out</span></a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<app-loader [size]=40 [color]="'white'" *ngIf="loadSave" class="sidebar-loader"></app-loader> -->
+
+<style>
+  .side-bar-overflow {
+    overflow-y: auto;
+    max-height: 90vh;
+  }
+
+    .side-bar-overflow::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 7px;
+    }
+
+    .side-bar-overflow::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgba(0,0,0,.5);
+      -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    }
+
+</style>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+<div class="sidebar"  *ngIf="!loadSave">
+  <div class="logopanel">
+    <h1 style="text-align: center;">
+      <!-- <a routerLink="dashboard" [ngStyle]="{'background-image':' url('+companyLogo+')'}"></a> -->
+     
+      <img src="{{companyLogo}}" style="max-width: 70%; margin: auto;"/>
+    </h1>
+  </div>
+
+  <div class="sidebar-inner">
+    <!-- <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
+      <div id="mCSB_1_container" class="mCSB_container" style="position: relative; top: 0px; left: 0px;"  dir="ltr"> -->
+        <ul class="nav nav-sidebar overflow side-bar-overflow fixed-sidebar" >
+          <ng-container *ngFor="let item of menulist">
+            <li class="nav-active" *ngIf="item.is_default" [routerLinkActive]="'active'">
+              <a href="javascript:void(0);" class="smview" [routerLink]="item.module_route" [title]="item.module_name">
+                <i [class]="item.moduleCssClass"></i><span> {{item.module_name }} </span>
+              </a>
+            </li>
+            <li class="nav-parent" id="ulili" *ngIf="!item.is_default">
+              <a href="javascript:void(0);" [title]="item.module_name">
+                <i [class]="item.moduleCssClass"></i><span> {{item.module_name}}</span> <span class="fa arrow"></span>
+              </a>
+              <ul class="children collapse">
+                <li *ngFor="let childItem of item.subModule" [routerLinkActive]="'active'" >
+                  <a [routerLink]="childItem.module_route" [class]="item.module_name == 'Solar'  ? childItem.module_css_class : ''" [title]="childItem.privilege_name" *ngIf="childItem.module_route!='/accountslist/viewaccount/##accountid##'"> {{childItem.sub_module_name}}</a>
+                  <a [title]="childItem.privilege_name" (click)="link(childItem.module_route)" *ngIf="childItem.module_route=='/accountslist/viewaccount/##accountid##'"> {{childItem.sub_module_name}}</a>
+                </li>
+              </ul>
+            </li>
+          </ng-container>
+          <li class="nav-active none-rescom" *ngIf="isSwitchCompany">
+            <a href="javascript:void(0);" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-out"></i><span>Switch Company</span></a>
+          </li>
+          <li class="nav-active">
+            <a href="javascript:void(0);" (click)="SignOut()" title="Sign Out"><i class="feather-power"></i><span>Sign Out</span></a>
+          </li>
+        </ul>
+       <!-- </div>
+      
+      
+       <div id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: block;"><div class="mCSB_draggerContainer"><div id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 30px; height: 231px; top: 116px; display: block; max-height: 476px;">
+        <div class="mCSB_dragger_bar" style="line-height: 30px;"></div>
+      </div><div class="mCSB_draggerRail"></div></div></div> -->
+    <!-- </div> -->
+  </div>
+  
+</div>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+

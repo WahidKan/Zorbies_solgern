@@ -1,0 +1,25 @@
+<div [formGroup]="date">
+  <div class="row">
+    <div class="col-12">
+      <p-calendar
+        [showIcon]="true"
+        class="calendarwidth"
+        inputStyleClass="form-control start-date"
+        formControlName="displayName"
+        [placeholder]="date.get('placeHolder').value"
+        [appAutofocus]="focus"
+        [style.height.px]="date.get('height').value"
+        [style.width.px]="date.get('width').value - 10"
+        [showTime]="false"
+        showButtonBar="true"
+        [monthNavigator]="true"
+        [yearNavigator]="true"
+        [dateFormat]="format"
+        yearRange="1900:2100"
+        [minDate]="date.get('minDate').value"
+        [maxDate]="date.get('maxDate').value"
+        [disabled]="date.get('isPreview').value"
+      ></p-calendar>
+    </div>
+  </div>
+</div>

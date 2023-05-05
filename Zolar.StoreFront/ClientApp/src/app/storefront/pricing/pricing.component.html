@@ -1,0 +1,768 @@
+<app-header></app-header>
+<main id="main" class="inner-page">
+
+  <section class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center text-white">
+        <h2>Pricing Talygen</h2>
+        <ol>
+          <li><a routerLink="/storefront/home" class="text-white">Home</a></li>
+          <li>Pricing Talygen</li>
+        </ol>
+      </div>
+
+    </div>
+  </section><!-- End Breadcrumbs Section -->
+
+<div class="header float-left w-100 mb-2 d-flex">
+  
+  <!-- <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div> -->
+</div>
+<div class="clearfix"></div>
+
+
+<div class="container">
+  <div class="row">
+    <div class="subscr-header">
+      <h2>You can <span class="text-primary">Subscribe</span> to any package(s) from the below listed
+        packages.</h2>
+    </div>
+    <div class="col-sm-12 annual-billing panel-header border-bottom pb-3">
+      Annual Billing
+      <span> Save 15.00 %</span>
+      <span class="btn-group mb-2 mb-md-0 mr-3">
+        <button type="button" class="btn chkAnnualBilling"
+          [ngClass]="yearly.value==true ? 'btn-success': 'btn-outline-success'" (click)="isYearly(true)"
+          data-type="a">Annually</button>
+        <button type="button" class="btn chkAnnualBilling"
+          [ngClass]="yearly.value==false ? 'btn-success': 'btn-outline-success'" (click)="isYearly(false)"
+          data-type="m">Monthly</button>
+      </span>
+    </div>
+    <div class="panel-content py-4 text-center">
+      <div class="sub-package package-form" [ngClass]="item.isSelected ? 'selectedpack':''"
+        *ngFor="let item of Package;let i=index">
+        <!--selectedpack--->
+        <div>
+          <div class="subs-package-hdr">
+            <label class="custom-control custom-checkbox is-selected checkboxlbl">
+              <input type="checkbox" (click)="updatePackage(item)" name="{{item.Name}}" value="{{item.Name}}"
+                class="custom-control-input" id="checkbox-{{item.id}}" [(ngModel)]="item.isSelected">
+              <label class="custom-control-label" for="checkbox-{{item.id}}"></label>
+            </label>
+            <div class="pack-add-count">
+              <div class="form-group">
+                <div class="input-group">
+                  <button class="btn calcbtn" (click)="subtract(i)">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                  </button>
+                  <input [(ngModel)]="item.license" type="text" class="license-input" (keyup)="onChangeLicense(item,i)">
+                  <button class="btn calcbtn" (click)="add(i)">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="imgofpck">
+            <img class="img-fluid" src="{{item.image}}" (error)="onImgError($event)" alt="NO IMAGE AVAILABLE">
+          </div>
+          <div class="pro-headr pb-2">
+            <div class="sbs-free-trial">7 Days <strong>Free</strong> Trial</div>
+            <h2 class="card-title mb-3" style="font-size:20px; font-weight:300;">{{item.name}}</h2>
+            <div class="package-form-data">
+              <p class="price-sub" style="color: white! important;" *ngIf="yearly.value==true">
+                <span class="spnPackageCost">
+                  ${{
+                  (item.monthlyPrice-( item.monthlyPrice * discount )) | number : '1.0-2'
+                  }}
+                </span>
+                <span>/ monthly</span>
+              </p>
+              <p class="price-sub" style="color: white! important;" *ngIf="yearly.value==false">
+                <span class="spnPackageCost">${{ item.monthlyPrice}}</span>
+                <span>/ monthly</span>
+              </p>
+
+              <p *ngIf="yearly.value==true" class="bill-type">billed annually</p>
+              <p *ngIf="yearly.value==false" class="bill-type">billed monthly</p>
+
+              <p *ngIf="yearly.value==true" class="sub-total">
+                <span class="spnPackageCosttotal" style="text-decoration: line-through;">${{item.oldPrice}}</span>
+                <span>/ Month</span>
+              </p>
+              <div class="row sub-total">
+                <div class="col-sm-4"><label>License : {{item.license}}</label></div>
+                <!-- <div class="col-sm-8">
+                  <input style="height:25px; width: 40%; float:left" type="number" min="1" max="999"
+                    (change)="onChangeLicense(item)" class="form-control" [(ngModel)]="item.license">
+                </div> -->
+              </div>
+              <p class="sub-total" *ngIf="item.license>0">
+                <span class="spnPackageCosttotal">Sub Total (USD): ${{item.netMonthlyPrice}}</span>
+                <span>/ Month</span>
+                <br>
+                <span class="spnPackageCosttotal">Discount (USD): - ${{item.discounts | number : '1.0-2'}}</span>
+                <span>/ Month</span>
+                <br>
+                <span class="spnPackageCosttotal total-cost">
+                  Total (USD): ${{
+                  item.netMonthlyPrice-item.discounts | number
+                  : '1.0-2'
+                  }}
+                </span>
+                <span>/ Month</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="pro-footer pro-footer-mt">
+            <h4>Package Includes:</h4>
+            <span class="sub-includes" *ngFor="let prop of item.Properties">
+              {{prop.proprty}}
+              <i class="fa fa-info " aria-hidden="true"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- <div class="row">
+    <div class="col-sm-12 panel-content"> -->
+
+<div class="panel p-3">
+  <div class="row">
+    <div class="col-sm-12 panel-content">
+      <h4 class="subs-heading">Choose Add-Ons</h4>
+      <div class="subs-adds-list">
+        <div class="storag-adds" *ngFor="let item of AdOns;let i=index">
+          <h5>{{item.Name}}</h5>
+          <div class="storag-adds-cntent">
+            <p class="left-conadds">
+              ${{item.PricePerYear}} <sub> /Year* | Total License: {{item.totalLicense}}</sub>
+            </p>
+            <p class="add-name">{{item.properties}}</p>
+          </div>
+          <button *ngIf="item.isSelected==false" class="btn-adons" (click)="updatedAdOn(item)">
+            <i class="fa fa-plus pr-1" aria-hidden="true" *ngIf="item.loading==false"></i>
+            <i class="fa fa-spinner fa-spin" *ngIf="item.loading==true"></i>
+            Add
+          </button>
+          <button *ngIf="item.isSelected==true" class="btn-adons" (click)="updatedAdOn(item)">
+            <i class="fa fa-spinner fa-spin" *ngIf="item.loading==true"></i>
+            <i class="feather-check pr-1" aria-hidden="true" *ngIf="item.loading==false"></i> Added
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="panel p-3">
+  <div class="row">
+    <div class="col-sm-12 panel-content">
+      <form [formGroup]="form" *ngIf="form">
+        <div class="row">
+          <div class="col-md-12 col-lg-6 col-xl-4">
+            <div class="panel-content p-2 mb-4">
+              <div>
+                <h4 class="subs-heading greenh">General Information</h4>
+                <div class="row">
+                  <div class="col-12 col-sm-6">
+                    <label>First Name:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="FirstName"
+                        [ngClass]="{'is-invalid': (FirstName.invalid && (FirstName.dirty || FirstName.touched) && FirstName.errors?.required || FirstName.errors?.maxlength) }">
+                      <small
+                        *ngIf="FirstName.invalid && (FirstName.dirty || FirstName.touched) && FirstName.errors?.required"
+                        class="text-danger pt-1">First Name is required</small>
+                      <small
+                        *ngIf="(FirstName.invalid && (FirstName.dirty || FirstName.touched)) && FirstName.errors?.maxlength"
+                        class="text-danger">First Name should be less then 50</small>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <label>Last Name:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="LastName"
+                        [ngClass]="{'is-invalid': (LastName.invalid && (LastName.dirty || LastName.touched) && LastName.errors?.required ||  LastName.errors?.maxlength) }">
+                      <small
+                        *ngIf="LastName.invalid && (LastName.dirty || LastName.touched) && LastName.errors?.required"
+                        class="text-danger pt-1">Last Name is required</small>
+                      <small
+                        *ngIf="(LastName.invalid && (LastName.dirty || LastName.touched)) && LastName.errors?.maxlength"
+                        class="text-danger">Last Name should be less then 50</small>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-12">
+                    <label>Company Name:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="CompanyName"
+                        [ngClass]="{'is-invalid': (CompanyName.invalid && (CompanyName.dirty || CompanyName.touched) && CompanyName.errors?.required || CompanyName.errors?.maxlength ) }">
+                      <small
+                        *ngIf="CompanyName.invalid && (CompanyName.dirty || CompanyName.touched) && CompanyName.errors?.required"
+                        class="text-danger pt-1">Company Name is required</small>
+                      <small
+                        *ngIf="(CompanyName.invalid && (CompanyName.dirty || CompanyName.touched)) && CompanyName.errors?.maxlength"
+                        class="text-danger">Last Name should be less then 100</small>
+                    </div>
+                  </div>
+                  <div *ngIf="!isLoan()" class="col-12 col-sm-12 mb-3">
+                    <label>Industry Type:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <ng-select [items]="industryLists" placeholder="Select Industry Type" bindValue="value" bindLabel="text"
+                        [closeOnSelect]="true" formControlName="IndustryType"
+                        [ngClass]="{'is-invalid': (IndustryType.invalid && (IndustryType.dirty || IndustryType.touched) && IndustryType.errors?.required) }">
+                      </ng-select>
+                      <small
+                        *ngIf="IndustryType.invalid && (IndustryType.dirty || IndustryType.touched) && IndustryType.errors?.required"
+                        class="text-danger pt-1">Industry Type is required</small>
+                    </div>
+                  </div>
+                  <!-- <div class="col-12 col-sm-12">
+                    <label>Industry Type:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="IndustryType"
+                        [ngClass]="{'is-invalid': (IndustryType.invalid && (IndustryType.dirty || IndustryType.touched) && IndustryType.errors?.required) }">
+                      <small
+                        *ngIf="IndustryType.invalid && (IndustryType.dirty || IndustryType.touched) && IndustryType.errors?.required"
+                        class="text-danger pt-1">Industry Type is required</small>
+                    </div>
+                  </div> -->
+
+                  <div class="col-12 col-sm-6">
+                    <label>Phone Number:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <p-inputMask styleClass="form-control" mask="(999) 999-9999" formControlName="PhoneNumber"
+                        placeholder="(___) ___-____"
+                        [ngClass]="{'is-invalid': (PhoneNumber.invalid && (PhoneNumber.dirty || PhoneNumber.touched) && (PhoneNumber.errors?.required || PhoneNumber.errors?.pattern)) }">
+                      </p-inputMask>
+                      <small
+                        *ngIf="PhoneNumber.invalid && (PhoneNumber.dirty || PhoneNumber.touched) && PhoneNumber.errors?.required"
+                        class="text-danger pt-1">Phone Number is required</small>
+                      <small
+                        *ngIf="(PhoneNumber.invalid && (PhoneNumber.dirty || PhoneNumber.touched)) && PhoneNumber.errors?.maxlength"
+                        class="text-danger">Phone Number length should be 10</small>
+                      <small
+                        *ngIf="(PhoneNumber.invalid && (PhoneNumber.dirty || PhoneNumber.touched)) && PhoneNumber.errors?.pattern"
+                        class="text-danger">Phone Number only accept digits</small>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <label>Mobile Number:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="MobileNumber"
+                        [ngClass]="{'is-invalid': (MobileNumber.invalid && (MobileNumber.dirty || MobileNumber.touched) && MobileNumber.errors?.required) }">
+                      <small
+                        *ngIf="MobileNumber.invalid && (MobileNumber.dirty || MobileNumber.touched) && MobileNumber.errors?.required"
+                        class="text-danger pt-1">Mobile Number is required</small>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-12">
+                    <label>Email:<span class="text-danger">*</span><small><em>This will be your
+                          username</em></small></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="Email"
+                        [ngClass]="{'is-invalid': (Email.invalid && (Email.dirty || Email.touched) && (Email.errors?.required || Email.errors?.EmailIsDuplicate ||Email.errors?.maxlength || Email.errors?.pattern) ) }">
+                      <small *ngIf="Email.invalid && (Email.dirty || Email.touched) && Email.errors?.required"
+                        class="text-danger pt-1">Email is required</small>
+                      <small *ngIf="Email.invalid && (Email.dirty || Email.touched) && Email.errors?.EmailIsDuplicate"
+                        class="text-danger pt-1">Email is duplicate</small>
+                      <small *ngIf="(Email.invalid && (Email.dirty || Email.touched)) && Email.errors?.maxlength"
+                        class="text-danger">Email should be less then 50</small>
+                      <small *ngIf="(Email.invalid && (Email.dirty || Email.touched)) && Email.errors?.pattern"
+                        class="text-danger">Please enter correct email</small>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="backgroundColor p-2">
+                  <div class="row">
+                    <div class="col-12">
+                      <div>
+                        <label>Password:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <div class="row">
+                          <div class="col-11">
+                          <input [type]="isTextFieldType ? 'text' : 'password'"  class="form-control" formControlName="Password"
+                            [ngClass]="{'is-invalid': (Password.invalid && (Password.dirty || Password.touched) && (Password.errors?.required ||  Password.errors?.passwordStrength || Password.errors?.minlength)) }">
+                            </div>
+                              <div (click)="togglemyPasswordFieldType()" class="col-1 pl-0 pt-2 cursor-pointer">
+                                <i class="fa fa-eye" aria-hidden="true" *ngIf="!isTextFieldType"></i>
+                                <i class="fa fa-eye-slash" aria-hidden="true" *ngIf="isTextFieldType"></i>
+                              </div>
+                        </div>
+
+                          <small
+                            *ngIf="Password.invalid && (Password.dirty || Password.touched) && Password.errors?.required"
+                            class="text-danger pt-1">Password is required</small>
+                            <small
+                            *ngIf="(Password.invalid && (Password.dirty || Password.touched)) && Password.errors?.minlength"
+                            class="text-danger">Minimum Password length should be 6</small>
+                        <small
+                            *ngIf="(Password.invalid && (Password.dirty || Password.touched)) && Password.errors?.passwordStrength"
+                            class="text-danger">There should be 1 uppercase, 1 lowercase, 1 number, and 1 special character should be mandatory</small>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                 <div class="row">
+                    <div class="col-12">
+                      <label>Confirm Password:<span class="text-danger">*</span></label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" formControlName="confirmPassword">
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+              <div class="mt-3">
+                <h4 class="subs-heading">Company Address Information</h4>
+                <div class="row">
+                  <div class="col-12">
+                    <label>Address Line 1:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="CompanyAddress1"
+                        [ngClass]="{'is-invalid': (CompanyAddress1.invalid && (CompanyAddress1.dirty || CompanyAddress1.touched) && CompanyAddress1.errors?.required) }">
+                      <small
+                        *ngIf="CompanyAddress1.invalid && (CompanyAddress1.dirty || CompanyAddress1.touched) && CompanyAddress1.errors?.required"
+                        class="text-danger pt-1">Address Line 1 is required</small>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <label>Address Line 2:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="CompanyAddress2">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12 col-sm-6">
+                    <label>Country:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <ng-select [items]="countryLists" placeholder="Select Country" bindValue="value" bindLabel="text"
+                        [closeOnSelect]="true" formControlName="CompanyCountry" 
+                        [ngClass]="{'is-invalid': (CompanyCountry.invalid && (CompanyCountry.dirty || CompanyCountry.touched) && CompanyCountry.errors?.required) }">
+                        <small
+                          *ngIf="CompanyCountry.invalid && (CompanyCountry.dirty || CompanyCountry.touched) && CompanyCountry.errors?.required"
+                          class="text-danger pt-1">Country is required</small>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <label>State:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <ng-select [items]="states" placeholder="Select State" bindValue="value" bindLabel="text"
+                        [closeOnSelect]="true" formControlName="CompanyState"
+                        [ngClass]="{'is-invalid': (CompanyState.invalid && (CompanyState.dirty || CompanyState.touched) && CompanyState.errors?.required) }">
+                        <small
+                          *ngIf="CompanyState.invalid && (CompanyState.dirty || CompanyState.touched) && CompanyState.errors?.required"
+                          class="text-danger pt-1">State is required</small>
+                      </ng-select>
+                    </div>
+                  </div>
+                                
+                </div>
+                <div class="row">
+                 
+                  <div class="col-12 col-sm-6">
+                    <label>City:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="CompanyCity"
+                        [ngClass]="{'is-invalid': (CompanyCity.invalid && (CompanyCity.dirty || CompanyCity.touched) && CompanyCity.errors?.required) }">
+                      <small
+                        *ngIf="CompanyCity.invalid && (CompanyCity.dirty || CompanyCity.touched) && CompanyCity.errors?.required"
+                        class="text-danger pt-1">City is required</small>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <label>Zip/Postal Code:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="CompanyPostalCode"
+                        [ngClass]="{'is-invalid': (CompanyPostalCode.invalid && (CompanyPostalCode.dirty || CompanyPostalCode.touched) && CompanyPostalCode.errors?.required) }">
+                      <small
+                        *ngIf="CompanyPostalCode.invalid && (CompanyPostalCode.dirty || CompanyPostalCode.touched) && CompanyPostalCode.errors?.required"
+                        class="text-danger pt-1">Postal Code is required</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-6 col-xl-4">
+            <div class="panel-content p-2 mb-4">
+              <div>
+                <h4 class="subs-heading blueh">Billing Details</h4>
+                <div class="backgroundColor p-2">
+                  <h4 style="font-weight: 300;">Secure Payment</h4>
+                  <div class="row">
+                    <div class="col-12">
+                      <label>Billing Cycle:</label>
+                      <div class="form-group">
+                        <ng-select [items]="billingCycleList" placeholder="Select Billing Cycle" bindValue="value"
+                          bindLabel="text" [closeOnSelect]="true" formControlName="billingCycle">
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+
+                    <div *ngIf="billingCycle.value=='annually'" class="col-12">
+                      <label>Billing Date:</label>
+                      <br>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="billingDate" name="billingDate"
+                          id="exampleRadios1" value="1st_Apr_of_Every_Year" checked>
+                        <label class="form-check-label" for="exampleRadios1">
+                          1st Apr of Every Year
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="billingDate" name="billingDate"
+                          id="exampleRadios2" value="15th_Apr_of_Every_Year">
+                        <label class="form-check-label" for="exampleRadios2">
+                          15th Apr of Every Year
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="billingDate" name="billingDate"
+                          id="exampleRadios3" value="Today">
+                        <label class="form-check-label" for="exampleRadios3">
+                          Today
+                        </label>
+                      </div>
+                    </div>
+                    <div *ngIf="billingCycle.value=='monthly'" class="col-12">
+                      <label>Billing Date:</label>
+                      <br>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="billingDate" name="billingDate"
+                          id="exampleRadios1" value="1st_Apr_of_Every_Month" checked>
+                        <label class="form-check-label" for="exampleRadios1">
+                          1st of Every Month
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="billingDate" name="billingDate"
+                          id="exampleRadios2" value="15th_Apr_of_Every_Month">
+                        <label class="form-check-label" for="exampleRadios2">
+                          15th of Every Month
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" formControlName="billingDate" name="billingDate"
+                          id="exampleRadios3" value="Today">
+                        <label class="form-check-label" for="exampleRadios3">
+                          Today
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-12">
+                      <label>Credit Card Number:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" style="position:relative"
+                          formControlName="creditCardNumber" [ngClass]="{'is-invalid': (creditCardNumber.invalid && (creditCardNumber.dirty || creditCardNumber.touched) && (creditCardNumber.errors?.maxlength
+                        || creditCardNumber.errors?.creditcardPattern)) }">
+                        <i [ngClass]="cardType" class="Custom-Card" aria-hidden="true"></i>
+
+
+
+                        <small
+                          *ngIf="creditCardNumber.invalid && (creditCardNumber.dirty || creditCardNumber.touched) && creditCardNumber.errors?.maxlength"
+                          class="text-danger pt-1">Credit Card Number maximum length should be 16</small>
+                        <!-- <small
+                        *ngIf="creditCardNumber.invalid && (creditCardNumber.dirty || creditCardNumber.touched) && creditCardNumber.errors?.creditcardPattern"
+                        class="text-danger pt-1">Not a valid Visa credit card number</small> -->
+                      </div>
+                    </div>
+                    <!-- <div class="col-2">
+                      <img src="assets/images/visaa.jpg" width="40" height="37" class="mt-4" />
+                    </div> -->
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <label>Name on Card:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" formControlName="creditCardName"
+                          [ngClass]="{'is-invalid': (creditCardName.invalid && (creditCardName.dirty || creditCardName.touched) && creditCardName.errors?.maxlength) }">
+                        <small
+                          *ngIf="creditCardName.invalid && (creditCardName.dirty || creditCardName.touched) && creditCardName.errors?.maxlength"
+                          class="text-danger pt-1">Credit Card Name maximum length should be 100</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 col-md-4">
+                      <label>Expiration Date:</label>
+                      <div class="form-group">
+                        <ng-select [items]="monthList" style="width: 102%;" class="custom-month"
+                          placeholder="Select Month" bindValue="value" bindLabel="text" [closeOnSelect]="true"
+                          formControlName="expirationMonth">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4">
+                      <label></label>
+                      <div class="form-group mt-1">
+                        <ng-select [items]="yearList" placeholder="Selet Year" bindValue="value" bindLabel="text"
+                          [closeOnSelect]="true" formControlName="expirationYear">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4">
+                      <label>CVV:</label>
+                      <div class="form-group">
+                        <input type="text" class="form-control" style="width: 80%;" formControlName="cvv"
+                          [ngClass]="{'is-invalid': (cvv.invalid && (cvv.dirty || cvv.touched) && (cvv.errors?.maxlength ||cvv.errors?.pattern )) }">
+                        <small *ngIf="cvv.invalid && (cvv.dirty || cvv.touched) && cvv.errors?.maxlength"
+                          class="text-danger pt-1">CVV maximum length should be 3 digits</small>
+                        <small *ngIf="cvv.invalid && (cvv.dirty || cvv.touched) && cvv.errors?.pattern"
+                          class="text-danger pt-1">CVV only accept digits</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="form-check mt-3 mb-4">
+                  <input class="form-check-input" type="checkbox" value="sameAsAccountInfo" id="flexCheckDefault"
+                    formControlName="sameAsAccountInfo">
+                  <label class="form-check-label ml-3" for="flexCheckDefault">
+                    My Billing Information is same as my account information
+                  </label>
+                </div>
+                <h4 class="subs-heading">Billing Address Information</h4>
+                <div class="row">
+                  <div class="col-12">
+                    <label>Address Line 1:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="BillingAddress1"
+                        [ngClass]="{'is-invalid': (BillingAddress1.invalid && (BillingAddress1.dirty || BillingAddress1.touched) && BillingAddress1.errors?.required) }">
+                      <small
+                        *ngIf="BillingAddress1.invalid && (BillingAddress1.dirty || BillingAddress1.touched) && BillingAddress1.errors?.required"
+                        class="text-danger pt-1">Address Line 1 is required</small>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <label>Address Line 2:</label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="BillingAddress2">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12 col-sm-6">
+                    <label>Country:<span class="text-danger">*</span></label>
+                    <br>
+                    <div class="form-group">
+                      <ng-select [items]="countryLists" placeholder="Select Country" bindValue="value" bindLabel="text"
+                        [closeOnSelect]="true" formControlName="BillingCountry"
+                        [ngClass]="{'is-invalid': (BillingCountry.invalid && (BillingCountry.dirty || BillingCountry.touched) && BillingCountry.errors?.required) }">
+                        <small
+                          *ngIf="BillingCountry.invalid && (BillingCountry.dirty || BillingCountry.touched) && BillingCountry.errors?.required"
+                          class="text-danger pt-1">Country is required</small>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <label>State:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <ng-select [items]="states" placeholder="Select State" bindValue="value" bindLabel="text"
+                        [closeOnSelect]="true" formControlName="BillingState"
+                        [ngClass]="{'is-invalid': (BillingState.invalid && (BillingState.dirty || BillingState.touched) && BillingState.errors?.required) }">
+                        <small
+                          *ngIf="BillingState.invalid && (BillingState.dirty || BillingState.touched) && BillingState.errors?.required"
+                          class="text-danger pt-1">State is required</small>
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12 col-sm-6">
+                    <label>City:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="BillingCity"
+                        [ngClass]="{'is-invalid': (BillingCity.invalid && (BillingCity.dirty || BillingCity.touched) && BillingCity.errors?.required) }">
+                      <small
+                        *ngIf="BillingCity.invalid && (BillingCity.dirty || BillingCity.touched) && BillingCity.errors?.required"
+                        class="text-danger pt-1">City is required</small>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <label>Zip/Postal Code:<span class="text-danger">*</span></label>
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="BillingPostalCode"
+                        [ngClass]="{'is-invalid': (BillingPostalCode.invalid && (BillingPostalCode.dirty || BillingPostalCode.touched) && BillingPostalCode.errors?.required) }">
+                      <small
+                        *ngIf="BillingPostalCode.invalid && (BillingPostalCode.dirty || BillingPostalCode.touched) && BillingPostalCode.errors?.required"
+                        class="text-danger pt-1">Postal Code is required</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+         
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-6 col-xl-4">
+          <div class="panel-content p-2 order-sum">
+            <h4 class="subs-heading prpleh">Order Summary</h4>
+            <div class="produts-to-pay">
+              <div class="col-12 text-center mt-3" *ngIf="counter==0 && adOnCount==0">
+                <label class="text-danger">No package(s) selected.</label>
+              </div>
+              <div *ngIf="counter>0">
+                <div class="ordered-pro" *ngFor="let item of Package">
+                  <div *ngIf="item.isSelected">
+                    <div class="ordpro-img">
+                      <img src="{{item.image}}" (error)="onImgError($event)">
+                    </div>
+                    <div class="ordpro-detai">
+                      <p class="ordpro-name">{{item.name}}</p>
+                      <span class="ordpro-price">${{item.netMonthlyPrice-item.discounts | number : '1.0-2'}}
+                        /Month</span>
+                    </div>
+                    <div class="ordpro-quant">
+                      <input type="text" value="{{item.license}}">
+                      <p class="ordpro-totl">${{item.netMonthlyPrice-item.discounts | number : '1.0-2'}} /Month</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-container *ngFor="let item of AdOns">
+                <div class="ordered-pro" *ngIf="adOnCount==1">
+                  <div *ngIf="item.isSelected">
+                    <div class="ordpro-img">
+                      <img src="{{item.image}}" (error)="onImgError($event)">
+                    </div>
+                    <div class="ordpro-detai">
+                      <p class="ordpro-name">{{item.Name}} Add-Ons</p>
+                      <span class="ordpro-price">${{item.PricePerYear}} /Year</span>
+                      <span class="ordpro-price">{{item.properties}} /Month</span>
+                    </div>
+                    <div class="ordpro-quant">
+                      <input type="text" value="{{adOnCount}}">
+                      <p class="ordpro-totl">${{item.PricePerYear}}.00</p>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+            </div>
+            <div class="clearfix"></div>
+            <!-- <div class="row">
+                <div class="col-sm-10">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Apply Promo Code" formControlName="promoCode">
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <button type="button" class="btn btn-light mr-5">Apply</button>
+                </div>
+              </div> -->
+            <div class="backgroundColor pt-3">
+              <div class="row mb-1 pr-3">
+                <div class="col-sm-12">
+                  <p class="text-right">
+                    Total Subscribed License: {{this.licenseCounter}}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="backgroundColor pt-3">
+              <div class="row pr-3 mb-1">
+                <div class="col-sm-12">
+                  <p class="text-right">
+                    Sub-Total Amount (USD): ${{TotalPrice() | number : '1.0-2'}}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="backgroundColor pt-3">
+              <div class="row pr-3 mb-1">
+                <div class="col-sm-12">
+                  <p class="text-right">
+                    One Time Charges(USD): $0.00
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="backgroundColor pt-3">
+              <div class="row pr-3 mb-1">
+                <div class="col-sm-12">
+                  <p class="text-right">
+                    Discount: - ${{TotalDiscount() | number : '1.0-2'}}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="netTotal-color pt-3">
+              <div class="row pr-3  mb-1">
+                <div class="col-sm-12">
+                  <p class="text-right">
+                    Net Total : ${{TotalPrice()| number : '1.0-2'}}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="pt-1">
+              <div class="row">
+                <div class="col-12">
+                  <input type="button" class="btn col-12 paynow-color" (click)="submit()" value="Pay Now">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    </form>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="clearfix"></div>
+	 <!-- ======= Features Section ======= -->
+    <section id="features" class="features">
+      <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+          <h2>Trusted by 55,000+ Customers Worldwide</h2>
+        </div>
+
+          <div class="row" >
+			<div class="swiper mySwiper1st">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-1.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-2.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-3.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-4.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-5.png" alt="" class="img-fluid">
+					 </div>
+					<div class="swiper-slide">
+					 <img src="assets/img/brand-1.png" alt="" class="img-fluid">
+					 </div>
+				  </div>
+			  </div>
+		</div>
+      </div>
+    </section>
+</main>
+<app-footer></app-footer>

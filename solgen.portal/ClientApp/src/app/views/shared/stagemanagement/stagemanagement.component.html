@@ -1,0 +1,766 @@
+
+<div class=" item-view" style="overflow:auto;"  *ngIf="customCompnentValuesTop != null && customCompnentValuesTop != undefined">
+  <div class="card-body timeline position-relative pt-2 card-body-m">
+   
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+    <div *ngIf="isadmin" class="row flex-row-reverse py-2 mb-3 border-bottom">
+      <div  class="col-md-6 col-lg-5  col-xs-12 text-md-right btns-viewui" *ngIf="areButtonsVisible">
+
+        <div *ngIf="submoduleName != 'proposal' && submoduleName != 'opportunity'">
+          <!-- <a href="javascript:;"
+                   class="btn btn-dark text-white mr-2 smview" (click)="SendBackClick()"> Send back to Queue</a> -->
+          <a href="javascript:void(0);" class="btn btn-primary text-white mr-2"  *ngIf="submoduleName == 'Contract'"
+            (click)="callToViewFilterBarFunction.emit($event)"><i class="fa fa-paper-plane mr-1"></i> Send</a>
+          <a *ngIf="solgenpower && is_converted != true && unqualifiedStage != true && submoduleName != 'Contract'"
+            href="javascript:;" [routerLink]="['/lead/editlead',Id]" class="btn btn-success text-white mr-2 smview">
+            <i class="feather-edit-2 mr-1"></i> Edit
+          </a>
+          <a [routerLink]="['/contract/edit',Id]"
+            *ngIf="solgenpower && is_converted != true && unqualifiedStage != true && submoduleName == 'Contract'"
+            class="btn btn-success text-white mr-2 mb-0 mb-md-2 smview"><i class="feather-edit-2"></i> Edit</a>
+          <a *ngIf="solgenpower && is_converted != true && unqualifiedStage != true && submoduleName != 'Contract'"
+            href="javascript:;" class="btn btn-primary form-btns mr-2 smview" (click)="showConvertModel($event)">
+            <i class="feather-repeat text-white"></i>
+            Convert
+          </a>
+          <a href="javascript:;" class="btn btn-dark text-white smview" (click)="OnBackToListClick()">
+            <i class="feather-arrow-left mr-1"></i> Back
+          </a>
+        </div>
+
+        <div *ngIf="submoduleName == 'proposal'">
+            <a href="javascript:void(0);" class="btn btn-primary text-white mr-2"  (click)="callToViewFilterBarFunction.emit($event)"><i
+                class="fa fa-paper-plane mr-1"></i> Send</a>
+            <a href="javascript:void(0);" [routerLink]="['/proposal-list/editproposal',Id]"
+              class="btn btn-success text-white mr-2"><i class="feather-edit-2 mr-1"></i> Edit</a>
+            <a href="javascript:void(0);" class="btn btn-dark text-white" (click)="OnBackToListClick()"><i
+                class="feather-arrow-left mr-1"></i> Back</a>
+         </div>
+         <div *ngIf="submoduleName == 'opportunity'">
+          <!-- <div class="d-inline-block mr-2 align-top" style="max-width:190px;">
+              <select class="form-control" [(ngModel)]="selectedAction"  (change)="callForDDLList.emit($event)" >
+                <option value="0">Action</option>
+                <option value="1">Make an Appointment</option>
+                <option value="2">Send automatic Contract</option>
+                <option value="3">Request Design</option>
+                <option value="4"> Request ReDesign</option>
+                <option value="5">Submit Welcome Call</option>
+              </select>
+            </div> -->
+            
+            <a [routerLink]="[pageLink,Id]" class="btn btn-success text-white mr-2 mb-0 mb-md-2 smview"><i class="feather-edit-2"></i> Edit</a>
+            <!-- <a href="javascript:void(0);" (click)="makeAppointment()" class="btn btn-info form-btns mr-2 mb-0 mb-md-2"><i class="fa fa-calendar"></i> Make an Appointment</a> -->
+            <!--<a (click)="sendAutomaticContract()" class="btn btn-orange text-white  mr-2 mb-0 mb-md-2"><i class="fa fa-cog mr-1"></i> Send Automatic Contract</a>
+            <a (click)="showrequestdesignpopup()" class="btn fc-button-primary text-white mr-2 mb-0 mb-md-2"><i class="fa fa-cog mr-1"></i> Request Design</a>
+            <a href="javascript:void(0);" class="btn btn-primary text-white mr-2 mb-0 mb-md-2" (click)="showRerequestdesignpopup()"><i class="fa fa-cogs mr-1"></i> Request ReDesign</a>-->
+            <a href="javascript:void(0);" class="btn btn-primary text-white mr-2 mb-0 mb-md-2 smview" *ngIf="isLoanProductAssociated" data-dismiss="modal"  (click)="callToViewFilterBarFunction.emit($event)" data-toggle="modal"><i class="fa fa-paper-plane mr-1"></i>Generate Loan Application</a>
+            <a href="javascript:void(0);" class="btn btn-dark text-white mb-0 mb-md-2 smview" (click)="OnBackToListClick()"><i class="feather-arrow-left mr-1"></i> Back</a>
+         </div>
+      </div>
+      <div class="col-md-6 col-lg-7  col-xs-12 view-details d-flex">
+
+        <span class="user-imgicon"><i  class="{{iconClass}}"></i></span>
+        <!-- <span  class="user-imgicon" *ngIf="submoduleName == 'opportunity'"><i  class="{{iconClass}}"></i></span> -->
+        <!-- <ul class="user-content"  *ngIf="submoduleName == 'proposal'" >
+    <li><h4> {{headerTitleName}}</h4></li>
+    </ul> -->
+
+        <div  *ngIf="submoduleName != 'proposal' && submoduleName != 'opportunity'" >
+          <ul class="user-content">
+            <li><h4> {{headerTitleName}}</h4></li>
+            <li *ngFor="let item of customCompnentValuesTop">
+              <span *ngIf="item.display_name == 'Mobile'">
+                <strong>
+                  <i class="feather-phone-call"></i>
+                </strong>{{item.value }}
+              </span>
+              <span *ngIf="item.display_name == 'Email'">
+                <strong>
+                  <i class="feather-mail"></i>
+                </strong>{{item.value }}
+              </span>
+              <span *ngIf="item.display_name != 'Mobile' && item.display_name != 'Email'">
+                <span *ngIf="item.dt_code!='select'">
+                  <!-- <div class="top" *ngIf="item.dt_code == 'date'" style="word-break:break-all;">
+                     {{ (item.value !== null) ? (item.value | date: 'MM-dd-yyyy') : "" }}
+                  </div> -->
+                  <strong>
+                    {{item.display_name}} :
+                  </strong>
+                  {{item.dt_code == 'date' ? (item.value | date: 'MM-dd-yyyy') : item.value }}
+                </span>
+                <span *ngIf="item.dt_code=='select'">
+                  <strong>
+                    {{item.display_name}} :
+                  </strong> 
+                  <span
+                                  *ngIf="item.value!=null && item.dt_code!='boolean' && item.field_route!=null && item.dt_code!='href'"
+                                  class="py-2 d-block">
+                                  <a href="javascript:void(0);"
+                                    [routerLink]="[item.field_route,item.ref_value]">{{item.value}}</a>
+                  </span>
+                  <span *ngIf="item.field_route == null">
+                    {{item.ColumnName != 'OwnerName' && item.ColumnName != 'Service_Territory_Text' 
+                    && item.ColumnName != 'Status' && item.ColumnName != 'OpportunityId' && item.ColumnName != 'AccountId' && item.ColumnName != 'Service_Territory__c'
+                    ? getValue(item.value,item.select_options) : item.value }}
+
+                  </span>
+                </span>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div  *ngIf="submoduleName == 'opportunity'" >
+          <ul class="user-content">
+            <li><h4> {{headerTitleName}}</h4></li>
+            <li *ngFor="let item of customCompnentValuesTop">
+            
+              <span>
+                <span *ngIf="item.dt_code!='select'">
+                  <strong>
+                    {{item.display_name}} :
+                  </strong>{{item.value}}
+                </span>
+                <span *ngIf="item.dt_code=='select'">
+                  <strong>
+                    {{item.display_name}} :  
+                  </strong>
+                  {{item.ColumnName != 'OwnerId' && item.ColumnName != 'Primary_Proposal' && item.ColumnName != 'UtilityCompany' && item.ColumnName != 'Service_Territory' ? getValue(item.value,item.select_options) : item.value }}
+                </span>
+                
+                <!-- <span *ngIf="item.display_name=='Utility Company'">
+                  <strong>
+                    {{item.display_name}} :  
+                  </strong>
+                  {{ item.value }}
+                </span> -->
+              </span>
+            </li>
+          </ul>
+        </div>
+
+
+        
+        <ul class="user-content" *ngIf="submoduleName == 'proposal'">
+          <li><h4> {{headerTitleName}}</h4></li>
+          <li *ngFor="let item of customCompnentValuesTop">
+              <span *ngIf="item.ColumnName == 'AccountId' || item.ColumnName == 'OpportunityId'">
+                <span class="d-block">
+                  <strong>{{ item.display_name}}:</strong> <a href="javascript:void(0);" [routerLink]="[item.field_route,item.ref_value]"> {{ item.value}}</a>
+                </span>
+              </span>
+              <span *ngIf="item.ColumnName == 'CreatedById' || item.ColumnName == 'ExpirationDate'">
+                <span class="d-block">
+                  <strong>{{ item.display_name}}:</strong> {{  item.ColumnName == 'ExpirationDate'? (item.value | date: 'MM-dd-yyyy') : item.value}}
+                </span>
+              </span>
+          </li>
+        </ul>
+        <!-- <div  >
+      <ng-container *ngFor="let item of customCompnentValuesTop">
+        <div *ngIf="item.ColumnName!='Name' && item.ColumnName!='Name'" class="col py-2">
+          <ng-container *ngIf="item.field_route && item.ref_value;else elseBlock">
+            <span class="d-block">
+              <strong>{{ item.display_name}}:</strong> <a href="javascript:void(0);" [routerLink]="[item.field_route,item.ref_value]"> {{ item.value}}</a>
+            </span>
+          </ng-container>
+          <ng-template #elseBlock>
+            <span class="d-block">
+              <strong>{{ item.display_name}}:</strong> {{item.value}}
+            </span>
+          </ng-template>
+
+
+        </div>
+      </ng-container>
+    </div> -->
+
+      </div>
+    </div>
+
+    <div *ngIf="isadmin" class="col-md-12 col col-xs-12 p-0 newstages-ui mt-4">
+      <ul class="newstages-ui-container">
+
+        <ng-container *ngFor="let item of stagedatamaster | slice:0:6;let i=index">
+          <li class="stage-ui {{item.stageclass}}" [ngClass]="{'corner-rght' : i==6}">
+            <ng-container *ngIf="item.parentid==null">
+              <!-- <span class="step-name abs">{{item.loan_app_stage_name}}</span> -->
+
+              <a (click)="showStage(item.loan_app_stage_id,true,item, null, true)" *ngIf="item.stageActive=='1'"
+                href="javascript:void(0);">
+                <span class="left-icon  {{item.stageclass}} {{item.stageSelectedClass}}"><i
+                    class="feather-check-circle "></i></span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">{{item.loan_app_stage_name}}</strong> 
+                      <span class="stage-datetime"  *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                    </span>
+              </a>
+              <a (click)="showStage(item.loan_app_stage_id,true,item, null,true)" *ngIf="item.stageActive=='0'"
+                href="javascript:void(0);">
+                <span class="left-icon   {{item.stageclass}} {{item.stageSelectedClass}}"><i
+                    class="feather-check-circle "></i></span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                      <span class="stage-datetime"  *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                    </span>
+              </a>
+
+              <div class="subchildbx" *ngIf="checksubchildsq(item.loan_app_stage_id)">
+
+
+                <div class="sub-list" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                  <a (click)="showStage(item1.loan_app_stage_id,true,item1,item.loan_app_stage_id, null,true)"
+                    *ngIf="item1.stageActive=='1'" href="javascript:void(0);">
+                    <span class="left-icon {{item1.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <a (click)="showStage(item1.loan_app_stage_id,true,item1,item.loan_app_stage_id, null,true)"
+                    *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                    <span class="left-icon {{item1.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                  </a>
+                  <span class="step-name ">{{item.loan_app_stage_name}}</span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="child" *ngIf="checksubchildpar(item.loan_app_stage_id)">
+                <div class="list-item2" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                  <a (click)="showStage(item.loan_app_stage_id,true,item1,item.loan_app_stage_id, null,true)"
+                    *ngIf="item1.stageActive=='1'" href="javascript:void(0);">
+                    <span class="left-icon {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <a (click)="showStage(item.loan_app_stage_id,true,item1,item.loan_app_stage_id, null,true)"
+                    *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                    <span class="left-icon {{item1.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                  </a>
+                  <!-- <span class="step-name ">{{item.loan_app_stage_name}}</span> -->
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                  </span>
+                </div>
+              </div>
+            </ng-container>
+            <!-- <div *ngIf="submoduleName == 'lead'">{{item.createdDate | DateTimeToLocal}}</div> -->
+            <div class="line-btm" *ngIf="i==6"></div>
+          </li>
+        </ng-container>
+
+      </ul>
+<!-- 
+      <div class="step-dashed-line stag_line2 mt-spc" *ngIf="stagedatamaster && stagedatamaster.length>6">
+        <div class="dash-top"></div>
+        <div class="dash-bottom"></div>
+      </div> -->
+      <ul *ngIf="stagedatamaster && stagedatamaster.length>=8" class="newstages-ui-container">
+        <ng-container *ngFor="let item of stagedatamaster | slice:6:15;let i=index">
+          <li class="stage-ui {{item.stageclass}}">
+            <ng-container *ngIf="item.parentid==null">
+
+              <!-- <span class="step-name abs">{{item.loan_app_stage_name}}</span> -->
+              <a (click)="showStage(item.loan_app_stage_id,true,item, null,true)" *ngIf="item.stageActive=='1'"
+                href="javascript:void(0);">
+                
+                <span class="left-icon  {{item.stageSelectedClass}}"><i
+                  class="feather-check-circle "></i></span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                  </span>
+              </a>
+
+              <a (click)="showStage(item.loan_app_stage_id,true,item, null,true)" *ngIf="item.stageActive=='0'"
+                href="javascript:void(0);">
+                
+                <span class="left-icon  {{item.stageSelectedClass}}"><i
+                  class="feather-check-circle "></i></span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                  </span>
+              </a>
+              
+              <div class="subchildbx" *ngIf="checksubchildsq(item.loan_app_stage_id)">
+                <div class="sub-list" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                  <a (click)="showStage(item.loan_app_stage_id,true,item1,item.loan_app_stage_id,true)"
+                    *ngIf="item1.stageActive=='1'" href="javascript:void(0);">
+                    <span class="step-no {{item1.stageclass}} {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span> 
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <a (click)="showStage(item.loan_app_stage_id,true,item1,item.loan_app_stage_id,true)"
+                    *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                    <span class="step-no {{item1.stageclass}} {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  
+                  <!-- <span class="step-name ">{{item1.loan_app_stage_name}}</span> -->
+                </div>
+              </div>
+              <div class="child" *ngIf="checksubchildpar(item.loan_app_stage_id)">
+                <div class="list-item2" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+
+                  <a (click)="showStage(item.loan_app_stage_id,true,item1,item.loan_app_stage_id,true)"
+                    *ngIf="item1.stageActive=='1'" href="javascript:void(0);">
+                    <span class="step-no {{item1.stageclass}} {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <a (click)="showStage(item.loan_app_stage_id,true,item1,item.loan_app_stage_id,true)"
+                    *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                    <span class="step-no {{item1.stageclass}} {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <!-- <span class="step-name ">{{item1.loan_app_stage_name}}</span> -->
+                </div>
+              </div>
+            </ng-container>
+            <!-- <div *ngIf="submoduleName == 'lead'">{{item.createdDate | DateTimeToLocal}}</div> -->
+          </li>
+        </ng-container>
+
+      </ul>
+
+      <!-- <div *ngIf="showdetail && !hideConstomerSatgeDtails" class="svlead ng-star-inserted"><a
+          class="text-white show-detail" data-toggle="collapse" href="#collapseExample" role="button"
+          aria-expanded="true" aria-controls="collapseExample"><i class="fa fa-chevron-right"></i></a></div> -->
+    </div>
+
+    <div *ngIf="!isadmin" class="col-md-12 col col-xs-12 p-0 newstages-ui mt-4">
+      <ul class="newstages-ui-container">
+
+        <ng-container *ngFor="let item of stagedatamaster | slice:0:6;let i=index">
+          <li class="stage-ui {{item.stageclass}}" [ngClass]="{'corner-rght' : i==6}">
+            <ng-container *ngIf="item.parentid==null">
+              <!-- <span class="step-name abs">{{item.loan_app_stage_name}}</span> -->
+
+              <a  *ngIf="item.stageActive=='1'"
+                >
+                <span class="left-icon  {{item.stageclass}} {{item.stageSelectedClass}}"><i
+                    class="feather-check-circle "></i></span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">{{item.loan_app_stage_name}}</strong> 
+                      <span class="stage-datetime"  *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                    </span>
+              </a>
+              <a  *ngIf="item.stageActive=='0'"
+                >
+                <span class="left-icon   {{item.stageclass}} {{item.stageSelectedClass}}"><i
+                    class="feather-check-circle "></i></span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                      <span class="stage-datetime"  *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                    </span>
+              </a>
+
+              <div class="subchildbx" *ngIf="checksubchildsq(item.loan_app_stage_id)">
+
+
+                <div class="sub-list" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                  <a 
+                    *ngIf="item1.stageActive=='1'">
+                    <span class="left-icon {{item1.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <a 
+                    *ngIf="item1.stageActive=='0'">
+                    <span class="left-icon {{item1.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                  </a>
+                  <span class="step-name ">{{item.loan_app_stage_name}}</span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="child" *ngIf="checksubchildpar(item.loan_app_stage_id)">
+                <div class="list-item2" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                  <a 
+                    *ngIf="item1.stageActive=='1'">
+                    <span class="left-icon {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <a 
+                    *ngIf="item1.stageActive=='0'">
+                    <span class="left-icon {{item1.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                  </a>
+                  <!-- <span class="step-name ">{{item.loan_app_stage_name}}</span> -->
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                  </span>
+                </div>
+              </div>
+            </ng-container>
+            <!-- <div *ngIf="submoduleName == 'lead'">{{item.createdDate | DateTimeToLocal}}</div> -->
+            <div class="line-btm" *ngIf="i==6"></div>
+          </li>
+        </ng-container>
+
+      </ul>
+<!-- 
+      <div class="step-dashed-line stag_line2 mt-spc" *ngIf="stagedatamaster && stagedatamaster.length>6">
+        <div class="dash-top"></div>
+        <div class="dash-bottom"></div>
+      </div> -->
+      <ul *ngIf="stagedatamaster && stagedatamaster.length>=8" class="newstages-ui-container">
+        <ng-container *ngFor="let item of stagedatamaster | slice:6:15;let i=index">
+          <li class="stage-ui {{item.stageclass}}">
+            <ng-container *ngIf="item.parentid==null">
+
+              <!-- <span class="step-name abs">{{item.loan_app_stage_name}}</span> -->
+              <a  *ngIf="item.stageActive=='1'"
+                >
+                
+                <span class="left-icon  {{item.stageSelectedClass}}"><i
+                  class="feather-check-circle "></i></span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                  </span>
+              </a>
+
+              <a  *ngIf="item.stageActive=='0'"
+                >
+                
+                <span class="left-icon  {{item.stageSelectedClass}}"><i
+                  class="feather-check-circle "></i></span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                  </span>
+              </a>
+              
+              <div class="subchildbx" *ngIf="checksubchildsq(item.loan_app_stage_id)">
+                <div class="sub-list" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                  <a 
+                    *ngIf="item1.stageActive=='1'" >
+                    <span class="step-no {{item1.stageclass}} {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span> 
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <a 
+                    *ngIf="item1.stageActive=='0'">
+                    <span class="step-no {{item1.stageclass}} {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  
+                  <!-- <span class="step-name ">{{item1.loan_app_stage_name}}</span> -->
+                </div>
+              </div>
+              <div class="child">
+                <div class="list-item2" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+
+                  <a
+                    *ngIf="item1.stageActive=='1'">
+                    <span class="step-no {{item1.stageclass}} {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <a 
+                    *ngIf="item1.stageActive=='0'">
+                    <span class="step-no {{item1.stageclass}} {{item.stageSelectedClass}}"><i
+                        class="feather-check-circle "></i></span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                          <span class="stage-datetime" *ngIf="item.createdDate !=null">{{item.createdDate | DateTimeToLocal}} </span>
+                        </span>
+                  </a>
+                  <!-- <span class="step-name ">{{item1.loan_app_stage_name}}</span> -->
+                </div>
+              </div>
+            </ng-container>
+            <!-- <div *ngIf="submoduleName == 'lead'">{{item.createdDate | DateTimeToLocal}}</div> -->
+          </li>
+        </ng-container>
+
+      </ul>
+
+      <!-- <div *ngIf="showdetail && !hideConstomerSatgeDtails" class="svlead ng-star-inserted"><a
+          class="text-white show-detail" data-toggle="collapse" href="#collapseExample" role="button"
+          aria-expanded="true" aria-controls="collapseExample"><i class="fa fa-chevron-right"></i></a></div> -->
+    </div>
+    <!--<a class="btn btn-primary" >
+      <i class="fa fa-arrow-down "></i>
+    </a>-->
+    <div class="collapse show stage-new-m" id="collapseExample">
+      <div class="card card-body p-0 border-0">
+
+
+        <div *ngIf="showFormDiv && isEnabledDetailsView" class="row bg-light">
+          <div [ngClass]="{'disabled':loading}" class="w-100 p-3">
+            <form [formGroup]="form" *ngIf="form">
+              <div class="row  mb-2">
+                <ng-container *ngFor="let item of formControlList;let i=index">
+
+                  <ng-container *ngFor="let inner of item.InnerData;let j=index">
+
+                    <div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : (inner.form_field_visibility == 'NO' && inner.edit_form_field_visibility == 'NO'), 'col-12': inner.layout_type =='single', 'col-md-6': inner.layout_type =='double', 'col-lg-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                             inner.layout_type =='four' }" ngShow="inner.dependent_show_type == true">
+
+                      <input type="hidden"
+                        *ngIf="inner.form_field_visibility == 'NO' &&  inner.edit_form_field_visibility == 'NO' " />
+                      <!--v-model="item.value" v-bind:id="item.name"     -->
+                      <label
+                        *ngIf="inner.form_field_visibility == 'YES' || inner.edit_form_field_visibility == 'YES'">{{
+                        inner.display_name}}:<span class="text-danger"
+                          [ngClass]="{'text-danger':inner.is_required== true}"
+                          *ngIf="inner.is_required==true">*</span></label>
+                      <div class="form-group"
+                        *ngIf="inner.form_field_visibility == 'YES' || inner.edit_form_field_visibility == 'YES'">
+
+
+
+                        <!--text  [placeholder]="inner.display_name"-->
+                        <input type="text" class="form-control" [readonly]="inner.is_readOnly || !isEditable"
+                          [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                          [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                          *ngIf="inner.picklist_options != 'Lookup' && inner.dt_code !='date'  && inner.dt_code !='radio' && inner.dt_code!='boolean'  && inner.dt_code !='select' && inner.dt_code !='textarea' && inner.dt_code !='checkbox' && inner.dt_code !='date' && inner.dt_code !='int' && inner.dt_code !='decimal' && inner.dt_code !='bigint' && inner.dt_code !='datetime'" />
+
+
+
+                        <input type="text" class="form-control" [readonly]="inner.is_readOnly || !isEditable"
+                          [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                          [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                          *ngIf="inner.dt_code == 'int'" />
+
+                        <small *ngIf="inner.dt_code == 'int' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)" class="text-danger">Please enter valid
+                          value</small>
+
+                        <input type="text" class="form-control" [readonly]="inner.is_readOnly || !isEditable"
+                          [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                          [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                          *ngIf="inner.dt_code == 'bigint'" />
+
+                        <small *ngIf="inner.dt_code == 'bigint' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)" class="text-danger">Please enter valid
+                          value</small>
+
+                        <input type="text" class="form-control" [readonly]="inner.is_readOnly || !isEditable"
+                          [formControlName]="inner.form_controlName" [id]="inner.custom_field_id"
+                          [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                          *ngIf="inner.dt_code == 'decimal'" />
+
+                        <small *ngIf="inner.dt_code == 'decimal' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)" class="text-danger">Please enter valid
+                          value</small>
+
+
+                        <!--Textarea [placeholder]="inner.display_name"-->
+                        <textarea class="form-control" *ngIf="inner.dt_code == 'textarea'"  [readonly]="inner.is_readOnly || !isEditable"
+                          [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName).errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                          [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+
+
+                        <!--Ng Calendar [placeholder]="inner.display_name"-->
+
+                        <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date"  [readonly]="inner.is_readOnly || !isEditable"
+                          *ngIf="inner.dt_code == 'date'" [formControlName]="inner.form_controlName" [showTime]="false"
+                          appendTo="body" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true"
+                          [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                        <p-calendar [showIcon]="true" class="calendarwidth" inputStyleClass="form-control start-date "  [readonly]="inner.is_readOnly || !isEditable"
+                          *ngIf="inner.dt_code == 'datetime'" [formControlName]="inner.form_controlName"
+                          [hourFormat]="(timeFormat==24)?'24':'12'" appendTo="body" [showTime]="true" inputId="timeonly"
+                          dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                          yearRange="1919:2030"></p-calendar>
+                        <!--end calandar-->
+                        <!--Checkbox-->
+
+                        <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='checkbox'">
+                          <div *ngFor="let options of inner.listoptions">
+                            <div class="form-check form-check-inline"
+                              *ngFor="let option of options.listoptions;let i=index;">
+                              <div class="custom-control custom-checkbox">
+                                <input id="chk_{{inner.custom_field_id}}_{{option}}_{{i}}" value="5555"  [readonly]="inner.is_readOnly || !isEditable"
+                                  [checked]="checkvalue(inner.value,option)"
+                                  (change)="onCheckboxChange($event,item,inner)" class="dynamic custom-control-input"
+                                  type="checkbox">
+                                <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                                  for="chk_{{inner.custom_field_id}}_{{option}}_{{i}}">{{option}}</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='boolean'">
+                          <div class="form-check form-check-inline">
+                            <div class="custom-control custom-checkbox pl-0">
+                              <label class="switch">
+                                <input type="checkbox"  [readonly]="inner.is_readOnly || !isEditable"
+                                  (ngModelChange)="validator(inner.form_controlName,inner.is_required)"
+                                  id="{{inner.form_controlName}}" [formControlName]="inner.form_controlName">
+                                <span class="slider round" id="{{inner.form_controlName}}"><span>Yes</span></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!--Radio button-->
+                        <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.dt_code=='radio'">
+                          <div *ngFor="let options of inner.listoptions">
+                            <div class="form-check form-check-inline"
+                              *ngFor="let option of options.listoptions;let i=index;">
+                              <div class="custom-control custom-radio mx-2  p-0">
+                                <input id="radio-{{inner.custom_field_id}}_{{option}}"  [readonly]="inner.is_readOnly || !isEditable"
+                                  [formControlName]="inner.form_controlName" [value]="option" type="radio">
+                                <label for="radio-{{inner.custom_field_id}}_{{option}}"
+                                  class="radio-label">{{option}}</label>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+
+                        <!--Ng Dropdown-->
+                        <!--Dropdown
+  picklist_options = Lookup       dt_code==select    dropdown_type==normal--- so fill dropdown with select_options- coming from db
+  -->
+                        <!--<ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select" (clear)="onClearLang(item.InnerData,j)"
+                                   (scrollToEnd)="onScrollToEnd(item.InnerData,j)" [virtualScroll]="true" (keyup)="onKey($event,item.InnerData,j)"
+                                   *ngIf="inner.dt_code=='select' && inner.picklist_options==''" [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+
+                        </ng-select>
+
+                        <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                                   *ngIf="inner.dt_code=='select' && inner.picklist_options=='true'" [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name" bindValue="value">
+
+                        </ng-select>-->
+
+
+                        <ng-select [disabled]="!isEditable? true:false"
+                          *ngIf="inner.dt_code=='select' && inner.picklist_options=='' && inner.is_readOnly && inner.dropdown_type==null"
+                          [items]="inner.select_options" 
+                          [ngClass]="{'disabledddl':inner.is_readOnly || !isEditable}" [id]="inner.form_controlName" [searchable]="false" [clearable]="false"
+                          [closeOnSelect]="true" placeholder="Select" [formControlName]="inner.form_controlName"
+                          bindLabel="name" bindValue="value">
+                        </ng-select>
+
+                        <ng-select [disabled]="!isEditable? true:false" [items]="inner.select_options" 
+                          [ngClass]="{'disabledddl':inner.is_readOnly || !isEditable}" [id]="inner.form_controlName" [closeOnSelect]="true"
+                          placeholder="Select" (clear)="onClearLang(item.InnerData,j)"
+                          (scrollToEnd)="onScrollToEnd(item.InnerData,j)" [virtualScroll]="true"
+                          (keyup)="onKey($event,item.InnerData,j)"
+                          *ngIf="inner.dt_code=='select' && inner.picklist_options=='' && inner.field_code!=null && inner.dropdown_type==null && !inner.is_readOnly"
+                          [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+
+                        </ng-select>
+                        <!--drop down -->
+                        <ng-select [disabled]="!isEditable? true:false" [items]="inner.select_options" 
+                          [ngClass]="{'disabledddl':inner.is_readOnly || !isEditable}" [id]="inner.form_controlName" [closeOnSelect]="true"
+                          placeholder="Select"
+                          *ngIf="inner.dt_code=='select' && inner.picklist_options=='' && ((inner.field_code==null || inner.dropdown_type=='Normal') && inner.dropdown_type!='custom')  && !inner.is_readOnly"
+                          [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+                        </ng-select>
+
+                        <ng-select [disabled]="!isEditable? true:false" [items]="inner.select_options" 
+                          [ngClass]="{'disabledddl':inner.is_readOnly || !isEditable}" [id]="inner.form_controlName" [closeOnSelect]="true"
+                          placeholder="Select" (change)="onCustomChange($event,inner)"
+                          *ngIf="inner.dt_code=='select' && inner.picklist_options=='' && inner.dropdown_type=='custom' && !inner.is_readOnly"
+                          [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+                        </ng-select>
+
+
+                        <ng-select [disabled]="!isEditable? true:false" [items]="inner.select_options" 
+                          [ngClass]="{'disabledddl':inner.is_readOnly || !isEditable}" [id]="inner.form_controlName" [closeOnSelect]="true"
+                          placeholder="Select"
+                          *ngIf="inner.dt_code=='select' && inner.picklist_options=='true' && !inner.is_readOnly"
+                          [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name"
+                          bindValue="value">
+
+                        </ng-select>
+
+
+                        <small
+                          *ngIf="((form.get(inner.form_controlName)?.invalid) && (form.get(inner.form_controlName).dirty) || (form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required))"
+                          class="text-danger">{{inner.display_name}} is required</small>
+                      </div>
+
+
+
+
+                    </div>
+                  </ng-container>
+
+
+                </ng-container>
+              </div>
+              <div class="row" >
+                <div class="col-sm-12 col-md-12">
+                  <!-- <div class="col-md-3 mt-4 mt-sm-0 text-center"> -->
+                    <!-- <span *ngIf="is_converted != true && unqualifiedStage != true">
+                      <a *ngIf="!showMarkAsCompleteButton" href="javascript:;" class="btn btn-primary mr-2 v-cen-btn"
+                        (click)="markAsComplete()"><i class="fa fa-calendar-check-o mr-2"></i>{{buttonTitle}}</a>
+                    </span> -->
+                    <span>
+                      <a  href="javascript:;" class="btn btn-dark mr-2"
+                        (click)="showConvertPopUp()"><i class="fa fa-calendar-check-o mr-2"></i>Mark As Complete </a>
+                    </span>
+                  <!-- </div> -->
+                  <a href="javascript:void(0);" *ngIf="isEditable"  class="btn btn-success mr-2" (click)="onSubmit()"><i
+                      class="feather-save"></i> Submit</a>
+                  <a href="javascript:void(0);"  *ngIf="!isEditable"  (click)="enableEditing()" class="btn btn-success mr-2" ><i
+                          class="feather-edit-2"></i> Edit</a>
+                  <a href="javascript:void(0);" class="btn btn-danger" (click)="closedetailform()"><i
+                      class="feather-x"></i> Cancel</a>
+                </div>
+              </div>
+            </form>
+          </div>
+          <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

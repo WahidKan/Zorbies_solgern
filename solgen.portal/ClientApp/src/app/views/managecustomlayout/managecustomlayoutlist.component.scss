@@ -1,0 +1,21 @@
+// a.disabled {
+//     pointer-events: none;
+//     opacity: 0.4;
+// }
+// .wrapper {
+//     cursor: not-allowed;
+// }
+
+/* Adding cursor just works: */
+
+a[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+
+/* Makes link non-clickable: */
+
+a[aria-disabled="true"]:active {
+    pointer-events: none;
+}

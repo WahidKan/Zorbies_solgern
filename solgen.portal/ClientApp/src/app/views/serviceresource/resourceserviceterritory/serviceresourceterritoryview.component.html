@@ -1,0 +1,158 @@
+<div bsModal #sourceterritory="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info " [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; max-height:1200px; overflow:visible;">
+        <form [formGroup]="addForm" autocomplete="off">
+          <div class="row col-12">
+            <h3 class="form-heading"> <span>Information</span></h3>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Service Resource:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstResource"
+                           placeholder="Select Service Resource" bindValue="value" bindLabel="text" formControlName="serviceResource"
+                           [closeOnSelect]="true"
+                           [ngClass]="{'is-invalid': (serviceResource.invalid && (serviceResource.dirty || serviceResource.touched) && serviceResource.errors?.required) }">
+                </ng-select>
+                <small *ngIf="serviceResource.invalid && (serviceResource.dirty || serviceResource.touched) && serviceResource.errors?.required"
+                       style="color:red;">Please select Service Resource</small>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Service Territory:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstTerritory"
+                           placeholder="Select service Territory" bindValue="value" bindLabel="text"
+                           formControlName="serviceTerritoryId"
+                           [closeOnSelect]="true" [ngClass]="{'is-invalid': (serviceTerritoryId.invalid && (serviceTerritoryId.dirty || serviceTerritoryId.touched) && serviceTerritoryId.errors?.required) }">
+                </ng-select>
+                <small *ngIf="serviceTerritoryId.invalid && (serviceTerritoryId.dirty || serviceTerritoryId.touched) && serviceTerritoryId.errors?.required"
+                       style="color:red;">Please select service territory</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Territory Type:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstTerritoryType"
+                           placeholder="Select service Territory Type" bindValue="value" bindLabel="text"
+                           formControlName="territoryType"
+                           [closeOnSelect]="true" [ngClass]="{'is-invalid': (territoryType.invalid && (territoryType.dirty || territoryType.touched) && territoryType.errors?.required) }">
+                </ng-select>
+                <small *ngIf="territoryType.invalid && (territoryType.dirty || territoryType.touched) && territoryType.errors?.required"
+                       style="color:red;">Please select territory Ttype</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+            </div>
+            <div class="col-12">
+              <label>Address:<span class="text-danger"></span></label>
+              <!--<div class="form-group">
+                <input type="text" class="form-control" placeholder="Please enter Skill Level" formControlName="skillLevel">
+                <small *ngIf="skillLevel.invalid && (skillLevel.dirty || skillLevel.touched) && skillLevel.errors?.pattern"
+                       class="text-danger">Please enter valid Skill Level.</small>
+              </div>-->
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Country:<span class="text-danger"></span></label>
+              <div class="form-group">
+                <ng-select [items]="lstCountry"
+                           placeholder="Select Country" bindValue="value" bindLabel="text"
+                           formControlName="country"
+                           [closeOnSelect]="true" [ngClass]="{'is-invalid': (country.invalid && (country.dirty || country.touched) && country.errors?.required) }">
+                </ng-select>
+                <small *ngIf="country.invalid && (country.dirty || country.touched) && country.errors?.required"
+                       style="color:red;">Please select country</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Address:<span class="text-danger"></span></label>
+              <div class="form-group">
+                <textarea class="form-control" [ngClass]="{'is-invalid': (addressDes.invalid && (addressDes.dirty || addressDes.touched) && addressDes.errors?.required) }" formControlName="addressDes" rows="3" cols="4"></textarea>
+                <small *ngIf="addressDes.invalid && (addressDes.dirty || addressDes.touched) && addressDes.errors?.required"
+                       style="color:red;">Please select address</small>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>City:<span class="text-danger"></span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Please enter city" formControlName="city">
+                <small *ngIf="city.invalid && (city.dirty || city.touched) && city.errors?.pattern"
+                       class="text-danger">Please enter valid Skill Level.</small>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>State/Provlnce:<span class="text-danger"></span></label>
+              <div class="form-group">
+                <ng-select [items]="lstState"
+                           placeholder="Select State" bindValue="value" bindLabel="text"
+                           formControlName="state"
+                           [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Zip/Postal Code:<span class="text-danger"></span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Please enter city" formControlName="zipCode">
+              </div>
+              <small *ngIf="zipCode.invalid && (zipCode.dirty || zipCode.touched) && zipCode.errors?.pattern"
+                     class="text-danger">Please enter valid zipCode.</small>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Operating Hours:<span class="text-danger"></span></label>
+              <div class="form-group">
+                <ng-select [items]="lstOperatingHours"
+                           placeholder="Select State" bindValue="value" bindLabel="text"
+                           formControlName="operatingHours"
+                           [closeOnSelect]="true">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="row col-12">
+            <h3 class="form-heading"> <span>Duration</span></h3>
+
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Start Date:<span class="text-danger">*</span></label>
+              <div class="form-group datepickerinpop">
+
+                <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true" inputStyleClass="form-control start-date " formControlName="startDate"  [maxDate]="minDate"
+                            [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030" [hourFormat]="(timeFormat==24)?'24':'12'"
+                            [ngClass]="{'is-invalid': (startDate?.invalid && (startDate.dirty || startDate.touched) && startDate.errors?.required) }"></p-calendar>
+                <small *ngIf="startDate?.invalid && (startDate.dirty || startDate.touched) && startDate.errors?.required"
+                       style="color:red;">Please select Start Date</small>
+              </div>
+            </div>
+
+
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>End Date:<span class="text-danger"></span></label>
+              <div class="form-group datepickerinpop">
+
+                <p-calendar [showIcon]="true" class="calendarwidth" hideOnDateTimeSelect="true"  inputStyleClass="form-control start-date " formControlName="endDate" [minDate]="startDate.value"
+                            [showTime]="true" inputId="timeonly" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"  [hourFormat]="(timeFormat==24)?'24':'12'"></p-calendar>
+              </div>
+            </div>
+
+
+          </div>
+
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="Save()"><i class="feather-save text-white"></i> Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal" aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>

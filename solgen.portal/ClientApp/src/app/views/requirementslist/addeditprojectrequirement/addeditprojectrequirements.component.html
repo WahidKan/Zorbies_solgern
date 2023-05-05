@@ -1,0 +1,184 @@
+<div bsModal #addEditprojectRequirementPopup="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1"
+  role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-info req_pop" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{title}}</h4>&nbsp;&nbsp;
+        <h4 *ngIf="title==='Edit Requirement'" class="modal-title">{{SFName}} </h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="addForm" autocomplete="off">
+          <div class="row  mb-2">
+            <div class="col-12 col-md-12 col-lg-12">
+              <h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>Information:</span></h3>
+            </div>
+
+            <div class="col-md-12 col-lg-4">
+              <label>Requirement Name:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="utilityCompanyList" placeholder="Select Requirement Name"
+                           (clear)="onClearLangUtilityCompany(utilityCompanyList)"
+                           (keyup)="onKeyUtilityCompany($event,utilityCompanyList)"
+                           (scrollToEnd)="onScrollToEndUtilityCompany(utilityCompanyList)" [virtualScroll]="true"
+                           (change)="ddlchange($event)"
+                           [closeOnSelect]="true"
+                           formControlName="requirementName"
+                           bindLabel="text" bindValue="text"></ng-select>
+                <!-- <ng-select [items]="lstPertainsTo" placeholder="None" bindValue="value" bindLabel="text"
+                  formControlName="requirementName" [closeOnSelect]="true">
+                </ng-select> -->
+                <small
+                  *ngIf="requirementName.invalid && (requirementName.dirty || requirementName.touched) && requirementName.errors?.required"
+                  style="color:red;">Please select Requirement Name</small>
+              </div>
+            </div>
+
+           
+            <div class="col-md-12 col-lg-4" *ngIf = "RecordTypeForUi=='trackable'">
+              <label>Type:<span class="text-danger">*</span></label>
+              <div class="form-group" [ngClass]="[disabledCondtion? 'disabledddl':''] ">
+                <!-- <input type="text" class="form-control" formControlName="type" disabled> -->
+                <ng-select [items]="lstType"   placeholder="None" bindValue="text" bindLabel="text"
+                  formControlName="type" [closeOnSelect]="true"  (change)="ddlTypechange($event)">
+                </ng-select>
+                <small
+                *ngIf="type.invalid && (type.dirty || type.touched) && type.errors?.required"
+                style="color:red;">Please select type</small>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4" *ngIf = "RecordTypeForUi=='trackable'">
+              <label>Status:<span class="text-danger">*</span></label>
+              <div class="form-group">
+                <ng-select [items]="lstappointmentstatus" formControlName="requirementStatus"
+                  placeholder="Select Status" bindValue="text" bindLabel="text" [closeOnSelect]="true">
+                </ng-select>
+                <small
+                *ngIf="requirementStatus.invalid && (requirementStatus.dirty || requirementStatus.touched) && requirementStatus.errors?.required"
+                style="color:red;">Please select Status</small>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Record Type:<span class="text-danger"></span></label>
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="recordType" disabled>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Account:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" disabled  formControlName="Account" >
+                <!-- <ng-select [items]="lstRequiredBy" placeholder="None" bindValue="value" bindLabel="text"
+                  formControlName="Account" [closeOnSelect]="true">
+                </ng-select> -->
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-4">
+              <label>Required By:</label>
+              <div class="form-group">
+                <input type="text" class="form-control" disabled  formControlName="RequireBy" >
+                <!-- <ng-select [items]="lstRequiredBy" placeholder="None" bindValue="value" bindLabel="text"
+                  formControlName="Account" [closeOnSelect]="true">
+                </ng-select> -->
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12">
+              <label>Description:</label>
+              <div class="form-group">
+                <textarea type="text" readonly class="form-control" formControlName="description"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2" *ngIf = "RecordTypeForUi=='trackable'">
+            <div class="col-12 col-md-12 col-lg-12">
+              <h3 class="form-heading ng-star-inserted ml-0 mt-0"><span>Submission Tracking:</span></h3>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Date Submitted:</label>
+              <div class="form-group datepickerinpop">
+                <p-calendar class="calendarwidth" inputStyleClass="form-control start-date" [minDate]="minimumDate"
+                  formControlName="DateSubmitted" placeholder="Select Date" [showIcon]="true" [showTime]="false"
+                  dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                  yearRange="1919:2030" [defaultDate]="defaultminDate"
+                  [ngClass]="{'is-invalid': (DateSubmitted.invalid && (DateSubmitted.dirty || DateSubmitted.touched) && DateSubmitted.errors?.required) }">
+                </p-calendar>
+                <!-- <small *ngIf="DateSubmitted.invalid && (DateSubmitted.dirty || DateSubmitted.touched) && DateSubmitted.errors?.required"
+                       style="color:red;">Please select Date</small> -->
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Completed Date:</label>
+              <div class="form-group datepickerinpop">
+                <p-calendar class="calendarwidth" inputStyleClass="form-control start-date" [minDate]="minimumDate"
+                  formControlName="CompltedDate" placeholder="Select Date" [showIcon]="true" [showTime]="false"
+                  dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                  yearRange="1919:2030" [defaultDate]="defaultminDate"
+                  [ngClass]="{'is-invalid': (CompltedDate.invalid && (CompltedDate.dirty || CompltedDate.touched) && CompltedDate.errors?.required) }">
+                </p-calendar>
+                <!-- <small *ngIf="DateSubmitted.invalid && (DateSubmitted.dirty || DateSubmitted.touched) && DateSubmitted.errors?.required"
+                       style="color:red;">Please select Date</small> -->
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Due Date:</label>
+              <div class="form-group datepickerinpop">
+                <p-calendar class="calendarwidth" inputStyleClass="form-control start-date" [minDate]="minimumDate"
+                  formControlName="DueDate" placeholder="Select Date" [showIcon]="true" [showTime]="false"
+                  dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                  yearRange="1919:2030" [defaultDate]="defaultminDate"
+                  [ngClass]="{'is-invalid': (DueDate.invalid && (DueDate.dirty || DueDate.touched) && DueDate.errors?.required) }">
+                </p-calendar>
+                <!-- <small *ngIf="DateSubmitted.invalid && (DateSubmitted.dirty || DateSubmitted.touched) && DateSubmitted.errors?.required"
+                       style="color:red;">Please select Date</small> -->
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+              <label>Original Due Date:</label>
+              <div class="form-group datepickerinpop">
+                <p-calendar class="calendarwidth" inputStyleClass="form-control start-date" [minDate]="minimumDate"
+                  formControlName="OrginalDueDate" placeholder="Select Date" [showIcon]="true" [showTime]="false"
+                  dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                  yearRange="1919:2030" [defaultDate]="defaultminDate"
+                  [ngClass]="{'is-invalid': (OrginalDueDate.invalid && (OrginalDueDate.dirty || OrginalDueDate.touched) && OrginalDueDate.errors?.required) }">
+                </p-calendar>
+                <!-- <small *ngIf="DateSubmitted.invalid && (DateSubmitted.dirty || DateSubmitted.touched) && DateSubmitted.errors?.required"
+                       style="color:red;">Please select Date</small> -->
+              </div>
+            </div>
+            <div class="card-body mt-0" *ngIf="title==='Edit Requirement'">
+              <div class="row">
+                <div class="col col-md-2">
+                  <label>Created By:</label>
+                 
+                </div>
+                <div class="col col-md-4">                    
+                 {{createdBy}},{{createdDate | DateTimeToLocal}}
+                </div>
+                <div *ngIf="updatedBy" class="col col-md-2" style="padding-left:5px;">
+                  <label>Last Modified By:</label>
+                  </div>
+                  <div *ngIf="updatedBy" class="col col-md-4">                    
+                    {{updatedBy}} ,{{updatedDate | DateTimeToLocal}} 
+                  </div>
+              </div>
+            </div> 
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success form-btns" (click)="Save()"><i class="feather-save text-white"></i>
+          Save</button>
+        <button type="submit" class="btn btn-danger form-btns" (click)="close()" data-dismiss="modal"
+          aria-label="Close"><i class="fa fa-times text-white"></i> Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

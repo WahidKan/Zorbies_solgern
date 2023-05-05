@@ -1,0 +1,3371 @@
+<div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2  class="float-left pr-2 w-100"><strong>Loan Detail</strong></h2>
+    <!--<a href="javascript:;" class="btn btn-danger d-none ml-5" (click)="sendSFTPfile()">Send file</a>-->
+    <div class="breadcrumb-wrapper w-100">
+  
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+  
+        <li *ngIf="backurl && backurl=='/loanApplications/Cancelled'">
+          <a class="smview" routerLink="/loanApplications/Cancelled">loanApplication</a>
+        </li>
+        <li *ngIf="backurl && backurl=='/loanApplications/Completed'">
+          <a class="smview" routerLink="/loanApplications/Completed">loanApplication</a>
+        </li>
+        <li *ngIf="backurl && backurl=='/loanApplication'">
+          <a class="smview" routerLink="/loanApplication">loanApplication</a>
+        </li>
+        <li class="active">Loan Detail </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="feather-repeat mr-1"></i>Switch Company</a>
+  </div>
+</div>
+
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+      <h2 class="float-left pr-2 w-100">
+          <strong>{{data.headerTitle}}</strong>
+        </h2>
+      <div class="breadcrumb-wrapper w-100">
+        <ol class="breadcrumb">
+          <li [ngClass]="!breadcrumb.isLink ? 'active' : ''" *ngFor="let breadcrumb of data.breadcrumb; let i = index;" >
+            {{!breadcrumb.isLink ?  breadcrumb.name :  '' }}
+            <a *ngIf="breadcrumb.isLink" routerLink="{{breadcrumb.link}}">{{breadcrumb.name}}</a>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-6 text-right right pr-0">
+      <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="feather-repeat mr-1"></i>Switch Company</a>
+    </div>
+  </div> -->
+
+<div class="clearfix"></div>
+<div  *ngIf="formdata1">
+<div *ngIf="((formdata1.CancelledReason && formdata1.CancelledReason!=null) || (formdata1.CancelReqReason && formdata1.CancelReqReason!=null)) && (formdata1.UncanceledReason && formdata1.UncanceledReason==null)">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div class="alert alert-danger cancel-reason">
+        <div class="w-100" *ngIf="formdata1.CancelReqReason!=null">
+          <b>Cancelled Request Note:</b> <span class="approved" *ngIf="formdata1.CancelReqReason!=null">{{formdata1.CancelReqReason}}</span>
+        </div>
+        <div class="w-100" *ngIf="formdata1.CancelReqReason!=null">
+          <b>
+            Check Request Date:
+          </b>  <span class="approved">{{formdata1.RequestDate|utctolocal}}</span>
+
+        </div>
+
+        <div class="w-100" *ngIf="formdata1.CancelledReason!=null">
+          <b>Cancelled Note:</b> <span class="approved" *ngIf="formdata1.CancelledReason!=null">{{formdata1.CancelledReason}}</span>
+        </div>
+        <div class="w-100" *ngIf="formdata1.CancelledReason!=null">
+          <b>
+            Cancel Date:
+          </b>  <span class="approved">{{formdata1.CloseDate|utctolocal}}</span>
+
+        </div>
+
+        <div class="w-100" *ngIf="CancelledBy!=null">
+          <b>
+            Cancelled By:
+          </b>  <span class="approved">{{CancelledBy}}</span>
+        </div>
+
+        <div class="w-100" *ngIf="formdata1.UncanceledReason!=null">
+          <b>Un-Cancelled Note:</b> <span class="approved" *ngIf="formdata1.UncanceledReason!=null">{{formdata1.UncanceledReason}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="formdata1.IsDocumentProcessing">
+  <div class="row">
+    <div class="col-12 mb-2"><div class="alert alert-danger cancel-reason"><b>Loan Document is processing.</b> </div></div>
+  </div>
+</div>
+<div *ngIf="formdata1.NTPReason!=null">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div class="alert alert-danger cancel-reason">
+        <b class="h5">NTP Deny Reason:</b>
+        <span class="approved mr-2">{{formdata1.NTPReason}}</span>
+        <span *ngIf="isBanker || isCompanyAdmin" class="edit"><a href="javascript:void(0);" (click)="editDenyReason('NTP')" title="Edit NTP deny reason"><i class="fa fa-pencil"></i></a></span>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="PendingRulesForExecution.length > 0">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div class="alert alert-danger" role="alert">
+        <h4 class="font-weight-bold">Pending Rule Engine Execution:</h4>
+        You might have changed the version of the already executed rule(s) or applied a new rule on this application. Following are the rules which are pending for execution:
+        <ul style="padding: 9px 18px 0px 20px">
+          <li *ngFor="let ruleItem of PendingRulesForExecution">{{ruleItem}}</li>
+        </ul>
+        <button class="btn btn-success btn-sm float-right" (click)="ExecuteRuleEngineForPendingRules()"><i class="fa fa-cogs"></i> Execute Rule Engine</button>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="formdata1.BankReason!=null">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div class="alert alert-danger cancel-reason">
+        <b class="h5">Bank Deny Reason:</b>
+        <span class="approved mr-2">{{formdata1.BankReason}}</span>
+        <span *ngIf="isBanker || isCompanyAdmin || isdealerFinanceUser" class="edit"><a href="javascript:void(0);" (click)="editDenyReason('Bank')" title="Edit bank deny reason"><i class="fa fa-pencil"></i></a></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="formdata1.NTPCOReason!=null">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div class="alert alert-danger cancel-reason">
+        <b class="h5" style="width:auto">NTP(CO) Deny Reason:</b>
+        <span class="approved mr-2 mt-1">{{formdata1.NTPCOReason}}</span>
+        <span *ngIf="isBanker || isCompanyAdmin" class="edit"><a href="javascript:void(0);" (click)="editDenyReason('NTPCO')" title="Edit NTP Change Order deny reason"><i class="fa fa-pencil"></i></a></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="formdata1.AuditDeny!=null">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div class="alert alert-danger cancel-reason">
+        <b class="h5" style="width:auto">Audit Deny Reason:</b>
+        <span class="approved mr-2 mt-1">{{formdata1.AuditDeny}}</span>
+        <!--<span *ngIf="isBanker || isCompanyAdmin" class="edit"><a href="javascript:void(0);" (click)="editDenyReason('Audit')" title="Edit Audit  deny reason"><i class="fa fa-pencil"></i></a></span>-->
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!--<div *ngIf="changeOrderDocWithR_F_S > 0">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div class="alert alert-danger cancel-reason">
+        <b class="h5" style="width:auto">Please upload the modification agreement to complete Change Order step</b>
+      </div>
+    </div>
+  </div>
+</div>-->
+<!--<div *ngIf="formdata1.OverrideReason!=null">
+  <div class="row">
+    <div class="col-12 mb-2"><div class="alert alert-danger cancel-reason"><b class="h5">Overriden Reason:</b> <span class="approved">{{formdata1.OverrideReason}}</span></div></div>
+  </div>
+</div>-->
+<div class="clearfix"></div>
+<div *ngIf="isFrozen">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div class="alert alert-danger cancel-reason">
+        <strong>Equifax: </strong>Consumer Requested Security Freeze on His/Her Credit File - Report Unavailable
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isFraudulent">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <div class="alert alert-danger cancel-reason">
+        <strong>Equifax: </strong>Information from your inquiry has been identified as potentially fraudulent or misused, therefore the consumer report is not available for delivery
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-2">
+<div class="row mx-0 pt-3">
+  <div class="col-md-12 newstages-ui">
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+    <ul class="newstages-ui-container">
+      <li class="stage-ui ui-done">
+        <a href="javascript:void(0)">
+          <span class="left-icon">
+            <i class="feather-check-circle"></i>
+          </span>
+          <span class="right-stage-con">
+            <strong class="stage-name">Initiated</strong>
+            <span *ngIf="formdata1" class="stage-datetime">{{formdata1.ApplicationDate|pstdatetimetolocaldate}}</span>
+          </span>
+        </a>
+      </li>
+      <ng-container *ngFor="let item of formstagedatamaster | slice:0:5;let i=index">
+        <li [ngClass]="{'corner-rght' : i==5}" class="stage-ui {{item.stageclass}}">
+          <ng-container>
+            <a (click)="openStagePopup(item)" *ngIf="item.stageActive=='1' && !isContact && item.stageapproved==1" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                <span class="stage-datetime">{{item.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+              </span>
+            </a>
+            <a *ngIf="item.stageActive=='1' && isContact && item.stageapproved==1" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                <span class="stage-datetime">{{item.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+              </span>
+            </a>
+            <a (click)="openStagePopup(item)" *ngIf="item.stageActive=='1' && !isContact && item.stageapproved==0" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+              </span>
+            </a>
+            <a *ngIf="item.stageActive=='1' && isContact && item.stageapproved==0" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+              </span>
+            </a>
+            <a *ngIf="item.stageActive=='0'" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+              </span>
+            </a>
+
+            <div class="subchildbx" *ngIf="item.loan_app_stage_id==CancelledStage && !checksubchildsq(item.loan_app_stage_id) && !checksubchildpar(item.loan_app_stage_id)">
+              <div class="sub-list">
+                <a href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">Cancelled</strong>
+                  </span>
+                </a>
+              </div>
+
+            </div>
+            <div class="subchildbx" *ngIf="checksubchildsq(item.loan_app_stage_id)">
+              <div class="sub-list" *ngIf="item.loan_app_stage_id==CancelledStage">
+                <a href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">Cancelled</strong>
+                  </span>
+                </a>
+              </div>
+
+              <div class="sub-list" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                <a (click)="openStagePopup(item1)" *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==1" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==1" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                  </span>
+                </a>
+                <a (click)="openStagePopup(item1)" *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==0" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==0" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  </span>
+                </a>
+              </div>
+            </div>
+
+            <div class="substages-ui" *ngIf="checksubchildpar(item.loan_app_stage_id) && (item.loan_app_stage_name!='Applicant' || item.IsCoappReq==1)">
+              <div class="sub-stage-item" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                <ng-container *ngIf="item1.loan_app_stage_name!='Co-Applicant' || item.IsCoappReq==1">
+                  <div class="subchildbx canceled" *ngIf="item.loan_app_stage_id==CancelledStage">
+
+                    <div class="sub-list">
+                      <a href="javascript:void(0);">
+                        <span class="left-icon">
+                          <i class="feather-check-circle"></i>
+                        </span>
+                        <span class="right-stage-con">
+                          <strong class="stage-name">Cancelled</strong>
+                        </span>
+                      </a>
+                    </div>
+
+                  </div>
+                  <a (click)="openStagePopup(item1)" *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==1" href="javascript:void(0);">
+                    <span class="left-icon">
+                      <i class="feather-check-circle"></i>
+                    </span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                      <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                    </span>
+                  </a>
+                  <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==1" href="javascript:void(0);">
+                    <span class="left-icon">
+                      <i class="feather-check-circle"></i>
+                    </span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                      <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                    </span>
+                  </a>
+                  <a (click)="openStagePopup(item1)" *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==0" href="javascript:void(0);">
+                    <span class="left-icon">
+                      <i class="feather-check-circle"></i>
+                    </span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                    </span>
+                  </a>
+                  <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==0" href="javascript:void(0);">
+                    <span class="left-icon">
+                      <i class="feather-check-circle"></i>
+                    </span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                    </span>
+                  </a>
+                  <a *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                    <span class="left-icon">
+                      <i class="feather-check-circle"></i>
+                    </span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                    </span>
+                  </a>
+                </ng-container>
+              </div>
+
+            </div>
+          </ng-container>
+          <div class="line-btm" *ngIf="i==5"></div>
+
+        </li>
+      </ng-container>
+      <li *ngIf="formstagedatamaster && formstagedatamaster.length<6" class="stage-ui" [ngClass]="{'ui-done':checklaststage(),'stage-ui':!checklaststage()}">
+      </li>
+    </ul>
+    <div class="step-dashed-line stag_line2 mt-spc" *ngIf="formstagedatamaster && formstagedatamaster.length>=6"><div class="dash-top"></div><div class="dash-bottom"></div></div>
+    <ul class="newstages-ui-container">
+        <li  *ngFor="let item of formstagedatamaster | slice:5:12;let i=index" class="stage-ui {{item.stageclass}}" [ngClass]="checksubchildpar(item.loan_app_stage_id) ? 'multistage-ui': ''">
+            <template *ngIf="i<6">{{item.loan_app_stage_name}}</template>
+
+            <a (click)="openStagePopup(item)" *ngIf="item.stageActive=='1' && !isContact && item.stageapproved==1" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                <span class="stage-datetime">{{item.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+              </span>
+            </a>
+            <a *ngIf="item.stageActive=='1' && isContact && item.stageapproved==1" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+                <span class="stage-datetime">{{item.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+              </span>
+            </a>
+            <a (click)="openStagePopup(item)" *ngIf="item.stageActive=='1' && !isContact && item.stageapproved==0" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+              </span>
+            </a>
+            <a *ngIf="item.stageActive=='1' && isContact && item.stageapproved==0" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+              </span>
+            </a>
+            <a *ngIf="item.stageActive=='0'" href="javascript:void(0);">
+              <span class="left-icon">
+                <i class="feather-check-circle"></i>
+              </span>
+              <span class="right-stage-con">
+                <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+              </span>
+            </a>
+
+            <div class="subchildbx" *ngIf="item.loan_app_stage_id==CancelledStage && !checksubchildsq(item.loan_app_stage_id) && !checksubchildpar(item.loan_app_stage_id)">
+
+              <div class="sub-list">
+                <a href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">Cancelled</strong>
+                  </span>
+                </a>
+              </div>
+
+            </div>
+            <div class="subchildbx" *ngIf="checksubchildsq(item.loan_app_stage_id)">
+              <div class="sub-list" *ngIf="item.loan_app_stage_id==CancelledStage">
+                <a href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">Cancelled</strong>
+                  </span>
+                </a>
+              </div>
+              <div class="sub-list" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                <a *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==1" (click)="openStagePopup(item1)" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==1" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==0" (click)="openStagePopup(item1)" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==0" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  </span>
+                </a>
+
+                <!--<span class="step-name ">{{item1.loan_app_stage_name}}</span>-->
+              </div>
+
+            </div>
+            <div class="substages-ui" *ngIf="checksubchildpar(item.loan_app_stage_id)">
+
+              <div class="sub-stage-item" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+                <div class="subchildbx canceled" *ngIf="item.loan_app_stage_id==CancelledStage">
+
+                  <div class="sub-list">
+                    <a href="javascript:void(0);">
+                      <span class="left-icon">
+                        <i class="feather-check-circle"></i>
+                      </span>
+                      <span class="right-stage-con">
+                        <strong class="stage-name">Cancelled</strong>
+                      </span>
+                    </a>
+                  </div>
+
+                </div>
+                <a (click)="openStagePopup(item1)" *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==1" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==1" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                    <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                  </span>
+                </a>
+                <a (click)="openStagePopup(item1)" *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==0" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==0" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  </span>
+                </a>
+                <a *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                  <span class="left-icon">
+                    <i class="feather-check-circle"></i>
+                  </span>
+                  <span class="right-stage-con">
+                    <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  </span>
+                </a>
+              </div>
+
+            </div>
+        </li>
+    </ul>
+    <div class="step-dashed-line stag_line2 mt-spc" *ngIf="formstagedatamaster && formstagedatamaster.length>=9"><div class="dash-top"></div><div class="dash-bottom"></div></div>
+    <ul class="newstages-ui-container mb-4">
+      <li  *ngFor="let item of formstagedatamaster | slice:12:15;let i=index" class="stage-ui {{item.stageclass}}" [ngClass]="checksubchildpar(item.loan_app_stage_id) ? 'multistage-ui': ''">
+          <a (click)="openStagePopup(item)" *ngIf="item.stageActive=='1' && !isContact && item.stageapproved==1" href="javascript:void(0);">
+            <span class="left-icon">
+              <i class="feather-check-circle"></i>
+            </span>
+            <span class="right-stage-con">
+              <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+              <span class="stage-datetime">{{item.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+            </span>
+          </a>
+          <a *ngIf="item.stageActive=='1' && isContact && item.stageapproved==1" href="javascript:void(0);">
+            <span class="left-icon">
+              <i class="feather-check-circle"></i>
+            </span>
+            <span class="right-stage-con">
+              <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+              <span class="stage-datetime">{{item.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+            </span>
+          </a>
+          <a (click)="openStagePopup(item)" *ngIf="item.stageActive=='1' && !isContact && item.stageapproved==0" href="javascript:void(0);">
+            <span class="left-icon">
+              <i class="feather-check-circle"></i>
+            </span>
+            <span class="right-stage-con">
+              <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+            </span>
+          </a>
+          <a *ngIf="item.stageActive=='1' && isContact && item.stageapproved==0" href="javascript:void(0);">
+            <span class="left-icon">
+              <i class="feather-check-circle"></i>
+            </span>
+            <span class="right-stage-con">
+              <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+            </span>
+          </a>
+          <a *ngIf="item.stageActive=='0'" href="javascript:void(0);">
+            <span class="left-icon">
+              <i class="feather-check-circle"></i>
+            </span>
+            <span class="right-stage-con">
+              <strong class="stage-name">{{item.loan_app_stage_name}}</strong>
+            </span>
+          </a>
+
+          <div class="subchildbx" *ngIf="item.loan_app_stage_id==CancelledStage && !checksubchildsq(item.loan_app_stage_id) && !checksubchildpar(item.loan_app_stage_id)">
+
+            <div class="sub-list">
+              <a href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">Cancelled</strong>
+                </span>
+              </a>
+            </div>
+
+          </div>
+          <div class="subchildbx" *ngIf="checksubchildsq(item.loan_app_stage_id)">
+            <div class="sub-list" *ngIf="item.loan_app_stage_id==CancelledStage">
+              <a href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">Cancelled</strong>
+                </span>
+              </a>
+            </div>
+            <div class="sub-list" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+              <a *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==1" (click)="openStagePopup(item1)" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                </span>
+              </a>
+              <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==1" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                </span>
+              </a>
+              <a *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==0" (click)="openStagePopup(item1)" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                </span>
+              </a>
+              <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==0" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                </span>
+              </a>
+              <a *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                </span>
+              </a>
+            </div>
+
+          </div>
+          <div class="substages-ui" *ngIf="checksubchildpar(item.loan_app_stage_id)">
+
+            <div class="sub-stage-item" *ngFor="let item1 of formstagedatasub(item.loan_app_stage_id)">
+              <div class="subchildbx canceled" *ngIf="item.loan_app_stage_id==CancelledStage">
+
+                <div class="sub-list">
+                  <a href="javascript:void(0);">
+                    <span class="left-icon">
+                      <i class="feather-check-circle"></i>
+                    </span>
+                    <span class="right-stage-con">
+                      <strong class="stage-name">Cancelled</strong>
+                    </span>
+                  </a>
+                </div>
+
+              </div>
+              <a (click)="openStagePopup(item1)" *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==1" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                </span>
+              </a>
+              <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==1" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                  <span class="stage-datetime">{{item1.StageSubmittedDate|pstdatetimetolocaldate}}</span>
+                </span>
+              </a>
+              <a (click)="openStagePopup(item1)" *ngIf="item1.stageActive=='1' && !isContact && item1.stageapproved==0" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                </span>
+              </a>
+              <a *ngIf="item1.stageActive=='1' && isContact && item1.stageapproved==0" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                </span>
+              </a>
+              <a *ngIf="item1.stageActive=='0'" href="javascript:void(0);">
+                <span class="left-icon">
+                  <i class="feather-check-circle"></i>
+                </span>
+                <span class="right-stage-con">
+                  <strong class="stage-name">{{item1.loan_app_stage_name}}</strong>
+                </span>
+              </a>
+            </div>
+
+          </div>
+      </li>
+    
+    <li *ngIf="formstagedatamaster && formstagedatamaster.length > 6 && checklaststage() && !IsLACanceledFlag" class="stage-ui" [ngClass]="{'ui-done':checklaststage(),'stage-ui':!checklaststage()}">
+      <a href="javascript:void(0)">
+        <span class="left-icon">
+          <i class="feather-check-circle"></i>
+        </span>
+        <span class="right-stage-con">
+          <strong class="stage-name" *ngIf="!IsLACanceledFlag">Completed</strong>
+          <strong class="stage-name" *ngIf="IsLACanceledFlag">Cancelled</strong>
+        </span>
+      </a>
+    </li> 
+     
+    <li *ngIf="formstagedatamaster && formstagedatamaster.length > 6" class="stage-ui" [ngClass]="{'ui-done':checklaststage(),'stage-ui':!checklaststage()}">
+      <a href="javascript:void(0)">
+        <span class="left-icon">
+          <i class="feather-check-circle"></i>
+        </span>
+        <span class="right-stage-con">
+          <strong class="stage-name" *ngIf="!IsLACanceledFlag">Completed</strong>
+          <strong class="stage-name" *ngIf="IsLACanceledFlag">Cancelled</strong>
+          <span class="stage-datetime" *ngIf="ptoDate != null">{{ptoDate|pstdatetimetolocaldate}}</span>
+        </span>
+      </a>
+    </li>
+    <!-- <li *ngIf="formstagedatamaster && formstagedatamaster.length > 6 && !checklaststage()" class="stage-ui" [ngClass]="{'ui-done':checklaststage(),'stage-ui':!checklaststage()}">
+      <a href="javascript:void(0)" >
+        <span class="left-icon">
+          <i class="feather-check-circle"></i>
+        </span>
+        <span class="right-stage-con">
+          <strong class="stage-name" *ngIf="!IsLACanceledFlag">Completed</strong>
+          <strong class="stage-name" *ngIf="IsLACanceledFlag">Cancelled</strong>
+        </span>
+      </a>
+    </li> -->
+    <li *ngIf="formstagedatamaster && formstagedatamaster.length > 6 && checklaststage() && IsLACanceledFlag" class="stage-ui" [ngClass]="{'ui-done':checklaststage(),'stage-ui':!checklaststage()}">
+      <a href="javascript:void(0)" *ngIf="checklaststage() && IsLACanceledFlag">
+        <span class="left-icon">
+          <i class="feather-check-circle"></i>
+        </span>
+        <span class="right-stage-con">
+          <strong class="stage-name" *ngIf="!IsLACanceledFlag">Completed</strong>
+          <strong class="stage-name" *ngIf="IsLACanceledFlag">Cancelled</strong>
+        </span>
+      </a>
+    </li>
+  </ul>
+    <div class="stage-version" *ngIf="formdata1 && !isContact && !isBanker && !isDealerAccount">  <a href="javascrip:;" (click)="stageversion(formdata1.BatchId)" class="">Stage version {{formdata1.BatchId}} </a>  </div>
+  </div>
+</div>
+</div>
+
+<div class="card mb-2" *ngIf="!isContact && !IsLACanceledFlag">
+  <div class="card-body p-2">
+    <div class="row loansummary" *ngIf="formdata1">
+
+      <div class="col-lg-12 col-xl-12 mb-3 mb-xl-0">
+        <div class="row">
+          <div class="col-lg-12 col-xl-12">
+            <div class="h-100 w-100 d-md-flex flex-row-reverse">
+
+              <a *ngIf="(isCompanyAdmin || formdata1.IsCancelRequest || isFinanceUser || isSales || isDealerUser || isRealtionshipUser) && !IsLACanceledFlag && canCancel" (click)="cancelloanapp(formdata1.Id,formdata1.FundApproved,formdata1.IsCancelRequest,formdata1.isBanker,formdata1.LoanApplicationNumber)" class="btn btn-danger form-btns mr-1" href="javascript:void(0);" title="Cancel"><i class="feather-x" aria-hidden="true"></i> Cancel Application</a>
+
+
+              <div *ngIf="generateButtonName && generateButtonName=='Generate Document' && ApplicationStatus!='Failed' && !isBanker && !isAccountingUser && !isAudit">
+                <div class="d-inline-block">
+                  <button (click)="generateDoc()" class="btn btn-success form-btns mr-1 ng-star-inserted" href="javascript:void(0)"><i class="fa fa-file text-white mr-1"></i>Generate Loan Docs</button>
+                </div>
+              </div>
+
+
+              <div *ngIf="generateButtonName && generateButtonName=='Void Document'">
+                <div class="d-inline-block" *ngIf="financeNTP && !isNTPFundReleaseApproved && !(generateButtonName == 'Void Document' && isBanker) && shouldGenerateDocumentVisible">
+                  <button *ngIf="(commonService.LoginUser.userType!='usertypecontact') && isProductInfoApproved" (click)="generateDocument(PrimarySigner)" class="btn btn-success form-btns mr-1 ng-star-inserted" [class.btn-success]="generateButtonName == 'Generate Document'" [class.btn-secondary]="generateButtonName == 'Void Document'" href="javascript:void(0)"><i class="feather-file text-white"></i> {{generateButtonName}}</button>
+                </div>
+              </div>
+
+
+              <!--<div class="d-inline-block" *ngIf="isCompanyAdmin">
+                <button *ngIf="hidegenerateDocBySecSignerButton" (click)="generateDocumentBySecondarySigner(SecondarySigner)" class="btn btn-success form-btns mr-1 ng-star-inserted" href="javascript:void(0)"><i class="fa fa-file text-white mr-1"></i>Generate Document By {{SecondarySigner}}</button>
+              </div>-->
+
+
+
+              <div class="d-inline-block" *ngIf="!checklaststage() && !(isBanker || isAudit || isAccountingUser) && (shouldVoidChangeOrderVisible)">
+                <button *ngIf="(commonService.LoginUser.userType!='usertypecontact') && isProductInfoApproved" (click)="voidChangeOrder()" class="btn btn-secondary form-btns mr-1 ng-star-inserted" href="javascript:void(0)"><i class="fa fa-file text-white mr-1"></i>Void CO</button>
+              </div>
+
+              <div class="d-inline-block" *ngIf="isCompanyAdmin && formdata1.dealerAccountId!='0'">
+                <button (click)="transferLoanApplication()" class="btn btn-success form-btns mr-1 ng-star-inserted" href="javascript:void(0)"><i class="fa fa-exchange text-white mr-1"></i>Transfer</button>
+              </div>
+              <!-- <div class="d-inline-block" *ngIf="isCompanyAdmin && formdata1.dealerAccountId=='0'">
+                <button (click)="transfertodealeruser()" class="btn btn-dark form-btns mr-1 ng-star-inserted" href="javascript:void(0)"><i class="feather-user-plus text-white mr-1"></i>Assign Dealer</button>
+              </div> -->
+
+              <!--<div class="d-inline-block" >
+                <a  (click)="propertySearch()" class="btn btn-success form-btns mr-1 ng-star-inserted" href="javascript:void(0)"><i class="feather-user text-white mr-1"></i>View Property Owner</a>
+              </div>-->
+              <!--<a *ngIf="(showOverride && isCompanyAdmin && canOverride)||(showOverrideForExecutive)" (click)="updateOverRide()" class="btn btn-primary form-btns mr-1" href="javascript:void(0)"><i class="feather-edit" aria-hidden="true"></i> Override</a>-->
+              <!-- 7 May 2021
+              <a *ngIf="showOverride && isCompanyAdmin && canOverride" (click)="updateOverRide()" class="btn btn-primary form-btns mr-1" href="javascript:void(0)"><i class="feather-edit" aria-hidden="true"></i> Override</a>-->
+
+              <a *ngIf="showOverride && isCompanyAdmin && canOverride" (click)="updateOverRide()" class="btn btn-primary form-btns mr-1" href="javascript:void(0)"><i class="feather-edit" aria-hidden="true"></i> Override</a>
+
+              <!--<a *ngIf="isOverridden && isCompanyAdmin" class="btn btn-danger form-btns mr-1" href="javascript:void(0)"><i class="feather-edit" aria-hidden="true"></i> Overridden</a>-->
+              <a *ngIf="false && canOverride" class="btn btn-danger form-btns mr-1" href="javascript:void(0)"><i class="feather-edit" aria-hidden="true"></i> Overridden</a>
+
+              <a *ngIf="(isBanker || isFinanceUser || isSales)&& canAssign " (click)="showpopup(formdata1.Id,formdata1.LoanApplicationNumber,formdata1.ApplicantName)" href="javascript:void(0);" class="btn btn-info form-btns mr-1"><i class="feather-user-plus" aria-hidden="true"></i> Assign Users </a>
+
+              <a *ngIf="isDealerSaleFinManagerUser || isRealtionshipUser" (click)="showpopup(formdata1.Id,formdata1.LoanApplicationNumber,formdata1.ApplicantName)" href="javascript:void(0);" class="btn btn-info form-btns mr-1"><i class="feather-user-plus" aria-hidden="true"></i> Assign Users </a>
+
+              <a *ngIf="HasCoApplicant && generateButtonName == 'Generate Document'" (click)="swapApplicants()" href="javascript:void(0);" class="btn btn-info form-btns mr-1"><i class="fa fa-sync" aria-hidden="true"></i> Swap Applicants </a>
+
+
+
+
+              <a *ngIf="isCompanyAdmin && canAssign" (click)="showAssignSalesPopup(formdata1.Id,formdata1.LoanApplicationNumber,formdata1.ApplicantName)" class="btn btn-info form-btns mr-1" href="javascript:void(0);" title="Assign To User"><i class="feather-user-plus" aria-hidden="true"></i> Assign Users</a>
+
+              <div *ngIf="!isBanker && !isAccountingUser && !isAudit">
+                <a *ngIf="showCOBtn" (click)="showChangeOrder('insertOperation')" class="btn btn-orange form-btns mr-1" href="javascript:void(0);" title="Change Order"><i class="fa fa-undo mr-1" aria-hidden="true"></i>Change Order</a>
+              </div>
+              <a *ngIf="showBackToReportBtn" href="javascript:void(0);" class="btn btn-dark text-white form-btns mr-1" (click)="OnBackToReport()"><i class="fa fa-arrow-left mr-1"></i> Back To Report</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="card mb-2" *ngIf="IsLACanceledFlag">
+  <div class="card-body p-2">
+    <div class="row loansummary">
+      <div class="col-lg-12 col-xl-12 mb-3 mb-xl-0">
+        <div class="row">
+          <div class="col-lg-12 col-xl-12">
+            <div class="h-100 w-100 d-md-flex flex-row-reverse">
+              <a class="btn btn-danger" href="javascript:;" (click)="uncancelloanapp(formdata1.Id,formdata1.LoanApplicationNumber)"><i class="fa fa-undo"></i> UnCancel Application</a>
+              <a *ngIf="showBackToReportBtn" href="javascript:void(0);" class="btn btn-dark text-white form-btns mr-1" (click)="OnBackToReport()"><i class="fa fa-arrow-left mr-1"></i> Back To Report</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-3 border-0" *ngIf="!isContact" style="background: transparent;">
+  <div class="card-body p-0">
+    <div class="row loansummary" *ngIf="formdata1">
+      <div class="col-lg-12 col-xl-12 mb-3 mb-xl-0">
+        <div class="row">
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0">
+            <div class="border loansumm-box h-100 w-100">
+              <div class="detail-heading px-3 py-2">
+                {{formdata1.LoanApplicationNumber}}
+                <!--<a *ngIf="showOverride && isCompanyAdmin" (click)="updateOverRide()" class="btn btn-primary form-btns float-right" href="javascript:void(0)">Override</a>
+                <a *ngIf="isOverridden && isCompanyAdmin" class="btn btn-danger form-btns float-right" href="javascript:void(0)">Overridden</a>-->
+              </div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+                  <div class="row">
+                    <div class="col-12 mb-2"><i class="fa fa-building mr-2"></i>{{formdata1.CompanyName}}</div>
+                    <div class="col-12 mb-2"><i class="feather-calendar mr-2"></i> <b class="b-color">{{formdata1.ApplicationDate|pstdatetimetolocaldate}}</b></div>
+                    <!--<div class="col-12 mb-2"><i class="fa fa-list-alt mr-2"></i> Refrence No. {{formdata1.ReferenceNo}}</div>-->
+
+
+                    <div class="col-12 mb-2">
+                      <i class="fa fa-circle-o-notch mr-2"></i> <b class="b-color">
+                        Application Status:  <span class="approved" *ngIf="IsLACanceledFlag">Cancelled</span>
+                        <span class="approved" *ngIf="!IsLACanceledFlag && formdata1.ApplicationStatus!='Pending Documents' && formdata1.ApplicationStatus!='Failed'">
+                          {{formdata1.ApplicationStatus}}
+                        </span>
+                        <span class="approved" *ngIf="!IsLACanceledFlag && formdata1.ApplicationStatus=='Pending Documents' || formdata1.ApplicationStatus=='Failed'">
+                          {{formdata1.ApplicationStatus}}
+                          <ng-container *ngIf="!IsLACanceledFlag">
+                            (<a [routerLink]="'.'" fragment="sectionRuleSummary" (click)="moveToRuleSummuary($event)">Click To View</a>)
+                          </ng-container>
+                        </span>
+
+                      </b>
+                    </div>
+                    <div class="col-12 mb-2" *ngIf="formdata1.OverrideReason!=null"><i class="fa fa-circle-o-notch mr-2"></i> <b class="b-color">Overriden Reason: <span class="approved">{{formdata1.OverrideReason}}</span></b></div>
+
+                    <div class="col-12 mb-2"><i class="feather-check-square mr-2"></i> {{formdata1.CompanyName}}</div>
+
+                    <div class="col-12 mb-2">
+                      <i class="feather-user mr-2"></i>
+
+                      <b class="b-color">
+                        Dealer Name:
+                        <span>
+                          {{formdata1.DealerName}}
+                        </span>
+                      </b>
+                    </div>
+
+                    <div class="col-12 mb-2">
+                      <i class="feather-user mr-2"></i>
+
+                      <b class="b-color">
+                        Account Name:
+                        <span>
+                          {{formdata1.AccountName}} {{formdata1.AccId}}
+                          (<a href="javascript:void(0);" (click)="viewAccountDetail(formdata1.AccId)">Click To View</a>)
+                        </span>
+                      </b>
+                    </div>
+
+
+
+
+                  </div>
+                </div>
+                <div class="col-12 my-2 justify-content-sm-between d-flex p-0">
+
+                  <!--<a *ngIf="isBanker || isFinanceUser" (click)="showpopup(formdata1.Id)" href="javascript:void(0);" class="btn btn-success form-btns mr-1"><i class="feather-user-plus" aria-hidden="true"></i> Assign Users </a>
+
+                  <a *ngIf="isCompanyAdmin" (click)="showAssignSalesPopup(formdata1.Id)" class="btn btn-success form-btns mr-1" href="javascript:void(0);" title="Assign To User"><i class="feather-user-plus" aria-hidden="true"></i> Assign Users</a>
+
+                  <a *ngIf="(isCompanyAdmin || formdata1.IsCancelRequest || isFinanceUser) && !IsLACanceledFlag" (click)="cancelloanapp(formdata1.Id,formdata1.FundApproved,formdata1.IsCancelRequest,formdata1.isBanker,formdata1.LoanApplicationNumber)" class="btn btn-success form-btns mr-1" href="javascript:void(0);" title="Cancel"><i class="feather-x" aria-hidden="true"></i>Cancel Application</a>-->
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Borrower</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+                  <div class="row">
+                    <div class="col-12 mb-2"><i class="feather-user mr-2"></i> {{formdata1.ApplicantName}}</div>
+                    <!--<div class="col-12 mb-2"><i class="feather-phone mr-2"></i> {{formdata1.HomePhone}}</div>-->
+                    <div class="col-12 mb-2"><i class="fa fa-mobile mr-2"></i> {{formdata1.BusinessPhone}}</div>
+
+                    <div class="col-12 mb-2">
+                      <i class="feather-mail mr-2"></i> {{formdata1.Email}}
+                    </div>
+                    <div class="col-12 mb-2"><i class="feather-home mr-2"></i> {{formdata1.StreetName}},  {{formdata1.City}}, {{formdata1.ApplicantState}}, {{formdata1.ApplicationCountry}} {{formdata1.Zip}}</div>
+                    <!-- <div class="col-12 mb-2"><i class="feather-mic mr-2"></i> English</div> -->
+                  </div>
+                </div>
+                <!--<div class="col-12 my-2 justify-content-sm-between d-flex p-0">
+                  <a _ngcontent-c23="" *ngIf="formdata1.SFOpportunityId!=''" (click)="synctosalesforce()" class="btn btn-success form-btns mr-1 ng-star-inserted" href="javascript:void(0)"><i _ngcontent-c23="" class="fa fa-file"></i> Sync To Salesforce</a>
+                </div>-->
+                <!-- <div class="row">
+                <div class="col-12 my-2 justify-content-sm-between d-flex">
+                  <span class="email-color text-center"><i class="feather-mail"></i> <br>Email</span>
+                </div>
+                <span class="call-color text-center"><i class="feather-phone"></i> <br>Call</span> <span class="email-color text-center"><i class="feather-mail"></i> <br>Email</span> <span class="sms-color text-center"><i class="fa fa-commenting"></i> <br>SMS</span> <span class="chat-color text-center"><i class="fa fa-comments"></i> <br>Chat</span></div>
+                      </div>-->
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Product Info</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+                  <div class="row">
+                    <div class="col-5 mb-2">Bank Name:</div>
+                    <div class="col-7 mb-2"><b>{{formdata1.BankName}}</b></div>
+                    <div class="col-5 mb-2">Product Type:</div>
+                    <div class="col-7 mb-2"><b>{{formdata1.ProductType}}</b></div>
+                    <div class="col-5 mb-2">Product Name:</div>
+                    <div class="col-7 mb-2"><b>{{formdata1.ProductName}}</b></div>
+                    <!--<div class="col-5 mb-2">System Price:</div>
+                    <div class="col-7 mb-2"><b>{{formdata1.SystemPrice| MyCurrencyPipe}}</b></div>-->
+                    <div class="col-5 mb-2">Loan Amount:</div>
+                    <div class="col-7 mb-2"><b>{{formdata1.SalesPrice | MyCurrencyPipe }}</b></div>
+
+                    <div class="col-5 mb-2">Interest Rate:</div>
+                    <div class="col-7 mb-2"><b>{{formdata1.LoanRate}}%</b></div>
+
+
+                  </div>
+
+                </div>
+                <!--<div class="col-12 my-2 justify-content-sm-between d-flex p-0" *ngIf="!checklaststage() && !(generateButtonName == 'Void Document' && isBanker)">
+                  <a *ngIf="(commonService.LoginUser.userType!='usertypecontact') && isProductInfoApproved" (click)="generateDocument()" class="btn btn-success form-btns mr-1 ng-star-inserted" [class.btn-success]="generateButtonName == 'Generate Document'" [class.btn-danger]="generateButtonName == 'Void Document'" href="javascript:void(0)"><i class="fa fa-file text-white"></i> {{generateButtonName}}</a>
+                </div>-->
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Payment Info</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+                  <div class="row">
+                    <div class="col-6 mb-2">ACH Payment:</div>
+                    <div class="col-6 mb-2"><b>{{formdata1.AutoPaymentViaACH}}</b></div>
+                    <div class="col-6 mb-2">Initial Payment(1-18):</div>
+                    <div class="col-6 mb-2"><b>{{formdata1.InitialPaymnetAmount| MyCurrencyPipe}}</b></div>
+                    <div class="col-6 mb-2">First Payment Date:</div>
+                    <div class="col-6 mb-2"><b> {{formdata1.FirstPaymentDate | pstdatetimetolocaldate}}</b></div>
+                    <div class="col-6 mb-2">Payments 19+After Tax Credit Paid:</div>
+                    <div class="col-6 mb-2"><b>{{formdata1.AfterTaxCredit| MyCurrencyPipe}}</b></div>
+                    <div class="col-6 mb-2">Payments 19+Without Tax Credit Paid:</div>
+                    <div class="col-6 mb-2"><b>{{formdata1.WithoutTaxCredit| MyCurrencyPipe}}</b></div>
+                    <div class="col-6 mb-2">Financer:</div>
+                    <div class="col-6 mb-2"><b>{{formdata1.CompanyName}}</b></div>
+                    <div class="col-6 mb-2">Number of Terms(Months):</div>
+                    <div class="col-6 mb-2"><b>{{formdata1.LoanTerm}}</b></div>
+                    <div class="col-6 mb-2">Interest Rate:</div>
+                    <div class="col-6 mb-2"><b>{{formdata1.LoanRate}}%</b></div>
+                  </div>
+                </div>
+                <!-- <div class="col-12 text-center pt-2"><a href="#" class="btn btn-success rounded"><i class="far fa-file-archive text-white mr-2"></i> System info</a></div> -->
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0 mt-3" *ngIf="salesRepList && salesRepList.length>0">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Sales Rep</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+
+                  <div class="row" *ngFor="let s of salesRepList">
+                    <div class="col-12 mb-2"><i class="feather-user mr-2"></i>  {{s.name}}</div>
+                    <div class="col-12 mb-2"><i class="feather-mail mr-2"></i>  {{s.Email}}</div>
+                    <div class="col-12 mb-2"><i class="feather-phone mr-2"></i>  {{s.PhoneNumber}}</div>
+                    <div class="col-12 mb-3"><hr /></div>
+                  </div>
+
+                </div>
+              </div>
+              <!-- <div class="col-12 text-center pt-2"><a href="#" class="btn btn-success rounded"><i class="far fa-file-archive text-white mr-2"></i> System info</a></div> -->
+            </div>
+          </div>
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0 mt-3" *ngIf="finusers!==null">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Finance User</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+
+
+                  <div class="row" *ngFor="let s of finusers">
+                    <div class="col-12 mb-2"><i class="feather-user mr-2"></i>  {{s.name}}</div>
+                    <div class="col-12 mb-2"><i class="feather-mail mr-2"></i>  {{s.Email}}</div>
+                    <div class="col-12 mb-2"><i class="feather-phone mr-2"></i>  {{s.PhoneNumber}}</div>
+                    <div class="col-12 mb-3"><hr /></div>
+                  </div>
+
+                </div>
+                <!-- <div class="col-12 text-center pt-2"><a href="#" class="btn btn-success rounded"><i class="far fa-file-archive text-white mr-2"></i> System info</a></div> -->
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0 mt-3" *ngIf="relationshipUsers!==null && isCompanyAdmin">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Relationship User</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+
+
+                  <div class="row" *ngFor="let s of relationshipUsers">
+                    <div class="col-12 mb-2"><i class="feather-user mr-2"></i>  {{s.name}}</div>
+                    <div class="col-12 mb-2"><i class="feather-mail mr-2"></i>  {{s.Email}}</div>
+                    <div class="col-12 mb-2"><i class="feather-phone mr-2"></i>  {{s.PhoneNumber}}</div>
+                    <div class="col-12 mb-3"><hr /></div>
+                  </div>
+
+                </div>
+                <!-- <div class="col-12 text-center pt-2"><a href="#" class="btn btn-success rounded"><i class="far fa-file-archive text-white mr-2"></i> System info</a></div> -->
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0 mt-3" *ngIf="AccountingUsers!==null && isCompanyAdmin">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Accounting User</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+                  <div class="row" *ngFor="let s of AccountingUsers">
+                    <div class="col-12 mb-2"><i class="feather-user mr-2"></i>  {{s.name}}</div>
+                    <div class="col-12 mb-2"><i class="feather-mail mr-2"></i>  {{s.Email}}</div>
+                    <div class="col-12 mb-2"><i class="feather-phone mr-2"></i>  {{s.PhoneNumber}}</div>
+                    <div class="col-12 mb-3"><hr /></div>
+                  </div>
+
+                </div>
+                <!-- <div class="col-12 text-center pt-2"><a href="#" class="btn btn-success rounded"><i class="far fa-file-archive text-white mr-2"></i> System info</a></div> -->
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0 mt-3" *ngIf="AuditUsers!==null">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Audit User</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+                  <div class="row" *ngFor="let s of AuditUsers">
+                    <div class="col-12 mb-2"><i class="feather-user mr-2"></i>  {{s.name}}</div>
+                    <div class="col-12 mb-2"><i class="feather-mail mr-2"></i>  {{s.Email}}</div>
+                    <div class="col-12 mb-2"><i class="feather-phone mr-2"></i>  {{s.PhoneNumber}}</div>
+                    <div class="col-12 mb-3"><hr /></div>
+                  </div>
+
+                </div>
+                <!-- <div class="col-12 text-center pt-2"><a href="#" class="btn btn-success rounded"><i class="far fa-file-archive text-white mr-2"></i> System info</a></div> -->
+              </div>
+            </div>
+          </div>
+
+
+
+
+          <div class="col-lg-6 col-xl-3 mb-3 mb-xl-0 mt-3" *ngIf="bankUsers && !isDealerUser">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Bank User</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+
+
+                  <div class="row" *ngFor="let s of bankUsers">
+                    <div class="col-12 mb-2"><i class="feather-user mr-2"></i>  {{s.name}}</div>
+                    <div class="col-12 mb-2"><i class="feather-mail mr-2"></i>  {{s.Email}}</div>
+                    <div class="col-12 mb-2"><i class="feather-phone mr-2"></i>  {{s.PhoneNumber}}</div>
+                    <div class="col-12 mb-3"><hr /></div>
+                  </div>
+
+                </div>
+                <!-- <div class="col-12 text-center pt-2"><a href="#" class="btn btn-success rounded"><i class="far fa-file-archive text-white mr-2"></i> System info</a></div> -->
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 mb-3 mb-xl-0 mt-3 {{ docClass}}">
+            <div class="border loansumm-box h-100">
+              <div class="detail-heading px-3 py-2">Document Info</div>
+              <div class="detail-con px-3 py-2" style="max-height: 200px;overflow-y: auto;">
+                <div class="pb-3">
+                  <div class="row">
+
+                    <div class="col-12 col-lg-6 mb-2" *ngFor="let item of docinfo">
+                      {{item.MasterValue}}:
+                      <span class="doc-received" *ngIf="item.IsVerified==1 || item.IsVerified=='1'">  <i class="feather-check text-success"></i></span>
+                      <span class="doc-not-received" *ngIf="item.IsVerified==0 || item.IsVerified=='0'">   <i class="feather-x text-danger"></i></span>
+
+
+
+                    </div>
+
+                  </div>
+                </div>
+                <!-- <div class="col-12 text-center pt-2"><a href="#" class="btn btn-success rounded"><i class="far fa-file-archive text-white mr-2"></i> System info</a></div> -->
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="card-body" *ngIf="isContact">
+      <div class="row" *ngIf="formdata1">
+        <div class="col-lg-3 mb-3 mb-lg-0">
+          <div class="border w-100">
+            <div class="detail-heading px-3 py-2">{{formdata1.LoanApplicationNumber}}</div>
+            <div class="detail-con px-3 py-2">
+              <div class="border-bottom pb-3">
+                <div class="row">
+                  <div class="col-12 mb-2"><i class="fa fa-building mr-2"></i>{{formdata1.CompanyName}}</div>
+                  <div class="col-12 mb-2"><i class="feather-calendar mr-2"></i> <b class="b-color">{{formdata1.ApplicationDate}}</b></div>
+                  <!--<div class="col-12 mb-2"><i class="fa fa-list-alt mr-2"></i> Refrence No. {{formdata1.ReferenceNo}}</div>-->
+                  2
+                  <div class="col-12 mb-2">
+                    <i class="fa fa-circle-o-notch mr-2"></i> <b class="b-color">
+                      Application Status:  <span class="approved" *ngIf="IsLACanceledFlag">Cancelled</span>
+                      <span class="approved" *ngIf="!IsLACanceledFlag">{{formdata1.ApplicationStatus}}</span>
+                    </b>
+                  </div>
+                  <div class="col-12 mb-2" *ngIf="formdata1.OverrideReason!=null"><i class="fa fa-circle-o-notch mr-2"></i> <b class="b-color">Overriden Reason: <span class="approved">{{formdata1.OverrideReason}}</span></b></div>
+
+                  <div class="col-12 mb-2"><i class="feather-check-square mr-2"></i> {{formdata1.CompanyName}}</div>
+                </div>
+              </div>
+              <div class="detail-heading-small">Sales Rep <span class="edit"><a href="#"><i style="display:none" class="fa fa-pencil"></i></a></span></div>
+              <div class="row">
+                <div class="col-12 mb-2"><i class="feather-user mr-2"></i>  {{formdata1.RepName}}</div>
+                <div class="col-12 mb-2"><i class="feather-mail mr-2"></i>  {{formdata1.RepEmail}}</div>
+                <div class="col-12 mb-2"><i class="feather-phone mr-2"></i>  {{formdata1.SaleRepPhone}}</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 mb-3 mb-lg-0">
+          <div class="border h-100">
+            <div class="detail-heading px-3 py-2">Borrower</div>
+            <div class="detail-con px-3 py-2">
+              <div class="border-bottom pb-3">
+                <div class="row">
+                  <div class="col-12 mb-2"><i class="feather-user mr-2"></i> {{formdata1.ApplicantName}}</div>
+                  <!--<div class="col-12 mb-2"><i class="feather-phone mr-2"></i> {{formdata1.HomePhone}}</div>-->
+                  2
+                  <div class="col-12 mb-2"><i class="fa fa-mobile mr-2"></i> {{formdata1.BusinessPhone}}</div>
+                  <div class="col-12 mb-2">
+                    <i class="feather-mail mr-2"></i> {{formdata1.Email}}
+                  </div>
+                  <div class="col-12 mb-2"><i class="feather-home mr-2"></i> {{formdata1.StreetName}},  {{formdata1.City}}, {{formdata1.ApplicantState}} {{formdata1.Zip}}</div>
+                  <!-- <div class="col-12 mb-2"><i class="feather-mic mr-2"></i> English</div> -->
+                </div>
+              </div>
+              <!--<div class="col-12 my-2 justify-content-sm-between d-flex p-0">
+                <a _ngcontent-c23="" *ngIf="formdata1.SFOpportunityId!=''" (click)="synctosalesforce()" class="btn btn-success form-btns mr-1 ng-star-inserted" href="javascript:void(0)"><i _ngcontent-c23="" class="fa fa-file"></i> Sync To Salesforce</a>
+              </div>-->
+              <!-- <div class="row">
+              <div class="col-12 my-2 justify-content-sm-between d-flex">
+                <span class="email-color text-center"><i class="feather-mail"></i> <br>Email</span>
+              </div>
+              <span class="call-color text-center"><i class="feather-phone"></i> <br>Call</span> <span class="email-color text-center"><i class="feather-mail"></i> <br>Email</span> <span class="sms-color text-center"><i class="fa fa-commenting"></i> <br>SMS</span> <span class="chat-color text-center"><i class="fa fa-comments"></i> <br>Chat</span></div>
+                    </div>-->
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 mb-3 mb-lg-0">
+          <div class="border h-100">
+            <div class="detail-heading px-3 py-2">Product Info</div>
+            <div class="detail-con px-3 py-2">
+              <div class="border-bottom pb-3">
+                <div class="row">
+                  <div class="col-5 mb-2">Bank Name:</div>
+                  <div class="col-7 mb-2"><b>{{formdata1.BankName}}</b></div>
+                  <div class="col-5 mb-2">Product Type:</div>
+                  <div class="col-7 mb-2"><b>{{formdata1.ProductType}}</b></div>
+                  <div class="col-5 mb-2">Product Name:</div>
+                  <div class="col-7 mb-2"><b>{{formdata1.ProductName}}</b></div>
+                  <!--<div class="col-5 mb-2">System Price:</div>
+                  <div class="col-7 mb-2"><b>{{formdata1.SystemPrice| MyCurrencyPipe}}</b></div>-->
+                  <div class="col-5 mb-2">Loan Amount:</div>
+                  <div class="col-7 mb-2"><b>{{formdata1.MaxAmount| MyCurrencyPipe}}</b></div>
+
+                  <div class="col-5 mb-2">Interest Rate:</div>
+                  <div class="col-7 mb-2"><b>{{formdata1.LoanRate}}%</b></div>
+
+
+
+                <!--<div class="col-5 mb-2">Loan Selected:</div>
+                <div class="col-7 mb-2"><b>{{formdata1.LoanSelected}}</b></div>-->
+                <!--<div class="col-6 mb-2">Credit Expires On:</div>
+                <div class="col-6 mb-2"><b>{{formdata1.CreditExpireOn}}</b></div>-->
+                </div>
+              </div>
+              <div class="col-12 my-2 justify-content-sm-between d-flex p-0">
+
+                <a _ngcontent-c23="" (click)="generateDocument()" class="btn btn-success form-btns mr-1 ng-star-inserted" href="javascript:void(0)"><i _ngcontent-c23="" class="fa fa-file text-white"></i> {{generateButtonName}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 mb-3 mb-lg-0">
+          <div class="border h-100">
+            <div class="detail-heading px-3 py-2">Payment Info</div>
+            <div class="detail-con px-3 py-2">
+              <div class="pb-3">
+                <div class="row">
+                  <div class="col-6 mb-2">ACH Payment:</div>
+                  <div class="col-6 mb-2"><b>{{formdata1.AutoPaymentViaACH}}</b></div>
+                  <div class="col-6 mb-2">Initial Payment(1-18):</div>
+                  <div class="col-6 mb-2"><b>{{formdata1.InitialPaymnetAmount| MyCurrencyPipe}}</b></div>
+                  <div class="col-6 mb-2">First Payment Date:</div>
+                  <div class="col-6 mb-2"><b>{{formdata1.FirstPaymentDate|pstdatetimetolocaldate}}</b></div>
+                  <div class="col-6 mb-2">Payments 19+After Tax Credit Paid:</div>
+                  <div class="col-6 mb-2"><b>{{formdata1.AfterTaxCredit| MyCurrencyPipe}}</b></div>
+                  <div class="col-6 mb-2">Payments 19+Without Tax Credit Paid:</div>
+                  <div class="col-6 mb-2"><b>{{formdata1.WithoutTaxCredit| MyCurrencyPipe}}</b></div>
+                </div>
+              </div>
+              <!-- <div class="col-12 text-center pt-2"><a href="#" class="btn btn-success rounded"><i class="far fa-file-archive text-white mr-2"></i> System info</a></div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<div class="card mb-3">
+
+  </div>-->
+
+  <div class="card mb-3 ln-dtl">
+    <div class="card-body" *ngIf="!isContact">
+      <div id="accordion" class="panel-group">
+        <div *ngFor="let item of formstagearray;let i=index">
+          <div class="panel panel-default" *ngIf='item.stageclass == "step-green" && item.formmasterid !=""'>
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyOne{{item.formmasterid}}" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyOne{{item.formmasterid}}"> <span>   {{item.stageName}}</span> <span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyOne{{item.formmasterid}}" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-forminfo submoduleName={{item.formmasterid}} moduleName="form" [itemdata12]="item"></app-forminfo>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Application Info'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyOne" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyOne"> <span>Application Information</span> <span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyOne" class=" panel-collapse collapse" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="panel-body">
+                <app-systeminfo #sysInfo [itemdata12]="item" [IsLACanceledFlag]="IsLACanceledFlag" submoduleName="LoanApplicationInfo"></app-systeminfo>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Applicant'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' && item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyThree" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyThree"><span> {{item.stageName}}</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyThree" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" submoduleName="LoanApplicationApplicant" [itemdata12]="item"></app-applicant>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Co-Applicant'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodySix" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodySix"><span> {{item.stageName}}</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodySix" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" submoduleName="LoanApplicationCoapplicant" [itemdata12]="item"></app-applicant>
+              </div>
+            </div>
+          </div>
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Payment Information'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyfourteen" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyfourteen"><span> {{item.stageName}}</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyfourteen" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" submoduleName="LoanApplicationPaymentInfo" [itemdata12]="item"></app-applicant>
+              </div>
+            </div>
+          </div>
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Product Info'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyfourteen34" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyfourteen34"><span> Product Info</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyfourteen34" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-applicant submoduleName="LoanApplicationProductInfo" [IsLACanceledFlag]="IsLACanceledFlag" [itemdata12]="item"></app-applicant>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Installation Property'.toLocaleLowerCase() &&  item.stageclass == 'ui-done'  && item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyTwo" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyTwo"> <span>{{item.stageName}}</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyTwo" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" [itemdata12]="item" submoduleName="LoanApplicationInstallationProperty"></app-applicant>
+              </div>
+            </div>
+          </div>
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Bank Documents Signed'.toLocaleLowerCase() &&  item.stageclass == 'ui-done'  && item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyTwo" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyTwo"> <span>Documents Signed</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyTwo" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-applicant [IsLACanceledFlag]="IsLACanceledFlag" [itemdata12]="item" submoduleName="LoanApplicationSignedDoc"></app-applicant>
+              </div>
+            </div>
+          </div>
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Expanses'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBodyeight1" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyeight1"><span>  {{item.stageName}}</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBodyeight1" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-expanses [IsLACanceledFlag]="IsLACanceledFlag"></app-expanses>
+              </div>
+            </div>
+          </div>
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'NTP'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody91" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBody91"><span>  {{item.stageName}}</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody91" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-ntp [IsLACanceledFlag]="IsLACanceledFlag" [ntpStageApproved]="ntpApprovedFlag" [itemdata12]="item" formtype="" submoduleName="LoanApplicationNTP"></app-ntp>
+              </div>
+            </div>
+          </div>
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Internal Verification'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody91" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBody91"><span>  {{item.stageName}}</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody91" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-applicationverification [IsLACanceledFlag]="IsLACanceledFlag" [itemdata12]="item" submoduleName="LoanApplicationAppVerification"></app-applicationverification>
+              </div>
+            </div>
+          </div>
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Fund Release'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody81" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBody81"><span>  {{item.stageName}}</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody81" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-releasefunds [IsLACanceledFlag]="IsLACanceledFlag" submoduleName="LoanApplicationReleaseFunds" [itemdata12]="item"></app-releasefunds>
+              </div>
+            </div>
+          </div>
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Fund Release(CO)'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody822" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBody822"><span>  {{item.stageName}}</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody822" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-releasefunds [IsLACanceledFlag]="IsLACanceledFlag" submoduleName="FundReleaseCO" [itemdata12]="item"></app-releasefunds>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Change Order'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody823" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBody823"><span>  {{item.stageName}}</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody823" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-changeorder [IsLACanceledFlag]="IsLACanceledFlag" submoduleName="LoanApplicationChangeOrder" [itemdata12]="item" [CallFrom]="'TAB'"></app-changeorder>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'NTP(CO)'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody824" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBody824"><span>  {{item.stageName}}</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+              </h4>
+            </div>
+            <div id="panelBody824" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <app-ntpchangeorder [IsLACanceledFlag]="IsLACanceledFlag" submoduleName="NTPChangeOrder" [itemdata12]="item" [CallFrom]="'TAB'"></app-ntpchangeorder>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" *ngIf="item.stageName.toLocaleLowerCase() == 'Install Step'.toLocaleLowerCase() &&  item.stageclass == 'ui-done' &&  item.stageActive=='1'">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#panelBody0123" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBody0123"><span>SMS History</span></a>
+              </h4>
+            </div>
+            <div id="panelBody0123" class="panel-collapse collapse" data-parent="#accordion">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th class="text-left">From</th>
+                            <th class="text-left">To</th>
+                            <th class="text-left">TimeStamp</th>
+                            <th class="text-left">Status</th>
+                            <th class="text-left">Message</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of smsData">
+                            <td class="text-left">{{item.From}}</td>
+                            <td class="text-left">{{item.TO}}</td>
+                            <td class="text-left">{{item.CreatedOn|DateTimeToLocal:''}}</td>
+                            <td class="text-left">{{item.MessageStatus}}</td>
+                            <td class="text-left">{{item.Body}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- credit score -->
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodySeven" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodySeven" (click)="justRefreshTabData('credit')"><span> Credit Score</span><span class="edit" style="display:none"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodySeven" class="panel-collapse collapse" data-parent="#accordion">
+            <div class="panel-body">
+              <div *ngIf="enableTestCreditPull" class="row">
+                <div class="col-sm-4 col-md-3">
+                  <label>Credit:</label>
+                  <div class="form-group">
+                    <ng-select #testDrop [items]="Scores"
+                               placeholder="Select Score" bindValue="Score" bindLabel="Case"
+                               [closeOnSelect]="true">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-sm-2 col-md-2">
+                  <label></label>
+                  <a (click)="testScore()" *ngIf="isflag==true" class="btn btn-dark mt-4" href="javascript:void(0);"><span>Test Score Case</span></a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 col-md-3">
+                  <label>Applicant:</label>
+                  <div class="form-group">
+                    <ng-select #ApplicantDrop [items]="Applicants"
+                               placeholder="Select Applicant" bindValue="value" bindLabel="name"
+                               [closeOnSelect]="true">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-sm-4 col-md-3">
+                  <label>Credit:</label>
+                  <div class="form-group">
+                    <ng-select #BureauDrop [items]="Bureaus"
+                               placeholder="Select Bureau" bindValue="Id" bindLabel="BureauName"
+                               [closeOnSelect]="true"
+                               [(ngModel)]="bureauItem">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-sm-2 col-md-2">
+                  <label></label>
+                  <a (click)="pullCreditScore()" *ngIf="isflag==true" class="btn btn-dark mt-4" href="javascript:void(0);"><span>Manual Pull</span></a>
+                </div>
+                <div class="col-md-12 d-flex">
+                  <h3 class="form-heading w-100 independ"><span>Primary</span></h3>
+                </div>
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <div class="table table-striped trow-wbtn">
+                      <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                     [rows]="applicantCreditScoreData"
+                                     [scrollbarH]="true"
+                                     [rowHeight]="'40'"
+                                     [columnMode]="'force'"
+                                     [headerHeight]="40"
+                                     [footerHeight]="40"
+                                     [loadingIndicator]="loadSave">
+                        <ngx-datatable-column name="Bureau" prop="Bureau" [minWidth]="190" [width]="185">
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Applicant" prop="ApplicantType" [minWidth]="150"></ngx-datatable-column>
+                        <ngx-datatable-column name="Date Pulled" prop="CreatedOn" [minWidth]="130">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.CreatedOn | utcdatetimetolocal}}
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Credit Score" prop="CreditScore" [minWidth]="110"></ngx-datatable-column>
+                        <ngx-datatable-column name="Category" prop="CreditScoreCategory" [minWidth]="110"></ngx-datatable-column>
+                        <ngx-datatable-column name="Show Report" *ngIf="showCreditReportButtons || isBanker">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="ShowCreditReport(row)"><i class="fa fa-pencil"></i> Show Credit Report</a>
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Show Raw Data" *ngIf="showCreditReportButtons || isBanker">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="ShowCreditReportRawData(row)"><i class="fa fa-pencil"></i> Show Raw Data</a>
+                          </ng-template>
+                        </ngx-datatable-column>
+                      </ngx-datatable>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div *ngIf="HasCoApplicant" class="col-md-12 d-flex">
+                  <h3 class="form-heading w-100 independ"><span>Co-Applicant</span></h3>
+                </div>
+                <div *ngIf="HasCoApplicant" class="col-md-12">
+                  <div class="table-responsive">
+                    <div class="table table-striped trow-wbtn">
+                      <ngx-datatable #cotable class="bootstrap table table-hover table-dynamic"
+                                     [rows]="coApplicantCreditScoreData"
+                                     [columnMode]="'force'"
+                                     [scrollbarH]="true"
+                                     [rowHeight]="'40'"
+                                     [headerHeight]="40"
+                                     [footerHeight]="40"
+                                     [loadingIndicator]="loadSave">
+                        <ngx-datatable-column name="Bureau" prop="Bureau" [minWidth]="190" [width]="185">
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Applicant" prop="ApplicantType" [minWidth]="150"></ngx-datatable-column>
+                        <ngx-datatable-column name="Date Pulled" prop="CreatedOn" [minWidth]="130">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.CreatedOn | utcdatetimetolocal}}
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Credit Score" prop="CreditScore" [minWidth]="110"></ngx-datatable-column>
+                        <ngx-datatable-column name="Category" prop="CreditScoreCategory" [minWidth]="110"></ngx-datatable-column>
+                        <ngx-datatable-column name="Show Report" *ngIf="showCreditReportButtons || isBanker">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="ShowCreditReport(row)"><i class="fa fa-pencil"></i> Show Credit Report</a>
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Show Raw Data" *ngIf="showCreditReportButtons || isBanker">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <a href="javascript:void(0);" class="btn btn-success mr-2" (click)="ShowCreditReportRawData(row)"><i class="fa fa-pencil"></i> Show RawData</a>
+                          </ng-template>
+                        </ngx-datatable-column>
+                      </ngx-datatable>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- credit score ends here-->
+
+         <!-- Expense score -->
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyExpenses" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyExpenses"><span> Expenses</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodyExpenses" class="panel-collapse collapse" data-parent="#accordion">
+            <app-expanses [IsLACanceledFlag]="IsLACanceledFlag" #expenses [loanApplicationId]="loanId" [HasCoApplicant]="HasCoApplicant"></app-expanses>
+          </div>
+        </div>
+         <!-- Expense score ends here-->
+
+         <!-- Communications -->
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodynine" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodynine"><span> Communications</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodynine" class="panel-collapse collapse" data-parent="#accordion">
+            <a href="javascript:void(0);" class="btn-in-panel"
+               (click)="openComentHistoryPopup()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add Communication</a>
+            <div class="panel-body px-0">
+              <app-commenthistory #commentHistory></app-commenthistory>
+            </div>
+          </div>
+        </div>
+        <!-- Communications ends here -->
+
+        <!-- Rule Engine History -->
+        <div class="panel" *ngIf="isflag==true && !isAccountingUser && !isAudit" [ngClass]="{'active':!collapsedRuleSummary}">
+          <div class="panel-heading">
+            <h4 class="panel-title" (click)="moveToRuleSummuary()">
+              <a href="#panelBodyteen" class="accordion-toggle" [ngClass]="{'collapsed':collapsedRuleSummary}" data-toggle="collapse" data-target="#panelBodyteen"><span> Rule Engine History</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodyteen" class="panel-collapse collapse" [ngClass]="{'show':!collapsedRuleSummary}" data-parent="#accordion">
+            <div class="panel-body">
+              <app-ruleEngineHistory #RuleEngineHistory></app-ruleEngineHistory>
+            </div>
+          </div>
+        </div>
+        <!-- Rule Engine History ends here -->
+        
+        <!-- Audit History -->
+        <div id="sectionRuleSummary"></div>
+        <div class="panel" *ngIf="isflag==true && isShowAudit">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyten" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyten"><span> Audit History</span></a>
+            </h4>
+          </div>
+          <div id="panelBodyten" class="panel-collapse collapse" data-parent="#accordion">
+            <div class="panel-body">
+              <div class="row">
+
+                <div class="col-sm-4 col-md-4">
+                  <label>Select Form</label>
+                  <ng-select #audit [items]="lstdata"
+                             placeholder="Select" bindValue="Id" bindLabel="text"
+                             [closeOnSelect]="true"
+                             (change)="SetTableData($event)">
+                  </ng-select>
+                </div>
+                <div class="col-md-12 custom-according-width">
+                  <div class="table-responsive">
+                    <div class="table table-striped">
+                      <ngx-datatable #myTable class="bootstrap custom-big-table-width loadr-tabel"
+                                     [rows]="pagedData.data"
+                                     [columnMode]="'force'"
+                                     [scrollbarH]="true"
+                                     [rowHeight]="'40'"
+                                     [headerHeight]="40"
+                                     [footerHeight]="50"
+                                     [externalPaging]="true"
+                                     [externalSorting]="true"
+                                     [loadingIndicator]="loadSave"
+                                     [count]="pagedData.pager.totalItems"
+                                     [offset]="pagedData.pager.currentPage"
+                                     [limit]="pagedData.pager.pageSize"
+                                     [messages]="{emptyMessage:'No Record Found.'}">
+
+
+                        <!-- Row Detail Template -->
+                        <ngx-datatable-row-detail [rowHeight]="100" #myDetailRow (toggle)="onDetailToggle($event)">
+                          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                            <table class="table table-striped" *ngIf="opr!='Add' && internalVerification == false">
+                              <thead>
+                                <tr>
+                                  <th scope="col" width="100">Name</th>
+                                  <th scope="col" width="150">From</th>
+                                  <th scope="col" width="550">To</th>
+
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let e of detailData">
+
+                                  <td *ngIf="detailData != ''"><span>{{e.column_name}}</span></td>
+
+                                  <td *ngIf="detailData != ''  && e.data_type != 'bit'"><span>{{e.his_column_value}}</span> </td>
+                                  <td *ngIf="detailData != ''  && e.data_type != 'bit'"><span>{{e.column_value}}</span> </td>
+
+                                  <td *ngIf="e.data_type == 'bit'">
+                                    <span *ngIf="e.his_column_value == '1'">Yes</span>
+                                    <span *ngIf="e.his_column_value == '0'">No</span>
+                                  </td>
+                                  <td *ngIf="e.data_type == 'bit'">
+                                    <span *ngIf="e.column_value == '1'">Yes</span>
+                                    <span *ngIf="e.column_value == '0'">No</span>
+                                  </td>
+
+
+                                </tr>
+                                <tr *ngIf="detailData == ''">
+                                  <td colspan="3" align="center">
+                                    <span class="nofound">No Record Found</span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+
+                            <table class="table table-striped" *ngIf="opr=='Add' && internalVerification == false">
+                              <thead>
+                                <tr>
+                                  <th scope="col" width="100">Name</th>
+                                  <th scope="col" width="500">Value</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let e of detailData">
+
+                                  <td *ngIf="detailData != '' && e.column_value != null "><span>{{e.column_name}}</span></td>
+
+                                  <td *ngIf="detailData != '' && e.data_type != 'bit' && e.column_value != null"><span>{{e.column_value}}</span> </td>
+
+                                  <td *ngIf="e.data_type == 'bit' && e.column_value != null">
+                                    <span *ngIf="e.column_value == '1'">Yes</span>
+                                    <span *ngIf="e.column_value == '0'">No</span>
+                                  </td>
+
+
+                                </tr>
+                                <tr *ngIf="detailData == ''">
+                                  <td colspan="3" align="center">
+                                    <span class="nofound">No Record Found</span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+
+                            <table class="table table-striped" *ngIf="opr=='Add' && internalVerification == true">
+                              <thead>
+                                <tr>
+                                  <th scope="col" width="100">Name</th>
+                                  <th scope="col" width="500">Value</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let e of detailData">
+                                  <td *ngIf="detailData != '' && e.column_name == 'CreatedBy' "><span>{{e.column_name}}</span></td>
+                                  <td *ngIf="detailData != '' && e.column_name == 'CreatedBy'"><span>{{e.column_value}}</span> </td>
+                                </tr>
+                                <tr *ngIf="detailData == ''">
+                                  <td colspan="3" align="center">
+                                    <span class="nofound">No Record Found</span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+
+                          </ng-template>
+                        </ngx-datatable-row-detail>
+                        <ngx-datatable-column [width]="50"
+                                              [resizeable]="false"
+                                              [sortable]="false"
+                                              [draggable]="false"
+                                              [canAutoResize]="false">
+                          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                            <a href="javascript:void(0)"
+                               [class.datatable-icon-right]="!expanded"
+                               [class.datatable-icon-down]="expanded"
+                               title="Expand/Collapse Row"
+                               (click)="toggleExpandRow(row,expanded)">
+                            </a>
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="User" [sortable]="false">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span><b>{{row.created_by}}</b></span>
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Date" [sortable]="false">
+                          <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span><b>{{row.created_at | utcdatetimetolocal}}</b></span>
+                          </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-footer>
+                          <ng-template ngx-datatable-footer-template
+                                       let-rowCount="rowCount"
+                                       let-isVisible="isVisible">
+                            <div class="page-count" style="max-width:170px;">
+                              {{rowCount}} Total
+                            </div>
+                          </ng-template>
+                        </ngx-datatable-footer>
+
+                      </ngx-datatable>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <!--<div class="row">
+
+                <div class="col-sm-4 col-md-4">
+                  <label>Select </label>
+                  <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                             bindLabel="text" bindValue="text"></ng-select>
+
+                </div>
+
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th class="text-left">Version</th>
+                          <th class="text-left">User</th>
+                          <th class="text-left">Date/Time</th>
+                          <th class="text-left">Group</th>
+                          <th class="text-left">SubGroup</th>
+                          <th class="text-left">Name</th>
+                          <th class="text-left">From</th>
+                          <th class="text-left">To</th>
+                          <th class="text-left">Change</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="text-left">1</td>
+                          <td class="text-left">rclyde@solgenpower.com</td>
+                          <td class="text-left">04/09/2020 07:29 PM</td>
+                          <td class="text-left">Deal</td>
+                          <td class="text-left"></td>
+                          <td class="text-left">New Appliation..</td>
+                          <td class="text-left">1</td>
+                          <td class="text-left">0</td>
+                          <td class="text-left"></td>
+                        </tr>
+                        <tr>
+                          <td class="text-left">1</td>
+                          <td class="text-left">rclyde@solgenpower.com</td>
+                          <td class="text-left">04/09/2020 07:29 PM</td>
+                          <td class="text-left">Applicant</td>
+                          <td class="text-left"></td>
+                          <td class="text-left">Employer Mo..</td>
+                          <td class="text-left"></td>
+                          <td class="text-left">0</td>
+                          <td class="text-left"></td>
+                        </tr>
+                        <tr>
+                          <td class="text-left">1</td>
+                          <td class="text-left">rclyde@solgenpower.com</td>
+                          <td class="text-left">04/09/2020 07:29 PM</td>
+                          <td class="text-left">CoApplicant</td>
+                          <td class="text-left"></td>
+                          <td class="text-left">Address Mon..</td>
+                          <td class="text-left"></td>
+                          <td class="text-left">0</td>
+                          <td class="text-left"></td>
+                        </tr>
+                        <tr>
+                          <td class="text-left">1</td>
+                          <td class="text-left">rclyde@solgenpower.com</td>
+                          <td class="text-left">04/09/2020 07:29 PM</td>
+                          <td class="text-left">Applicant</td>
+                          <td class="text-left"></td>
+                          <td class="text-left">Employer2 ID</td>
+                          <td class="text-left">24947.28</td>
+                          <td class="text-left">24947.28</td>
+                          <td class="text-left"></td>
+                        </tr>
+                        <tr>
+                          <td class="text-left">1</td>
+                          <td class="text-left">rclyde@solgenpower.com</td>
+                          <td class="text-left">04/09/2020 07:29 PM</td>
+                          <td class="text-left">Applicant</td>
+                          <td class="text-left"></td>
+                          <td class="text-left">Employer2 M..</td>
+                          <td class="text-left"></td>
+                          <td class="text-left">143899794</td>
+                          <td class="text-left"></td>
+                        </tr>
+                        <tr>
+                          <td class="text-left">1</td>
+                          <td class="text-left">rclyde@solgenpower.com</td>
+                          <td class="text-left">04/09/2020 07:29 PM</td>
+                          <td class="text-left">CoApplicant</td>
+                          <td class="text-left"></td>
+                          <td class="text-left">Init Date</td>
+                          <td class="text-left">04/09/2020 07:29 PM</td>
+                          <td class="text-left">04/09/2020</td>
+                          <td class="text-left"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>-->
+            </div>
+          </div>
+        </div>
+        <!-- Audit History ends here-->
+
+        <!-- Loan Application Transfer History -->
+        <div class="panel" *ngIf="showTransferPanel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyfifty" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyfifty">
+                <span>Loan Application Transfer History</span>
+              </a>
+            </h4>
+          </div>
+
+          <div id="panelBodyfifty" class="panel-collapse collapse" data-parent="#accordion">
+
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                                   [rows]="transferpagedData.data"
+                                   [columnMode]="'force'"
+                                   [headerHeight]="40"
+                                   [scrollbarH]="true"
+                                   [rowHeight]="'40'"
+                                   [footerHeight]="40"
+                                   [externalPaging]="true"
+                                   [externalSorting]="true"
+                                   [loadingIndicator]="loadSave"
+                                   [count]="transferpagedData.pager.totalItems"
+                                   [offset]="transferpagedData.pager.currentPage"
+                                   [limit]="transferpagedData.pager.pageSize"
+                                   (page)='transferSetPage($event)'
+                                   (sort)="transferOnSort($event)">
+                      <ngx-datatable-column name="Application Number" prop="LoanApplicationNumber" [sortable]="true">
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Transfer From" prop="TransferFromName" [sortable]="true">
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Transfer To" prop="TransferToName" [sortable]="true"></ngx-datatable-column>
+                      <ngx-datatable-column name="Transfer By" prop="TransferByName" [sortable]="true">
+                      </ngx-datatable-column>
+                      <ngx-datatable-column name="Transfer Date" prop="TransferDate" [sortable]="true">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{row.TransferDate | pstdatetimetolocal}}
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-footer>
+                        <ng-template ngx-datatable-footer-template
+                                     let-rowCount="rowCount"
+                                     let-pageSize="pageSize"
+                                     let-selectedCount="selectedCount"
+                                     let-currentPage="currentPage"
+                                     let-offset="offset"
+                                     let-isVisible="isVisible">
+                          <div class="page-count" style="max-width:170px;">
+                            {{rowCount}} total
+                          </div>
+                          <div>
+                            <div style="color:black; margin-right:10px;" class="page-size-record">
+                              <span style="text-align:right; width:80px;vertical-align: middle;">
+                                <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="transferOnChange($event)" draggable="false" [closeOnSelect]="true"
+                                           bindLabel="text" bindValue="text"></ng-select>
+                              </span>
+                            </div>
+                          </div>
+                          <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                           [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                           [pagerPreviousIcon]="'fa fa-angle-left'"
+                                           [pagerNextIcon]="'fa feather-chevron-left'"
+                                           [page]="transferpagedData.pager.currentPage+1"
+                                           [size]="pageSizeValue"
+                                           [count]="transferpagedData.pager.totalItems"
+                                           [hidden]="!((rowCount / pageSize) > 1)"
+                                           (change)="transferSetPage($event)">
+                          </datatable-pager>
+                        </ng-template>
+                      </ngx-datatable-footer>
+                    </ngx-datatable>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- Loan Application Transfer History ends here -->
+
+        <!-- Emails -->
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodyeleven" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyeleven">
+                <span> Emails</span>
+
+              </a>
+
+
+            </h4>
+
+          </div>
+          <div id="panelBodyeleven" class="panel-collapse collapse" data-parent="#accordion">
+            <a href="javascript:void(0);" class="btn-in-panel"
+               (click)="openNotificationPopup()" data-toggle="modal" *ngIf="isflag"><i class="feather-plus mr-2"></i> Send Email</a>
+            <div class="panel-body">
+              <app-notifications [loanApplicationId]="loanId"></app-notifications>
+            </div>
+          </div>
+          <!--<div id="panelBodyeleven" class="panel-collapse collapse" data-parent="#accordion">
+            <app-notifications [loanApplicationId]="loanId"></app-notifications>
+          </div>-->
+        </div>
+        <!-- Emails ends here -->
+
+        <!--notespopup-->
+        <app-notes [IsLACanceledFlag]="IsLACanceledFlag" subModuleName="lead"></app-notes>
+
+        <!--<div class="panel-body" *ngIf="commonService.LoginUser.userType!='usertypecontact'">-->
+
+          <!-- loan docs -->
+        <div class="panel" *ngIf="commonService.LoginUser.userType!='usertypecontact'" (click)="refreshloandoclist()">
+          <div class="panel-heading" *ngIf="!isAudit">
+            <h4 class="panel-title">
+              <!--<a href="#LoanDocspanelBody" class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">-->
+              <a href="#LoanDocspanelBody" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#LoanDocspanelBody">
+                <span> Loan Docs</span>
+              </a>
+            </h4>
+          </div>
+          <div id="LoanDocspanelBody" class="panel-collapse collapse" data-parent="#accordion">
+            <div class="panel-body" *ngIf="showLoanDocs">
+              <app-loandocs #loandocs (refreshLoanDocsEmit)="refreshLoanDocsEmit($event)"></app-loandocs>
+            </div>
+          </div>
+        </div>
+
+          <!-- loan doc ends here -->
+
+        <!--<div id="panelBodyeleven" class="panel-collapse collapse" data-parent="#accordion">
+          <app-notifications [loanApplicationId]="loanId"></app-notifications>
+        </div>-->
+        <!--notespopup-->
+        <!-- document upload -->
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodythirteen" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodythirteen">
+                <span> Document Upload</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span>
+              </a>
+            </h4>
+          </div>
+          <div id="panelBodythirteen" class="panel-collapse collapse" data-parent="#accordion">
+            <span class="btn-in-panel">
+
+              <a *ngIf="isCompanyAdmin || isBanker" (click)="transferSFTPdoc()" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" href="javascript:void(0);" title="Transfer documents to SFTP"><i class="fa fa-exchange text-white mr-1"></i> </a>
+
+              <a (click)="copyMessage(formdata1.Id,formdata1.AccountId)" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" title="Click to copy share document link" href="javascript:void(0);"><i class=" feather-copy" aria-hidden="true"></i></a>
+              <a *ngIf="isCompanyAdmin || isFinanceUser || isSales  || isDealerUser" (click)="sharelink(formdata1.Id,'EMAIL')" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" href="javascript:void(0);" title="Share Document Link"><i class="fa fa-share-alt" aria-hidden="true"></i> </a>
+
+              <a *ngIf="isCompanyAdmin || isFinanceUser || isSales  || isDealerUser" (click)="sharelink(formdata1.Id,'SMS')" class="icon-text-center text-white mr-2 h6 mb-0 mt-3" href="javascript:void(0);" title="Share document link via text messsge"><i class="fa fa-mobile" aria-hidden="true"></i> </a>
+
+              <span class="pr-3">Required Document: {{requireDoc}} </span><span>
+                Uploaded Document: {{recieveDocument}}
+                <span>Pending Document: {{pendingDoc}}</span>
+              </span>
+            </span>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <form [formGroup]="UploadimageForm" [ngClass]="{'disabled':loadSave}">
+                    <div class="action row" *ngIf="is_converted != true">
+                      <div class="col-lg-6">
+                        <label>Choose Document:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <div class="input-group">
+                            <div class="input-group-prepend" *ngIf="imageLink!=''">
+
+                              <!--<img src={{imageLink}} alt="img" class="upload_image_thnumb" data-toggle="modal" data-target="#myModal">-->
+
+                              <div id="myModal" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" style="height:450px!important;width:450px!important; ">
+                                  <div class="">
+                                    <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+                                  </div>
+                                  <div class="modal-content">
+                                    <div class="text-center">
+                                      <img src={{imageLink}} alt="img" style="height:450px!important;width:450px!important; " class="img-responsive">
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="custom-file m-fileup">
+                              <input formControlName="profilePic" class="custom-file-input" #file type="file" name='file' #fileInput (change)="setFile($event)" lang="es">
+                              <label class="custom-file-label">{{fileName}}</label>
+
+                            </div>
+                            <small *ngIf="!isValid"
+                                   style="color:red;" class="w-100 mt-1">Document is required</small>
+                            <small class="w-100 mt-1"><i class="text-secondary">Valid file format is pdf and limit upto 20MB.</i> </small>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6">
+                        <label>Document Type:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <ng-select #fileuploadddl [items]="lstfiletype" placeholder="Select File type" formControlName="filetype"
+                                     bindLabel="documentType" (change)="fileNameDDL($event)" bindValue="id" [ngClass]="{'is-invalid': (filetype.invalid && (filetype.dirty || filetype.touched) && (filetype.errors.required || filetype.errors.maxlength)) }"></ng-select>
+                          <!--<small *ngIf="(filetype.dirty || filetype.touched) && filetype.errors?.required"
+                          style="color:red;">Please select File Type</small>-->
+                          <small *ngIf="filetype.invalid && (filetype.dirty || filetype.touched) && filetype.errors.required"
+                                 class="text-danger">Please select Document Type</small>
+                        </div>
+                      </div>
+                      <div class="col-lg-6" style="display:none">
+                        <label>Document Title:<span class="text-danger"></span></label>
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Please enter File Title"
+                                 formControlName="documentTitle"
+                                 [ngClass]="{'is-invalid': (documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && (documentTitle.errors?.required || documentTitle.errors?.maxlength)) }">
+                          <small *ngIf="documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && documentTitle.errors?.required"
+                                 class="text-danger">Document Title is required</small>
+                          <small *ngIf="documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && documentTitle.errors?.maxlength"
+                                 class="text-danger">Document Title must be less than 50 characters.</small>
+                        </div>
+                      </div>
+                      <div class="col-lg-6" style="display:none">
+                        <label>Description:<span class="text-danger"></span></label>
+                        <div class="form-group">
+                          <textarea class="form-control" placeholder="Description" formControlName="description"
+                                    [ngClass]="{'is-invalid': (description.invalid && (description.dirty || description.touched) && (description.errors?.required)) }"></textarea>
+                          <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.required"
+                                 class="text-danger">Description is required</small>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-12">
+                        <a href="javascript:;" (click)="SaveImage()" *ngIf="isflag" class="btn btn-success">Upload Document</a>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="table-responsive mt-3">
+                    <table class="table table-hover border mb-0">
+                      <thead>
+                        <tr>
+                          <th>Download</th>
+                          <th>Document Type</th>
+                          <th>Document Title</th>
+                          <th>Document Uploaded Date</th>
+                          <!--<th>Description</th>-->
+                          <td>Action</td>
+                        </tr>
+
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let c of fileuplist">
+                          <td class="text-left">
+                            <a class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}}" href="{{c.urlLink}}" *ngIf="c.fileExtension=='jpg' ||c.fileExtension=='jpeg' ">
+                              <!--<img src="{{c.fileUrl}}" style="height:50px;width:50px" />-->
+                              <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:50px;width:50px" />
+
+                            </a>
+
+                            <a *ngIf="c.fileExtension=='rar'" (click)="downloadFile($event,c.urlLink)" class="text-dark" download="{{c.fileName}}" href="{{c.urlLink}}">
+                              <img src="../../../assets/default-theme/imagesNew/RarFile.png" style="height:50px;width:50px" />
+
+                            </a>
+
+                            <a *ngIf="c.fileExtension=='png'" class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}} " href="{{c.urlLink}}">
+                              <!--<img src="{{c.fileUrl}}" style="height:50px;width:50px" />-->
+                              <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:50px;width:50px" />
+                            </a>
+
+                            <a *ngIf="c.fileExtension=='gif'" class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}}" href="{{c.urlLink}}">
+                              <img src="../../../assets/default-theme/imagesNew/RarFile.png" style="height:50px;width:50px" />
+
+                            </a>
+
+                            <a *ngIf="c.fileExtension=='zip'" class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}}" href="{{c.urlLink}}">
+                              <img src="../../../assets/default-theme/imagesNew/ZipImage.jpg" style="height:50px;width:50px" />
+
+                            </a>
+
+                            <a *ngIf="c.fileExtension=='pdf' || c.fileExtension=='.pdf' || c.fileExtension=='heic' || c.fileExtension=='heif'" class="text-dark" (click)="downloadFile($event,c.urlLink)" download="{{c.fileName}}" href="{{c.urlLink}}">
+                              <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:50px;width:50px" />
+
+                            </a>
+
+
+                          </td>
+
+                          <td class="text-left">{{c.masterValue}}</td>
+                          <td class="text-left">{{c.fileName}}</td>
+                          <td class="text-left">{{c.createOn | pstdatetimetolocal}}</td>
+                          <!--<td class="text-left">{{c.description}}</td>-->
+                          <td>
+
+                            <div class="text-left">
+                              <ng-container *ngIf="DocVerified==0">
+                                <a (click)="Deleteimage(c.id)" class="btn-delete" *ngIf="isflag"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                                &nbsp;&nbsp;
+                              </ng-container>
+                              <a download="{{c.fileName}}" [href]="c.urlLink" (click)="downloadFile($event,c.urlLink)" [target]="_blank"><i title="Click to downloand." class="fa fa-download text-primary"></i></a>
+
+
+                            </div>
+                          </td>
+                        </tr>
+                        <tr *ngIf="fileuplist == ''">
+                          <td colspan="3" align="center">
+                            <span class="nofound">No Record Found.</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+          </div>
+        </div>
+        <!-- document upload ends here-->
+
+
+
+
+      </div>
+    </div>
+    <div class="card-body" *ngIf="loanApplicationId!='undefined' && loanApplicationId!=null && isContact">
+      <div id="accordion" class="panel-group">
+        <div class="card-body p-0">
+          <div class="detail-heading px-3 py-2 border-0">Your Applications</div>
+          <div class="panel active" *ngFor="let option of loanApplicationData.loanApplicationNumber; let i=index">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a href="#option_{{option.id}}" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false"><span>Loan App.# {{option.loanApplocationNumber}}</span></a>
+              </h4>
+            </div>
+            <div id="option_{{option.id}}" class="panel-collapse collapse show" >
+              <div class="panel-body">
+                <h3 class="form-heading sub"><span>Customer Detail</span></h3>
+                <div class="row" *ngFor="let primarycontact of loanApplicationDetail; let a=index">
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">First Name</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{primarycontact.firstName}}</b></div>
+                  </div>
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Last Name</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{primarycontact.lastName}}</b></div>
+                  </div>
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Email</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{primarycontact.email}}</b></div>
+                  </div>
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Date Of Birth</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{primarycontact.dob| utctolocal}}</b></div>
+                  </div>
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Phone</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{formdata1.HomePhone}}</b></div>
+                  </div>
+
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Address</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left">
+                      <b>
+                        {{formdata1.StreetName}},  {{formdata1.City}} {{formdata1.Zip}}
+                      </b>
+                    </div>
+                  </div>
+                </div>
+                <h3 class="form-heading sub"><span>Product Detail</span></h3>
+                <div class="row">
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Product Name</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{formdata1.ProductName}}</b></div>
+                  </div>
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Loan Rate(%) </div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{formdata1.LoanRate}}</b></div>
+                  </div>
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Term(Month) </div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{formdata1.LoanTerm}}</b></div>
+                  </div>
+
+
+                </div>
+                <h3 style="display:none" class="form-heading sub"><span>Finance Detail</span></h3>
+                <div style="display:none" class="row" *ngFor="let finDetail of loanApplicationfinanceDetail; let c=index">
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Amount:</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{finDetail.amount}}</b></div>
+                  </div>
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">EMI(Month) </div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{finDetail.emi}}</b></div>
+                  </div>
+
+                </div>
+                <h3 class="form-heading sub"><span>Payment Detail</span></h3>
+                <div class="row">
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Payment Via ACH</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{formdata1.AutoPaymentViaACH}}</b></div>
+                  </div>
+
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Bank Name </div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{formdata1.BankName}}</b></div>
+                  </div>
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Product Name</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{formdata1.ProductName}}</b></div>
+                  </div>
+
+                </div>
+                <h3 class="form-heading sub"><span>Sales Rep</span></h3>
+                <div *ngIf="salesRepList!=null && salesRepList!=''">
+                  <div class="row" *ngFor="let s of salesRepList">
+                    <div class="col-md-12 d-flex">
+                      <div class="col-4 mb-2 pb-2  float-left">First Name</div>
+                      <div class="col-8 mb-2 pb-2  float-left">
+                        <b>{{s.name}}</b>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 d-flex">
+                      <div class="col-4 mb-2 pb-2  float-left">Email </div>
+                      <div class="col-8 mb-2 pb-2  float-left"><b>{{s.Email}}</b></div>
+                    </div>
+                    <div class="col-md-12 d-flex">
+                      <div class="col-4 mb-2 pb-2 border-bottom float-left">Phone Number</div>
+                      <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{s.PhoneNumber}}</b></div>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="row" *ngIf="salesRepList==null || salesRepList==''">
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2  float-left">First Name</div>
+                    <div class="col-8 mb-2 pb-2  float-left">
+                      <b>{{N/A}}</b>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2  float-left">Email </div>
+                    <div class="col-8 mb-2 pb-2  float-left"><b>{{N/A}}</b></div>
+                  </div>
+                  <div class="col-md-12 d-flex">
+                    <div class="col-4 mb-2 pb-2 border-bottom float-left">Phone Number</div>
+                    <div class="col-8 mb-2 pb-2 border-bottom float-left"><b>{{N/A}}</b></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodynine" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodynine"><span> Communications</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+            </h4>
+          </div>
+          <div id="panelBodynine" class="panel-collapse collapse" data-parent="#accordion">
+            <a href="javascript:void(0);" class="btn-in-panel"
+               (click)="openComentHistoryPopup()" data-toggle="modal"><i class="feather-plus mr-2"></i> Add Communication</a>
+            <a href="javascript:void(0);" class="btn-in-panel" data-toggle="modal"></a>
+            <div class="panel-body px-0">
+              <app-commenthistory #commentHistory></app-commenthistory>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a href="#panelBodythirteen" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodythirteen">
+                <span> Document Upload</span><span style="display:none" class="edit"><i class="fa fa-pencil"></i></span>
+              </a>
+            </h4>
+          </div>
+          <div id="panelBodythirteen" class="panel-collapse collapse" data-parent="#accordion">
+            <a href="javascript:void(0);" class="btn-in-panel">
+              <span class="pr-3">Required Document: {{requireDoc}} </span><span>
+                Uploaded Document: {{recieveDocument}}
+                <span>Pending Document: {{pendingDoc}}</span>
+              </span>
+            </a>
+            <!--<a href="javascript:void(0);" class="btn-in-panel"></a>-->
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <form [formGroup]="UploadimageForm" [ngClass]="{'disabled':loadSave}">
+                    <div class="action row" *ngIf="is_converted != true">
+                      <div class="col-lg-6">
+                        <label>Choose Document:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <div class="input-group">
+                            <div class="input-group-prepend" *ngIf="imageLink!=''">
+
+                              <!--<img src={{imageLink}} alt="img" class="upload_image_thnumb" data-toggle="modal" data-target="#myModal">-->
+
+                              <div id="myModal" style=" background: none !important;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" style="height:450px!important;width:450px!important; ">
+                                  <div class="">
+                                    <button type="button" class="close" style="color: #fff!important; " data-dismiss="modal">&times;</button>
+                                  </div>
+                                  <div class="modal-content">
+                                    <div class="text-center">
+                                      <img src={{imageLink}} alt="img" style="height:450px!important;width:450px!important; " class="img-responsive">
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="custom-file m-fileup">
+                              <input formControlName="profilePic" class="custom-file-input" #file type="file" name='file' #fileInput (change)="setFile($event)" lang="es">
+                              <label class="custom-file-label">{{fileName}}</label>
+
+                            </div>
+                            <small *ngIf="!isValid"
+                                   style="color:red;" class="w-100 mt-1">Document is required</small>
+                            <small class="w-100 mt-1"><i class="text-secondary">Valid file format is pdf and limit upto 20MB.</i> </small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <label>Document Type:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <ng-select #fileuploadddl [items]="lstfiletype" placeholder="Select File type" formControlName="filetype" (change)="fileNameDDL($event)"
+                                     bindLabel="documentType" bindValue="id" [ngClass]="{'is-invalid': ((filetype.dirty || filetype.touched) && filetype.errors?.required) }"></ng-select>
+                          <small *ngIf="(filetype.dirty || filetype.touched) && filetype.errors?.required"
+                                 style="color:red;">Please select File Type</small>
+                        </div>
+                      </div>
+                      <div class="col-lg-6" style="display:none">
+                        <label>File Title:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Please enter File Title"
+                                 formControlName="documentTitle"
+                                 [ngClass]="{'is-invalid': (documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && (documentTitle.errors?.required || documentTitle.errors?.maxlength)) }">
+                          <small *ngIf="documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && documentTitle.errors?.required"
+                                 class="text-danger">Document Title is required</small>
+                          <small *ngIf="documentTitle.invalid && (documentTitle.dirty || documentTitle.touched) && documentTitle.errors?.maxlength"
+                                 class="text-danger">Document Title must be less than 50 characters.</small>
+                        </div>
+                      </div>
+                      <div class="col-lg-6" style="display:none">
+                        <label>Description:<span class="text-danger">*</span></label>
+                        <div class="form-group">
+                          <textarea class="form-control" placeholder="Description" formControlName="description"
+                                    [ngClass]="{'is-invalid': (description.invalid && (description.dirty || description.touched) && (description.errors?.required)) }"></textarea>
+                          <small *ngIf="description.invalid && (description.dirty || description.touched) && description.errors?.required"
+                                 class="text-danger">Description is required</small>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <a href="javascript:void(0);" (click)="SaveImage()" *ngIf="isflag==true" class="btn btn-success">Upload Files</a>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="table-responsive mt-3">
+                    <table class="table table-hover border mb-0">
+                      <thead>
+                        <tr>
+                          <th>Download</th>
+                          <th>Document Type</th>
+                          <th>Document Title</th>
+                          <!--<th>Description</th>-->
+                          <th>Action</th>
+                        </tr>
+
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let c of fileuplist">
+                          <td class="text-left">
+                            <a *ngIf="c.fileExtension=='jpg' ||c.fileExtension=='jpeg' " (click)="downloadFile($event,c.urlLink)" class="text-dark" download="file" href="{{c.urlLink}}">
+                              <img src="{{c.urlLink}}" style="height:50px;width:50px" />
+
+                            </a>
+
+                            <a *ngIf="c.fileExtension=='rar'" (click)="downloadFile($event,c.urlLink)" class="text-dark" download="{{c.fileName}}" href="{{c.urlLink}}">
+                              <img src="../../../assets/default-theme/imagesNew/RarFile.png" style="height:50px;width:50px" />
+
+                            </a>
+
+
+                            <a *ngIf="c.fileExtension=='png'" (click)="downloadFile($event,c.urlLink)" class="text-dark" download="{{c.fileName}}" href="{{c.urlLink}}">
+                              <img src="{{c.urlLink}}" style="height:50px;width:50px" />
+
+                            </a>
+
+                            <a *ngIf="c.fileExtension=='gif'" (click)="downloadFile($event,c.urlLink)" class="text-dark" download="{{c.fileName}}" href="{{c.urlLink}}">
+                              <img src="../../../assets/default-theme/imagesNew/RarFile.png" style="height:50px;width:50px" />
+
+                            </a>
+
+                            <a *ngIf="c.fileExtension=='zip'" (click)="downloadFile($event,c.urlLink)" class="text-dark" download="{{c.fileName}}" href="{{c.urlLink}}">
+                              <img src="../../../assets/default-theme/imagesNew/ZipImage.jpg" style="height:50px;width:50px" />
+
+                            </a>
+
+                            <a *ngIf="c.fileExtension=='pdf'" (click)="downloadFile($event,c.urlLink)" class="text-dark" download="{{c.fileName}}" href="{{c.urlLink}}">
+                              <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:50px;width:50px" />
+
+                            </a>
+                          </td>
+                          <td class="text-left">{{c.masterValue}}</td>
+                          <td class="text-left">{{c.fileName}}</td>
+
+                          <!--<td class="text-left">{{c.description}}</td>-->
+                          <td>
+
+                            <div class="text-left">
+                              <ng-container *ngIf="DocVerified==0">
+
+                                <a (click)="Deleteimage(c.id)" class="btn-delete"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                                &nbsp;&nbsp;
+                              </ng-container>
+                              <a download="{{c.fileName}}" (click)="downloadFile($event,c.urlLink)" [href]="c.urlLink" [target]="_blank"><i title="Click to downloand." class="fa fa-download text-primary"></i></a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr *ngIf="fileuplist == ''">
+                          <td colspan="3" align="center">
+                            <span class="nofound text-center text-danger">No Record Found.</span>
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--<app-loanapplicationpopup #loanapplicationpopupModal></app-loanapplicationpopup>
+  <app-aoapplicantdetail #coapplicantDetail></app-aoapplicantdetail>
+  <app-cbilscore #cibilscore></app-cbilscore>-->
+  <app-stageinfo #stageInfo (stageemit)="stageemit()" (changeOrderStageEmit)="changeOrderStageEmit()" (showOverrideReasonPopup)="showOverrideReasonPopup()" (stageCreditScoreManualPullForCoApp)="CreditScoreManualPullForCoApp()" (stageCreditScoreManualPullForApp)="CreditScoreManualPullForApp()" (stateRule)="ruleProgressShow()" [LoanApplicationNumber]="LoanApplicationNumber" [SFOpportunityId]="SFOpportunityId"></app-stageinfo>
+  <app-notificationpopup #notificationPopup></app-notificationpopup>
+  <app-downloaddocument #documentModal></app-downloaddocument>
+  <app-credit-report #creditReport></app-credit-report>
+  <app-transferloanapplication #showtransferAppPopUp (refreshEmit)="refreshEmit()"></app-transferloanapplication>
+  <app-tranfertodealer #showtransfertoDealerPopUp (refreshEmit)="refreshEmit()"></app-tranfertodealer>
+
+  <div class="modal fade in show" bsModal #AddReason="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add a Note</h4>
+          <button type="button" class="close" (click)="closeAddReason()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-bottom:10px; height:290px;">
+          <form [formGroup]="addReasonForm" [ngClass]="{'disabled':loadSave}">
+            <div class="row">
+              <!--<div class="col-12 col-md-12 col-lg-12">
+                <label>Name</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Enter Note" formControlName="note" [ngClass]="{'is-invalid': (note.invalid && (note.dirty || note.touched) && (note.errors?.required || note.errors?.maxlength)) }">
+                  <small *ngIf="note.invalid && (note.dirty || note.touched) && note.errors?.required"
+                         class="text-danger">Note is required</small>
+                </div>
+              </div>-->
+              <div class="col-12 col-md-12 col-lg-12">
+                <label>Note</label>
+                <div class="form-group">
+                  <textarea rows="5" class="form-control" style="min-height:170px;" placeholder="Enter Reason" formControlName="reasonDescription" #machineDescription maxlength="1000" [ngClass]="{'is-invalid': (reasonDescription.invalid && (reasonDescription.dirty || reasonDescription.touched) && (reasonDescription.errors?.required || reasonDescription.errors?.maxlength)) }"></textarea>
+                  <small *ngIf="reasonDescription.invalid && (reasonDescription.dirty || reasonDescription.touched) && reasonDescription.errors?.required"
+                         class="text-danger">Note is required</small>
+                </div>
+              </div>
+
+
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success form-btns" (click)="SaveReason()"><i class="feather-save text-white"></i> Save</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="closeAddReason()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+        </div>
+
+      </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>
+
+  <div class="modal fade in show" bsModal #assignpopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-xl modal-info ">
+      <div class="modal-content">
+        <div class="modal-header" *ngIf="formdata1">
+          <h4 class="modal-title">Assign Loan Application (#{{formdata1.LoanApplicationNumber}})</h4>
+          <button type="button" class="close" (click)="closemodel()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="panel-header border-bottom py-2">
+
+          <div class="col-md-12 col-xl-12">
+            <div class="row searchfield  mr-1 w-100">
+              <div class="col-sm-12  col-lg-4 mb-lg-0 mb-2">
+                <input class="form-control input-sm" type="text" [(ngModel)]='listBankerNameFilter' placeholder="Search By Name" (keyup)='updateBankerNameFilter($event)'>
+              </div>
+              <div class="col-sm-12  col-lg-4">
+                <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="searchBankUserList()"><span><i class="feather-search"></i> Search</span></a>
+                <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="resetBankUserList()"><span><i class="fa fa-refresh"></i> Reset</span></a>
+                <!--<a class="btn btn-white mr-1" href="javascript:void(0);"><span><i class="fa fa-filter"></i> Filter</span></a>-->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-body" style="margin-bottom:10px; max-height:700px; overflow-y:auto;">
+
+          <div class="col-lg-12" [ngClass]="{'disabled':loadSave}">
+            <div class="table-responsive">
+              <div class="table table-striped">
+                <ngx-datatable #table class="bootstrap"
+                               [rows]="pagedDataBankerList.data"
+                               [columnMode]="'force'"
+                               [scrollbarH]="true"
+                               [rowHeight]="'40'"
+                               [headerHeight]="40"
+                               [footerHeight]="40"
+                               [externalPaging]="true"
+                               [externalSorting]="true"
+                               [loadingIndicator]="loadSave"
+                               [messages]="{emptyMessage:'No Record Found.'}"
+                               [count]="pagedDataBankerList.pager.totalItems"
+                               [offset]="pagedDataBankerList.pager.currentPage"
+                               [limit]="pagedDataBankerList.pager.pageSize"
+                               (page)='setPageBankerList($event)'
+                               (sort)="onSortBankerList($event)">
+                  <!--[selected]="selected"
+                  [selectionType]="SelectionType.checkbox"
+                  [selectAllRowsOnPage]="false"
+                  [displayCheck]="displayCheck">-->
+
+
+
+
+                  <ngx-datatable-column name="Name" [sortable]="true" prop="Name" [minWidth]="150">
+
+
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column name="Email" sortable="true" prop="Email" [minWidth]="150"></ngx-datatable-column>
+                  <ngx-datatable-column name="Role" sortable="true" prop="Role" [minWidth]="150"></ngx-datatable-column>
+                  <ngx-datatable-column name="Assigned" sortable="true" prop="Status">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <label class="switch">
+                        <input type="checkbox" (change)="assignedBanker(row)" [(ngModel)]='row.Status'>
+                        <span class="slider round"><span>Yes</span></span>
+                      </label>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-footer>
+                    <ng-template ngx-datatable-footer-template
+                                 let-rowCount="rowCount"
+                                 let-pageSize="pageSize"
+                                 let-selectedCount="selectedCount"
+                                 let-currentPage="curPageBankUserList"
+                                 let-offset="offsetBankUser"
+                                 let-isVisible="isVisible">
+                      <div class="page-count" style="max-width:170px;">
+                        Total Records: {{rowCount}}
+                      </div>
+                      <div>
+                        <div style="color:black; margin-right:10px;" class="page-size-record">
+                          <span style="text-align:right; width:80px;vertical-align: middle;">
+                            <ng-select [searchable]="false" [items]="lstPageSizeBankerList" appendTo="body" [(ngModel)]='pageSizeValueBankerList' dropzone="fixed" [clearable]="false" (change)="onChangeBankUserList($event)" draggable="false" [closeOnSelect]="true"
+                                       bindLabel="text" bindValue="text"></ng-select>
+                          </span>
+                        </div>
+                      </div>
+                      <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                       [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                       [pagerPreviousIcon]="'fa fa-angle-left'"
+                                       [pagerNextIcon]="'fa feather-chevron-left'"
+                                       [page]="curPageBankUserList"
+                                       [size]="pageSizeValueBankerList"
+                                       [count]="pagedDataBankerList.pager.totalItems"
+                                       [hidden]="!((rowCount / pageSize) > 1)"
+                                       (change)="setPageBankerList($event)">
+                      </datatable-pager>
+                    </ng-template>
+                  </ngx-datatable-footer>
+                </ngx-datatable>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+
+          <button type="submit" class="btn btn-success form-btns" (click)="saveAssociateBanker()"><i class="feather-save text-white"></i> Save</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="closemodel()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade in show" bsModal #salesassignpopup="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-xl modal-info">
+      <div class="modal-content">
+        <div class="modal-header" *ngIf="formdata1">
+          <h4 class="modal-title">Assign Loan Application (#{{formdata1.LoanApplicationNumber}})</h4>
+          <button type="button" class="close" (click)="closeSalesAssignModel()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="panel-header border-bottom py-2">
+
+          <div class="col-md-12 col-xl-12">
+            <div class="row searchfield  mr-1 w-100">
+              <div class="col-sm-12  col-lg-4 mb-lg-0 mb-2">
+                <input class="form-control input-sm" type="text" [(ngModel)]='listNameFilter' placeholder="Search By Name" (keyup)='updateNameFilter($event)'>
+              </div>
+              <div class="col-sm-12  col-lg-4">
+                <ng-select #userTypeSelect [items]="lstUserType"
+                           placeholder="Select User Type" bindValue="value" bindLabel="text"
+                           [closeOnSelect]="true"
+                           (change)="SetUserType($event.value)" (clear)="restddl()">
+                </ng-select>
+              </div>
+              <div class="col-sm-12  col-lg-4">
+                <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="searchSaleUserList()"><span><i class="feather-search"></i> Search</span></a>
+                <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="resetSaleUserList()"><span><i class="fa fa-refresh"></i> Reset</span></a>
+                <!--<a class="btn btn-white mr-1" href="javascript:void(0);"><span><i class="fa fa-filter"></i> Filter</span></a>-->
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-body" style="margin-bottom:10px; max-height:600px; overflow-y:auto;">
+
+
+          <div class="col-lg-12" [ngClass]="{'disabled':loadSave}">
+            <div class="table-responsive">
+              <div class="table table-striped">
+                <ngx-datatable #table class="bootstrap"
+                               [rows]="pagedDataSalesList.data"
+                               [columnMode]="'force'"
+                               [scrollbarH]="true"
+                               [rowHeight]="'40'"
+                               [headerHeight]="40"
+                               [footerHeight]="40"
+                               [externalPaging]="true"
+                               [externalSorting]="true"
+                               [loadingIndicator]="loadSave"
+                               [messages]="{emptyMessage:'No Record Found.'}"
+                               [count]="pagedDataSalesList.pager.totalItems"
+                               [offset]="pagedDataSalesList.pager.currentPage"
+                               [limit]="pagedDataSalesList.pager.pageSize"
+                               (page)='setPageSalesList($event)'
+                               (sort)="onSortSalesList($event)">
+                  <!--[selected]="selected"
+                  [selectionType]="SelectionType.checkbox"
+                  [selectAllRowsOnPage]="false"
+                  [displayCheck]="displayCheck">-->
+
+
+
+
+                  <ngx-datatable-column name="Name" [sortable]="true" prop="Name" [minWidth]="150">
+
+
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column name="Email" sortable="true" prop="Email" [minWidth]="150"></ngx-datatable-column>
+                  <ngx-datatable-column name="Role" sortable="true" prop="Role" [minWidth]="150"></ngx-datatable-column>
+                  <ngx-datatable-column name="Assigned" sortable="true" prop="Status " [maxWidth]="150">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <label class="switch">
+                        <input type="checkbox" (change)="assigned(row)" [(ngModel)]='row.Status' [checked]="row.Status">
+                        <span class="slider round"><span>Yes</span></span>
+                      </label>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-footer>
+                    <ng-template ngx-datatable-footer-template
+                                 let-rowCount="rowCount"
+                                 let-pageSize="pageSize"
+                                 let-selectedCount="selectedCount"
+                                 let-currentPage="curPageSalesUserList"
+                                 let-offset="offsetSaleUser"
+                                 let-isVisible="isVisible">
+                      <div class="page-count" style="max-width:170px;">
+                        Total Records: {{rowCount}}
+                      </div>
+                      <div>
+                        <div style="color:black; margin-right:10px;" class="page-size-record">
+                          <span style="text-align:right; width:80px;vertical-align: middle;">
+                            <ng-select [searchable]="false" [items]="lstPageSizeBankerList" appendTo="body" [(ngModel)]='pageSizeValueSalesList' dropzone="fixed" [clearable]="false" (change)="onChangeSalesUserList($event)" draggable="false" [closeOnSelect]="true"
+                                       bindLabel="text" bindValue="text"></ng-select>
+                          </span>
+                        </div>
+                      </div>
+                      <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                       [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                       [pagerPreviousIcon]="'fa fa-angle-left'"
+                                       [pagerNextIcon]="'fa feather-chevron-left'"
+                                       [page]="curPageSalesUserList"
+                                       [size]="pageSizeValueSalesList"
+                                       [count]="pagedDataSalesList.pager.totalItems"
+                                       [hidden]="!((rowCount / pageSize) > 1)"
+                                       (change)="setPageSalesList($event)">
+                      </datatable-pager>
+                    </ng-template>
+                  </ngx-datatable-footer>
+                </ngx-datatable>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="modal-footer">
+
+          <button type="submit" class="btn btn-success form-btns" (click)="saveAssignedSalesUserDetail()"><i class="feather-save text-white"></i> Save</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="closeSalesAssignModel()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+        </div>
+        <!--<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>-->
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade in show" bsModal #AddCancelReason="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header" *ngIf="formdata1">
+          <h4 class="modal-title">Add a Cancel Note (#{{formdata1.LoanApplicationNumber}})</h4>
+          <button type="button" class="close" (click)="closecancel()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-bottom:10px; height:330px;">
+          <form [formGroup]="addCancelReasonForm" [ngClass]="{'disabled':loadSave}">
+            <div class="row">
+              <!--<div class="col-12 col-md-12 col-lg-12">
+                <label>Name</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Enter Note" formControlName="note" [ngClass]="{'is-invalid': (note.invalid && (note.dirty || note.touched) && (note.errors?.required || note.errors?.maxlength)) }">
+                  <small *ngIf="note.invalid && (note.dirty || note.touched) && note.errors?.required"
+                         class="text-danger">Note is required</small>
+                </div>
+              </div>-->
+              <div class="col-12 col-md-12 col-lg-12">
+                <label>Note</label>
+                <div class="form-group">
+                  <textarea rows="5" class="form-control" style="min-height:140px;" placeholder="Enter Reason" formControlName="cancelreasonDescription" maxlength="1000" [ngClass]="{'is-invalid': (cancelreasonDescription.invalid && (cancelreasonDescription.dirty || cancelreasonDescription.touched) && (cancelreasonDescription.errors?.required || cancelreasonDescription.errors?.maxlength)) }"></textarea>
+                  <small *ngIf="cancelreasonDescription.invalid && (cancelreasonDescription.dirty || cancelreasonDescription.touched) && cancelreasonDescription.errors?.required"
+                         class="text-danger">Note is required</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-12 col-lg-12" *ngIf="isCancelRequest==1">
+                <label>Check Request Date</label>
+                <div class="form-group">
+
+                  <p-calendar inputStyleClass="form-control start-date" [baseZIndex]="9999" formControlName="requestdate"
+                              [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+                  <small *ngIf="requestdate.invalid && (requestdate.dirty || requestdate.touched) && requestdate.errors?.required"
+                         class="text-danger">Check Request Date is required</small>
+                </div>
+              </div>
+              <div class="col-12 col-md-12 col-lg-12" *ngIf="isCancelRequest==0">
+                <label>Cancel Date</label>
+                <div class="form-group">
+                  <p-calendar inputStyleClass="form-control start-date" [baseZIndex]="9999" formControlName="closedate"
+                              [showTime]="false" dateFormat="mm/dd/yy" appendTo="body" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+                  <small *ngIf="closedate.invalid && (closedate.dirty || closedate.touched) && closedate.errors?.required"
+                         class="text-danger">Cancel Date is required</small>
+                </div>
+              </div>
+
+
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success form-btns" (click)="SaveCancelReason()"><i class="feather-save text-white"></i> Save</button>
+
+          <button type="submit" class="btn btn-danger form-btns" (click)="closecancel()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+        </div>
+
+      </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>
+
+  <div bsModal #ruleProgressModel="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Progress</h4>
+          <button type="button" class="close" (click)="ruleProgressClose()" *ngIf="loanProgressModel.finalizing ==2" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="max-height:450px;">
+          <div class="row">
+            <div class="col-12">
+              <div id="accordion">
+                <div class="card loan-progress-parent">
+                  <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                      <span *ngIf="loanProgressModel.appyingChanges == 2" class="step-no btn-primary mr-1">
+                        <i class="feather-check " aria-hidden="true"></i>
+                      </span>
+                      <span *ngIf="loanProgressModel.appyingChanges == 1">
+                        <i class="fa fa-cog fa-spin fa-fw rule-target-spinner my-2 "></i>
+                      </span>
+                      <span *ngIf="loanProgressModel.appyingChanges ==0">
+                        <i class="fa fa-cog fa-fw rule-target-spinner my-2 " style="color:#495056 !important;"></i>
+                      </span>
+                      <span *ngIf="loanProgressModel.appyingChanges ==0">
+                        <i class="fa fa-cog fa-fw rule-target-spinner my-2 " style="color:#495056 !important;"></i>
+                      </span>
+                      <span *ngIf="loanProgressModel.appyingChanges ==3">
+                        <i class="fa fa-exclamation-triangle fa-fw rule-target-spinner my-2 text-danger" aria-hidden="true"></i>
+                      </span>
+
+
+                      <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style=" color: #495056; font-size: 20px;    text-decoration: none;">
+                        <span *ngIf="loanProgressModel.appyingChanges == 2">Changes applied</span>
+                        <span *ngIf="loanProgressModel.appyingChanges != 2">Applying changes</span>
+                      </button>
+                    </h5>
+                  </div>
+                </div>
+                <div class="card loan-progress-parent">
+                  <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                      <span *ngIf="loanProgressModel.applyingRules==2" class="step-no btn-primary mr-1">
+                        <i class="feather-check " aria-hidden="true"></i>
+                      </span>
+                      <span *ngIf="loanProgressModel.applyingRules==1">
+                        <i class="fa fa-cog fa-spin fa-fw rule-target-spinner my-2 "></i>
+                      </span>
+                      <span *ngIf="loanProgressModel.applyingRules==0">
+                        <i class="fa fa-cog fa-fw rule-target-spinner my-2" style="color:#495056 !important;"></i>
+                      </span>
+                      <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style=" color: #495056; font-size: 20px;    text-decoration: none;">
+                        <span *ngIf="loanProgressModel.applyingRules == 2">Rules applied</span>
+                        <span *ngIf="loanProgressModel.applyingRules != 2">Applying rules</span>
+                      </button>
+                    </h5>
+                  </div>
+                  <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body pt-2">
+                      <div id="rule-accordion" class="rule-accordion">
+                        <div class="card" *ngFor="let rule of ruleList">
+                          <div class="card-header" id="heading-{{rule.RuleId}}">
+                            <h5 class="mb-0 pl-1">
+                              <span *ngIf="rule.Status==1" class="step-no btn-primary mr-1">
+                                <i class="feather-check " aria-hidden="true"></i>
+                              </span>
+                              <span *ngIf="rule.Status==3">
+                                <i class="fa fa-cog fa-spin fa-fw rule-target-spinner my-2 "></i>
+                              </span>
+                              <span *ngIf="rule.Status==4">
+                                <i class="fa fa-cog fa-fw rule-target-spinner my-2" style="color:#495056"></i>
+                              </span>
+
+                              <button class="btn btn-link rule-heading collapsed cursor-pointer" [ngClass]="{'cursor-pointer':(rule.failed!=0 || rule.completed!=0)}" data-toggle="collapse" [attr.data-target]="'#collapse-' + (rule.failed!=0 || rule.completed!=0 ? rule.RuleId : 0)" aria-expanded="false" [attr.aria-controls]="'collapse-' + rule.RuleId">
+                                {{rule.RuleName}}
+                              </button>
+
+                              <span class="badge box-red text-white float-right mt-2">{{rule.failed}}</span>
+
+
+                              <!--<span class="badge col-orange text-white float-right mr-2 mt-2">{{rule.unmatched}}</span>-->
+
+                              <span class="badge box-green text-white float-right mr-2 mt-2">{{rule.completed}}</span>
+                            </h5>
+                          </div>
+
+                          <div [id]="'collapse-' +rule.RuleId" class="collapse" [attr.aria-labelledby]="'heading-' +rule.RuleId" data-parent="#rule-accordion">
+                            <div class="card-body pt-0">
+
+
+                              <div id="target-accordion" class="target-accordion">
+                                <div class="card" *ngFor="let target of rule.Targets" [ngClass]="{'d-none':(target.Status != 1 && target.Status != 0)}">
+                                  <div class="card-header" id="heading-{{target.TargetId}}">
+                                    <h5 class="mb-0 ist-child-loanapp">
+                                      <span [ngSwitch]="target.Status">
+
+                                        <i *ngSwitchCase="3" class="fa fa-spinner fa-spin fa-3x fa-fw rule-target-spinner float-left mr-2 mt-1"></i>
+                                        <span *ngSwitchCase="3" class="sr-only">Loading...</span>
+                                        <i *ngSwitchCase="1" class="fa fa-circle text-green float-left mr-2 mt-1" aria-hidden="true"></i>
+                                        <i *ngSwitchCase="0" class="fa fa-circle text-red float-left mr-2 mt-1" aria-hidden="true"></i>
+                                        <!--<i *ngSwitchCase="2" class="fa fa-circle text-yellow float-left mr-2 mt-1" aria-hidden="true"></i>-->
+                                      </span>
+                                      <button class="btn btn-link collapsed p-0 text-left cursor-pointer" data-toggle="collapse" [attr.data-target]="'#collapse-'+target.TargetId" aria-expanded="true" [attr.aria-controls]="'collapse-' + target.TargetId">
+                                        {{target.DisplayCondition}}
+                                      </button>
+
+                                    </h5>
+                                  </div>
+
+                                  <div [id]="'collapse-'+ target.TargetId" class="collapse" [attr.aria-labelledby]="'heading' + target.TargetId" data-parent="#target-accordion">
+                                    <div class="card-body">
+                                      <ul class="list-unstyled">
+                                        <li *ngFor="let result of target.Results">
+                                          <span class="badge badge-info">{{result.Action}}</span> {{result.Name}}
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="row ml-0 mr-0 w-100">
+            <div class="col-3">
+              <span class="d-inline-block mr-2 float-left"> <i class="fa fa-circle text-green"></i> Pass</span>
+              <!--<span class="d-inline-block mr-2"> <i class="fa fa-circle text-yellow"></i> Unmached</span>-->
+              <span class="d-inline-block mr-2 float-left"> <i class="fa fa-circle text-red"></i> Failed</span>
+            </div>
+            <div class="col-9">
+              <button type="button" class="btn btn-info form-btns mr-2 float-right" *ngIf="loanProgressModel.finalizing==0" aria-label="Close">
+                <i class="fa fa-spinner fa-spin fa-3x fa-fw rule-target-spinner float-left text-white mr-2 mt-1"></i>
+                <span class="sr-only">Loading...</span>Running..
+              </button>
+              <button type="button" class="btn btn-primary form-btns mr-2 float-right" *ngIf="loanProgressModel.finalizing==1" aria-label="Close">
+                <i class="fa fa-spinner fa-spin fa-3x fa-fw rule-target-spinner float-left text-white mr-2 mt-1"></i>
+                <span class="sr-only">Loading...</span>Finalizing..
+              </button>
+              <button type="button" class="btn btn-danger form-btns mr-2 float-right" (click)="ruleProgressClose()" *ngIf="loanProgressModel.finalizing ==2" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade in show" bsModal #DenyReason="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit {{ReasonFrom}} Deny Reason</h4>
+          <button type="button" class="close" (click)="cancelDenyReason()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-bottom:10px; height:330px;">
+          <div class="row">
+
+            <div class="col-12 col-md-12 col-lg-12">
+              <label>Reason</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" style="min-height:140px;" placeholder="Enter Reason" [(ngModel)]="denyReasonField"></textarea>
+              </div>
+            </div>
+
+            <!--<div class="col-12 col-md-12 col-lg-12" *ngIf="formdata1.NTPCOReason!=null">
+              <label>Reason</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" style="min-height:140px;" placeholder="Enter Reason" [(ngModel)]="denyReasonField"></textarea>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-12 col-lg-12" *ngIf="formdata1.BankReason!=null">
+              <label>Reason</label>
+              <div class="form-group">
+                <textarea rows="5" class="form-control" style="min-height:140px;" placeholder="Enter Reason" [(ngModel)]="denyReasonField"></textarea>
+
+              </div>
+            </div>-->
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success form-btns" (click)="UpdateDenyReson()"><i class="feather-save text-white"></i> Save</button>
+
+          <button type="submit" class="btn btn-danger form-btns" (click)="cancelDenyReason()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+        </div>
+
+      </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>
+
+  <div class="modal fade in show" bsModal #UnCancelReason="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add a UnCancel Note (#{{applicationNumber}})</h4>
+          <button type="button" class="close" (click)="closeUnCancelReason()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-bottom:10px; height:320px;">
+          <form [formGroup]="addUnCancelForm" [ngClass]="{'disabled':loadSave}">
+            <div class="row">
+              <div class="col-12 col-md-12 col-lg-12">
+                <label>Note</label>
+                <div class="form-group">
+                  <textarea rows="5" class="form-control" style="min-height:140px;" placeholder="Enter Note" formControlName="reasonCancelDescription" maxlength="1000" [ngClass]="{'is-invalid': (reasonCancelDescription.invalid && (reasonCancelDescription.dirty || reasonCancelDescription.touched) && (reasonCancelDescription.errors?.required || reasonCancelDescription.errors?.maxlength)) }"></textarea>
+                  <small *ngIf="reasonCancelDescription.invalid && (reasonCancelDescription.dirty || reasonCancelDescription.touched) && reasonCancelDescription.errors?.required"
+                         class="text-danger">Note is required</small>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success form-btns" (click)="SaveUncancelReason()"><i class="feather-save text-white"></i> Save</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="closeUnCancelReason()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>
+
+
+  <div class="modal fade in show" bsModal #showReasonPopUp="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-lg modal-info ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add a Note</h4>
+          <button type="button" class="close" (click)="closeoverrideReason()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-bottom:10px; height:290px;">
+          <form [formGroup]="overrideForm" [ngClass]="{'disabled':loadSave}">
+            <div class="row">
+              <div class="col-12 col-md-12 col-lg-12">
+                <label>Note</label>
+                <div class="form-group">
+                  <textarea rows="5" class="form-control" style="min-height:170px;" placeholder="Enter Reason" formControlName="overridereasonDescription" #machineDescription maxlength="1000" [ngClass]="{'is-invalid': (overridereasonDescription.invalid && (overridereasonDescription.dirty || overridereasonDescription.touched) && (overridereasonDescription.errors?.required || overridereasonDescription.errors?.maxlength)) }"></textarea>
+                  <small *ngIf="overridereasonDescription.invalid && (overridereasonDescription.dirty || overridereasonDescription.touched) && overridereasonDescription.errors?.required"
+                         class="text-danger">Note is required</small>
+                </div>
+              </div>
+
+
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success form-btns" (click)="SaveOverRideReason()"><i class="feather-save text-white"></i> Save</button>
+          <button type="submit" class="btn btn-danger form-btns" (click)="closeoverrideReason()" data-dismiss="modal" aria-label="Close"><i class="feather-x text-white"></i> Cancel</button>
+        </div>
+
+      </div>
+    </div>
+    <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+  </div>
+
+  <div class="modal fade in show" bsModal #generatePopUp="bs-modal" tabindex="-1" role="dialog" style="display: none; padding-right: 10px;">
+    <div class="modal-dialog modal-sm modal-info">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Generate Loan Docs</h4>
+          <button type="button" class="close" (click)="closeGenerateDocumentModel()" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+
+        <div class="modal-body" style="margin-bottom:10px; max-height:600px; overflow-y:auto;">
+
+
+          <div class="col-lg-12">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="createloandoc" style="background: #ececec;">
+                  <p>Using {{PrimarySigner}}</p>
+                  <div class="d-inline-block" *ngIf="financeNTP && !isNTPFundReleaseApproved && !(generateButtonName == 'Void Document' && isBanker) && shouldGenerateDocumentVisible">
+                    <button *ngIf="(commonService.LoginUser.userType!='usertypecontact') && isProductInfoApproved" (click)="generateDocument(PrimarySigner)" class="btn btn-success form-btns mr-1 ng-star-inserted" [class.btn-success]="generateButtonName == 'Generate Document'" [class.btn-secondary]="generateButtonName == 'Void Document'" href="javascript:void(0)">Generate</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="createloandoc">
+                  <p>Using {{SecondarySigner}}</p>
+
+                  <!--*ngIf="isCompanyAdmin"
+                  *ngIf="hidegenerateDocBySecSignerButton"-->
+
+                  <div class="d-inline-block" *ngIf="financeNTP && !isNTPFundReleaseApproved && !(generateButtonName == 'Void Document' && isBanker) && shouldGenerateDocumentVisible">
+                    <button *ngIf="(commonService.LoginUser.userType!='usertypecontact') && isProductInfoApproved" (click)="generateDocumentBySecondarySigner(SecondarySigner)" class="btn btn-success form-btns mr-1 ng-star-inserted orangecolor" href="javascript:void(0)">Generate</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <app-loader [size]=60 [color]="'white'" *ngIf="loaderCommon" class="loader-popup"></app-loader>
+
+  <!--<app-systeminfo #sysInfo></app-systeminfo>-->
+  <!--<app-propertysearch #property [AppDATA]="formdata1"></app-propertysearch>-->

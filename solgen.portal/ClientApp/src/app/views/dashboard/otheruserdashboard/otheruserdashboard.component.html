@@ -1,0 +1,440 @@
+<style>
+    .circle-color {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        margin: 0 15px;
+        border-radius: 100%;
+        vertical-align: middle;
+    }
+    
+    .multi-color:nth-child(5n+1) .circle-color {
+        background: #d88c49;
+    }
+    
+    .multi-color:nth-child(5n+2) .circle-color {
+        background: #52a4c9;
+    }
+    
+    .multi-color:nth-child(5n+3) .circle-color {
+        background: #d84a49;
+    }
+    
+    .multi-color:nth-child(5n+4) .circle-color {
+        background: #b8a41d;
+    }
+    
+    .multi-color:nth-child(5n+5) .circle-color {
+        background: #6f9f4d;
+    }
+</style>
+
+<div (click)="hideCalendar($event)" *ngIf="!loadSave">
+    <div [ngClass]="isFullScreenSection ? 'fixeddheaderss' : 'fixeddheader'">
+        <div class="header header d-flex flex-wrap justify-content-between pt-2">
+            <h2 class="float-left pr-2"><strong>Dashboard</strong>
+                <!--<a class="d-inline-block ml-2 cursor-pointer" style="margin:auto 0px;" data-dismiss="modal" (click)="addedit()" data-toggle="modal"><i class="fa fa-pencil mr-1 text-success"></i></a>--></h2>
+
+            <div class="right pt-2">
+                <a *ngIf="isSuperAdmin==true" href="javascript:;" class="btn btn-primary mr-2" data-toggle="modal" data-target="#headerswtichuser"><i class="feather-log-in mr-1"></i>Switch Company</a>
+                <a href="javascript:;" class="btn btn-info" (click)="addedit()"><i class="feather-edit-2 mr-1"></i> Edit Dashboard</a>
+
+            </div>
+
+
+            <div class="input-group" style="width: auto !important;" *ngIf="usertype !='usertypecompanyadmin' && isHOD != true">
+                <input type="text" class="form-control" placeholder="All" (click)="ShowCustomDateFilter()" [(ngModel)]="selectedFilter" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <span class="input-group-text closeCustomFilter" id="basic-addon2" (click)="ShowCustomDateFilter()"><i class="feather-calendar m-0"></i></span>
+                </div>
+                <div class="dasboard-calc" *ngIf="showDateFilter">
+                    <span><a href="javascript:void(0);" (click)="today()" [ngClass]="{'cal-active' : selectedFilter==='Today'}">Today</a> </span>
+                    <span> <a href="javascript:void(0);" (click)="yesterday()" [ngClass]="{'cal-active' : selectedFilter==='Yesterday'}">Yesterday</a></span>
+                    <!--<span> <a href="javascript:void(0);" (click)="onWeek()" [ngClass]="{'cal-active' : selectedFilter==='Last 7 Days'}">Last 7 Days </a></span>-->
+                    <span> <a href="javascript:void(0);" (click)="ThisWeek()" [ngClass]="{'cal-active' : selectedFilter==='This Week'}">This Week</a></span>
+                    <!--<span> <a href="javascript:void(0);" (click)="onMonth()" [ngClass]="{'cal-active' : selectedFilter==='Last 30 Days'}">Last 30 Days</a></span>-->
+                    <span> <a href="javascript:void(0);" (click)="LastWeek()" [ngClass]="{'cal-active' : selectedFilter==='Last Week'}">Last Week</a></span>
+                    <span> <a href="javascript:void(0);" (click)="thisMopnth()" [ngClass]="{'cal-active' : selectedFilter==='This Month'}">This Month</a></span>
+                    <span> <a href="javascript:void(0);" (click)="lastMonth()" [ngClass]="{'cal-active' : selectedFilter==='Last Month'}">Last Month</a>   </span>
+                    <span>  <a href="javascript:void(0);" (click)="thisYear()" [ngClass]="{'cal-active' : selectedFilter==='This Year'}">This Year </a> </span>
+                    <span>   <a href="javascript:void(0);" (click)="lastYear()" [ngClass]="{'cal-active' : selectedFilter==='Last Year'}">Last Year </a> </span>
+                    <span class="w-100 border-0 text-center"><a href="javascript:void(0);">Custom Range</a></span>
+
+                    <div class="date-box p-2">
+                        <p-calendar #myStartCalendar placeholder="From Date - To Date" [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true" inputId="range" (onSelect)="OnChangedDateRange($event)" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"
+                            (click)="customRange()" [ngClass]="{'cal-active' : selectedFilter==='Custom Range'}"></p-calendar>
+                        <span id="basic-addon2"><i class="feather-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <app-annoucementwidget *ngIf="!isFullScreen"></app-annoucementwidget>
+
+        <div class="clearfix"></div>
+        <div class="row  float-right" *ngIf="usertype =='usertypecompanyadmin' || isHOD == true">
+            <div class="col-lg-12">
+                <div class="d-md-flex justify-content-between flex-wrap">
+                    <div class="input-group justify-content-end mt-2 pr-3 d-none">
+                        View Data
+                        <label class="switch dashsl ml-2">
+              <input type="checkbox" class="form-check-input custom-control-input dynamic" [checked]="DashboardViewData" (click)="ShowDashboardViewData()">
+              <span class="slider round">
+                <span class="slider-yes">Me</span>
+                <span class="slider-no">Team</span>
+              </span>
+            </label>
+                    </div>
+                    <div class=" dash-filter mr-2" style="display:none;" role="group" aria-label="Button group with nested dropdown">
+                        <button type="button" class="btn btnfc mr-2" (click)="SetDashboardViewType('me')" [ngClass]="{'btn-secondary' : DashboardViewType !='me','btn-primary' : DashboardViewType == 'me'}">Me</button>
+                        <button type="button" class="btn mr-2" (click)="SetDashboardViewType('team')" [ngClass]="{'btn-secondary' : DashboardViewType !='team','btn-primary' : DashboardViewType =='team'}">My Team</button>
+                        <button type="button" class="btn btnlc mr-2" (click)="SetDashboardViewType('company')" [ngClass]="{'btn-secondary' : DashboardViewType !='company','btn-primary' : DashboardViewType =='company'}" *ngIf="usertype =='usertypecompanyadmin'">Company</button>
+                        <div class="btn-group mx-2" role="group" *ngIf="DashboardViewType =='company' || DashboardViewType =='team'">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-success dropdown-toggle" (click)="ShowTeamDataS()">
+                {{TeamDataText}}
+              </button>
+                            <div class="dropdown-menu" [ngClass]="{'show' : ShowTeamData==true}" aria-labelledby="btnGroupDrop1" style="max-height:400px;overflow-y:auto;">
+                                <a class="dropdown-item" href="javascript:void(0);" *ngFor="let item of UserTeam;let i=index" (click)="SetDashboardFilterTeam(item)">{{item.name}}</a>
+                            </div>
+                        </div>
+
+                        <!--Service Territory Search - uncomment it-->
+                        <div class="btn-group mx-2" role="group" *ngIf="usertype =='usertypecompanyadmin'">
+                            <button id="btnGroupServiceTerr" type="button" class="btn btn-success dropdown-toggle" (click)="ShowServiceTerr()">
+                {{ServiceTerritoryName}}
+              </button>
+                            <div class="dropdown-menu" [ngClass]="{'show' : ShowServiceTerrData==true}" aria-labelledby="btnGroupServiceTerr" style="max-height:400px;overflow-y:auto;">
+                                <a class="dropdown-item" href="javascript:void(0);" *ngFor="let item of ShowServiceTerrList;let i=index" (click)="SetDashboardFilterServiceTerritory(item)">{{item.text}}</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--<button (click)="openFullscreen()"> <span *ngIf="!isFullScreen">Full Screen</span><span *ngIf="isFullScreen">Exit</span></button>-->
+                    <!--<button  (click)="closeFullscreen()">fullscreen_exit</button>-->
+
+                    <div class="input-group right caln-wid mt-0 mt-sm-2" *ngIf="!isFullScreen">
+                        <input type="text" class="form-control" placeholder="All" (click)="ShowCustomDateFilter()" [(ngModel)]="selectedFilter" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <span class="input-group-text closeCustomFilter" id="basic-addon2" (click)="ShowCustomDateFilter()"><i class="feather-calendar m-0"></i></span>
+                        </div>
+                        <div class="dasboard-calc" *ngIf="showDateFilter">
+                            <span><a href="javascript:void(0);" (click)="today()" [ngClass]="{'cal-active' : selectedFilter==='Today'}">Today</a> </span>
+                            <span> <a href="javascript:void(0);" (click)="yesterday()" [ngClass]="{'cal-active' : selectedFilter==='Yesterday'}">Yesterday</a></span>
+                            <!--<span> <a href="javascript:void(0);" (click)="onWeek()" [ngClass]="{'cal-active' : selectedFilter==='Last 7 Days'}">Last 7 Days </a></span>-->
+                            <span> <a href="javascript:void(0);" (click)="ThisWeek()" [ngClass]="{'cal-active' : selectedFilter==='This Week'}">This Week</a></span>
+                            <!--<span> <a href="javascript:void(0);" (click)="onMonth()" [ngClass]="{'cal-active' : selectedFilter==='Last 30 Days'}">Last 30 Days</a></span>-->
+                            <span> <a href="javascript:void(0);" (click)="LastWeek()" [ngClass]="{'cal-active' : selectedFilter==='Last Week'}">Last Week</a></span>
+                            <span> <a href="javascript:void(0);" (click)="thisMopnth()" [ngClass]="{'cal-active' : selectedFilter==='This Month'}">This Month</a></span>
+                            <span> <a href="javascript:void(0);" (click)="lastMonth()" [ngClass]="{'cal-active' : selectedFilter==='Last Month'}">Last Month</a>   </span>
+                            <span>  <a href="javascript:void(0);" (click)="thisYear()" [ngClass]="{'cal-active' : selectedFilter==='This Year'}">This Year </a> </span>
+                            <span>   <a href="javascript:void(0);" (click)="lastYear()" [ngClass]="{'cal-active' : selectedFilter==='Last Year'}">Last Year </a> </span>
+                            <span class="w-100 border-0 text-center"><a href="javascript:void(0);">Custom Range</a></span>
+
+                            <div class="dashboard-top-date date-box p-2">
+                                <p-calendar #myStartCalendar placeholder="From Date - To Date" [(ngModel)]="rangeDates" selectionMode="range" [readonlyInput]="true" inputId="range" (onSelect)="OnChangedDateRange($event)" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2030"
+                                    (click)="customRange()" [ngClass]="{'cal-active' : selectedFilter==='Custom Range'}"></p-calendar>
+                                <span id="basic-addon2"><i class="feather-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <!--•1st Row-->
+    <!--•Company Admin*ngIf="usertype=='usertype06'"-->
+    <div class="row paddingtopdc">
+
+        <!--Widgets Div-->
+        <!-- <div class="col-4 mb-4">
+      <a href="javascript:void(0);" class="d-flex dashboard-widget">
+        <div class="left-content">
+          <h4>Accounts W/O Open</h4>
+          <span class="numbers"> 55</span>
+        </div>
+        <div class="right-content">
+          <span class="icon-bg"><i class="fa fa-users"></i></span>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4 mb-4">
+      <a href="javascript:void(0);" class="d-flex dashboard-widget">
+        <div class="left-content">
+          <h4>My AM Customer Updates</h4>
+          <span class="numbers"> 35</span>
+        </div>
+        <div class="right-content">
+          <span class="icon-bg orange-iobg"><i class="fa fa-drivers-license-o"></i></span>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-4 mb-4">
+      <a href="javascript:void(0);" class="d-flex dashboard-widget">
+        <div class="left-content">
+          <h4>My AM Scheduling Queue</h4>
+          <span class="numbers"> 15</span>
+        </div>
+        <div class="right-content">
+          <span class="icon-bg green-iobg"><i class="fa fa-calendar"></i></span>
+        </div>
+      </a>
+    </div> -->
+        <!-- <div id="dashboardtabs" class="col-12 mb-3">
+      <div class="tabs tabs-linetriangle">
+        <ul class="nav nav-tabs group2  ">
+          <li *ngFor="let c of tilewidget" class="my-2">
+            <a href="javascript:void(0);" (click)="gotopage(c)" [ngStyle]="{'background-color':c.widgetBoxClass}" class="border h-100">
+              <span class="headingtext" [ngStyle]="{'color':c.widgetTextClass}">{{c.widgetName}}</span>
+              <span class="numbers" [ngStyle]="{'color':c.widgetTextClass}"> {{c.widgetCount }}</span>
+              <span class="description" [ngStyle]="{'color':c.widgetTextClass}" *ngIf="c.widgetRoute!=='' && c.widgetRoute!=='javascript:void(0);'"> View Report</span>
+              <span class="description" [ngStyle]="{'color':c.widgetTextClass}" *ngIf="c.widgetRoute=='' || c.widgetRoute=='javascript:void(0);'">&nbsp;</span>
+              <span class="block-icon"><i class="{{c.widgetIconClass}}"></i></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div> -->
+        <div class="col-md-12">
+          <ul class="count-widget">
+            <li class="widget-item mb-4" *ngFor="let c of tilewidget">
+              <a href="javascript:void(0);" (click)="gotopage(c)" class="d-flex dashboard-widget">
+                <div class="left-content">
+                  <h4>{{c.widgetName}}</h4>
+                  <span class="numbers"> {{c.widgetCount }}</span>
+                </div>
+                <div class="right-content">
+                  <span class="{{c.reportIconSpanColorClass}}"><i class="{{c.reportIconClass}}"></i></span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="col-md-6 mb-4" *ngFor="let c of widgetGraphData_LineChart">
+          <div class="chart-dash">
+            <h2 class="header-chart"> {{c.widgetName}} <span style="float: right;"> <a href="javascript:void(0);" (click)="gotopage(c)">See Full Report</a></span></h2>
+            <div class="center-content">
+              <div *ngIf="c.graphData">
+                <app-line-charts [widgetGraphData]="c.graphData" [widgetCount]="c.widgetCount"></app-line-charts>
+              </div>
+              <div *ngIf="!c.graphData">
+                <p style="color: red;">No data to display</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4" *ngFor="let c of widgetGraphData_ColumnChart">
+          <div class="chart-dash">
+              <h2 class="header-chart"> {{c.widgetName}} <span style="float: right;"><a href="javascript:void(0);" (click)="gotopage(c)">See Full Report</a></span></h2>
+            <div class="center-content">
+              <div *ngIf="c.graphData">
+                <app-column-charts [widgetGraphData]="c.graphData" [widgetCount]="c.widgetCount"></app-column-charts>
+              </div>
+              <div *ngIf="!c.graphData">
+                <p style="color: red;">No data to display</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4" *ngFor="let c of widgetGraphData_DoughnutChart">
+          <div class="chart-dash">
+            <h2 class="header-chart"> {{c.widgetName}} <span style="float: right;"> <a href="javascript:void(0);" (click)="gotopage(c)">See Full Report</a></span></h2>
+            <div class="center-content">
+              <div *ngIf="c.graphData">
+                <app-doughnut-charts [widgetGraphData]="c.graphData" [widgetCount]="c.widgetCount"></app-doughnut-charts>
+              </div>
+              <div *ngIf="!c.graphData">
+                <p style="color: red;">No data to display</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        <!-- <div class="col-md-6 mb-4">
+      <div class="chart-dash">
+        <h2 class="header-chart">Column Chart</h2>
+        <div class="center-content">
+          <app-column-charts  [widgetGraphData]="widgetGraphData"></app-column-charts>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="chart-dash">
+        <h2 class="header-chart">Doughnut Chart</h2>
+        <div class="center-content">
+          <app-doughnut-charts [widgetGraphData]="widgetGraphData"></app-doughnut-charts>
+        </div>
+      </div>
+    </div> -->
+        <!-- <img style="max-width: 266px;" src="../../../../assets/default-theme/imagesNew/chart-2.png" /> -->
+
+        <!--<div class="col-md-3">
+    <div class="row">
+      <div class="col-md-12 mb-4" >
+        <a href="javascript:void(0);" class="dashboard-widget-center">
+          <div class="top-content">
+            <h4><i class="fa fa-address-book-o"></i> Total Leads</h4>
+            <span class="numbers"> {{totalLeads}}</span>
+          </div>
+          <div class="center-content">
+            <img src="../../../../assets/default-theme/imagesNew/progress-imh.png" />
+          </div>
+          <div class="bottom-content row">
+            <div class="text-center" *ngFor="let c of tilewidget"  style="overflow: auto;display: inline-block;">
+              <span>{{c.widgetName}}</span>
+              <span class="numbers">{{c.widgetCount}}</span>
+            </div>
+          </div>
+        </a>
+       </div>
+      <div class="col-md-12 mb-4">
+        <div class="chart-dash">
+          <h2 class="header-chart">Total Leads</h2>
+          <div class="center-content">
+            <img src="../../../../assets/default-theme/imagesNew/chart-2.png" />
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>-->
+
+        <div class="w-100">
+            <!--Graphs Div-->
+            <div class="col-lg-12 mb-12">
+                <div class="row">
+                    <!--Table Data-->
+                    <div class="col-sm-12 col-md-12 col-lg-6 float-left mb-4" *ngFor="let d of widgetTableData">
+                        <div class="list-dashboard h-100">
+                            <div class="header-chart mb-1">
+                                {{d.widgetName}}
+                                <span style="float: right;"> <a href="javascript:void(0);" (click)="gotopage(d)">See Full Report</a></span>
+                            </div>
+                            <app-listwidget [widgetGraphData]="d.listViewData" [widgetBoxClass]="d.widgetBoxClass"></app-listwidget>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Graphs Div-->
+            <div class="col-lg-12 mb-12">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-4 float-left mb-4" *ngFor="let c of widgetGraphDataFullScreen">
+                        <div class="bg-white p-3 border  h-100">
+                            <div class="graph-widget-heading mb-2">
+                                {{c.widgetName}}
+                            </div>
+                            <app-widget [widgetGraphData]="c.graphData" [widgetType]="c.graphType" [widgetGroupCode]="c.widgetGroupCode"></app-widget>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+        </div>
+
+        <div *ngIf="isFullScreen && !isFullScreen" class="w-100">
+            <!--Widgets Div-->
+            <!-- <div id="dashboardtabs" class="col-12 mb-3">
+        <div class="tabs tabs-linetriangle">
+          <ul class="nav nav-tabs group2  ">
+            <li *ngFor="let c of tilewidgetFullscreen" class="my-2">
+              <a href="javascript:void(0);" (click)="gotopage(c)" [ngStyle]="{'background-color':c.widgetBoxClass}" class="border">
+                <span class="headingtext" [ngStyle]="{'color':c.widgetTextClass}">{{c.widgetName}}</span>
+                <span class="numbers" [ngStyle]="{'color':c.widgetTextClass}"> {{c.widgetCount }}</span>
+                <span class="description" [ngStyle]="{'color':c.widgetTextClass}" *ngIf="c.widgetRoute!=='' && c.widgetRoute!=='javascript:void(0);'"> View Report</span>
+                <span class="description" [ngStyle]="{'color':c.widgetTextClass}" *ngIf="c.widgetRoute=='' || c.widgetRoute=='javascript:void(0);'">&nbsp;</span>
+                <span class="block-icon"><i class="{{c.widgetIconClass}}"></i></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div> -->
+            <div class="col-lg-12 mb-4">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-4 float-left mb-4" *ngFor="let c of widgetListCountDateFullScreen; let i = index" [attr.data-index]="i">
+                        <div class="bg-white px-3 border h-100 py-4">
+                            <div class="row">
+                                <div class="col-md-5 text-center">
+                                    <b>{{c.widgetName}}</b><br />
+                                    <span class="display-4"><b>{{c.widgetCount | number}}</b></span>
+                                </div>
+                                <div class="col-md-7">
+                                    <ng-container *ngFor="let widget of datatss2FullScreen[i]; let j = index" [attr.data-index]="j">
+                                        <div class="d-flex mb-1 multi-color"><b><span style="    width: 40px;    display: inline-block;">{{widget.dataValue | number }}</span> <span class="circle-color"></span> {{widget.dataName}}</b></div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Graphs Div-->
+            <!-- <div class="col-lg-12 mb-4">
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-4 float-left mb-4" *ngFor="let c of widgetGraphDataFullScreen">
+            <div class="bg-white p-3 border  h-100">
+              <div class="graph-widget-heading mb-2">
+                {{c.widgetName}}
+              </div>
+              <app-widget [widgetGraphData]="c.graphData" [widgetType]="c.graphType" [widgetGroupCode]="c.widgetGroupCode"></app-widget>
+            </div>
+          </div>
+        </div>
+      </div> -->
+            <!--Table Data-->
+            <!-- <div class="col-lg-12 mb-0 mb-lg-4 d-table-data">
+        <div class="row">
+          <div class="col-md-12 col-lg-6 pr-3 mb-4" *ngFor="let d of widgetTableDataFullScreen">
+            <div class="{{d.widgetBoxClass}}">
+              <div class="graph-widget-heading mb-2"><h4>{{d.widgetName}}</h4></div>
+              {{d.graphType}}
+              <app-listwidget [widgetGraphData]="d.graphData" [widgetBoxClass]="d.widgetBoxClass"></app-listwidget>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+        </div>
+    </div>
+</div>
+<!--
+<div class="modal fade" id="headerswtichuser" tabindex="-1" role="dialog" aria-labelledby="headerexampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-info switch-cpop" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="headerexampleModalLabel">Associated Companies</h4>
+        <button #closeButton type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="login-box-fields" [ngClass]="{'disabled':loadSave}">
+          <div class="card border-0">
+            <ul class="list-group list-group-flush multicompanylogin" *ngIf="headerData!=null && headerData !='undefined'">
+              <li class="list-group-item" *ngFor="let comp of lstheadercompany">
+                <a *ngIf='comp.CompanyName !== headerData.companyName' href="javascript:void(0);" title="Switch Company" (click)="updateToken(comp.CompanyId)">
+                  <img src="{{comp.CompanyLogo}}" style="height:50px;width:60px;" />
+                  <span>{{comp.CompanyName}}</span>
+                </a>
+                <a *ngIf='comp.CompanyName == headerData.companyName' href="javascript:void(0);" class="selectedcompany" title="Switch Company">
+                  <img src="{{comp.CompanyLogo}}" style="height:50px;width:60px;" />
+                  <span>{{comp.CompanyName}}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-login"></app-loader>
+</div> -->
+
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

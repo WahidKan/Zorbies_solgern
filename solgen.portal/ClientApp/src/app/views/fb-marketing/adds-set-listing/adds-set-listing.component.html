@@ -1,0 +1,292 @@
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100"><strong>Manage Ad Sets</strong></h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Manage Ad Sets</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-header border-bottom pb-3 btn-iconres">
+        <div class="row mt-2 align-items-end">
+          <div class="col-lg-2 col-xl-2">
+            <div class="form-group mb-xl-0">
+              <input class="form-control" type="text" (keyup)="updateFilter($event)" [(ngModel)]='listFilter'
+                     placeholder="Search by ad set name">
+            </div>
+          </div>
+          <div class="col-lg-2 col-xl-2">
+            <div class="form-group mb-xl-0 d-inline-block w-100 flex-full">
+              <div class="input-group">
+                <p-calendar inputStyleClass="form-control start-date" placeholder="Start Date" [(ngModel)]="From"
+                            [maxDate]="To" [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true"
+                            [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+                <div class="input-group-append">
+                  <span class="input-group-text"><i class="feather-calendar font-16"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-xl-2 pr-0">
+            <div class="form-group mb-xl-0 d-inline-block w-100 flex-full">
+              <div class="input-group">
+                <p-calendar inputStyleClass="form-control start-date" placeholder="End Date" [(ngModel)]="To" [minDate]="From"
+                            [readonlyInput]="true" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                            yearRange="2000:2030"></p-calendar>
+                <div class="input-group-append">
+                  <span class="input-group-text"><i class="feather-calendar font-16"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-xl-3">
+            <div class="d-inline-block align-top">
+              <a class="btn btn-dark form-btns mr-2" href="javascript:void(0);" (click)="search()"
+                 tooltip="Search"><span><i class="feather-search mr-1"></i>Search </span></a>
+              <a class="btn btn-white form-btns " href="javascript:void(0);" (click)="reset()"
+                 tooltip="Reset"><span><i class="feather-repeat mr-1"></i>Reset </span></a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-xl-3 text-right">
+            <div class="d-inline-block align-top">
+              <a *ngIf='isAdd' class="btn btn-success form-btns mr-2" href="javascript:void(0);" (click)="AddNew()"
+                 tooltip="Add Ad Set"><span><i class="feather-plus mr-1"></i> Add</span></a>
+              <a *ngIf='isDelete' class="btn btn-danger form-btns" (click)="onDeleteMultipleAdSets()" href="javascript:void(0);"
+                 tooltip="Delete">
+                <span><i class="feather-trash-2 mr-1"></i> Delete</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="panel-content px-3 pagination2 table-responsive no-padding">
+        <div class="header-chart mb-1">Ad Sets</div>
+        <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="pagedData.data"
+                       [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40"
+                       [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                       [count]="pagedData.pager.totalItems" [offset]="pagedData.pager.currentPage"
+                       [limit]="pagedData.pager.pageSize" (page)='setPageNo($event)' (sort)="onSort($event)"
+                       [selectionType]="SelectionType.checkbox" [selected]="selected" (select)="onSelect($event)">
+
+          <ngx-datatable-column [width]="42" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                                [resizeable]="false" [headerCheckboxable]="true" [checkboxable]="true">
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Ad Set ID" prop="FacebookAdSetId" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a title="View Ad Set" [routerLink]="['/marketing/adSet-view', row.AdSetId]">{{row.FacebookAdSetId }}</a>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Ad Set Name" prop="Name" [sortable]="true"></ngx-datatable-column>
+          <!-- <ngx-datatable-column name="Amount Spent" prop="spent_amount" [sortable]="true"> -->
+
+          <ngx-datatable-column name="Amount Spent" prop="spent_amount" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.spent_amount">$</span> {{ row.spent_amount }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Bid Strategy" prop="bid_strategy" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Budget" prop="Budget" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.Budget">$</span> {{ row.Budget }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Campaign" prop="campaign" [sortable]="true"></ngx-datatable-column>
+
+          <ngx-datatable-column name="Cost Per Result" prop="cost_per_result" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.cost_per_result">$</span> {{ row.cost_per_result }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Frequency" prop="adSet_frequency" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Impressions" prop="adSet_impressions" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Reach" prop="adSet_reach" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Unique Link Clicks" prop="adSet_unique_link_clicks" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Cost Per Mile" prop="adSet_cost_per_mile" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.adSet_cost_per_mile">$</span> {{ row.adSet_cost_per_mile }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Cost Per Pixel" prop="adSet_cost_per_pixel" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.adSet_cost_per_pixel">$</span> {{ row.adSet_cost_per_pixel }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Click Through Rate" prop="adSet_click_through_rate" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.adSet_click_through_rate">$</span> {{ row.adSet_click_through_rate }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Social Spend" prop="adSet_social_spend" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.adSet_social_spend">$</span> {{ row.adSet_social_spend }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Effective Status" prop="adSet_effective_status" [sortable]="true"></ngx-datatable-column>
+
+          <ngx-datatable-column name="Billing Event" prop="adSet_billing_event" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Video View" prop="adSet_video_view" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Ad Objective" prop="ad_objective" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Daily Budget" prop="DailyBudget" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.DailyBudget">$</span> {{ row.DailyBudget }}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="External Id" prop="external_id" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Status" prop="FacebookStatus" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Start Date" [sortable]="true" prop="LastEdit">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <!-- {{row.LastEdit | date:'MM/dd/yyyy'}} -->
+              {{
+ (row.start_time !== null) ?
+              (row.start_time || DateTimeToLocal | date:'MM/dd/yyyy') : ""
+              }}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="End Date" [sortable]="true" prop="LastEdit">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <!-- {{row.LastEdit | date:'MM/dd/yyyy'}} -->
+              {{
+ (row.end_time !== null) ?
+              (row.end_time || DateTimeToLocal | date:'MM/dd/yyyy') : ""
+              }}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Ad Set Objective" prop="adset_objective" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Cost Per Unique Clicks" prop="adSet_costper_unique_clicks" [sortable]="true">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.adSet_costper_unique_clicks">$</span> {{ row.adSet_costper_unique_clicks }}
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Last Significant Edit" [sortable]="true" prop="LastEdit">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <!-- {{row.LastEdit | date:'MM/dd/yyyy'}} -->
+              {{
+ (row.LastEdit !== null) ?
+              (row.LastEdit | date:'MM/dd/yyyy') : ""
+              }}
+              &nbsp;
+              {{
+ (row.LastEdit !== null) ?
+              (row.LastEdit || DateTimeToLocal | date :'hh:mm a') : "-"
+              }}
+
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Optimization Goal" prop="optimization_goal" [sortable]="true"></ngx-datatable-column>
+
+
+          <ngx-datatable-column name="Created By" prop="created_by" [sortable]="true"></ngx-datatable-column>
+          <ngx-datatable-column name="Created On" [sortable]="true" prop="created_at">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+
+              {{
+ (row.created_at !== null) ?
+                  (row.created_at | date:'MM/dd/yyyy') : ""
+              }}
+              &nbsp;
+              {{
+ (row.created_at !== null) ?
+                  (row.created_at || DateTimeToLocal | date :'hh:mm a') : "-"
+              }}
+
+
+              <!-- {{ (row.created_at !== null) ? (row.created_at | utcdatetimetolocal) : "" }} -->
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Modified By" prop="modified_by" [sortable]="true"></ngx-datatable-column>
+          <!-- <ngx-datatable-column name="Module" prop="moduleName" [sortable]="true"></ngx-datatable-column>
+      <ngx-datatable-column name="SubModule" prop="subModuleName" [sortable]="true"></ngx-datatable-column> -->
+          <ngx-datatable-column name="Modified On" [sortable]="true" prop="modified_at">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+
+
+
+              {{
+ (row.modified_at !== null) ?
+                  (row.modified_at | date:'MM/dd/yyyy') : ""
+              }}
+              &nbsp;
+              {{
+ (row.modified_at !== null) ?
+                  (row.modified_at || DateTimeToLocal | date :'hh:mm a') : "-"
+              }}
+
+
+              <!-- {{ (row.modified_at !== null) ? (row.modified_at | utcdatetimetolocal) : "" }} -->
+            </ng-template>
+          </ngx-datatable-column>
+
+
+          <ngx-datatable-column [sortable]="false" [width]="45" [maxWidth]="100" headerClass="text-center">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span class="actions rw_act" style="padding: 1px;">
+                <i class="feather-settings action_icon" [attr.attribute-id]="row.AdSetId" aria-hidden="true"></i>
+                <span class="action-list-box spn{{row.AdSetId}}">
+                  <span class="list-actions fsm-list" id="action-list" style="width:210px;">
+                    <a class="actions-onclick view-list smview" [routerLink]="['/marketing/adSet-view', row.AdSetId]" title="View Ad Set"><i class="feather-eye text-info pr-2"></i></a>
+                    <a class="actions-onclick view-list smview" *ngIf='isUpdate' [routerLink]="['/marketing/editAdSet', row.AdSetId]" title="Edit Ad Set"><i class="feather-edit-2 text-success pr-2"></i></a>
+                    <a class="actions-onclick view-list smview" *ngIf='isDelete' title="Delete Ad Set" (click)="DeleteAdset(row)"
+                       href="javascript:void(0);"><i class="feather-trash-2 text-danger"></i></a>
+                    <i class="feather-x close close-action" aria-hidden="true"></i>
+
+                  </span>
+                </span>
+              </span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-footer>
+            <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                         let-selectedCount="selectedCount" let-currentPage="currentPage" let-offset="offset"
+                         let-isVisible="isVisible">
+              <div>
+                <div style="color: black; margin-right: 10px" class="page-size-record">
+                  <span style="text-align: right; width: 80px; vertical-align: middle">
+                    <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]="pageSize"
+                               dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false"
+                               [closeOnSelect]="true" bindLabel="text" bindValue="text"></ng-select>
+                  </span>
+                </div>
+              </div>
+              <div class="page-count" *ngIf="rowCount > 0">
+                {{ commonService.PageString(pagedData.pager.currentPage + 1, pageSize, rowCount) }}
+              </div>
+              <datatable-pager [pagerLeftArrowIcon]="'feather-chevron-left'" [pagerRightArrowIcon]="'feather-chevron-right'"
+                               [pagerPreviousIcon]="'feather-chevrons-left'" [pagerNextIcon]="'feather-chevrons-right'"
+                               [page]="curPage" [size]="pageSize" [count]="pagedData.pager.totalItems"
+                               [hidden]="!(rowCount / pageSize > 1)" (change)="setPage($event)">
+              </datatable-pager>
+            </ng-template>
+          </ngx-datatable-footer>
+        </ngx-datatable>
+      </div>
+
+    </div>
+  </div>
+  <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+</div>

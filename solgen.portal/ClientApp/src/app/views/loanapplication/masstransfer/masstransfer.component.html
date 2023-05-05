@@ -1,0 +1,190 @@
+<!-- <div class="header float-left w-100 mb-2">
+  <h2 class="float-left pr-2"><strong>Manage Mass Transfer</strong></h2>
+  <div class="breadcrumb-wrapper">
+    <ol class="breadcrumb">
+      <li><a routerLink="/dashboard">Dashboard</a></li>
+      <li><a routerLink="/loanApplication">Loan Application</a></li>
+      <li class="active">Mass Transfer</li>
+    </ol>
+  </div>
+</div> -->
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+      <div class="panel-header border-bottom pb-3 btn-iconres">
+        <div class="row mt-2">
+          <div class="col-md-12 col-xl-12">
+            <div class="row searchfield">
+
+              <div class="col-lg-4 col-xl-3 float-left mb-lg-0 mb-2" *ngIf="isCompanyAdmin">
+                <label class="inline-block pr-3" style="float: left; line-height: 34px;"><strong>Dealer:</strong></label>
+                <div class="form-group mb-0 inline-block" style="width: calc( 100% - 70px ); float: left;" [ngClass]="{'disabledddl':(disableDealerUser)}">
+                  <ng-select [items]="dealerUsers" class="form-control heightauto p-0" placeholder="Select Dealer" bindValue="value" bindLabel="text" [closeOnSelect]="true" (change)="selectDealerUser($event.value,$event.text)" [(ngModel)]="dealerUserValue" [ngClass]="{'is-invalid': (isdealerUserRequired) }">
+                  </ng-select>
+                  <small *ngIf="isdealerUserRequired"
+                         style="color:red;">Please Select Company</small>
+                </div>
+              </div>
+
+              <div class="col-lg-4 col-xl-3 float-left mb-lg-0 mb-2">
+                <label class="inline-block pr-3" style="float: left; line-height: 34px;"><strong>From:</strong></label>
+                <div class="form-group mb-0 inline-block" style="width: calc( 100% - 70px ); float: left;" [ngClass]="{'disabledddl':(disableFromUser)}">
+                  <ng-select [items]="fromUsers" class="form-control heightauto p-0" placeholder="Select User" bindValue="value" bindLabel="text" [closeOnSelect]="true" (change)="selectFromUser($event.value,$event.text)" [(ngModel)]="fromUserValue" [ngClass]="{'is-invalid': (isFromUser) }">
+                  </ng-select>
+                  <small *ngIf="isFromUser"
+                         style="color:red;">Please Select From User</small>
+                </div>
+              </div>
+              <!--[ngClass]="{'disabledddl':(!isToUser)}"-->
+              <div class="col-lg-4 col-xl-3 float-left pl-3 pl-lg-0">
+                <label class="inline-block pr-3" style="float: left; line-height: 34px;"><strong>To:</strong></label>
+                <div class="form-group mb-0 inline-block" style="width: calc( 100% - 70px ); float: left;">
+                  <ng-select [items]="toUsers" class="form-control heightauto p-o" placeholder="Select User" bindValue="value" bindLabel="text" (change)="selectToUser($event.value,$event.text)" [closeOnSelect]="true" [(ngModel)]="toUserValue" [ngClass]="{'is-invalid': (isToUser) }">
+                  </ng-select>
+                  <small *ngIf="isToUser"
+                         style="color:red;">Please Select To User</small>
+                </div>
+              </div>
+
+              <div class="col-lg-4 col-xl-3 pl-3 pl-lg-0">
+                <a class="btn btn-success form-btns mr-1" href="javascript:void(0);" (click)="transfer($event)" tooltip="Transfer Loan Application"><span>Transfer</span></a>
+                <a class="btn btn-danger form-btns mr-2" href="javascript:void(0);" (click)="reset()" tooltip="Reset"><span><i class="fa fa-refresh"></i> </span></a>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+
+      <div class="panel-content px-3 pagination2 table-responsive no-padding">
+        <div class="table-responsive">
+
+          <div *ngIf="pagedData.data.length==0" class="border p-3 text-danger mt-3 mb-3 text-center">No data to display</div>
+         
+          <div class="table table-striped" *ngIf="pagedData.data.length > 0">
+
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                           [scrollbarH]="true"
+                           [rowHeight]="'40'"
+                           [rows]="pagedData.data"
+                           [columnMode]="'force'"
+                           [headerHeight]="40"
+                           [footerHeight]="40"
+                           [externalPaging]="true"
+                           [externalSorting]="true"
+                           [loadingIndicator]="loadSave"
+                           [count]="pagedData.pager.totalItems"
+                           [offset]="pagedData.pager.currentPage"
+                           [limit]="pagedData.pager.pageSize"
+                           (page)='setPage($event)'
+                           (sort)="onSort($event)"
+                           [selectionType]="SelectionType.checkbox"
+                           [selectAllRowsOnPage]="false"
+                           [selected]="selected"
+                           (select)="onSelect($event)">
+
+              <ngx-datatable-column [width]="42"
+                                    [sortable]="false"
+                                    [canAutoResize]="false"
+                                    [draggable]="false"
+                                    [resizeable]="false"
+                                    [headerCheckboxable]="true"
+                                    [checkboxable]="true">
+              </ngx-datatable-column>
+
+
+              <ngx-datatable-column name="Application Number" prop="LoanApplicationNumber" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a href="javascript:void(0);" [routerLink]="['/loanApplication/Detail/',row.Id]">{{row.LoanApplicationNumber}}</a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Name" [sortable]="true" prop="Name">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Date Submitted" [sortable]="true" prop="ApplicationDate">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{row.ApplicationDate |pstdatetimetolocaldate}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Stage" [sortable]="true" prop="Stage">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Status" [sortable]="true" prop="ApplicationStatus">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Pending Document" [sortable]="true" prop="module_name">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="doc-count">
+                    <span class="single-action" *ngIf="row.RequiredDoc!=row.ReciveDoc">
+                      <a href="javascript:void(0);" class="text-dark">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i><span class="noti-circle">{{row.PendingDocument}}</span>
+                      </a>
+                    </span>
+                    <span class="single-action" *ngIf="row.RequiredDoc==row.ReciveDoc">
+                      <a href="javascript:void(0);" class="text-dark">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i><span class="noti-circle nodoc">{{row.PendingDocument}}</span>
+                      </a>
+                    </span>
+
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Product Type" [sortable]="true" prop="ProductType">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="NTP Deny Reason" [sortable]="true" prop="NTPReason">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Bank Deny Reason" [sortable]="true" prop="BankReason">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Bank User(s)" [sortable]="true" prop="BankUsers">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Sales User(s)" [sortable]="true" prop="SalesUsers">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Finance User(s)" [sortable]="true" prop="FinanceUsers">
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Dealer Company Name" [sortable]="true" prop="dealerCompanyName">
+              </ngx-datatable-column>
+
+
+
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template
+                             let-rowCount="rowCount"
+                             let-pageSize="pageSize"
+                             let-selectedCount="selectedCount"
+                             let-currentPage="currentPage"
+                             let-offset="offset"
+                             let-isVisible="isVisible">
+                  <div>
+                    <div class="page-size-record">
+                      <span style="text-align:left; width:80px;vertical-align: middle;">
+                        <ng-select [searchable]="false" [items]="lstPageSize" appendTo="body" [(ngModel)]='pageSizeValue' dropzone="fixed" [clearable]="false" (change)="onChange($event)" draggable="false" [closeOnSelect]="true"
+                                   bindLabel="text" bindValue="text"></ng-select>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="page-count">
+                    {{rowCount}} total
+                  </div>
+
+                  <datatable-pager [pagerLeftArrowIcon]="'fa feather-chevrons-left'"
+                                   [pagerRightArrowIcon]="'fa fa-angle-double-right'"
+                                   [pagerPreviousIcon]="'fa fa-angle-left'"
+                                   [pagerNextIcon]="'fa feather-chevron-left'"
+                                   [page]="pagedData.pager.currentPage+1"
+                                   [size]="pageSizeValue"
+                                   [count]="pagedData.pager.totalItems"
+                                   [hidden]="!((rowCount / pageSize) > 1)"
+                                   (change)="setPage($event)">
+                  </datatable-pager>
+                </ng-template>
+              </ngx-datatable-footer>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader"></app-loader>
+    </div>
+  </div>
+</div>
+

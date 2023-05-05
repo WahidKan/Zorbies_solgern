@@ -1,0 +1,159 @@
+Client Jira Points
+=================================================
+Under TODO Tab
+-----------------------------
+1. MCIT3-17 - Discussion
+2. MCIT2-2 - No Description
+3. MCIT3-5 - No Description
+4. MCIT3-102 - Need to comment
+5. MCIT3-105 - Discussion
+6. MCIT3-20 - Under Client Verification
+7. MCIT3-22 - Discussion
+8. MCIT3-24 - Discussion
+9. MCIT3-63 - Development(Amandeep)
+10.MCIT3-26 - Development(Discussion)
+11.MCIT3-29 - Discussion
+12.MCIT3- - Development - Vikrant(Discussion)
+13.MCIT3-68 - Discussion
+14.MCIT3-77 - Development - Vikrant - hold
+15.MCIT3-91 - Discussion
+16.MCIT3-81 - Development(Enhancement) - Anish - Done
+17.MCIT3-129 - Development(Enhancement) - Except delete all done
+18.MCIT3-138 - Login issue(Login with different Account) - Amandeep
+
+
+https://conexlink.atlassian.net/browse/MCIT3-206 - Discussion
+https://conexlink.atlassian.net/browse/MCIT3-233 - Amandeep(Working on this)
+https://conexlink.atlassian.net/browse/MCIT3-232 - Done
+https://conexlink.atlassian.net/browse/MCIT3-227 - Done
+https://conexlink.atlassian.net/browse/MCIT3-223 - Done
+https://conexlink.atlassian.net/browse/MCIT3-219 - Done
+
+https://conexlink.atlassian.net/browse/MCIT3-161 - Need to Discuss(1 - Waited a long time before entering the original code. I guess it expired? Please add
+								       this info on the email. - Discussion
+								   2 - Click on Resend code. No email received. Red baris showing, but no errors showing on the Developer Tools (it is 								       actually 200 OK)) - Done
+https://conexlink.atlassian.net/browse/MCIT3-160 - Need to Explain to client(How coupon is actually working)
+https://conexlink.atlassian.net/browse/MCIT3-157 - Done
+https://conexlink.atlassian.net/browse/MCIT3-154 - Done
+https://conexlink.atlassian.net/browse/MCIT3-138 - Login issue - Amandeep
+https://conexlink.atlassian.net/browse/MCIT3-109 - Done
+https://conexlink.atlassian.net/browse/MCIT3-26 - Discussion
+
+Subtask(MCIT3-26) - https://conexlink.atlassian.net/browse/MCIT3-92
+		1. After clearing 'Invoice status' field the 'invoice ID' doesn't work properly. - Deepak Jha (Done)
+		2. Add currency unit - Rahul-(Done)
+		3. If it is charged for $ 100, where is it registered? - This record is registered under transactions(i.e. We can see an entry of this in transactions)
+                4. Add back button on Customer Overview - Done
+Subtask(MCIT3-26) - https://conexlink.atlassian.net/browse/MCIT3-89
+		1. All the pages show the same customers - Done
+		2. The text in the fourth column has a longer length than the other columns.
+		   Please keep the same length between the columns. If the text has an ellipsis it could be nice if when moving the mouse over the word all the text is displayed (something 		   	   like tooltips) - Done
+
+Subtask(MCIT3-26) -  https://conexlink.atlassian.net/browse/MCIT3-77 (Pending customer need to show data) - Deepak Jha (Working on this)
+
+Subtask(MCIT3-26) -  https://conexlink.atlassian.net/browse/MCIT3-91 - Done
+
+Under In Progress
+--------------------------
+1.MCIT3-37 - Discussion
+
+
+Bug Tracker Points
+=================================================
+
+------------Under QC Process---------------------
+
+1.#137361 - 7 feb 2019 >> When we login in company admin sometimes it is login with another account like we try to login with Steve but website is login with andrew. – Amandeep
+
+2.#140160 - 13 mar 2019 >> From any module>>when user refresh the page then in side menu its highlighted the Dashboard module, it should highlight/selected  the same module which is opened. - LovePreet - Hold
+
+-----------Reseller Phase2 QC--------------------
+1. #142318 - 04 April 2019 >> Alignment is not correct in emails. Please check all running email and fix the design issues. - Anish(Working)
+2. #144140 - 17 April 2019 >> Super Admin >> Discount >> Free Trial Type >> Not working when user apply free trial discount coupon - Vikrant(Discussion)
+
+
+3. #145211 - 22 April 2019 >> Azure Consumption>> Granularity drop down>> None and Accumulated is not given - Dheeraj(Enhancement)
+4. #145235 - 22 April 2019 >> Azure Consumption>> Graph value should be shown like azure portal - Dheeraj (Enhancement)
+5. #145683 - 25 April 2019 >> common>>Billing setting>>invoice setting>>Edit invoice email template button should display on invoice setting page, so that user can easily edit the invoice email template. (Suggestions)
+6. #146759 - Registration>> ReSeller>> At the time of registration default commission category should shown to the reselller. Amandeep(Enhancement)
+
+
+7. #146683 - Company Admin >> My Billing>> My Statements>> when we click "Send via email", it sends the invoice in email. - Vikrant(Discussion)
+
+
+
+8. #146810 - 7 May 2019 >> License >> Assign license to user functionality missing from the subscription page and marketplace - Vikrant/Anish
+
+9. #146816 - 7 May 2019 >> License >> Subscription page>>Assign license pop up>>Select all records, Pagination and record size functionality missing from assign license pop up. - Anish(Select all records functionality left)
+
+
+10. #147534 - 16 May 2019 >> Company admin >> Reports >> License report >> In license report hardcoded license is displaying even user not purchased the license - Discussion
+11. #147539 - 16 May 2019 >> company dashboard >> License code value is displaying 2 hardcoaded. -  Discussion
+
+12. #148066 - Commission rate is not getting updated after new default commission rate is changed. - Discussion
+13. #145683 - 25 April 2019>>common>>Billing setting>>invoice setting>>Edit invoice email template button should display on invoice setting page, so that user can easily edit the invoice email template. - Discussion
+
+14. #148632 - Super admin>> Sub admin>> Main module should display if user has permission for it's sub module. - Amandeep
+15. #148638 - Super admin>> Accounts>> Roles>> Subscription & transaction should be coming under the billing domain (before settings). - Amandeep
+16. #148647 - Super admin>> Manage customer>> Email and plan name are overlapping in the customer listing.(Resolution 1280*1024) - Anish
+
+
+----------Text/Design Issues---------------------
+
+1. #145109	iPad>> Super admin>>reports>> customer report>>Action drop down>> Open the drop down and scroll the screen. The drop down list remains static. - Need to check
+2. #145126	Asus Laptop>> Edge Browser>> Common for all text fields and search fields>> Placeholder is not completely shown. - Need to check
+
+3. #145130	Asus Laptop>> Edge Browser>> Super Admin>> Customers>> Import CSP Customers>> There is blank space at the right side of the list. Also columns data merged. - Anish
+
+4. #145134	Asus Laptop>> Edge Browser>> Company Admin>> Billing>> Subscriptions>> "Available Add-ons" section>> Search field placeholder is not shown properly. - Need to check
+
+5. #145152	Asus Laptop>> Edge Browser>> Re-Seller Account>> Billing>> Subscriptions>> "Available Add-ons" section>> Search field placeholder is not shown properly. - Placeholder issue
+6. #145160	iPad>> Company Admin>> Deployments>>Click on name (Type= VM)>> raywinserver>> Portrait mode>> Design Issues. - Lovepreet
+7. #145164	iPad>>Super admin>>reports>> Portrait mode>> Open the menu>> "Select Subscription" placeholder is not shown properly. - Placeholder issue
+8. #145168	iPad>> Re-Seller Account>> Catalog>> Products>> "Records Per Page" drop down is not aligned properly. - Anish
+
+9. #145999	Edit Dashboard issues>> - Done which are need to do some are not done as per site structure
+10.#146004	Super Admin >> Breadcrumb and URL >> - Discussion
+11.#146009	Company Admin >> Breadcrumb and URL >> - Discussion
+12.#146014	Re-Seller Account >> Breadcrumb and URL >> - Discussion
+
+
+---Implement Localdatetime on all listing and on all pages where datetime is showing -Rahul/Anish/LovePreet
+
+---Unit Test case implementing on listing for the time. - Anish/Rahul/Lovepreet
+
+
+
+https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-26 - Done
+https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-77 - Done
+https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-81 - Add Activity - Hold
+https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-107 - Amandeep - Done
+https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-138 - Amandeep - Working
+https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-161 - QA(Reproduce) - Hold
+https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-233 - Amandeep (Done)
+https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-256 - Amandeep - Done
+https://conexlink.atlassian.net/projects/MCIT3/issues/MCIT3-92 - Done
+
+- Sorting not working on customers/Pending customer email field
+
+
+1. LOGS load nhi ho rhe dashboard par - Done
+2. Company Dashboard --> Due Invoices --> color need to set  - Done
+3. Cloud Notificaiton Listing --> date time need to show instead of "x days ago" - Done
+4. super admin dashboard --> first graph is not working properly - Done
+
+
+
+3.)High Priority>> Super admin>>super/cutomer dashboard>>Loader is keep running in logs, azure consumptions tab. - Done
+5.) High Priority>>Super admin>>from the every listing page, when a user click on any button or pagination then then in a side menu module not displaying selected. - Not done
+6.)High Priority>> Super admin>>Billing>>Revenue report>>loader is displaying. data not displaying in page. - Done 
+7.) company admin>>My account>>Company>>Loader is missing is missing from the page. - Done 
+8.) High Priority>>Company admin>>Dashboard>>Deployment tab>>Success deployment count displaying incorrect - Done
+
+H!Tech@20!8
+
+
+Ticket module ---
+
+- Notification not recieved by company admin
+- Status not updated from superadmin

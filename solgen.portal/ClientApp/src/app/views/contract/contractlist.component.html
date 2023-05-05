@@ -1,0 +1,50 @@
+
+<app-breadcrumb *ngIf="!loadSave"  [data]="contentHeader"></app-breadcrumb>
+<!-- <div class="header float-left w-100 mb-2 d-flex">
+  <div class="col-md-6 pl-0">
+    <h2 class="float-left pr-2 w-100">
+      <strong>Manage Contract</strong>
+      <p class="d-inline-block pl-1 pl-md-3 mb-1"><i class="fa fa-list-alt p-0 pr-1"></i>{{ViewModel}}</p>
+    </h2>
+    <div class="breadcrumb-wrapper w-100">
+      <ol class="breadcrumb">
+        <li>
+          <a class="smview" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="active">Contract</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-md-6 text-right right pr-0">
+    <a href="javascript:;" class="btn btn-primary"  data-toggle="modal" data-target="#headerswtichuser"><i class="fa fa-sign-in mr-1"></i>Switch Company</a>
+  </div>
+</div> -->
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-lg-12 portlets">
+    <div class="panel">
+
+      
+
+      <lib-dynamic-list *ngIf="load" [jsoninput]="jsonData" [currentPage]="currentPage" [pageSizeValue]="pageSizeValue" [lstPageSize]="lstPageSize"
+                        (MainMethod)="MainMethod($event)" (curPageemit)="curPageemit($event)" [sortDir]="sortDir" [sortColumn]="sortColumn"
+                        primaryid="Id" (selectdata)="selectdata($event)" [companytype]="companyType" (goToPage)="goToPage($event)" [jsoncondition]="jsoncondition"
+                        [actionarray]="actionarray" [listFilter]="listFilter"
+                        [myCheckboxemit]="myCheckbox" [vewId]="vewId" [manageviewList]="pagedData.data" (updateFilter)="updateFilter($event)" (displayDetailDetail)="displayDetailDetail($event)"
+                        (search)="search()" (reset)="reset()" [isAdd]="isAdd" (add)="add()" (deleteAll)="deleteAll()" (switchClicked)="switchClicked($event)" (filterpopup)="filterpopup()"
+                        [placeholder]="placeholder" (SetManageViewValue)="SetManageViewValue($event)"
+                        [isUpdate]="isUpdate" [isDelete]="isDelete" [searchlabelName]="searchlabelName" [listLabelName]="listLabelName"
+                        Showheader="true" isSearchPannel="true" isManageView="true" [userinfodata]="userinfodata" >
+
+      </lib-dynamic-list>
+
+
+    </div>
+  </div>
+</div>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+
+<app-searchfilteradd (searchFilterCondition)="ApplyAdvanceFilter($event)" #templateFilterView moduleName="crm" subModuleName="contract"></app-searchfilteradd>
+<app-manageviewnew #templateManageView (customViewid)="GetcustomViewid($event)" moduleName="crm" subModuleName="contract"></app-manageviewnew>
+
+

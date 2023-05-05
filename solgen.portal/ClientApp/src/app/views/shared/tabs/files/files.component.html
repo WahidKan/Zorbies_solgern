@@ -1,0 +1,179 @@
+<div class="active" [ngClass]="{'panel':header}">
+    <div class="panel-heading" *ngIf="header">
+        <h4 class="panel-title">
+            <a href="#Files" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+                <span>{{title}} ({{filesCount}})</span>
+            </a>
+        </h4>
+    </div>
+    <div id="Files" class="panel-collapse collapse active show" style="">
+        <a *ngIf="header" href="javascript:void(0);" class="btn-in-panel" (click)="openUploadFilePopup()"><span data-toggle="modal"><i class="feather-plus mr-2"></i>Add</span></a>
+        <div class="panel-body row px-0 mt-0">
+            <!-- <div [ngClass]="{'col-3':header,'col-6':!header}">
+                <ng-select [items]="lstDocumentCategory" placeholder="Select Document Category" bindValue="value" bindLabel="text" [(ngModel)]="ddlDocumentCategory" (change)="GetDocumentType($event)" (clear)="resetDocumentDDL();"></ng-select>
+            </div> -->
+            <div class="clearfix"></div>
+            <div class="table-responsive col-12 mb-0">
+                <div class="table table-striped mb-0">
+                    <ngx-datatable #table class="bootstrap table table-hover table-dynamic" [rows]="lstFiles.data" [columnMode]="'force'" [scrollbarH]="true" [rowHeight]="'40'" [headerHeight]="40" [footerHeight]="40" [externalPaging]="true" [externalSorting]="true" [loadingIndicator]="loadSave"
+                        [count]="lstFiles.pager.totalItems" [offset]="lstFiles.pager.currentPage" [limit]="lstFiles.pager.pageSize" (page)='setPageNo($event)' (sort)="onSort($event)">
+                        <ngx-datatable-column name="Document Title" prop="FileTitle" [sortable]="true">
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Download" prop="fileUrl" [sortable]="false">
+
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <a class="text-dark" *ngIf="(row.fileExtension=='.image/jpeg' ||row.fileExtension=='.jpeg'||row.fileExtension=='.jpeg' || row.fileExtension=='.jpg' || row.fileExtension=='image/jpeg' ||row.fileExtension=='jpeg' || row.fileExtension=='jpg') && !row.isOnMediaServer">
+
+                                    <img loading="lazy" src="{{siteurl+row.fileUrl}}" class="img-fluid" (click)="open(siteurl+row.fileUrl, attachmentIndex)" style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;
+              cursor: zoom-in">
+
+                                </a>
+
+                                <a class="text-dark" *ngIf="(row.fileExtension=='.image/jpeg' ||row.fileExtension=='.jpeg' || row.fileExtension=='.jpg' || row.fileExtension=='image/jpeg' ||row.fileExtension=='jpeg' || row.fileExtension=='jpg') && row.isOnMediaServer">
+                                    <img loading="lazy" src="{{row.fileUrl}}" class="img-fluid" (click)="open(row.fileUrl, attachmentIndex)" style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;
+              cursor: zoom-in">
+
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.xlsx' ||row.fileExtension=='.xls' || row.fileExtension=='xlsx' ||row.fileExtension=='xls') && !row.isOnMediaServer" class="text-dark" download href="{{siteurl+row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/xlsxFile.png" style="height:25px;width:25px" />
+                                </a>
+                                <a *ngIf="(row.fileExtension=='.xlsx' ||row.fileExtension=='.xls' || row.fileExtension=='xlsx' ||row.fileExtension=='xls') && row.isOnMediaServer" class="text-dark" download href="{{row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/xlsxFile.png" style="height:25px;width:25px" />
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.txt' || row.fileExtension=='txt') && !row.isOnMediaServer" class="text-dark" download href="{{siteurl+row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/textFile.png" style="height:25px;width:25px" />
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.txt' || row.fileExtension=='txt') && row.isOnMediaServer" class="text-dark" download href="{{row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/textFile.png" style="height:25px;width:25px" (click)="downloadFile($event,row.fileUrl)" />
+                                </a>
+
+                                <a *ngIf="row.fileExtension=='.csv'  && row.isOnMediaServer" class="text-dark" download href="{{row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/textFile.png" style="height:25px;width:25px" (click)="downloadFile($event,row.fileUrl)" />
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.doc' || row.fileExtension=='doc') && !row.isOnMediaServer" class="text-dark" download href="{{siteurl+row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/docxFile.png" style="height:25px;width:25px" />
+                                </a>
+                                <a *ngIf="(row.fileExtension=='.doc' || row.fileExtension=='doc') && row.isOnMediaServer" class="text-dark" download href="{{row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/docxFile.png" style="height:25px;width:25px" />
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.docx' || row.fileExtension=='docx' && !row.isOnMediaServer) && !row.isOnMediaServer" class="text-dark" download href="{{siteurl+row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/docxFile.png" style="height:25px;width:25px" />
+                                </a>
+                                <a *ngIf="(row.fileExtension=='.docx' || row.fileExtension=='docx') && row.isOnMediaServer" class="text-dark" download href="{{row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/docxFile.png" style="height:25px;width:25px" />
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.rar' || row.fileExtension=='rar') && !row.isOnMediaServer" class="text-dark" download href="{{siteurl+row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/RarFile.png" style="height:25px;width:25px" />
+                                </a>
+                                <a *ngIf="(row.fileExtension=='.rar' || row.fileExtension=='rar') && row.isOnMediaServer" class="text-dark" download href="{{row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/RarFile.png" style="height:25px;width:25px" />
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.png' || row.fileExtension=='png') && !row.isOnMediaServer" class="text-dark">
+                                    <img loading="lazy" src="{{siteurl+row.fileUrl}}" class="img-fluid" (click)="open(siteurl+row.fileUrl, attachmentIndex)" style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;
+              cursor: zoom-in">
+                                </a>
+                                <a *ngIf="(row.fileExtension=='.png' || row.fileExtension=='png') && row.isOnMediaServer" class="text-dark">
+                                    <img loading="lazy" src="{{row.fileUrl}}" class="img-fluid" (click)="open(row.fileUrl, attachmentIndex)" style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;
+              cursor: zoom-in">
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.gif' || row.fileExtension=='gif') && !row.isOnMediaServer" class="text-dark">
+                                    <img loading="lazy" src="{{siteurl+row.fileUrl}}" class="img-fluid" (click)="open(siteurl+row.fileUrl, attachmentIndex)" style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;
+              cursor: zoom-in">
+                                </a>
+                                <a *ngIf="(row.fileExtension=='.gif' || row.fileExtension=='gif') && row.isOnMediaServer" class="text-dark">
+                                    <img loading="lazy" src="{{row.fileUrl}}" class="img-fluid" (click)="open(row.fileUrl, attachmentIndex)" style=" height: 50px; width: 50px; border-radius: 2px; margin-right: 5px;
+              cursor: zoom-in">
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.zip' || row.fileExtension=='zip') && !row.isOnMediaServer" class="text-dark" download href="{{siteurl+row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/ZipImage.jpg" style="height:25px;width:25px" />
+                                </a>
+                                <a *ngIf="(row.fileExtension=='.zip' || row.fileExtension=='zip') && row.isOnMediaServer" class="text-dark" download href="{{row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/ZipImage.jpg" style="height:25px;width:25px" />
+                                </a>
+
+                                <a *ngIf="(row.fileExtension=='.pdf' || row.fileExtension=='pdf') && !row.isOnMediaServer" class="text-dark" download href="{{siteurl+row.fileUrl}}">
+                                    <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:25px;width:25px" />
+                                </a>
+                                <a *ngIf="(row.fileExtension=='.pdf' || row.fileExtension=='pdf') && row.isOnMediaServer" style="cursor:pointer" class="text-dark" (click)="downloadFile($event,row.fileUrl)">
+                                    <img src="../../../assets/default-theme/imagesNew/1200px-PDF_file_icon.svg.png" style="height:25px;width:25px" />
+                                </a>
+
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <!-- <ngx-datatable-column name="Document Category" prop="DocumentCategory" [sortable]="true">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Document Type" prop="DocumentType" [sortable]="true">
+            </ngx-datatable-column> -->
+
+                        <ngx-datatable-column name="Description" prop="Description" [sortable]="true">
+                        </ngx-datatable-column>
+                        <!--<ngx-datatable-column name="Customer Approval" prop="isRequired" [sortable]="true">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div title="true" *ngIf="row.isRequired == true" class="ng-star-inserted">
+                  <i class="feather-check text-success icon_tick ng-star-inserted"></i>
+                </div>
+                <div title="false" *ngIf="row.isRequired != true" class="ng-star-inserted">
+                  <i class="fa fa-times text-danger icon_tick ng-star-inserted"></i>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>-->
+                        <ngx-datatable-column name="Action" [sortable]="false" headerClass="text-center">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div class="text-center">
+                                    <a href="javascript:void(0);" (click)="deleteFiles(row.Id)"><i title="Click to delete." class="feather-trash-2 text-danger"></i></a>
+                                </div>
+
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-footer>
+                            <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="lstFiles.pager.pageSize" let-selectedCount="selectedCount" let-currentPage="lstFiles.pager.currentPage" let-offset="offset" let-isVisible="isVisible">
+                                <!--<div class="page-count" *ngIf='(rowCount  > 0) && submoduleName!="account"'>
+
+                  {{commanService.PageString(lstFiles.pager.currentPage,lstFiles.pager.pageSize,rowCount)}}
+
+                </div>-->
+
+                                <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'" [pagerRightArrowIcon]="'fa feather-chevron-left'" [pagerPreviousIcon]="'fa feather-chevrons-left'" [pagerNextIcon]="'fa fa-angle-double-right'" [page]="lstFiles.pager.currentPage" [size]="lstFiles.pager.pageSize"
+                                    [count]="lstFiles.pager.totalItems" [hidden]="!((rowCount / lstFiles.pager.pageSize) > 1)" (change)="setPageNo($event)">
+                                </datatable-pager>
+                            </ng-template>
+                        </ngx-datatable-footer>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-filesupload #uploadFileModal (uploadFileEvent)="uploadFileEvent()"></app-filesupload>
+
+
+
+<div id="audioModal" bsModal #previewModelPoup="bs-modal" [config]="{backdrop: 'static'}" style=" background: none !important;" class="modal fade announcement-pop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-height:520px!important; max-width:420px!important; ">
+        <div class="modal-content" style="z-index:1; height:auto;">
+            <div class="modal-content p-4">
+                <div class="text-center w-100">
+                    <button type="submit" (click)="closePreview()" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute; right: 14px; top: 8px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                    <img src={{previewImage}} alt="img" style=" height: 520px !important; max-width: 700px !important; width: 100%; " class="img-responsive" />
+                    <div style="position: absolute; bottom: 38px; left: 50%; transform: translatex(-50%);">
+                        <a href={{previewImage}} (click)="downloadFile($event,previewImage)" [download]="previewImage" download class="btn btn-info mr-2" style="border-radius: 40px !important; border: 2px solid #fff; box-shadow: 0px 0px 10px 0px #000 !important; ">
+                            <i title="Click to downloand." class="fa fa-download pr-2"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>

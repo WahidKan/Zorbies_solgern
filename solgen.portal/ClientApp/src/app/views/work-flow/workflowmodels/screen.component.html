@@ -1,0 +1,294 @@
+<div class="flow-container" *ngIf="targetForm.get('isScreenAdded').value">
+  <div class="sh_rectangle" *ngIf="!isDecision">
+    <a href="javascript:;" (click)="openeditpopup(targetForm.value.ScreenId)" class="text-white text-truncate" style="max-width:110px; display:inline-block;" title="{{targetForm.value.ScreenName}}"> {{targetForm.value.ScreenName}}</a>
+    <a href="javascript:;" (click)="deletetarget(targetForm.value.ScreenId)" title="Delete Screen" class="delete-btn"><i class="feather-trash-2"></i></a>
+  </div>
+
+</div>
+<div *ngIf="targetForm.get('isDecisionScreenAdded').value && !typescreen" class="sh_rectangle inrow-right">
+
+  <a href="javascript:;" (click)="openeditpopup(targetForm.value.ScreenId)" style="max-width:110px; display:inline-block;" title="{{targetForm.value.ScreenName}}" class="text-white text-truncate">{{targetForm.value.ScreenName}}</a>
+  <a href="javascript:;" (click)="deletetargetDecision(targetForm.value.ScreenId)"  title="Delete Screen" class="delete-btn"><i class="feather-trash-2"></i></a>
+  <!--<a href="javascript:;" (click)="deletetarget(targetForm.value.ScreenId)" class="delete-btn"><i class="feather-trash-2"></i></a>-->
+</div>
+<!--<div class="flow-container last-child" *ngIf="!targetForm.get('isScreenAdded')?.value">
+  <div class="add-flow">
+    <i class="feather-plus"></i>
+    <div class="add-action">
+      <a href="javascript:;" (click)="AddScreen()" class="border-right"><span class="text-info"><i class="fa fa-clone text-info"></i></span>Add Screen</a>
+      <a href="javascript:;" (click)="AddDecision()" class="border-right"><span class="text-warning"><i class="fa fa-file-text-o text-warning"></i></span>Add Decision</a>
+      <a href="javascript:;" (click)="AddCondition()"> <span class="text-success"><i class="fa fa-code text-success"></i></span>Add Condition</a>
+    </div>
+  </div>
+</div>-->
+<!--screenmodel-->
+<div class="modal fade " bsModal #screenmodel="bs-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Flow Screens</h5>
+        <button type="button" class="close" (click)="hidescreenmodel()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="max-height: 400px;">
+        <div class="row">
+
+
+          <div class="col-12 col-md-12 " >
+            <form [formGroup]="form" *ngIf="form" autocomplete="off">
+
+
+
+              <h3 class="form-heading mt-0">
+                <span>{{screenname}} </span>
+              </h3>
+              <div class="row  mb-2">
+                <ng-container *ngFor="let inner of screendata">
+
+
+                  <!--<div [ngClass]="{'col-sm-12 col-md-12 float-left': true, 'd-none' : inner.form_field_visibility == 'NO', 'col-12': inner.layout_type =='single', 'col-md-6': inner.layout_type =='double', 'col-lg-4': inner.layout_type =='triple', 'col-lg-3 col-xl-3':
+                     inner.layout_type =='four' }">-->
+                  <div class="col-sm-12 col-md-12 col-12">
+                    <!---->
+                    <input type="hidden" *ngIf="inner.form_field_visibility == 'NO'" />  <!--v-model="item.value" v-bind:id="item.name"     -->
+                    <label *ngIf="inner.form_field_visibility == 'YES'">{{inner.display_name}}:<span class="text-danger" [ngClass]="{'text-danger':inner.is_required== true}" *ngIf="inner.is_required==true">*</span></label>
+                    <!--<a href="javascript:void(0);" v-bind:tabindex="-1" data-toggle="popoveruserguide" v-bind:data-content="GetLocalizedValue(item.user_guide)">-->
+                    <!--<a href="javascript:void(0);" data-toggle="popoveruserguide" data-content="inner.user_guide" [title]="inner.">
+                      <i class="fa fa-question-circle-o text-popover" style="font-size: 14px;" ></i>
+                    </a>-->
+                    <div class="form-group" *ngIf="inner.form_field_visibility == 'YES'">
+                      <!--text  [placeholder]="inner.display_name"-->
+                      <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                             [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                             [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                             *ngIf="inner.picklist_options != 'Lookup' && inner.field_type !='date'  && inner.field_type !='radio' && inner.field_type!='boolean'  && inner.field_type !='dropdown' && inner.field_type !='textarea' && inner.field_type !='checkbox' && inner.field_type !='date' && inner.field_type !='int' && inner.field_type !='decimal' && inner.field_type !='texteditor' && inner.field_type !='bigint'" />
+
+                      <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                             [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                             [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                             *ngIf="inner.field_type == 'int'" />
+
+                      <small *ngIf="inner.field_type == 'int' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)"
+                             class="text-danger">Please enter valid value</small>
+
+                      <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                             [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                             [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                             *ngIf="inner.field_type == 'bigint'" />
+
+                      <small *ngIf="inner.field_type == 'bigint' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)"
+                             class="text-danger">Please enter valid value</small>
+
+                      <input type="text" class="form-control" [readonly]="inner.is_readOnly"
+                             [formControlName]="inner.form_controlName" [id]="inner.form_field_id"
+                             [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }"
+                             *ngIf="inner.field_type == 'decimal'" />
+
+                      <small *ngIf="inner.field_type == 'decimal' &&(form.get(inner.form_controlName).touched &&
+                       form.get(inner.form_controlName).errors?.pattern)"
+                             class="text-danger">Please enter valid value</small>
+
+
+                      <!--Textarea [placeholder]="inner.display_name"-->
+                      <textarea class="form-control" *ngIf="inner.field_type == 'textarea'" [ngClass]="{'is-invalid': (form.get(inner.form_controlName)?.invalid && (form.get(inner.form_controlName)?.dirty || form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName).errors?.required || form.get(inner.form_controlName)?.errors?.maxlength)) }" [formControlName]="inner.form_controlName" rows="3" cols="4"></textarea>
+                      {{inner.field_type}}
+                      <!--<p *ngIf="inner.field_type == 'texteditor'" > </p>-->
+                      <div *ngIf="inner.field_type == 'texteditor'" [innerHtml]="inner.default_value">
+
+                      </div>
+
+                      <!--Ng Calendar [placeholder]="inner.display_name"-->
+
+                      <p-calendar inputStyleClass="form-control start-date" *ngIf="inner.field_type == 'date'" [formControlName]="inner.form_controlName"
+                                  [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"></p-calendar>
+
+
+                      <!--<p-calendar  inputStyleClass="form-control start-date" formControlName="leaseDate" placeholder="Select Date of Lease" [showTime]="false" dateFormat="mm/dd/yy" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1919:2030"
+                      [ngClass]="{'is-invalid': (leaseDetailForm.get('leaseDate').invalid && (leaseDetailForm.get('leaseDate').dirty || leaseDetailForm.get('leaseDate').touched) && (leaseDetailForm.get('leaseDate').errors?.required)) }"></p-calendar>-->
+                      <!--end calandar-->
+                      <!--Checkbox-->
+
+                      <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.field_type=='checkbox'">
+                        <div *ngFor="let options of inner.listoptions">
+                          <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                            <!--<div class="form-check form-check-inline" *ngFor="let checkedvals of form.get(inner.form_controlName).value">-->
+                            <div class="custom-control custom-checkbox">
+                              <input id="chk_{{inner.form_field_id}}_{{option}}_{{i}}"
+                                     value="5555" [checked]="checkvalue(inner.value,option)" (change)="onCheckboxChange($event,item,inner)" class="dynamic custom-control-input" type="checkbox">
+                              <label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic" for="chk_{{inner.form_field_id}}_{{option}}_{{i}}">{{option}}</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.field_type=='boolean'">
+                        <div class="form-check form-check-inline">
+                          <div class="custom-control custom-checkbox pl-0">
+                            <label class="switch">
+                              <input type="checkbox" id="chk_{{inner.form_field_id}}" [formControlName]="inner.form_controlName"
+                                     class="dynamic custom-control-input">
+                              <span class="slider round" id="{{inner.form_field_id}}"><span>Yes</span></span>
+                              <!--<label class="custom-control-label universal-custom-control-label pl-2 pr-1 dynamic"
+                              for="chk_{{inner.form_field_id}}">{{inner.display_name}}</label>-->
+                            </label>
+                          </div>
+
+                        </div>
+                      </div>
+
+                      <!--Radio button-->
+                      <div class="form-control pl-0 border-0 bg-transparent" *ngIf="inner.field_type=='radio'">
+                        <div *ngFor="let options of inner.listoptions">
+                          <div class="form-check form-check-inline" *ngFor="let option of options.listoptions;let i=index;">
+                            <div class="custom-control custom-radio mx-2  p-0">
+                              <!--<input id="rbl_{{inner.form_field_id}}_{{option}}" class="dynamic custom-control-input"
+                                     [formControlName]="inner.form_controlName" type="radio">
+                              <label class="custom-control-label universalradio-custom-control-label pl-2 pr-1 dynamic" for="rbl_{{inner.form_field_id}}_{{option}}">{{option}}</label>-->
+                              <input id="radio-{{inner.form_field_id}}_{{option}}" [formControlName]="inner.form_controlName" [value]="option" type="radio">
+                              <label for="radio-{{inner.form_field_id}}_{{option}}" class="radio-label">{{option}}</label>
+                            </div>
+                          </div>
+                          >
+
+                        </div>
+
+
+                      </div>
+                      <!--Ng Dropdown-->
+                      <!--Dropdown
+                      picklist_options = Lookup       field_type==select    dropdown_type==normal--- so fill dropdown with select_options- coming from db
+                      -->
+                      <!--<select [formControlName]="inner.form_controlName" [ngClass]="{'form-control' : true,'invalid': inner.field_type=='select' }" *ngIf="inner.field_type=='select' && inner.select_options==''">
+                        <option value="">Select</option>
+                        <option [value]="option.id"
+                                *ngFor="let option of MakeNormalArray(inner.selectlistvalues)">
+                          {{//option.value}}
+                        </option>
+                      </select>-->
+
+                      <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                                 *ngIf="inner.field_type=='dropdown' && inner.picklist_options==''" [formControlName]="inner.form_controlName" bindLabel="name" bindValue="value">
+                      </ng-select>
+                      <ng-select [items]="inner.select_options" [id]="inner.form_controlName" [closeOnSelect]="true" placeholder="Select"
+                                 *ngIf="inner.field_type=='dropdown' && inner.picklist_options=='true'" [formControlName]="inner.form_controlName" [multiple]="true" bindLabel="name" bindValue="value">
+                      </ng-select>
+                      <small *ngIf="((form.get(inner.form_controlName)?.invalid) && (form.get(inner.form_controlName).dirty) || (form.get(inner.form_controlName)?.touched) && (form.get(inner.form_controlName)?.errors?.required))"
+                             class="text-danger">{{inner.display_name}} is required</small>
+                      <!--Dropdown
+                        picklist_options != Lookup (contain values to fill in dropdown)      field_type==select  -- so fill dropdown with picklist_options
+                      -->
+                      <!--<select [formControlName]="inner.form_controlName" class="form-control" [ngClass]="{'form-control' : true }" *ngIf="inner.picklist_options != 'LOOKUP' && inner.field_type=='select'" [(ngModel)]="inner.form_controlName"
+                              (change)='onOptionsSelected($event,inner)'>
+                        <option value="">Select</option>
+                        <option [value]="option.name"
+                                *ngFor="let option of MakeArray(inner.picklist_options,inner.field_type)">
+                          {{//option.name}}
+                        </option>
+                      </select>-->
+                    </div>
+
+                  </div>
+                </ng-container>
+
+
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+        <!--<button type="button" class="btn btn-success mr-1" data-dismiss="modal" [disabled]="editpopup" (click)="saveScreen()"><i class="feather-save"></i> Save</button>-->
+        <button type="button" class="btn btn-danger" (click)="hidescreenmodel()"><i class="feather-x"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End screenmodel -->
+<!--start screenListmodel-->
+<div class="modal fade " bsModal #screenListmodel="bs-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Screen</h5>
+        <a href="javascript:void(0);"  class="btn btn-success form-btns  mr-1" tooltip=" Add Form"><i class="feather-plus"></i></a>
+        <button type="button" class="close" (click)="hidescreenListmodel()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <div class="table table-striped">
+            <ngx-datatable #table class="bootstrap table table-hover table-dynamic"
+                           [rows]="pagedData.data"
+                           [columnMode]="'force'"
+                           [scrollbarH]="true"
+                           [rowHeight]="'40'"
+                           [headerHeight]="40"
+                           [footerHeight]="40"
+                           [externalPaging]="true"
+                           [externalSorting]="true"
+                           [count]="pagedData.pager.totalItems"
+                           [offset]="currentPage"
+                           [limit]="pageSizeValue"
+                           (page)='setPage($event)' >
+              <ngx-datatable-column name="Name" prop="name" [sortable]="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a href="javascript:;" (click)="getScreenFormField(row)" title="Edit Note">{{row.name|truncate}}</a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template
+                             let-rowCount="rowCount"
+                             let-pageSize="pagedData.pager.pageSize"
+                             let-selectedCount="selectedCount"
+                             let-currentPage="pagedData.pager.currentPage"
+                             let-offset="offset"
+                             let-isVisible="isVisible">
+                  <!--<div class="page-count">
+                    Total Records: {{rowCount}}
+                  </div>-->
+                  <div class="page-count" *ngIf='(rowCount  > 0)'>
+
+                    <!--Showing {{(pagedData.pager.currentPage - 1 )* pagedData.pager.pageSize + 1}}  to {{(pagedData.pager.currentPage+1 - 1 )* pagedData.pager.pageSize}} out of {{rowCount}}  enteries-->
+                    {{commonService.PageString(pagedData.pager.currentPage,pagedData.pager.pageSize,rowCount)}}
+
+                  </div>
+
+
+                  <datatable-pager [pagerLeftArrowIcon]="'fa fa-angle-left'"
+                                   [pagerRightArrowIcon]="'fa feather-chevron-left'"
+                                   [pagerPreviousIcon]="'fa feather-chevrons-left'"
+                                   [pagerNextIcon]="'fa fa-angle-double-right'"
+                                   [page]="pagedData.pager.currentPage"
+                                   [size]="pagedData.pager.pageSize"
+                                   [count]="pagedData.pager.totalItems"
+                                   [hidden]="!((rowCount / pagedData.pager.pageSize) > 1)"
+                                   (change)="setPageNo($event)">
+                  </datatable-pager>
+
+                </ng-template>
+              </ngx-datatable-footer>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-danger" (click)="hidescreenListmodel()"><i class="feather-x"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End screenListmodel-->
+
+<app-welcomescreenadd #screenadd (getformid)="getformid($event)" (getformname)="getformname($event)"></app-welcomescreenadd>
+<app-welcomescreen #welcomecomponent></app-welcomescreen>

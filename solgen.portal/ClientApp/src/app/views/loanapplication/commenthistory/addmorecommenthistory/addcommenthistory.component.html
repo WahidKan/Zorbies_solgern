@@ -1,0 +1,155 @@
+<div *ngIf="!isContactUser" bsModal #commentHistory="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" >
+  <div class="modal-dialog modal-lg" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add Comment</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;">
+        <!--<div id="accordion1" class="panel-group accordion">
+
+      <div class="panel">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a href="#panelBodyOne1" class="accordion-toggle collapsed" data-toggle="collapse" data-target="#panelBodyOne1"> <span>Loan Information</span> <span style="display:none" class="edit"><i class="fa fa-pencil"></i></span></a>
+          </h4>
+        </div>
+        <div id="panelBodyOne1" class=" collapse" aria-labelledby="headingOne" data-parent="#accordion1">
+          <div class="panel">
+            <div class="panel-content ">-->
+        <form [formGroup]="commentForm" autocomplete="off">
+          <div [ngClass]="{'disabled':loadSave}">
+            <div class="row">
+
+              <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Comment Type:</label>
+    <ng-select [items]="commentList" #Select placeholder="Select Type" bindValue="value" formControlName="commentType"
+               bindLabel="text"></ng-select>
+
+  </div>-->
+
+
+              <div class="col-12 col-md-12 col-lg-12">
+                <label>Comment:</label>
+                <div class="form-group">
+                  <textarea class="form-control" placeholder="Enter Comment" formControlName="comment"></textarea>
+                </div>
+              </div>
+
+              <!--<div class="col-12 col-md-6 col-lg-4">
+    <label>Element:</label>
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Enter Element" formControlName="element">
+    </div>
+  </div>-->
+
+
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="!isContactUser">
+                <label>FollowUp Date:</label>
+                <div class="form-group datepickerinpop">
+                  <p-calendar inputStyleClass="form-control start-date" formControlName="followUpDate"
+                              placeholder="Select Date" [showTime]="false" dateFormat="mm/dd/yy"
+                              showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true"
+                              yearRange="2000:2030"></p-calendar>
+
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="!isContactUser && !isBankerUser" >
+                <label> </label>
+                <div class="form-group mt-3">
+
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input id="isPrivate2" formControlName="isPrivate" (change)="public($event)" value="0" type="radio">
+                    <label for="isPrivate2" class="radio-label">Public</label>
+                  </div>
+                  <div class="ustom-control custom-radio custom-control-inline">
+                    <input id="isPrivate1" formControlName="isPrivate" (change)="private($event)" value="1" type="radio">
+                    <label for="isPrivate1" class="radio-label">Private</label>
+                  </div>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input id="isBanker" formControlName="isPrivate" (change)="banker($event)" value="2" type="radio">
+                    <label for="isBanker" class="radio-label">Banker</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-6" *ngIf="assigntoddl && !isContactUser">
+                <label>Notify To:</label>
+                <ng-select [items]="usersList" groupBy="masterName"
+                           #Select placeholder="Select AssignTo" bindValue="valueGuid" [multiple]="true" formControlName="assignTo"
+                           bindLabel="text">
+                </ng-select>
+
+
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-6" style="display:none">
+                <label>Active:</label>
+                <div class="form-group mt-1">
+                  <label class="switch">
+                    <input type="checkbox" formControlName="isActive" checked="">
+                    <span class="slider round"><span>Yes</span></span>
+                  </label>
+                </div>
+              </div>
+
+
+
+            </div>
+
+            
+          </div>
+        </form>
+        <!--</div>
+          </div>
+        </div>
+      </div>
+    </div>-->
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-success  float-right mr-1" (click)="addComment()"><i class="feather-save"></i> Submit</a>
+        <a href="javascript:void(0);" class="btn btn-danger float-right" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+      </div>
+
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>
+
+<div bsModal #commentHistory="bs-modal" [config]="{backdrop: 'static'}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" *ngIf="isContactUser">
+  <div class="modal-dialog modal-lg" [ngClass]="{'disabled':loadSave}">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Reply</h4>
+        <button type="button" class="close" (click)="close()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body" style=" margin-bottom:10px; max-height:600px; overflow:visible;">
+       
+        <form [formGroup]="replyForm" autocomplete="off">
+          <div [ngClass]="{'disabled':loadSave}">
+            <div class="row">
+
+              <div class="col-12 col-md-12 col-lg-12">
+                <label>Comment:</label>
+                <div class="form-group">
+                  <textarea class="form-control" placeholder="Enter Comment" formControlName="replycomment"></textarea>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:void(0);" class="btn btn-success  float-right mr-1" (click)="replyCustComment()"><i class="feather-save"></i> Submit</a>
+        <a href="javascript:void(0);" class="btn btn-danger float-right" (click)="close()"><i class="fa fa-times"></i> Cancel</a>
+      </div>
+
+      <app-loader [size]=60 [color]="'white'" *ngIf="loadSave" class="loader-popup"></app-loader>
+    </div>
+  </div>
+</div>
+

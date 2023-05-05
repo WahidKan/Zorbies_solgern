@@ -1,0 +1,50 @@
+<div *ngIf="textBox" [formGroup]="textBox">
+  <div class="row">
+    <div class="col-12">
+      <!-- <input
+        #input
+        formControlName="displayName"
+        class="form-control richTextBox"
+        type="text"
+        [ngStyle]="textBox.get('style').value"
+        [appAutofocus]="focus"
+        [style.height.px]="textBox.get('height').value"
+        [style.width.px]="textBox.get('width').value - 10"
+      /> -->
+      <!-- [attr.tabindex]="disabled ? -1 : tabIndex"
+                   [attr.spellcheck]="config.spellcheck"
+             [style.height]="config.height"
+             [style.minHeight]="config.minHeight"
+             [style.maxHeight]="config.maxHeight"
+            [attr.contenteditable]="config.editable"
+             (blur)="onTextAreaBlur($event)"
+          -->
+      <div class="angular-editor-wrapper richTextBox col" #editorWrapper>
+        <div
+          #editor
+          class="angular-editor-textarea richTextBox"
+          [attr.contenteditable]="config.editable"
+          (focus)="onTextAreaFocus($event)"
+          [ngStyle]="textBox.get('style').value"
+          (input)="onTextBoxChanged($event)"
+        >
+        <span *ngIf="textBox.get('isPreview') && textBox.get('isPreview').value" [innerHTML]="textBox.get('displayName').value"></span>
+          <!-- <input
+                formControlName="displayName"
+                class="form-control richTextBox"
+                type="text"
+                [appAutofocus]="focus"
+                (focus)="onTextAreaFocus($event)"
+      /> -->
+        </div>
+        <!-- (input)="onContentChange($event.target)"
+
+        (blur)="onTextAreaBlur($event)"
+        (click)="exec()"
+        (keyup)="exec()"
+        (mouseout)="onTextAreaMouseOut($event)" -->
+        <!-- <span class="angular-editor-placeholder">{{ placeholder || config['placeholder'] }}</span> -->
+      </div>
+    </div>
+  </div>
+</div>
